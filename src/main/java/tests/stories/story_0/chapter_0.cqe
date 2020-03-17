@@ -1,0 +1,808 @@
+{
+  "stages":[
+      {
+        "id": 0,
+        "type_stage": 0,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfe0/8HZcNr7gBq0.jpg",
+        "music_id":"http://st-web.at.ua/stalkerpda/client/bar_shti.mp3",
+        "title":"Бар ШТИ",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"@name входит в бар ШТИ. В здании КООПТОРГа обосновался целый бар под названием «Шти» для всех желающих.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Пойти к Бармену Джо",
+            "stage_id":"2",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Сироте",
+            "stage_id":"7",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Хемулю",
+            "stage_id":"11",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Борланду",
+            "stage_id":"17",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          "add":["14"]
+        }
+    },
+	      {
+        "id": 1,
+        "type_stage": 0,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfc2/jak0IfjO9jg.jpg",
+        "music_id":0,
+        "title":"Бар ШТИ",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"@name находится в баре ШТИ. В здании КООПТОРГа обосновался целый бар под названием «Шти» для всех желающих.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Пойти к Бармену Джо",
+            "stage_id":"2",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Сироте",
+            "stage_id":"7",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Хемулю",
+            "stage_id":"11",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Подойти к Борланду",
+            "stage_id":"17",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+         
+        }
+    },
+	      {
+        "id": 2,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
+        "music_id":0,
+        "title":"Бармен Джо",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Привет, Сталкер. Чего хочешь?",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Здравствуйте, вы не подскажите, где человек, который на этой фотографии?",
+            "stage_id":"3",
+            "condition":{
+             "has":["dialog_dzho"]
+            }
+          },
+          {
+            "text":"Что за место, эта Зона?",
+            "stage_id":"2",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 3,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
+        "music_id":0,
+        "title":"Бармен Джо",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Турист? С Большой Земли?",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Так заметно?",
+            "stage_id":"4",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 4,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
+        "music_id":0,
+        "title":"Бармен Джо",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Перестань говорить: «Здравствуйте», склячь спину – будешь похож на дебила-новичка. По твоему вопросу обратись к Сироте, я за лицами не слежу.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Что за место, эта Зона?",
+            "stage_id":"5",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          "add":["dialog_sirota"],
+          "remove":["dialog_dzho"]
+        }
+    },
+	      {
+        "id": 5,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
+        "music_id":0,
+        "title":"Бармен Джо",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Зона, она… Я вижу ты подготовленный, читал фольклор? На самом деле все страшнее и чужде. Как говорили старики: Если ты хочешь сыграть с ней в карты, она берет шахматы, или другую игру, в которой понимаешь разве что с гулькин хрен. С народом местным: как относишься к ним – так к тебе, но я не верю в это дерьмо. Бывает, что одного человека спас, а через день он тебя убивает. Все остальное – сам узнаешь.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 7,
+        "type_stage": 0,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
+        "music_id":0,
+        "title":"Сирота",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Чего хочешь, Сталкер?",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Я ищу проводника…",
+            "stage_id":"8",
+            "condition":{
+             "has":["dialog_sirota"]
+            }
+          },
+          {
+            "text":"Кто эти двое?",
+            "stage_id":"10",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+         
+        }
+    },
+	      {
+        "id": 8,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
+        "music_id":0,
+        "title":"Бармен Джо",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Я слышал разговор. Подойди к Борланду, он сидит около двери.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Какую информацию ты продаешь? Как вообще в этой сфере работаешь?",
+            "stage_id":"9",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Кто эти двое?",
+            "stage_id":"10",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          "add": ["АДД"],
+          "remove": ["dialog_sirota"]
+        }
+    },
+	      {
+        "id": 9,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
+        "music_id":0,
+        "title":"Сирота",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Сирота работает нормально, вот только другим знать это «нормально» не причитается. Я выдаю общеизвестную информацию забесплатно, а лишнюю, между клиентами – за деньги.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Кто эти двое?",
+            "stage_id":"10",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Пока",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 10,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
+        "music_id":0,
+        "title":"Сирота",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Тот, что около окна – Хемуль, занятный и знатный, но старый. Как его любимый мультик. Тот, что ближе к центру – Фрост. Этот парень категоричен, как брошенные кости. Кого-то ищет.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          "add":["dialog_hem"]
+        }
+    },
+	      {
+        "id": 11,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24ce/m99B3Vu4Xl0.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Отстань, я занят.",
+            "condition":{
+               "!has":["dialog_hem"]
+          }
+          },
+          {
+            "text":"Чего тебе?",
+            "condition":{
+              "has":["dialog_hem"]
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Здравствуйте, я наслышан о вас.",
+            "stage_id":"12",
+            "condition":{
+               "has":["dialog_hem"]
+            }
+          },
+          {
+            "text":"Пока.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+         
+        }
+    },
+	      {
+        "id": 12,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24d8/CSlmCxncGq4.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"...",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Тут всегда так пусто?",
+            "stage_id":"13",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 13,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Что ты от меня хочешь?",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Расскажи о баре.",
+            "stage_id":"14",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 14,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Найди кого-нибудь другого.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Уйти.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"Я нашел, почему ты не хочешь продолжать диалог?.",
+            "stage_id":"15",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          
+        }
+    },
+	      {
+        "id": 15,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Ты отмычка. Я не хочу разговаривать.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Я не отмычка. Я не в Зоне. Не надо так разговаривать со мной.",
+            "stage_id":"16",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+         
+        }
+    },
+	      {
+        "id": 16,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
+        "music_id":0,
+        "title":"Хемуль",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Вали от меня.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Уйти.",
+            "stage_id":"1",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+          "remove":["dialog_hem_plus"]
+        }
+    },
+	      {
+        "id": 17,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24e2/SBoF-aglkGQ.jpg",
+        "music_id":0,
+        "title":"Борланд",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Да?",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Ты тот, с кем мы переписывались?",
+            "stage_id":"18",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 18,
+        "type_stage": 1,
+          "background_url":"https://pp.userapi.com/c855428/v855428255/a24e2/SBoF-aglkGQ.jpg",
+        "music_id":0,
+        "title":"Борланд",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Видимо да, если ты открыл ПДА. Присаживайся.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Ты возьмешь обговоренную сумму сразу?",
+            "stage_id":"19",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 19,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24ba/nsvcWxThliQ.jpg",
+        "music_id":0,
+        "title":"Борланд",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Нет. Так делают лишь те, кто обворовывают отмычек. Половина твоей суммы пойдет в резерв, половину оплачу я. Будут два пропуска, поддельных, естественно.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Понял. Что-то от меня требуется?",
+            "stage_id":"20",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    },
+	      {
+        "id": 20,
+        "type_stage": 1,
+        "background_url":"https://pp.userapi.com/c855428/v855428255/a24ba/nsvcWxThliQ.jpg",
+        "music_id":0,
+        "title":"Борланд",
+        "message": "",
+        "type_message": 0,
+        "texts":[
+          {
+            "text":"Проснуться завтра, в 6 часов утра. Расписание движения научников: с 7 до 9, будет уверенность – будет результат. И да, возьми что-нибудь деловое.",
+            "condition":{
+              
+            }
+          },
+          {
+            "text":"",
+            "condition":{
+              
+            }
+          }
+        ],
+        "transfers": [
+          {
+            "text":"Хорошо, до завтра.",
+            "stage_id":"21",
+            "condition":{
+              
+            }
+          }
+        ],
+        "actions": {
+        }
+    }
+ ]
+}
