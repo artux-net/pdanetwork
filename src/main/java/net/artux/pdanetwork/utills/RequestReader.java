@@ -2,7 +2,6 @@ package net.artux.pdanetwork.utills;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -30,7 +29,7 @@ public class RequestReader {
         return headers;
     }
 
-    public static Map<String, String> splitQuery(String  query) throws UnsupportedEncodingException {
+    public static Map<String, String> splitQuery(String  query) {
         Map<String, String> query_pairs = new LinkedHashMap<>();
         String[] pairs = query.split("&");
         for (String pair : pairs) {

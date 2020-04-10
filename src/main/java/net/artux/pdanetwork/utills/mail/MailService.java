@@ -88,7 +88,7 @@ public class MailService {
                 InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
         message.setSubject("Подтвердите регистацию");
         message.setContent(mailTemplateCon.replace("link" ,
-                "http://"+ ServletContext.host + ":8080/confirm?token=" + token),
+                "http://"+ ServletContext.host + ":8080/register?t=" + token),
                 "text/html; charset=utf-8");
 
         return sendMessage(message);
