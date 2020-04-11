@@ -49,7 +49,7 @@ public class MailService {
     }
 
     public void sendOldPassword(Member user) throws MessagingException {
-            Message message = new MimeMessage(session);
+            /*Message message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress("Сталкерский ПДА <"+email+">"));
             message.setRecipients(Message.RecipientType.TO,
@@ -58,7 +58,7 @@ public class MailService {
             message.setText(user.getLogin() +", "
                     + "\n\n Ваш пароль: " + user.getPassword());
             // TODO
-            Transport.send(message);
+            Transport.send(message);*/
     }
 
     public boolean sendRegisterLetter(RegisterUser user, int pdaId) throws MessagingException{

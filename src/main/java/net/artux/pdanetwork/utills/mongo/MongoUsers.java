@@ -20,7 +20,6 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.bson.types.ObjectId;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -314,10 +313,9 @@ public class MongoUsers {
         Member member = gson.fromJson(result.toJson(), Member.class);
         Dialog dialog = new Dialog(dialogName, toPdaId,member.getLogin(), member.getAvatar(), firstMessage);
 
-        //добавляем оригинальному юзеру дмиалог в топ
+        //добавляем оригинальному юзеру диалог в топ
         query = new Document();
-        ObjectId id = new ObjectId(token);
-        query.put("_id", id);
+        query.put("token", token);
         result = table.find(query).first();
 
         member = gson.fromJson(result.toJson(), Member.class);
@@ -331,7 +329,7 @@ public class MongoUsers {
         dialogs.add(0, dialog);
 
         // обновляем запись
-        table.updateOne(eq("_id", id),
+        table.updateOne(eq("token", token),
                 set("dialogs",gson.toJson(dialogs)));
 
         dialog = new Dialog(dialogName, member.getPdaId(), member.getLogin(), member.getAvatar(), firstMessage);
@@ -368,8 +366,7 @@ public class MongoUsers {
 
         //добавляем оригинальному юзеру диалог в топ
         query = new Document();
-        ObjectId id = new ObjectId(token);
-        query.put("_id", id);
+        query.put("token", token);
         result = table.find(query).first();
 
         Member member1 = gson.fromJson(result.toJson(), Member.class);
