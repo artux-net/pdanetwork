@@ -317,18 +317,11 @@ public class MongoUsers {
 
     LoginStatus checkPassword(Document element, String password){
         LoginStatus status = new LoginStatus();
-        Member user = new Member();
-        user.setId((ObjectId) element.get("_id"));
-        user.setLogin(String.valueOf(element.get("login")));
-        user.setName(String.valueOf(element.get("name")));
-        user.setPassword(String.valueOf(element.get("password")));
-        user.setEmail(String.valueOf(element.get("email")));
-        user.setToken(String.valueOf(element.get("token")));
 
-        if (user.getPassword().equals(String.valueOf(password.hashCode()))){
+        if (String.valueOf(element.get("password")).equals(String.valueOf(password.hashCode()))){
             status.setSuccess(true);
             status.setCode(0);
-            status.setToken(user.getToken());
+            status.setToken(String.valueOf(element.get("token")));
         } else {
             status.setSuccess(false);
             status.setCode(2);

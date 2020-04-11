@@ -21,17 +21,13 @@ public class MailService {
     private static String mailTemplateReg;
     private static String mailTemplateCon;
 
-    public static boolean startedSuccessfully;
-
     static {
         try {
             mailTemplateReg = readFile("mail-template-reg.html");
             mailTemplateCon = readFile("mail-template-con.html");
-            startedSuccessfully = true;
         } catch (IOException e) {
             System.out.println("Can not find template files.");
             System.out.println("Error message: " + e.getMessage());
-            startedSuccessfully = false;
         }
     }
 
@@ -61,7 +57,7 @@ public class MailService {
             message.setSubject("Восстановление пароля");
             message.setText(user.getLogin() +", "
                     + "\n\n Ваш пароль: " + user.getPassword());
-
+            // TODO
             Transport.send(message);
     }
 

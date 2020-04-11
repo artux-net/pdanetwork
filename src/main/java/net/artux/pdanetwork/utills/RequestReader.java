@@ -19,7 +19,7 @@ public class RequestReader {
         return sb.toString();
     }
 
-    static Map<String, String> getHeaders(HttpServletRequest req){
+    public static Map<String, String> getHeaders(HttpServletRequest req){
         Enumeration<String> enumeration = req.getHeaderNames();
         Map<String, String> headers = new LinkedHashMap<>();
         while(enumeration.hasMoreElements()){
