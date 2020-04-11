@@ -5,6 +5,7 @@ public class Status {
     private boolean success;
     private int code;
     private String description;
+    private String token;
 
     public Status(int code, String description, boolean success) {
         this.success = success;
@@ -21,6 +22,12 @@ public class Status {
         this.description = description;
     }
 
+    public Status(String token){
+        success = true;
+        code = 0;
+        this.token = token;
+    }
+
     public boolean isSuccess() {
         return success;
     }
@@ -35,6 +42,14 @@ public class Status {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public int getCode() {

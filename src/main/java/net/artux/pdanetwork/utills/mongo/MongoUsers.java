@@ -13,7 +13,6 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.UpdateData;
-import net.artux.pdanetwork.authentication.login.model.LoginStatus;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.communication.model.Dialog;
 import net.artux.pdanetwork.models.Profile;
@@ -245,17 +244,14 @@ public class MongoUsers {
 
 
 
-    public LoginStatus tryLogin(String emailOrLogin, String password){
-        LoginStatus status = new LoginStatus();
-
+    public Status tryLogin(String emailOrLogin, String password){
         Document query = new Document();
-
         query.put("login", emailOrLogin);
 
         Document element = table.find(query).first();
 
         if(element!=null){
-          status = checkPassword(element,password);
+          return checkPassword(element,password);
         } else {
             query.clear();
             query.put("email",emailOrLogin);
@@ -263,20 +259,14 @@ public class MongoUsers {
             element = table.find(query).first();
 
             if (element!=null){
-                status = checkPassword(element,password);
+                return checkPassword(element,password);
             }else {
-                status.setSuccess(false);
-                status.setCode(1);
-                status.setDescription("Wrong login or email");
+                return new Status(false,"Wrong login or email");
             }
         }
-
-        return status;
     }
 
-    public LoginStatus tryAdminLogin(String emailOrLogin, String password){
-        LoginStatus status = new LoginStatus();
-
+    public Status tryAdminLogin(String emailOrLogin, String password){
         Document query = new Document();
 
         query.put("login", emailOrLogin);
@@ -284,7 +274,7 @@ public class MongoUsers {
         Document element = table.find(query).first();
 
         if(element!=null){
-            status = getLoginAdminStatus(password, status, element);
+            return getLoginAdminStatus(password, element);
         } else {
             query.clear();
             query.put("email",emailOrLogin);
@@ -292,42 +282,27 @@ public class MongoUsers {
             element = table.find(query).first();
 
             if (element!=null){
-                status = getLoginAdminStatus(password, status, element);
+                return getLoginAdminStatus(password, element);
             }else {
-                status.setSuccess(false);
-                status.setCode(1);
-                status.setDescription("Wrong login or email");
+                return new Status(false, "Wrong email or password");
             }
         }
-
-        return status;
     }
 
-    private LoginStatus getLoginAdminStatus(String password, LoginStatus status, Document element) {
+    private Status getLoginAdminStatus(String password, Document element) {
         if((Integer) element.get("admin")==1){
-            status = checkPassword(element, password);
+            return checkPassword(element, password);
         } else {
-            status.setSuccess(false);
-            status.setCode(400);
-            status.setDescription("Вы не администратор");
-            status.setToken(null);
+            return new Status(false, "You aren't admin");
         }
-        return status;
     }
 
-    LoginStatus checkPassword(Document element, String password){
-        LoginStatus status = new LoginStatus();
-
+    private Status checkPassword(Document element, String password){
         if (String.valueOf(element.get("password")).equals(String.valueOf(password.hashCode()))){
-            status.setSuccess(true);
-            status.setCode(0);
-            status.setToken(String.valueOf(element.get("token")));
+            return new Status(String.valueOf(element.get("token")));
         } else {
-            status.setSuccess(false);
-            status.setCode(2);
-            status.setDescription("Wrong password");
+            return new Status(false, "Wrong password");
         }
-        return status;
     }
 
     public void addDialogByToken(String token, int toPdaId, String dialogName, String firstMessage){

@@ -3,7 +3,6 @@ package net.artux.pdanetwork.authentication.login;
 import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.UpdateData;
-import net.artux.pdanetwork.authentication.login.model.LoginStatus;
 import net.artux.pdanetwork.authentication.login.model.LoginUser;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
@@ -20,7 +19,6 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private LoginStatus status;
     private Gson gson = new Gson();
     private MongoUsers users;
 
@@ -35,18 +33,17 @@ public class LoginServlet extends HttpServlet {
         /*
             авторизация, получение токена
          */
+
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         try {
             LoginUser loginUser = gson.fromJson(RequestReader.getString(request), LoginUser.class);
-            status = ServletContext.mongoUsers.tryLogin(loginUser.getEmailOrLogin(), loginUser.getPassword());
+            response.getWriter().println(gson.toJson(ServletContext.
+                    mongoUsers.tryLogin(loginUser.getEmailOrLogin(), loginUser.getPassword())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            status.setSuccess(false);
-            status.setDescription(ex.getMessage());
+            response.setStatus(400);
         }
-
-        response.getWriter().println(gson.toJson(status));
-
     }
 
     @Override

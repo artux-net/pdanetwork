@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.frontend.adminpanel;
 
-import net.artux.pdanetwork.authentication.login.model.LoginStatus;
 import net.artux.pdanetwork.authentication.login.model.LoginUser;
+import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
 import javax.servlet.RequestDispatcher;
@@ -39,7 +39,7 @@ public class LoginAdminController extends HttpServlet {
         // setAttributes customer.setAsRequestAttributes(request);
         List violations = loginUser.validate();
 
-        LoginStatus status = mongoUsers.tryAdminLogin(loginUser.getEmailOrLogin(), loginUser.getPassword());
+        Status status = mongoUsers.tryAdminLogin(loginUser.getEmailOrLogin(), loginUser.getPassword());
 
         if(status.isSuccess()){
             request.getSession().setAttribute("token", status.getToken());
