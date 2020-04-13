@@ -30,7 +30,7 @@ public class ProfileServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         Map<String, String> query_pairs = RequestReader.splitQuery(httpServletRequest.getQueryString());
         Profile profile;
         if(query_pairs.containsKey("pdaId")){

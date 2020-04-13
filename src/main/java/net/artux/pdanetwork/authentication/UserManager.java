@@ -38,85 +38,93 @@ public class UserManager {
     public boolean doUserActions(HashMap<String, List<String>> map, String token) {
         FileGenerator fileGenerator = new FileGenerator();
         Data data = ServletContext.mongoUsers.getByToken(token).getData();
-        for (String key : map.keySet()) {
-            switch (key) {
-                case "add":
-                    for (String value: Objects.requireNonNull(map.get(key))) {
-                        if(isInteger(value)) {
-                            System.out.println("add_items");
-                            data.getItems().add(fileGenerator.getItem(Integer.parseInt(value)));
-                        } else if (value.contains(":")) {
-                            System.out.println("add_value");
-                            if(!data.params.values.containsKey(value.split(":")[0])){
-                                data.params.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+        try {
+            for (String key : map.keySet()) {
+                switch (key) {
+                    case "add":
+                        for (String value : map.get(key)) {
+                            if (isInteger(value)) {
+                                //add_items
+                                data.getItems().add(fileGenerator.getItem(Integer.parseInt(value)));
+                            } else if (value.contains(":")) {
+                                //add_value
+                                if (!data.params.values.containsKey(value.split(":")[0])) {
+                                    data.params.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                                }
+                            } else {
+                                //add_param
+                                if (!data.params.params.contains(value)) data.params.params.add(value);
                             }
-                        } else {
-                            System.out.println("add_param");
-                            if(!data.params.params.contains(value)) data.params.params.add(value);
                         }
-                    }
-                    break;
-                case "add_param":
-                    System.out.println("add_param");
-                    data.params.params.addAll(Objects.requireNonNull(map.get(key)));
-                    break;
-                case "add_value":
-                    System.out.println("add_value");
-                    HashMap<String, Integer> addMap = new HashMap<>();
-                    for (String name : Objects.requireNonNull(map.get(key))) {
-                        addMap.put(name, 0);
-                    }
-                    data.params.values.putAll(addMap);
-                    
-                case "add_items":
-                    for (String item_id : Objects.requireNonNull(map.get(key))) {
-                        data.getItems().add(fileGenerator.getItem(Integer.parseInt(item_id)));
-                    }
-
-
-                case "remove":
-                    for (String pass : Objects.requireNonNull(map.get(key))) {
-                        try{
-                            int id = Integer.parseInt(pass);
-                            data.getItems().remove(fileGenerator.getItem(id));
-                        } catch (NumberFormatException e) {
-                            data.params.params.remove(pass);
+                        break;
+                    case "add_param":
+                        for (String value : map.get(key)) {
+                            if (!data.params.params.contains(value)) data.params.params.add(value);
                         }
-                    }
-
-                case "=":
-                    for (String pass : Objects.requireNonNull(map.get(key))){
-                        String[] vals = pass.split(":");
-                        data.params.values.put(vals[0], data.params.values.get(Integer.parseInt(vals[1])));
-                    }
-
-                case "+":
-                    for (String pass : Objects.requireNonNull(map.get(key))){
-                        String[] vals = pass.split(":");
-                        data.params.values.put(vals[0], data.params.values.get(data.params.values.get(vals[0] + Integer.parseInt(vals[1]))));
-                    }
-
-                case "-":
-                    for (String pass : Objects.requireNonNull(map.get(key))){
-                        String[] vals = pass.split(":");
-                        data.params.values.put(vals[0], data.params.values.get(data.params.values.get(vals[0]) - Integer.parseInt(vals[1])));
-                    }
-
-                case "*":
-                    for (String pass : Objects.requireNonNull(map.get(key))){
-                        String[] vals = pass.split(":");
-                        data.params.values.put(vals[0], data.params.values.get(data.params.values.get(vals[0]) * Integer.parseInt(vals[1])));
-                    }
+                        break;
+                    case "add_value":
+                        for (String value : map.get(key)) {
+                            if (!data.params.values.containsKey(value.split(":")[0])) {
+                                data.params.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                            } else {
+                                data.params.
+                                        values.put(value.split(":")[0],
+                                        data.params.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
+                            }
+                        }
+                        break;
+                    case "add_items":
+                        for (String item_id : map.get(key)) {
+                            data.getItems().add(fileGenerator.getItem(Integer.parseInt(item_id)));
+                        }
+                        break;
+                    case "remove":
+                        for (String pass : map.get(key)) {
+                            if (isInteger(pass)) {
+                                int id = Integer.parseInt(pass);
+                                data.getItems().remove(fileGenerator.getItem(id));
+                            } else {
+                                data.params.params.remove(pass);
+                                data.params.values.remove(pass);
+                            }
+                        }
+                        break;
+                    case "=":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            data.params.values.put(vals[0], Integer.valueOf(vals[1]));
+                        }
+                        break;
+                    case "+":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            data.params.values.put(vals[0], data.params.values.get(vals[0]) + Integer.valueOf(vals[1]));
+                        }
+                        break;
+                    case "-":
+                        for (String pass : Objects.requireNonNull(map.get(key))) {
+                            String[] vals = pass.split(":");
+                            data.params.values.put(vals[0], data.params.values.get(vals[0]) - Integer.parseInt(vals[1]));
+                        }
+                        break;
+                    case "*":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            data.params.values.put(vals[0], data.params.values.get(vals[0]) * Integer.parseInt(vals[1]));
+                        }
+                        break;
                     default:
-                        System.out.println("nothing");
+                        System.out.println("unsupported: " + key + "_" + map.get(key));
+                        break;
+                }
             }
+
+            ServletContext.mongoUsers.changeField(token, "data", new Gson().toJson(data));
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
-
-        System.out.println("UserManager" + new Gson().toJson(data));
-
-        ServletContext.mongoUsers.changeField(token,"data", new Gson().toJson(data));
-
-        return true;
     }
 
 }
