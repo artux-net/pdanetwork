@@ -1,5 +1,7 @@
 package net.artux.pdanetwork.models.profile.items;
 
+import java.util.HashMap;
+
 public class Item {
 
     public int id;
@@ -9,7 +11,7 @@ public class Item {
     public float weight;
     public int library_id;
     public int price;
-
+    public HashMap<String, String> data;
 
     public int getId() {
         return id;

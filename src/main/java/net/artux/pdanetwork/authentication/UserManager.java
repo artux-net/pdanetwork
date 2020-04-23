@@ -2,6 +2,7 @@ package net.artux.pdanetwork.authentication;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.utills.FileGenerator;
 import net.artux.pdanetwork.utills.ServletContext;
 
@@ -35,9 +36,11 @@ public class UserManager {
         return true;
     }
 
-    public boolean doUserActions(HashMap<String, List<String>> map, String token) {
+    public Member doUserActions(HashMap<String, List<String>> map, String token) {
         FileGenerator fileGenerator = new FileGenerator();
-        Data data = ServletContext.mongoUsers.getByToken(token).getData();
+
+        Member member = ServletContext.mongoUsers.getByToken(token);
+        Data data = member.getData();
         try {
             for (String key : map.keySet()) {
                 switch (key) {
@@ -113,6 +116,24 @@ public class UserManager {
                             data.params.values.put(vals[0], data.params.values.get(vals[0]) * Integer.parseInt(vals[1]));
                         }
                         break;
+                    case "set":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            if (vals[0].equals("type0"))
+                            for (Item item : data.getItems()){
+                                if (item.id == Integer.parseInt(vals[1])){
+                                    if (item.type==0){
+                                        /*Item old = data.getEquipment().getType0();
+                                        data.getItems().add(old);
+                                        data.getEquipment().setType0((Type0) item);
+                                        data.getItems().remove(item);*/
+                                    } else {
+                                       System.out.println("Wrong type");
+                                    }
+                                }
+                            }
+                        }
+                        break;
                     default:
                         System.out.println("unsupported: " + key + "_" + map.get(key));
                         break;
@@ -120,10 +141,10 @@ public class UserManager {
             }
 
             ServletContext.mongoUsers.changeField(token, "data", new Gson().toJson(data));
-            return true;
+            return member;
         }catch (Exception e){
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 

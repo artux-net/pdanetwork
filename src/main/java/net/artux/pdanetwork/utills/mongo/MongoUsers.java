@@ -17,6 +17,7 @@ import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.communication.model.Dialog;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -67,7 +68,7 @@ public class MongoUsers {
         document.put("group", 0);
         document.put("xp", 0);
         document.put("location","Ч-4");
-        document.put("data", "");
+        document.put("data", gson.toJson(new Data()));
         document.put("dialogs", "");
         document.put("lastModified", new Date().toString());
         document.put("registrationDate", new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date()));

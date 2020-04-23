@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.servlets;
 
 import com.google.gson.Gson;
+import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.utills.RequestReader;
@@ -45,20 +46,17 @@ public class ProfileServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String token  = req.getHeader("t");
-        StringBuilder sb = new StringBuilder();
-        String s;
-        while ((s = req.getReader().readLine()) != null) {
-            sb.append(s);
-        }
-        HashMap actions = gson.fromJson(sb.toString(), HashMap.class);
+        HashMap actions = gson.fromJson(RequestReader.getString(req), HashMap.class);
         UserManager userManager = new UserManager();
-        if (userManager.doUserActions(actions, token)){
-            resp.getWriter().print(true);
-        } else {
-            resp.getWriter().print(false);
+        Member m = userManager.doUserActions(actions, token);
+        if (m!=null){
+            resp.getWriter().print(gson.toJson(m));
+        }else {
+            resp.setStatus(500);
         }
+
 
 
     }

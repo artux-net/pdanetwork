@@ -3,8 +3,7 @@ package net.artux.pdanetwork.models.profile;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import net.artux.pdanetwork.models.profile.items.Type0;
-import net.artux.pdanetwork.models.profile.items.Type1;
+import net.artux.pdanetwork.models.profile.items.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,51 +13,19 @@ public class Equipment {
 
     @SerializedName("armor")
     @Expose
-    private Armor armor = new Armor();
+    private Item armor = new Item();
     @SerializedName("type0")
     @Expose
-    private Type0 type0 = new Type0();
+    private Item firstWeapon = new Item();
     @SerializedName("type1")
     @Expose
-    private Type1 type1 = new Type1();
+    private Item secondWeapon = new Item();
     @SerializedName("detector")
     @Expose
-    private Detector detector = new Detector();
+    private Item detector = new Item();
     @SerializedName("artifacts")
     @Expose
     private List<Object> artifacts = new ArrayList<>();
-
-    public Armor getArmor() {
-        return armor;
-    }
-
-    public void setArmor(Armor armor) {
-        this.armor = armor;
-    }
-
-    public Type0 getType0() {
-        return type0;
-    }
-
-    public void setType0(Type0 type0) {
-        this.type0 = type0;
-    }
-
-    public Type1 getType1() {
-        return type1;
-    }
-
-    public void setType1(Type1 type1) {
-        this.type1 = type1;
-    }
-
-    public Detector getDetector() {
-        return detector;
-    }
-
-    public void setDetector(Detector detector) {
-        this.detector = detector;
-    }
 
     public List<Object> getArtifacts() {
         return artifacts;

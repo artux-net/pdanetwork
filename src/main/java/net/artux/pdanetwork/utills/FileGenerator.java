@@ -3,9 +3,6 @@ package net.artux.pdanetwork.utills;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Type0;
-import net.artux.pdanetwork.models.profile.items.Type1;
-import org.json.JSONArray;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,22 +37,9 @@ public class FileGenerator {
     }
 
     public Item getItem(int id){
-        int index = 0;
         for (Item item : itemsList) {
-            if(item.id == id){
-                JSONArray jsArray = new JSONArray(commonFile);
-                switch (item.type){
-                    case 0:
-                        return gson.fromJson(jsArray.getJSONObject(index).toString(), Type0.class);
-                    case 1:
-                        return gson.fromJson(jsArray.getJSONObject(index).toString(), Type1.class);
-                    case 2:
-                        //return gson.fromJson(jsArray.getJSONObject(index).toString(), Type2.class);
-                    default:
-                        return item;
-                }
-            }
-            index++;
+            if (item.id==id)
+                return item;
         }
         return null;
     }
