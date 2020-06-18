@@ -2,6 +2,7 @@ package net.artux.pdanetwork.utills;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
+import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.Date;
 public class ServletContext implements javax.servlet.ServletContextListener {
 
     public static MongoUsers mongoUsers = new MongoUsers();
+    public static MongoMessages mongoMessages = new MongoMessages();
     public static String host;
 
     @Override
@@ -25,22 +27,24 @@ public class ServletContext implements javax.servlet.ServletContextListener {
         Socket socket = new Socket();
         try {
             socket.connect(new InetSocketAddress("google.com", 80));
-            host = socket.getLocalAddress().getHostAddress();
+            host = "192.168.0.200";
             System.out.println("Host Address: " + host);
         } catch (IOException e) {
             System.out.println("Cannot define host, start local mode");
             host = "127.0.0.1";
         }
         log("Server info: " + servletContextEvent.getServletContext().getServerInfo());
+        log("Working Directory:" + System.getProperty("user.dir"));
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         System.out.println("Servlet eliminated, please check the status.");
+        mongoUsers.close();
     }
 
-    void log(String msg){
-        System.out.println(new Date() +" Debug: "+msg);
+    private void log(String msg){
+        System.out.println(new Date() +" "+msg);
     }
 }

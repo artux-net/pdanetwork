@@ -19,6 +19,12 @@ public class Story {
     @Expose
     private State state = new State();
 
+    public Story(String[] values) {
+        this.id = Integer.parseInt(values[0]);
+        this.lastChapter = Integer.parseInt(values[1]);
+        this.lastStage = Integer.parseInt(values[2]);
+    }
+
     public Integer getId() {
         return id;
     }

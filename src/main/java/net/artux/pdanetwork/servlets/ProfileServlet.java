@@ -56,8 +56,5 @@ public class ProfileServlet extends HttpServlet {
         }else {
             resp.setStatus(500);
         }
-
-
-
     }
 }

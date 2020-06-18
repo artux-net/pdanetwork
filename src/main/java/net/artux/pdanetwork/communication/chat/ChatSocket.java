@@ -6,89 +6,58 @@ import net.artux.pdanetwork.communication.chat.configurators.ChatSocketConfigura
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.RequestReader;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Map;
 
 @ServerEndpoint(value="/chat", configurator= ChatSocketConfigurator.class)
 public class ChatSocket {
 
-    private Set<Session> userSessions = Collections.synchronizedSet(new HashSet<Session>());
+    private Gson gson = new Gson();
 
-    Gson gson = new Gson();
-    MongoUsers mongoUsers = new MongoUsers();
-
-    LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>();
+    private LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>();
 
     @OnOpen
     public void onOpen(Session userSession) throws IOException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Map<String, String> params = RequestReader.splitQuery(userSession.getQueryString());
 
         String token = params.get("t");
-        if (!mongoUsers.isBlocked(token)){
-            userSessions.add(userSession);
+        if (!ServletContext.mongoUsers.isBlocked(token)){
             userSession.getAsyncRemote().sendText(gson.toJson(lastMessages));
         } else {
-            UserMessage blockedMessage = new UserMessage();
-            blockedMessage.senderLogin = "Система";
-            blockedMessage.message = "Вы были заблокированы за нарушение правил.";
-            blockedMessage.avatarId = 30;
-            blockedMessage.pdaId = 0;
-            blockedMessage.groupId = 0;
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            blockedMessage.time = dateFormatGmt.format(new Date());
-            userSession.getAsyncRemote().sendText(gson.toJson(blockedMessage));
+            sendMessage(userSession,"Вы были заблокированы за нарушение правил.");
             userSession.close();
         }
     }
 
+    private void sendMessage(Session userSession, String msg){
+        userSession.getAsyncRemote().sendText(gson.toJson(
+                UserMessage.getSystemMessage("ru", msg)));
+    }
+
     @OnClose
     public void onClose(Session userSession) {
-        userSessions.remove(userSession);
+        userSession.getAsyncRemote();
     }
 
     @OnMessage
     public void onMessage(String message, Session userSession) throws IllegalStateException, JsonSyntaxException {
-        try {
-            UserMessage userMessage = gson.fromJson(message, UserMessage.class);
+        UserMessage userMessage = gson.fromJson(message, UserMessage.class);
+        if(!BadWordsFilter.contains(userMessage)) {
             lastMessages.add(userMessage);
-            if(!BadWordsFilter.contains(userMessage)) {
-                for (Session session : userSessions) {
-                    session.getAsyncRemote().sendText(message);
-                }
-            } else {
-                UserMessage matMessage = new UserMessage();
-                matMessage.senderLogin = "Система";
-                matMessage.message = "За мат вас могут покарать (анально)";
-                matMessage.avatarId = 30;
-                matMessage.pdaId = 0;
-                matMessage.groupId = 0;
-                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-                matMessage.time = dateFormatGmt.format(new Date());
-
-                userSession.getAsyncRemote().sendText(gson.toJson(matMessage));
-
+            for (Session session : userSession.getOpenSessions()) {
+                session.getAsyncRemote().sendText(message);
             }
-        } catch (JsonSyntaxException e){
-            System.out.println(e.getMessage());
+        } else {
+            sendMessage(userSession,"Мат в общих чатах запрещен.");
         }
     }
 
     @OnError
-    public void onError(Session session, Throwable thr) {
+    public void onError(Throwable thr) {
         thr.printStackTrace();
     }
 

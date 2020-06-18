@@ -4,38 +4,21 @@ import com.google.gson.Gson;
 import net.artux.pdanetwork.communication.chat.configurators.GroupsSocketConfigurator;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
-import net.artux.pdanetwork.utills.RequestReader;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.HashMap;
 
 @ServerEndpoint(value="/groupChat", configurator= GroupsSocketConfigurator.class)
 public class GroupsSocket {
 
-    MongoUsers mongoUsers = new MongoUsers();
-    Gson gson = new Gson();
-    HashMap <Integer, List<Session>> userSessions = getUserSessions();  
+    private Gson gson = new Gson();
 
-    private HashMap<Integer, List<Session>> getUserSessions() {
-        userSessions = new HashMap<>();
+    private HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = getLastMessages();
 
-        userSessions.put(1, new ArrayList<>());
-        userSessions.put(2, new ArrayList<>());
-        userSessions.put(3, new ArrayList<>());
-        userSessions.put(4, new ArrayList<>());
-        userSessions.put(5, new ArrayList<>());
-        userSessions.put(6, new ArrayList<>());
-
-        return userSessions;
-    }
-
-    HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = getLastMessages();
-
-    public HashMap<Integer, LimitedArrayList<UserMessage>> getLastMessages() {
+    private HashMap<Integer, LimitedArrayList<UserMessage>> getLastMessages() {
         lastMessages = new HashMap<>();
 
         lastMessages.put(1, new LimitedArrayList<>());
@@ -49,77 +32,34 @@ public class GroupsSocket {
     }
 
     @OnOpen
-    public void onOpen(Session userSession) throws IOException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            userSession.getAsyncRemote().sendText("You have not connected to socket");
-            userSession.close();
-        }
+    public void onOpen(Session userSession, EndpointConfig config) throws IOException {
+        String token = (String) config.getUserProperties().get("t");
+        int group = ServletContext.mongoUsers.getByToken(token).getGroup();
 
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-
-
-
-        if(!Objects.isNull(params.get("group"))){
-            int group = Integer.parseInt(params.get("group"));
-            if(group != 0){
-                userSessions.get(group).add(userSession);
-                userSession.getAsyncRemote().sendText(gson.toJson(lastMessages.get(group)));
-            }
+        if(group != 0){
+            userSession.getUserProperties().put("group", group);
+            userSession.getAsyncRemote().sendText(gson.toJson(lastMessages.get(group)));
         } else {
-            UserMessage userMessage = new UserMessage();
-            userMessage.senderLogin = "Система";
-            userMessage.message = "Ваш ПДА не подключен ни к одной из групп";
-            userMessage.avatarId = 30;
-            userMessage.pdaId = 0;
-            userMessage.groupId = 0;
-
-            userSession.getAsyncRemote().sendText(gson.toJson(userMessage));
-            try {
-                userSession.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            userSession.getAsyncRemote()
+                    .sendText(gson.toJson(UserMessage
+                            .getSystemMessage("ru","Ваш PDA не подключен ни к одной из групп")));
+            userSession.close();
         }
     }
 
     @OnClose
-    public void onClose(Session userSession) throws UnsupportedEncodingException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onClose(Session userSession){
 
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-        int groupId = Integer.parseInt(params.get("group"));
-
-        userSessions.get(groupId).remove(userSession);
     }
 
     @OnMessage
-    public void onMessage(String message, Session userSession) throws UnsupportedEncodingException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onMessage(String message, Session userSession) {
+        int group = (Integer) userSession.getUserProperties().get("group");
+        lastMessages.get(group).add(gson.fromJson(message, UserMessage.class));
 
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-        int group = Integer.parseInt(params.get("group"));
-
-        UserMessage userMessage = gson.fromJson(message, UserMessage.class);
-        lastMessages.get(group).add(userMessage);
-
-        for (Session session : userSessions.get(group)){
-            session.getAsyncRemote().sendText(message);
+        for (Session session : userSession.getOpenSessions()){
+            if ((int)session.getUserProperties().get("group")==group)
+                session.getAsyncRemote().sendText(message);
         }
     }
 

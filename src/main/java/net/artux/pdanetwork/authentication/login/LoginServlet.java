@@ -6,7 +6,7 @@ import net.artux.pdanetwork.authentication.UpdateData;
 import net.artux.pdanetwork.authentication.login.model.LoginUser;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import org.bson.conversions.Bson;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,21 +15,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.mongodb.client.model.Updates.set;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
     private Gson gson = new Gson();
-    private MongoUsers users;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        users = new MongoUsers();
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         /*
             авторизация, получение токена
          */
@@ -51,9 +53,10 @@ public class LoginServlet extends HttpServlet {
         /*
             обновление информации профиля с сервера
          */
+
         String token = req.getHeader("t");
         if (token!=null){
-            Member member = users.getByToken(token);
+            Member member = ServletContext.mongoUsers.getByToken(token);
             resp.setContentType("application/json;");
             resp.setCharacterEncoding("UTF-8");
             resp.getWriter().println(gson.toJson(member));
@@ -67,7 +70,12 @@ public class LoginServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String token  = req.getHeader("t");
         UpdateData updateData = gson.fromJson(RequestReader.getString(req), UpdateData.class);
-        users.updateMember(token, updateData);
+
+        List<Bson> listSets = new ArrayList<>();
+        for (String key : updateData.values.keySet()) {
+            listSets.add(set(key, updateData.values.get(key)));
+        }
+        ServletContext.mongoUsers.changeFields(token, listSets);
 
         resp.getWriter().println("ok");
     }
@@ -76,6 +84,5 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void destroy() {
         super.destroy();
-        users.close();
     }
 }

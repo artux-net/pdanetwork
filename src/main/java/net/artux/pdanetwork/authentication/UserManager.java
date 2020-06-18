@@ -2,15 +2,19 @@ package net.artux.pdanetwork.authentication;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.models.profile.Story;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.utills.FileGenerator;
 import net.artux.pdanetwork.utills.ServletContext;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class UserManager {
+
+    private Gson gson = new Gson();
 
     private static boolean isInteger(String str) {
         if (str == null) {
@@ -40,8 +44,9 @@ public class UserManager {
         FileGenerator fileGenerator = new FileGenerator();
 
         Member member = ServletContext.mongoUsers.getByToken(token);
-        Data data = member.getData();
+        if (member!=null)
         try {
+            Data data = member.getData(gson);
             for (String key : map.keySet()) {
                 switch (key) {
                     case "add":
@@ -119,18 +124,35 @@ public class UserManager {
                     case "set":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            if (vals[0].equals("type0"))
-                            for (Item item : data.getItems()){
-                                if (item.id == Integer.parseInt(vals[1])){
-                                    if (item.type==0){
-                                        /*Item old = data.getEquipment().getType0();
-                                        data.getItems().add(old);
-                                        data.getEquipment().setType0((Type0) item);
-                                        data.getItems().remove(item);*/
-                                    } else {
-                                       System.out.println("Wrong type");
+                            if (vals.length==2) {
+                                if (vals[0].equals("type0"))
+                                    for (Item item : data.getItems()) {
+                                        if (item.id == Integer.parseInt(vals[1])) {
+                                            if (item.type == 0) {
+                                                /*Item old = data.getEquipment().getType0();
+                                                data.getItems().add(old);
+                                                data.getEquipment().setType0((Type0) item);
+                                                data.getItems().remove(item);*/
+                                            } else {
+                                                System.out.println("Wrong type");
+                                            }
+                                        }
+                                    }
+                            } else if (vals.length==4)
+                            if (vals[0].equals("story")){
+                                boolean found = false;
+                                for (Story story : data.getStories()){
+                                    if(story.getId() == Integer.parseInt(vals[1])){
+                                        found = true;
+                                        story.setLastChapter(Integer.parseInt(vals[2]));
+                                        story.setLastStage(Integer.parseInt(vals[3]));
                                     }
                                 }
+                                if (!found){
+                                    Story  story = new Story(Arrays.copyOfRange(vals, 1, 4));
+                                    data.getStories().add(story);
+                                }
+                                data.getTemp().put("currentStory", vals[1]);
                             }
                         }
                         break;
@@ -141,11 +163,13 @@ public class UserManager {
             }
 
             ServletContext.mongoUsers.changeField(token, "data", new Gson().toJson(data));
+            member.setData(new Gson().toJson(data));
             return member;
         }catch (Exception e){
             e.printStackTrace();
             return null;
         }
+        else return null;
     }
 
 }

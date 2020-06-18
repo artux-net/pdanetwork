@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import net.artux.pdanetwork.models.profile.items.Item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Data {
@@ -22,6 +23,9 @@ public class Data {
     @SerializedName("stories")
     @Expose
     private List<Story> stories = new ArrayList<>();
+    @SerializedName("temp")
+    @Expose
+    private HashMap<String, String> temp = new HashMap<>();
     @SerializedName("params")
     @Expose
     public Params params = new Params();
@@ -40,6 +44,10 @@ public class Data {
 
     public List<Story> getStories() {
         return stories;
+    }
+
+    public HashMap<String, String> getTemp() {
+        return temp;
     }
 
     public void setStories(List<Story> stories) {

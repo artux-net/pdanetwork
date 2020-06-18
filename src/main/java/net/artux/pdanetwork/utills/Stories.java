@@ -6,13 +6,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class StageKeeper {
+public class Stories {
 
     public static String getChapter(int story, int chapter) throws Exception{
-        return readFile( "stories" + "/story_"+ story + "/chapter_" + chapter + ".cqe", StandardCharsets.UTF_8);
+        return readFile( "/data/pdanetwork/stories" + "/story_"+ story + "/chapter_" + chapter + ".cqe", StandardCharsets.UTF_8);
     }
 
-    static String readFile(String path, Charset encoding)
+    public static String getStories() throws Exception{
+        return readFile( "/data/pdanetwork/stories/info", StandardCharsets.UTF_8);
+    }
+
+    private static String readFile(String path, Charset encoding)
             throws IOException
     {
         byte[] encoded = Files.readAllBytes(Paths.get(path));

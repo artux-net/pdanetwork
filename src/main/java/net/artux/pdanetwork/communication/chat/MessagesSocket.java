@@ -1,125 +1,93 @@
 package net.artux.pdanetwork.communication.chat;
 
 
-import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import net.artux.pdanetwork.communication.chat.configurators.MessagesConfigurator;
-import net.artux.pdanetwork.communication.model.UserMessage;
+import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.RequestReader;
-import net.artux.pdanetwork.utills.mongo.MongoMessages;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
-import org.bson.Document;
+import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ServerEndpoint(value="/dialog", configurator= MessagesConfigurator.class)
 public class MessagesSocket {
 
-    private HashMap<Integer, Session> userSessions = new HashMap<>();
+    private HashMap<Integer, List<Session>> conversations = new HashMap<>();
 
-    MongoMessages mongoMessages = new MongoMessages();
-    MongoUsers mongoUsers = new MongoUsers();
-    Gson gson = new Gson();
+    private MongoMessages mongoMessages = new MongoMessages();
 
     @OnOpen
-    public void onOpen(Session userSession) throws UnsupportedEncodingException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onOpen(Session userSession, EndpointConfig config) throws IOException {
+        Map<String, String> params = RequestReader.splitQuery(userSession.getQueryString());
 
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-        int toPdaId = Integer.parseInt(params.get("toPdaId"));
+        String token = (String) config.getUserProperties().get("t");
+        int pdaId = ServletContext.mongoUsers.getPdaIdByToken(token);
 
-        userSessions.put(pdaId,userSession);
+        userSession.getUserProperties().put("t", token);
+        userSession.getUserProperties().put("pda", pdaId);
+        int conversationId;
+        if (params.containsKey("to")){
+            int toPdaId = Integer.parseInt(params.get("to"));
+            //TODO: id doesn't exists
+            int id = mongoMessages.getDialogID(pdaId, toPdaId);
+            if (id == 0){
+                conversationId = mongoMessages.newConversation(pdaId, toPdaId);
+                addToConversation(conversationId, userSession);
+            } else {
+                conversationId = id;
+                addToConversation(conversationId, userSession);
 
-
-        Block<Document> printBlock = document -> {
-            try {
-                userSession.getBasicRemote().sendText(document.toJson());
-            } catch (IOException e) {
-                e.printStackTrace();
+                mongoMessages.sendLastMessages(conversationId, userSession);
             }
-        };
+        }else if (params.containsKey("c")){
+            conversationId = Integer.parseInt(params.get("c"));
+            if (mongoMessages.hasConversation(conversationId)
+                    && mongoMessages.conversationHas(conversationId,pdaId)){
+                addToConversation(conversationId, userSession);
+                mongoMessages.sendLastMessages(conversationId, userSession);
+            } else {
+                CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
+                userSession.close(closeReason);
+            }
+        } else {
+            CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
+            userSession.close(closeReason);
+        }
+    }
 
-        mongoMessages.getDialogCollection(mongoMessages.getDialogName(pdaId, toPdaId)).find().sort(new BasicDBObject()).limit(30).forEach(printBlock);
+    private void addToConversation(int conversationId, Session session){
+        if (!conversations.containsKey(conversationId)) {
+            List<Session> sessions = new ArrayList<>();
+            sessions.add(session);
+            conversations.put(conversationId, sessions);
+        }else {
+            conversations.get(conversationId).add(session);
+        }
+        session.getUserProperties().put("conversation", conversationId);
     }
 
     @OnClose
-    public void onClose(Session userSession) throws UnsupportedEncodingException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onClose(Session userSession) {
+        int conversation = (int) userSession.getUserProperties().get("conversation");
 
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-        int toPdaId = Integer.parseInt(params.get("toPdaId"));
-        String dialogName = mongoMessages.getDialogName(pdaId,toPdaId);
-
-
-        userSessions.remove(pdaId, userSession);
+        conversations.get(conversation).remove(userSession);
+        if (conversations.get(conversation).size()==0)
+            conversations.remove(conversation);
     }
 
     @OnMessage
-    public void onMessage(String message, Session userSession) throws UnsupportedEncodingException {
-        Map<String, String> params = null;
-        try {
-            params = RequestReader.splitQuery(userSession.getQueryString());
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void onMessage(String message, Session userSession) {
+        int conversation = (int) userSession.getUserProperties().get("conversation");
+
+        for (Session session : conversations.get(conversation)){
+            session.getAsyncRemote().sendText(message);
         }
-
-        String token = params.get("t");
-        int pdaId = mongoUsers.getPdaIdByToken(token);
-        int toPdaId = Integer.parseInt(params.get("toPdaId"));
-        String dialogName = mongoMessages.getDialogName(pdaId,toPdaId);
-
-        if(mongoUsers.userExists(toPdaId)) {
-
-            if (userSessions.get(toPdaId) != null) {
-                userSessions.get(toPdaId).getAsyncRemote().sendText(message);
-            }
-
-            userSession.getAsyncRemote().sendText(message);
-
-            if (!mongoMessages.dialogExists(dialogName)) {
-                mongoMessages.createDialog(dialogName);
-                mongoUsers.addDialogByToken(token, toPdaId, dialogName, gson.fromJson(message, UserMessage.class).message);
-                System.out.println("new dialog " + dialogName);
-            } else {
-                System.out.println("dialog upd");
-                mongoUsers.upDialog(token, toPdaId, dialogName, gson.fromJson(message, UserMessage.class).message);
-            }
-
-            mongoMessages.getDialogCollection(dialogName).insertOne(Document.parse(message));
-        } else {
-
-            Gson gson = new Gson();
-            UserMessage userMessage = new UserMessage();
-            userMessage.senderLogin = "Система";
-            userMessage.message = "Данного PDA ID не существует!";
-            userMessage.avatarId = 30;
-            userMessage.pdaId = 0;
-            userMessage.groupId = 0;
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            userMessage.time = dateFormatGmt.format(new Date());
-
-            userSession.getAsyncRemote().sendText(gson.toJson(userMessage));
-        }
+        mongoMessages.updateConversation(conversation, message);
     }
 
     @OnError

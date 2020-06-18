@@ -21,7 +21,7 @@ public class FileGenerator {
 
     public FileGenerator() {
         try {
-            commonFile = readFile("base/items/common", StandardCharsets.UTF_8);
+            commonFile = readFile("/data/pdanetwork/base/items/common", StandardCharsets.UTF_8);
             Type itemsListType = new TypeToken<List<Item>>() {}.getType();
             itemsList = gson.fromJson(commonFile, itemsListType);
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class FileGenerator {
     public static class Icons{
 
         public static File getIcon(String name){
-            return new File("base/items/icons/" + name);
+            return new File("/data/pdanetwork/base/items/icons/" + name);
         }
 
     }
@@ -55,7 +55,7 @@ public class FileGenerator {
     public static class Articles{
 
         public static String getArticle(String id) throws IOException {
-            return readFile("base/enc/" + id + ".html", StandardCharsets.UTF_8);
+            return readFile("/data/pdanetwork/base/enc/" + id + ".html", StandardCharsets.UTF_8);
         }
 
     }

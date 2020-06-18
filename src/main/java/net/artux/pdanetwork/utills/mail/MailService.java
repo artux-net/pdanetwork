@@ -23,8 +23,8 @@ public class MailService {
 
     static {
         try {
-            mailTemplateReg = readFile("mail-template-reg.html");
-            mailTemplateCon = readFile("mail-template-con.html");
+            mailTemplateReg = readFile("data/pdanetwork/mail/mail-template-reg.html");
+            mailTemplateCon = readFile("data/pdanetwork/mail/mail-template-con.html");
         } catch (IOException e) {
             System.out.println("Can not find template files.");
             System.out.println("Error message: " + e.getMessage());
@@ -48,7 +48,7 @@ public class MailService {
                 });
     }
 
-    public void sendOldPassword(Member user) throws MessagingException {
+    public void sendOldPassword(Member user) {
             /*Message message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress("Сталкерский ПДА <"+email+">"));
@@ -84,7 +84,7 @@ public class MailService {
                 InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
         message.setSubject("Подтвердите регистацию");
         message.setContent(mailTemplateCon.replace("link" ,
-                "http://"+ ServletContext.host + ":8080/register?t=" + token),
+                "http://"+ ServletContext.host + "/register?t=" + token),
                 "text/html; charset=utf-8");
 
         return sendMessage(message);
@@ -101,7 +101,7 @@ public class MailService {
         }
     }
 
-    static String readFile(String path) throws IOException {
+    private static String readFile(String path) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, StandardCharsets.UTF_8);
     }

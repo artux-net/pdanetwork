@@ -1,23 +1,14 @@
 package tests;
 
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
-import net.artux.pdanetwork.utills.Security;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import net.artux.pdanetwork.communication.utilities.MongoMessages;
 
 public class MainTest {
 
-    static int s = 2;
 
     public static void main(String[] args)  {
-        String registerToken = Security.encrypt("Prisoner");
-        System.out.println(registerToken);
-        registerToken = Security.encrypt("Prisone");
-        System.out.println(registerToken);
-    }
-
-    private static void testMongoUsers(){
-        MongoUsers m = new MongoUsers();
-        m.add(new RegisterUser("","", "", "", "2"));
+        MongoMessages mongoMessages = new MongoMessages();
+        //mongoMessages.newConversation(1, new ArrayList<>(Collections.singletonList(2)));
+        System.out.println(mongoMessages.getDialogID(3,2));
     }
 
 }

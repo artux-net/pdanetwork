@@ -2,11 +2,8 @@ package net.artux.pdanetwork.frontend.adminpanel;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.communication.model.UserMessage;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
+import net.artux.pdanetwork.utills.ServletContext;
+import okhttp3.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,13 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 
 @WebServlet(name = "AdminController", urlPatterns = "/admin")
 public class AdminController extends HttpServlet {
 
     Gson mGson = new Gson();
-    MongoUsers mongoUsers = new MongoUsers();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -40,14 +39,14 @@ public class AdminController extends HttpServlet {
 
     }
 
-    void makePage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void makePage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setPage(request, response);
 
         OkHttpClient client;
         WebSocket ws;
 
-        /*client = new OkHttpClient();
-        Request request1 = new Request.Builder().url("ws://" + "localhost:8080" + "/chat"
+        client = new OkHttpClient();
+        Request request1 = new Request.Builder().url("ws://" + ServletContext.host + ":8080" + "/chat"
                 + "?t=" + request.getSession().getAttribute("token"))
                 .build();
 
@@ -64,7 +63,7 @@ public class AdminController extends HttpServlet {
         userMessage.groupId = 1;
 
 
-        client.dispatcher().executorService().shutdown();*/
+        client.dispatcher().executorService().shutdown();
     }
 
     @Override
@@ -73,7 +72,7 @@ public class AdminController extends HttpServlet {
 
     }
 
-    List<UserMessage> chatList = new ArrayList<>();
+    private List<UserMessage> chatList = new ArrayList<>();
 
     private void newMessage(String text, HttpServletRequest httpServletRequest){
         UserMessage userMessage = mGson.fromJson(text, UserMessage.class);
