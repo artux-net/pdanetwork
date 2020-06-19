@@ -66,6 +66,8 @@ public class MongoUsers {
         document.put("location","Ч-4");
         document.put("data", gson.toJson(new Data()));
         document.put("dialogs", new ArrayList<Integer>());
+        document.put("friends", new ArrayList<Integer>());
+        document.put("friendRequests", new ArrayList<Integer>());
         document.put("lastModified", new Date().toString());
         document.put("registrationDate", new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date()));
         document.put("lastLoginAt", new Date());
@@ -89,11 +91,7 @@ public class MongoUsers {
     }
 
     public boolean isBlocked(String token){
-        Document query = new Document();
-
-        query.put("token", token);
-
-        Document result = table.find(query).first();
+        Document result = getDocument("token", token);
 
         if(result!=null) {
             int blocked = result.getInteger("blocked");
@@ -102,10 +100,7 @@ public class MongoUsers {
     }
 
     public Member getByToken(String token){
-        Document query = new Document();
-        query.put("token", token);
-
-        Document result = table.find(query).first();
+        Document result = getDocument("token", token);
 
         if(result!=null) {
             Member user = gson.fromJson(result.toJson(), Member.class);
@@ -119,10 +114,7 @@ public class MongoUsers {
     }
 
     public int getPdaIdByToken(String token){
-        Document query = new Document();
-        query.put("token", token);
-
-        Document result = table.find(query).first();
+        Document result = getDocument("token", token);
         //TODO if 0 then... What?
         if (result!=null)
             return result.getInteger("pdaId");
@@ -131,23 +123,13 @@ public class MongoUsers {
     }
 
     public Member getEmailUser(String loginOrEmail){
-        Document query = new Document();
-
-        // задаем поле и значение поля по которому будем искать
-        query.put("login", loginOrEmail);
-
-        // осуществляем поиск
-        Document element = table.find(query).first();
-
+        Document element = getDocument("login", loginOrEmail);
         if (element!=null) {
             return gson.fromJson(element.toJson(), Member.class);
         }
 
-        query.clear();
-        query.put("email", loginOrEmail);
+        element = getDocument("email", loginOrEmail);
 
-        // осуществляем поиск
-        element = table.find(query).first();
         if (element!=null){
             return gson.fromJson(element.toJson(), Member.class);
         }
@@ -156,11 +138,7 @@ public class MongoUsers {
     }
 
     public Profile getProfileByPdaId(int pdaId){
-        Document query = new Document();
-
-        query.put("pdaId", pdaId);
-
-        Document element = table.find(query).first();
+        Document element = getDocument("pdaId", pdaId);
 
         if (element!=null) {
             return gson.fromJson(element.toJson(), Member.class).getProfile();
@@ -199,21 +177,15 @@ public class MongoUsers {
     }
 
     public Status checkUser(String login, String email){
-        Document query = new Document();
 
         if (login!=null) {
-            query.put("login", login);
-
-            if (table.find(query).first() != null) {
+            if (getDocument("login", login) != null) {
                 return new Status(false, "Пользователь с таким логином уже существует.");
             }
-            query.clear();
         }
 
         if (email!=null) {
-            query.put("email", email);
-
-            if (table.find(query).first() != null) {
+            if (getDocument("email", email) != null) {
                 return new Status(false,"Пользователь с таким e-mail уже существует.");
             }
         }
@@ -222,18 +194,12 @@ public class MongoUsers {
     }
 
     public Status tryLogin(String emailOrLogin, String password){
-        Document query = new Document();
-        query.put("login", emailOrLogin);
-
-        Document element = table.find(query).first();
+        Document element = getDocument("login", emailOrLogin);
 
         if(element!=null){
           return checkPassword(element,password);
         } else {
-            query.clear();
-            query.put("email",emailOrLogin);
-
-            element = table.find(query).first();
+            element = getDocument("email", emailOrLogin);
 
             if (element!=null){
                 return checkPassword(element,password);
@@ -244,19 +210,12 @@ public class MongoUsers {
     }
 
     public Status tryAdminLogin(String emailOrLogin, String password){
-        Document query = new Document();
-
-        query.put("login", emailOrLogin);
-
-        Document element = table.find(query).first();
+        Document element = getDocument("login", emailOrLogin);
 
         if(element!=null){
             return getLoginAdminStatus(password, element);
         } else {
-            query.clear();
-            query.put("email",emailOrLogin);
-
-            element = table.find(query).first();
+            element = getDocument("email", emailOrLogin);
 
             if (element!=null){
                 return getLoginAdminStatus(password, element);
@@ -280,6 +239,10 @@ public class MongoUsers {
         } else {
             return new Status(false, "Wrong password");
         }
+    }
+
+    public void addFriend(String token, int id){
+
     }
 
     /*public void upDialog(int pdaId, String dialogName, int type, String lastMessage){
@@ -312,6 +275,13 @@ public class MongoUsers {
                     set("dialogs",gson.toJson(dialogs)));
         }
     }*/
+
+    private Document getDocument(String field, Object value){
+        Document query = new Document();
+        query.put(field, value);
+
+        return table.find(query).first();
+    }
 
     public UpdateResult changeField(String token, String field, String newValue){
         return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));
