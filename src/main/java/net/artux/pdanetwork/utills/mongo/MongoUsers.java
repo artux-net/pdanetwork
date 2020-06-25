@@ -241,8 +241,57 @@ public class MongoUsers {
         }
     }
 
-    public void addFriend(String token, int id){
+    public void friendRequest(String token, int id){
+        Document user = getDocument("token", token);
+        Document newFriend = getDocument("pdaId", id);
 
+        ArrayList<Integer> friends = user.get("friends", new ArrayList<>());
+        friends.add(newFriend.get("pdaId", Integer.class));
+        changeField((String) user.get("token"), "friends", friends);
+
+        int pda = user.get("pdaId", Integer.class);
+
+        ArrayList<Integer> requests = newFriend.get("friendRequests", new ArrayList<>());
+        requests.add(pda);
+        changeField((String) newFriend.get("token"), "friendRequests", requests);
+    }
+
+    public ArrayList<Integer> getFriends(String token){
+        Document user = getDocument("token", token);
+        return user.get("friends", new ArrayList<>());
+    }
+
+    public ArrayList<Integer> getFriendRequests(String token){
+        Document user = getDocument("token", token);
+        return user.get("friendRequests", new ArrayList<>());
+    }
+
+    public boolean addFriend(String token, int id){
+        Document user = getDocument("token", token);
+        List<Integer> requests = user.get("friendRequests", new ArrayList<>());
+        if(requests.contains(id)){
+            requests.remove(id);
+            List<Integer> friends = user.get("friends", new ArrayList<>());
+            if (!friends.contains(id)) {
+                friends.add(id);
+
+                changeField((String) user.get("token"), "friendRequests", requests);
+                changeField((String) user.get("token"), "friends", friends);
+            }
+            return true;
+        }else
+            return false;
+    }
+
+    public boolean removeFriend(String token, int id){
+        Document user = getDocument("token", token);
+        List<Integer> friends = user.get("friends", new ArrayList<>());
+        if(friends.contains(id)){
+            friends.remove(id);
+            changeField((String) user.get("token"), "friends", friends);
+            return true;
+        }else
+            return false;
     }
 
     /*public void upDialog(int pdaId, String dialogName, int type, String lastMessage){
@@ -283,7 +332,7 @@ public class MongoUsers {
         return table.find(query).first();
     }
 
-    public UpdateResult changeField(String token, String field, String newValue){
+    public UpdateResult changeField(String token, String field, Object newValue){
         return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));
     }
 

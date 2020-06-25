@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/user")
+@WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 
     private MongoUsers mongoUsers;

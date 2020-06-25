@@ -21,6 +21,8 @@ public class Member {
     private String location;
     private String data;
     private List<Integer> dialogs;
+    private List<Integer> friends;
+    private List<Integer> friendRequests;
     private String lastModified;
     private String registrationDate;
 
@@ -51,7 +53,8 @@ public class Member {
     public Profile getProfile(){
 
         return new Profile(login, name, admin, blocked,
-                group, avatar, pdaId, xp, location, registrationDate, data);
+                group, avatar, pdaId, xp, location, registrationDate, data,
+                friends, friendRequests);
     }
 
     public int getPdaId() {

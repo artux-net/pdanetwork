@@ -1,5 +1,7 @@
 package net.artux.pdanetwork.models;
 
+import java.util.List;
+
 public class Profile {
 
     private String login;
@@ -13,10 +15,11 @@ public class Profile {
     private String location;
     private String registrationDate;
     private String data;
+    private List<Integer> friends;
+    private List<Integer> requests;
 
-    public Profile(String login, String name, byte admin, byte blocked,
-                   int group, String avatar, int pdaId, int rang, String location,
-                   String registrationDate, String profileJson) {
+    public Profile(String login, String name, byte admin, byte blocked, int group, String avatar, int pdaId, int xp,
+                   String location, String registrationDate, String data, List<Integer> friends, List<Integer> requests) {
         this.login = login;
         this.name = name;
         this.admin = admin;
@@ -24,10 +27,20 @@ public class Profile {
         this.group = group;
         this.avatar = avatar;
         this.pdaId = pdaId;
-        this.xp = rang;
+        this.xp = xp;
         this.location = location;
         this.registrationDate = registrationDate;
-        this.data = profileJson;
+        this.data = data;
+        this.friends = friends;
+        this.requests = requests;
+    }
+
+    public List<Integer> getFriends() {
+        return friends;
+    }
+
+    public List<Integer> getRequests() {
+        return requests;
     }
 
     public String getLogin() {
