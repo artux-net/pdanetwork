@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.communication.model;
 
-import java.util.Collections;
 import java.util.List;
 
 public class Conversation {
@@ -15,8 +14,6 @@ public class Conversation {
         this.id = id;
         this.owners = owners;
         this.members = members;
-        this.members.addAll(owners);
-        Collections.sort(members);
     }
 
     public boolean has(int id){

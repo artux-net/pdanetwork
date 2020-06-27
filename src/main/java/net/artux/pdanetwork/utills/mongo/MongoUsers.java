@@ -103,6 +103,7 @@ public class MongoUsers {
         Document result = getDocument("token", token);
 
         if(result!=null) {
+            System.out.println(result.toJson());
             Member user = gson.fromJson(result.toJson(), Member.class);
 
             table.updateOne(

@@ -14,7 +14,7 @@ public class DialogResponse {
         this.title = profile.getLogin() + "PDA #" + profile.getPdaId();
         this.type = 0;
         this.lastMessage = conversation.lastMessage;
-        this.id = conversation.id;
+        this.id = profile.getPdaId();
         this.avatar = profile.getAvatar();
     }
 

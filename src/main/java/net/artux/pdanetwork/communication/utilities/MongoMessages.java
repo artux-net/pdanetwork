@@ -13,7 +13,6 @@ import org.bson.Document;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,21 +70,34 @@ public class MongoMessages {
 
     public boolean conversationHas(int id, int pda){
         Document document = conversations.find().sort(new Document("id", id)).first();
-        List<Integer> ids = (List<Integer>) document.get("members");
-        return ids.contains(pda);
+        if (document != null) {
+            List<Integer> ids = document.get("members", new ArrayList<>());
+            return ids.contains(pda);
+        } else return false;
     }
 
     public int getDialogID(int pda1, int pda2){
-        List<Integer> members = Arrays.asList(pda1, pda2);
-        Collections.sort(members);
+        List<Integer> members = Collections.singletonList(pda1);
+        List<Integer> owners = Collections.singletonList(pda2);
         Document query = new Document();
         query.put("members", members);
+        query.put("owners", owners);
         Document document = conversations.find(query).first();
 
         if (document!=null)
             return document.getInteger("id");
-        else
-            return 0;
+        else {
+            members = Collections.singletonList(pda2);
+            owners = Collections.singletonList(pda1);
+            query.clear();
+            query.put("members", members);
+            query.put("owners", owners);
+            document = conversations.find(query).first();
+            if (document != null)
+                return document.getInteger("id");
+            else
+                return 0;
+        }
     }
 
     public void sendLastMessages(int id, Session session){

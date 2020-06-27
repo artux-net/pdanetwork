@@ -39,11 +39,17 @@ public class DialogsServlet extends HttpServlet {
         for (int id : dialogs){
             Conversation conversation = ServletContext.mongoMessages.getConversation(id);
 
+            System.out.println(gson.toJson(conversation));
+
             if(conversation.getMembers().size()<=2){
-                Profile profile = ServletContext.mongoUsers.getProfileByPdaId(getAnotherId(conversation.getMembers(), pda));
+                int anotherId = getAnotherId(conversation.getMembers(), pda);
+                System.out.println(anotherId);
+                Profile profile = ServletContext.mongoUsers.getProfileByPdaId(anotherId);
                 response.add(new DialogResponse(conversation, profile));
+                System.out.println(111);
             } else {
                 response.add(new DialogResponse(conversation));
+                System.out.println(222);
             }
         }
         return response;

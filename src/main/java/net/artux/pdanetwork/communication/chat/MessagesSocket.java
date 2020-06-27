@@ -5,6 +5,7 @@ import net.artux.pdanetwork.communication.chat.configurators.MessagesConfigurato
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
+import org.bson.Document;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -88,6 +89,7 @@ public class MessagesSocket {
             session.getAsyncRemote().sendText(message);
         }
         mongoMessages.updateConversation(conversation, message);
+        mongoMessages.getConversationCollection(conversation).insertOne(Document.parse(message));
     }
 
     @OnError

@@ -7,8 +7,6 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.utills.mail.MailService;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
-import javax.mail.MessagingException;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,24 +21,18 @@ public class ResetServlet extends HttpServlet {
     private MailService mailService = new MailService();
 
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String loginOrEmail = httpServletRequest.getHeader("q");
 
         Member user = mongoUsers.getEmailUser(loginOrEmail);
         Status status;
 
         if (user != null) {
-            try {
-                mailService.sendOldPassword(user);
+            mailService.sendOldPassword(user);
 
-                httpServletResponse.setContentType("application/json");
-                httpServletResponse.setCharacterEncoding("UTF-8");
-                httpServletResponse.getWriter().println(gson.toJson(new Status(true, "Мы отправили письмо с паролем на Вашу почту")));
-            } catch (MessagingException e) {
-                httpServletResponse.setContentType("application/json; charset=UTF-8");
-                httpServletResponse.setCharacterEncoding("UTF-8");
-                httpServletResponse.getWriter().println(gson.toJson(new Status(false, "Данного email не существует, попробуйте зарегистрироваться")));
-            }
+            httpServletResponse.setContentType("application/json");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.getWriter().println(gson.toJson(new Status(true, "Мы отправили письмо с паролем на Вашу почту")));
         } else {
             httpServletResponse.setContentType("application/json; charset=UTF-8");
             httpServletResponse.setCharacterEncoding("UTF-8");
