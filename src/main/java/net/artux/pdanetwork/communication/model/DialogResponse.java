@@ -11,10 +11,10 @@ public class DialogResponse {
     private String avatar;
 
     public DialogResponse(Conversation conversation, Profile profile) {
-        this.title = profile.getLogin() + "PDA #" + profile.getPdaId();
+        this.title = profile.getLogin() + " PDA #" + profile.getPdaId();
         this.type = 0;
         this.lastMessage = conversation.lastMessage;
-        this.id = profile.getPdaId();
+        this.id = conversation.id;
         this.avatar = profile.getAvatar();
     }
 

@@ -24,6 +24,7 @@ public class MessagesSocket {
 
     @OnOpen
     public void onOpen(Session userSession, EndpointConfig config) throws IOException {
+        System.out.println("Opened session: " + userSession.getId());
         Map<String, String> params = RequestReader.splitQuery(userSession.getQueryString());
 
         String token = (String) config.getUserProperties().get("t");
@@ -31,26 +32,11 @@ public class MessagesSocket {
 
         userSession.getUserProperties().put("t", token);
         userSession.getUserProperties().put("pda", pdaId);
-        int conversationId;
-        if (params.containsKey("to")){
-            int toPdaId = Integer.parseInt(params.get("to"));
-            //TODO: id doesn't exists
-            int id = mongoMessages.getDialogID(pdaId, toPdaId);
-            if (id == 0){
-                conversationId = mongoMessages.newConversation(pdaId, toPdaId);
-                addToConversation(conversationId, userSession);
-            } else {
-                conversationId = id;
-                addToConversation(conversationId, userSession);
-
-                mongoMessages.sendLastMessages(conversationId, userSession);
-            }
-        }else if (params.containsKey("c")){
-            conversationId = Integer.parseInt(params.get("c"));
+        if (params.containsKey("c")) {
+            int conversationId = Integer.parseInt(params.get("c"));
             if (mongoMessages.hasConversation(conversationId)
-                    && mongoMessages.conversationHas(conversationId,pdaId)){
+                    && mongoMessages.conversationHas(conversationId, pdaId)) {
                 addToConversation(conversationId, userSession);
-                mongoMessages.sendLastMessages(conversationId, userSession);
             } else {
                 CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
                 userSession.close(closeReason);
@@ -70,15 +56,20 @@ public class MessagesSocket {
             conversations.get(conversationId).add(session);
         }
         session.getUserProperties().put("conversation", conversationId);
+
+        mongoMessages.sendLastMessages(conversationId, session);
     }
 
     @OnClose
     public void onClose(Session userSession) {
-        int conversation = (int) userSession.getUserProperties().get("conversation");
+        if (userSession.getUserProperties().get("conversation") != null) {
+            int conversation = (int) userSession.getUserProperties().get("conversation");
 
-        conversations.get(conversation).remove(userSession);
-        if (conversations.get(conversation).size()==0)
-            conversations.remove(conversation);
+            conversations.get(conversation).remove(userSession);
+            if (conversations.get(conversation).size() == 0)
+                conversations.remove(conversation);
+        }
+        System.out.println("Closed session: " + userSession.getId());
     }
 
     @OnMessage

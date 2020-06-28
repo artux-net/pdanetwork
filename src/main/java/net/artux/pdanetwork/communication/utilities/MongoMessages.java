@@ -69,10 +69,16 @@ public class MongoMessages {
     }
 
     public boolean conversationHas(int id, int pda){
-        Document document = conversations.find().sort(new Document("id", id)).first();
+        Document query = new Document();
+        query.put("id", id);
+
+        Document document = conversations.find(query).first();
         if (document != null) {
             List<Integer> ids = document.get("members", new ArrayList<>());
-            return ids.contains(pda);
+            if (!ids.contains(pda)) {
+                ids = document.get("owners", new ArrayList<>());
+                return ids.contains(pda);
+            } else return true;
         } else return false;
     }
 

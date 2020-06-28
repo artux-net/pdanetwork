@@ -43,13 +43,10 @@ public class DialogsServlet extends HttpServlet {
 
             if(conversation.getMembers().size()<=2){
                 int anotherId = getAnotherId(conversation.getMembers(), pda);
-                System.out.println(anotherId);
                 Profile profile = ServletContext.mongoUsers.getProfileByPdaId(anotherId);
                 response.add(new DialogResponse(conversation, profile));
-                System.out.println(111);
             } else {
                 response.add(new DialogResponse(conversation));
-                System.out.println(222);
             }
         }
         return response;
