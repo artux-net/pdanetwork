@@ -5,6 +5,7 @@ import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.utills.RequestReader;
+import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
 import javax.servlet.ServletConfig;
@@ -35,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
         Map<String, String> query_pairs = RequestReader.splitQuery(httpServletRequest.getQueryString());
         Profile profile;
         if(query_pairs.containsKey("pdaId")){
-            profile = mongoUsers.getProfileByPdaId(Integer.getInteger(query_pairs.get("pdaId")));
+            profile = ServletContext.mongoUsers.getProfileByPdaId(Integer.parseInt(httpServletRequest.getParameter("pdaId")));
         } else {
             profile = mongoUsers.getByToken(httpServletRequest.getHeader("t")).getProfile();
         }

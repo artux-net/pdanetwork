@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.artux.pdanetwork.communication.model.Conversation;
+import net.artux.pdanetwork.utills.ServletContext;
 import org.bson.Document;
 
 import javax.websocket.Session;
@@ -38,9 +39,9 @@ public class MongoMessages {
         List<Integer> owners = new ArrayList<>(Collections.singletonList(ownerId));
         Conversation conversation = new Conversation(id, owners, members);
         Document document = Document.parse(gson.toJson(conversation));
-        /*for (int i : conversation.getMembers()){
-            ServletContext.mongoUsers.upDialog(i,String.valueOf(id), 1, "Вы добавлены в беседу");
-        }*/
+        for (int i : conversation.getMembers()) {
+            ServletContext.mongoUsers.addDialog(i, id);
+        }
 
         conversations.insertOne(document);
         return id;

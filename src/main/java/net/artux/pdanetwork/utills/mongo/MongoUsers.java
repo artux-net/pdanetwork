@@ -103,7 +103,6 @@ public class MongoUsers {
         Document result = getDocument("token", token);
 
         if(result!=null) {
-            System.out.println(result.toJson());
             Member user = gson.fromJson(result.toJson(), Member.class);
 
             table.updateOne(
@@ -141,10 +140,11 @@ public class MongoUsers {
     public Profile getProfileByPdaId(int pdaId){
         Document element = getDocument("pdaId", pdaId);
 
+        System.out.println("try");
         if (element!=null) {
             return gson.fromJson(element.toJson(), Member.class).getProfile();
         }
-
+        System.out.println("null");
         return null;
     }
 
@@ -248,13 +248,13 @@ public class MongoUsers {
 
         ArrayList<Integer> friends = user.get("friends", new ArrayList<>());
         friends.add(newFriend.get("pdaId", Integer.class));
-        changeField((String) user.get("token"), "friends", friends);
+        changeField(user.get("token"), "friends", friends);
 
         int pda = user.get("pdaId", Integer.class);
 
         ArrayList<Integer> requests = newFriend.get("friendRequests", new ArrayList<>());
         requests.add(pda);
-        changeField((String) newFriend.get("token"), "friendRequests", requests);
+        changeField(newFriend.get("token"), "friendRequests", requests);
     }
 
     public ArrayList<Integer> getFriends(String token){
@@ -276,8 +276,8 @@ public class MongoUsers {
             if (!friends.contains(id)) {
                 friends.add(id);
 
-                changeField((String) user.get("token"), "friendRequests", requests);
-                changeField((String) user.get("token"), "friends", friends);
+                changeField(user.get("token"), "friendRequests", requests);
+                changeField(user.get("token"), "friends", friends);
             }
             return true;
         }else
@@ -289,42 +289,20 @@ public class MongoUsers {
         List<Integer> friends = user.get("friends", new ArrayList<>());
         if(friends.contains(id)){
             friends.remove(id);
-            changeField((String) user.get("token"), "friends", friends);
+            changeField(user.get("token"), "friends", friends);
             return true;
         }else
             return false;
     }
 
-    /*public void upDialog(int pdaId, String dialogName, int type, String lastMessage){
-        // находим собеседника по id
-        Document query = new Document();
-        query.put("pdaId", pdaId);
-        Document result = table.find(query).first();
-        //получаем по нему диалог
-        Member member = gson.fromJson(result.toJson(), Member.class);
-        Dialog dialog = new Dialog(dialogName, type, lastMessage);
-
-        updateDialogs(member, dialog);
-    }
-
-    private void updateDialogs(Member member, Dialog dialog) {
-        if(member.getDialogs(gson)!=null){
-            List<Dialog> dialogs = member.getDialogs(gson);
-            for (int i=0; i<dialogs.size(); i++){
-                if(dialogs.get(i).name.equals(dialog.name)) dialogs.remove(i);
-            }
-            dialogs.add(0, dialog);
-            // обновляем запись
-            table.updateOne(eq("pdaId", member.getPdaId()),
-                    set("dialogs",gson.toJson(dialogs)));
-        } else {
-            List<Dialog> dialogs = new ArrayList<>();
-            dialogs.add(0, dialog);
-            // обновляем запись
-            table.updateOne(eq("pdaId", member.getPdaId()),
-                    set("dialogs",gson.toJson(dialogs)));
+    public void addDialog(int pdaId, int conversation) {
+        Document user = getDocument("pdaId", pdaId);
+        if (user != null) {
+            List<Integer> dialogs = user.get("dialogs", new ArrayList<>());
+            dialogs.add(conversation);
+            changeField(user.get("token"), "dialogs", dialogs);
         }
-    }*/
+    }
 
     private Document getDocument(String field, Object value){
         Document query = new Document();
@@ -333,11 +311,11 @@ public class MongoUsers {
         return table.find(query).first();
     }
 
-    public UpdateResult changeField(String token, String field, Object newValue){
+    public UpdateResult changeField(Object token, String field, Object newValue) {
         return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));
     }
 
-    public UpdateResult changeFields(String token, List<Bson> updates){
+    public UpdateResult changeFields(Object token, List<Bson> updates) {
         updates.add(set("lastModified", new Date().toString()));
         return table.updateOne (eq("token", token), combine(updates), new UpdateOptions().upsert(true).bypassDocumentValidation(true));
     }

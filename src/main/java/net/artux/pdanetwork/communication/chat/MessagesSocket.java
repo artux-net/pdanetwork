@@ -32,7 +32,17 @@ public class MessagesSocket {
 
         userSession.getUserProperties().put("t", token);
         userSession.getUserProperties().put("pda", pdaId);
-        if (params.containsKey("c")) {
+        if (params.containsKey("to")) {
+            int id = Integer.parseInt(params.get("to"));
+            int conversationId = mongoMessages.getDialogID(pdaId, id);
+            if (conversationId != 0) {
+                addToConversation(conversationId, userSession);
+            } else {
+                userSession.getUserProperties().put("first", true);
+                userSession.getUserProperties().put("pda", pdaId);
+                userSession.getUserProperties().put("to", id);
+            }
+        } else if (params.containsKey("c")) {
             int conversationId = Integer.parseInt(params.get("c"));
             if (mongoMessages.hasConversation(conversationId)
                     && mongoMessages.conversationHas(conversationId, pdaId)) {
@@ -74,11 +84,13 @@ public class MessagesSocket {
 
     @OnMessage
     public void onMessage(String message, Session userSession) {
+        checkFirst(userSession);
         int conversation = (int) userSession.getUserProperties().get("conversation");
 
         for (Session session : conversations.get(conversation)){
             session.getAsyncRemote().sendText(message);
         }
+
         mongoMessages.updateConversation(conversation, message);
         mongoMessages.getConversationCollection(conversation).insertOne(Document.parse(message));
     }
@@ -86,6 +98,17 @@ public class MessagesSocket {
     @OnError
     public void onError(Session session, Throwable thr) {
         thr.printStackTrace();
+    }
+
+    private void checkFirst(Session userSession) {
+        if ((Boolean) userSession.getUserProperties().get("first")) {
+            int pdaId = (int) userSession.getUserProperties().get("pda");
+            int id = (int) userSession.getUserProperties().get("to");
+
+            int conversationId = ServletContext.mongoMessages.newConversation(pdaId, id);
+            addToConversation(conversationId, userSession);
+        }
+
     }
 
 }
