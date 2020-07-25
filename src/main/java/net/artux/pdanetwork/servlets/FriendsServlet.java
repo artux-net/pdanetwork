@@ -2,8 +2,6 @@ package net.artux.pdanetwork.servlets;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.models.FriendModel;
-import net.artux.pdanetwork.models.Friends;
-import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
 
@@ -12,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/friends")
 public class FriendsServlet extends HttpServlet {
@@ -23,29 +23,34 @@ public class FriendsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String token = RequestReader.getHeaders(httpServletRequest).get("t");
-        Friends friends = new Friends();
-        List<Integer> list = ServletContext.mongoUsers.getFriends(token);
-        for(int id : list){
-            Profile profile = ServletContext.mongoUsers.getProfileByPdaId(id);
-            FriendModel friendModel = new FriendModel(profile);
-            friendModel.isSub = profile.getFriends()
-                    .contains(ServletContext.mongoUsers.getPdaIdByToken(token));
-            friends.list.add(friendModel);
+        Map<String, String> query = RequestReader.splitQuery(httpServletRequest.getQueryString());
+        if (query.containsKey("pdaId") && query.containsKey("type")) {
+            List<Integer> list = new ArrayList<>();
+            switch (query.get("type")) {
+                case "0":
+                    list = ServletContext.mongoUsers.getFriends(Integer.parseInt(query.get("pdaId")));
+                    break;
+                case "1":
+                    list = ServletContext.mongoUsers.getFriendRequests(Integer.parseInt(query.get("pdaId")));
+                    break;
+            }
+            List<FriendModel> friendModels = new ArrayList<>();
+            for (int id : list) {
+                friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
+            }
+
+
+            httpServletResponse.getWriter().print(gson.toJson(friendModels));
+
         }
-        list = ServletContext.mongoUsers.getFriendRequests(token);
-        for(int id : list){
-            Profile profile = ServletContext.mongoUsers.getProfileByPdaId(id);
-            FriendModel friendModel = new FriendModel(profile);
-            friends.list.add(friendModel);
-        }
-        httpServletResponse.getWriter().print(gson.toJson(friends));
+
 
     }
 
     @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String token = RequestReader.getHeaders(httpServletRequest).get("t");
-        Enumeration<String> names = getInitParameterNames();
+        Enumeration<String> names = httpServletRequest.getParameterNames();
         while(names.hasMoreElements()){
             String param = names.nextElement();
             switch (param){

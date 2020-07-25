@@ -140,9 +140,19 @@ public class MongoUsers {
     public Profile getProfileByPdaId(int pdaId){
         Document element = getDocument("pdaId", pdaId);
 
-        System.out.println("try");
         if (element!=null) {
             return gson.fromJson(element.toJson(), Member.class).getProfile();
+        }
+        System.out.println("null");
+        return null;
+    }
+
+    public Profile getProfileByPdaId(String token, int pdaId) {
+        Document user = getDocument("token", token);
+        Document element = getDocument("pdaId", pdaId);
+
+        if (element != null) {
+            return gson.fromJson(element.toJson(), Member.class).getRelateProfile(gson.fromJson(user.toJson(), Member.class));
         }
         System.out.println("null");
         return null;
@@ -257,17 +267,17 @@ public class MongoUsers {
         changeField(newFriend.get("token"), "friendRequests", requests);
     }
 
-    public ArrayList<Integer> getFriends(String token){
-        Document user = getDocument("token", token);
+    public ArrayList<Integer> getFriends(int pdaId) {
+        Document user = getDocument("pdaId", pdaId);
         return user.get("friends", new ArrayList<>());
     }
 
-    public ArrayList<Integer> getFriendRequests(String token){
-        Document user = getDocument("token", token);
+    public ArrayList<Integer> getFriendRequests(int pdaId) {
+        Document user = getDocument("pdaId", pdaId);
         return user.get("friendRequests", new ArrayList<>());
     }
 
-    public boolean addFriend(String token, int id){
+    public boolean addFriend(String token, Integer id) {
         Document user = getDocument("token", token);
         List<Integer> requests = user.get("friendRequests", new ArrayList<>());
         if(requests.contains(id)){
@@ -284,12 +294,25 @@ public class MongoUsers {
             return false;
     }
 
-    public boolean removeFriend(String token, int id){
+    public boolean removeFriend(String token, Integer id) {
         Document user = getDocument("token", token);
         List<Integer> friends = user.get("friends", new ArrayList<>());
+        List<Integer> requests = user.get("friendRequests", new ArrayList<>());
         if(friends.contains(id)){
             friends.remove(id);
             changeField(user.get("token"), "friends", friends);
+
+            Document oldFriend = getDocument("pdaId", id);
+            friends = oldFriend.get("friends", new ArrayList<>());
+            if (friends.contains(user.get("pdaId", Integer.class))) {
+                requests.add(id);
+                changeField(user.get("token"), "friendRequests", requests);
+            } else {
+                requests = oldFriend.get("friendRequests", new ArrayList<>());
+                requests.remove(user.get("pdaId", Integer.class));
+                changeField(oldFriend.get("token"), "friendRequests", requests);
+
+            }
             return true;
         }else
             return false;

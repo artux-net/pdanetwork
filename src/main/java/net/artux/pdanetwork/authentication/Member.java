@@ -14,8 +14,8 @@ public class Member {
     private String avatar;
     private String token;
     private int pdaId;
-    private byte admin;
-    private byte blocked;
+    private int admin;
+    private int blocked;
     private int group;
     private int xp;
     private String location;
@@ -51,10 +51,11 @@ public class Member {
     }
 
     public Profile getProfile(){
+        return new Profile(this);
+    }
 
-        return new Profile(login, name, admin, blocked,
-                group, avatar, pdaId, xp, location, registrationDate, data,
-                friends, friendRequests);
+    public Profile getRelateProfile(Member by) {
+        return new Profile(this, by);
     }
 
     public int getPdaId() {
@@ -77,11 +78,47 @@ public class Member {
         return dialogs;
     }
 
+    public List<Integer> getFriends() {
+        return friends;
+    }
+
+    public List<Integer> getFriendRequests() {
+        return friendRequests;
+    }
+
     Data getData(Gson gson) {
         if(data==null || data.equals("") || data.equals("null") || data.equals("{}")){
             data = gson.toJson(new Data());
         }
 
         return gson.fromJson(data, Data.class);
+    }
+
+    public int getAdmin() {
+        return admin;
+    }
+
+    public int getBlocked() {
+        return blocked;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 }

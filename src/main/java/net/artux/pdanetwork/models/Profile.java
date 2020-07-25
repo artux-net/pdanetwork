@@ -1,46 +1,67 @@
 package net.artux.pdanetwork.models;
 
+import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.profile.Achievements;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class Profile {
 
     private String login;
     private String name;
-    private byte admin;
-    private byte blocked;
+    private int admin;
+    private int blocked;
     private int group;
     private String avatar;
     private int pdaId;
     private int xp;
     private String location;
     private String registrationDate;
-    private String data;
-    private List<Integer> friends;
-    private List<Integer> requests;
+    private int friendStatus;
+    /*
+    0 - is not friend
+    1 - friend
+    2 - subscriber
+    3 - requested
+     */
+    private int friends;
+    private int requests;
 
-    public Profile(String login, String name, byte admin, byte blocked, int group, String avatar, int pdaId, int xp,
-                   String location, String registrationDate, String data, List<Integer> friends, List<Integer> requests) {
-        this.login = login;
-        this.name = name;
-        this.admin = admin;
-        this.blocked = blocked;
-        this.group = group;
-        this.avatar = avatar;
-        this.pdaId = pdaId;
-        this.xp = xp;
-        this.location = location;
-        this.registrationDate = registrationDate;
-        this.data = data;
-        this.friends = friends;
-        this.requests = requests;
+    //TODO
+    private HashMap<Integer, Integer> relations;
+    private List<Achievements> achievements;
+
+    public Profile(Member member) {
+        this.login = member.getLogin();
+        this.name = member.getName();
+        this.admin = member.getAdmin();
+        this.blocked = member.getBlocked();
+        this.group = member.getGroup();
+        this.avatar = member.getAvatar();
+        this.pdaId = member.getPdaId();
+        this.xp = member.getXp();
+        this.location = member.getLocation();
+        this.registrationDate = member.getRegistrationDate();
+        this.friends = member.getFriends().size();
+        this.requests = member.getFriendRequests().size();
     }
 
-    public List<Integer> getFriends() {
-        return friends;
-    }
+    public Profile(Member member, Member by) {
+        this.login = member.getLogin();
+        this.name = member.getName();
+        this.admin = member.getAdmin();
+        this.blocked = member.getBlocked();
+        this.group = member.getGroup();
+        this.avatar = member.getAvatar();
+        this.pdaId = member.getPdaId();
+        this.xp = member.getXp();
+        this.location = member.getLocation();
+        this.registrationDate = member.getRegistrationDate();
+        this.friends = member.getFriends().size();
+        this.requests = member.getFriendRequests().size();
 
-    public List<Integer> getRequests() {
-        return requests;
+        setFriendStatus(member, by);
     }
 
     public String getLogin() {
@@ -51,11 +72,11 @@ public class Profile {
         return name;
     }
 
-    public byte getAdmin() {
+    public int getAdmin() {
         return admin;
     }
 
-    public byte getBlocked() {
+    public int getBlocked() {
         return blocked;
     }
 
@@ -83,7 +104,15 @@ public class Profile {
         return registrationDate;
     }
 
-    public String getData() {
-        return data;
+    private void setFriendStatus(Member member, Member by) {
+        if (member.getFriendRequests().contains(by.getPdaId())) {
+            friendStatus = 3;
+        } else if (by.getFriendRequests().contains(pdaId)) {
+            friendStatus = 2;
+        } else if (member.getFriends().contains(by.getPdaId())) {
+            friendStatus = 1;
+        } else {
+            friendStatus = 0;
+        }
     }
 }

@@ -6,10 +6,7 @@ import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,24 +18,16 @@ import java.util.Map;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 
-    private MongoUsers mongoUsers;
-    private Gson gson;
-
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
-        mongoUsers = new MongoUsers();
-        gson = new Gson();
-    }
+    private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         Map<String, String> query_pairs = RequestReader.splitQuery(httpServletRequest.getQueryString());
         Profile profile;
         if(query_pairs.containsKey("pdaId")){
-            profile = ServletContext.mongoUsers.getProfileByPdaId(Integer.parseInt(httpServletRequest.getParameter("pdaId")));
+            profile = ServletContext.mongoUsers.getProfileByPdaId(httpServletRequest.getHeader("t"), Integer.parseInt(httpServletRequest.getParameter("pdaId")));
         } else {
-            profile = mongoUsers.getByToken(httpServletRequest.getHeader("t")).getProfile();
+            profile = ServletContext.mongoUsers.getByToken(httpServletRequest.getHeader("t")).getProfile();
         }
 
         httpServletResponse.setContentType("application/json; charset=UTF-8");
