@@ -24,24 +24,29 @@ public class FriendsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String token = RequestReader.getHeaders(httpServletRequest).get("t");
         Map<String, String> query = RequestReader.splitQuery(httpServletRequest.getQueryString());
+
+        int pdaId = Integer.parseInt(query.get("pdaId"));
+        List<FriendModel> friendModels = new ArrayList<>();
+
         if (query.containsKey("pdaId") && query.containsKey("type")) {
-            List<Integer> list = new ArrayList<>();
             switch (query.get("type")) {
                 case "0":
-                    list = ServletContext.mongoUsers.getFriends(Integer.parseInt(query.get("pdaId")));
+                    List<Integer> list = ServletContext.mongoUsers.getFriends(pdaId);
+                    for (int id : list) {
+                        if (ServletContext.mongoUsers.getFriends(id).contains(pdaId))
+                            friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
+                    }
                     break;
                 case "1":
-                    list = ServletContext.mongoUsers.getFriendRequests(Integer.parseInt(query.get("pdaId")));
+                    list = ServletContext.mongoUsers.getFriendRequests(pdaId);
+                    for (int id : list) {
+                        friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
+
+                    }
                     break;
             }
-            List<FriendModel> friendModels = new ArrayList<>();
-            for (int id : list) {
-                friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
-            }
-
 
             httpServletResponse.getWriter().print(gson.toJson(friendModels));
-
         }
 
 
