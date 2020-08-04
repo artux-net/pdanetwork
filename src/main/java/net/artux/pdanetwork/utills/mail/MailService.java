@@ -66,10 +66,10 @@ public class MailService {
 
         message.setFrom(new InternetAddress("Сталкерский ПДА <"+email+">"));
         message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
+                InternetAddress.parse(user.name + " <" + user.email + ">"));
         message.setSubject("Регистрация");
         message.setContent(mailTemplateReg
-                .replace("login" , user.getLogin())
+                .replace("login", user.login)
                 .replace("pass" , user.getPassword())
                 .replace("pdaId" , Integer.toString(pdaId)), "text/html; charset=utf-8");
 
@@ -81,7 +81,7 @@ public class MailService {
 
         message.setFrom(new InternetAddress("Сталкерский ПДА <"+email+">"));
         message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
+                InternetAddress.parse(user.name + " <" + user.email + ">"));
         message.setSubject("Подтвердите регистацию");
         message.setContent(mailTemplateCon.replace("link" ,
                 "http://"+ ServletContext.host + "/register?t=" + token),

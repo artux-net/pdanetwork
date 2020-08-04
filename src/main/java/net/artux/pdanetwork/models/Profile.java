@@ -1,9 +1,8 @@
 package net.artux.pdanetwork.models;
 
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.models.profile.Achievements;
+import net.artux.pdanetwork.models.profile.Achievement;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class Profile {
@@ -29,8 +28,11 @@ public class Profile {
     private int requests;
 
     //TODO
-    private HashMap<Integer, Integer> relations;
-    private List<Achievements> achievements;
+    private int[] relations;
+    private List<Achievement> achievements;
+
+    public Profile() {
+    }
 
     public Profile(Member member) {
         this.login = member.getLogin();

@@ -1,6 +1,8 @@
+
 package net.artux.pdanetwork.models.profile.items;
 
-public class Item {
+
+public class Detector {
 
     public int id;
     public int type;
@@ -10,7 +12,7 @@ public class Item {
     public int library_id;
     public int price;
 
-    public Item() {
+    public Detector() {
     }
 
     public int getId() {

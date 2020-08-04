@@ -1,23 +1,22 @@
 
 package net.artux.pdanetwork.models.profile;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Stats {
 
-    @SerializedName("achievements")
-    @Expose
-    private Achievements achievements = new Achievements();
-    @SerializedName("battles")
-    @Expose
+    private List<Achievement> achievements = new ArrayList<>();
     private Battles battles = new Battles();
 
-    public Achievements getAchievements() {
+    public Stats() {
+    }
+
+    public List<Achievement> getAchievements() {
         return achievements;
     }
 
-    public void setAchievements(Achievements achievements) {
+    public void setAchievements(List<Achievement> achievements) {
         this.achievements = achievements;
     }
 

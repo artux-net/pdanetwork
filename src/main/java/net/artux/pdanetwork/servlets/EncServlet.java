@@ -34,7 +34,7 @@ public class EncServlet extends HttpServlet {
     }
 
     private String returnList() throws IOException {
-        return  FileGenerator.readFile("base/list", StandardCharsets.UTF_8);
+        return FileGenerator.readFile("data/pdanetwork/base/list", StandardCharsets.UTF_8);
     }
 
     @Override

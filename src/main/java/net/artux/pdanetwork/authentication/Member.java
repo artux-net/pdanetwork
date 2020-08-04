@@ -1,14 +1,21 @@
 package net.artux.pdanetwork.authentication;
 
-import com.google.gson.Gson;
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.utills.Security;
+import org.bson.types.ObjectId;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Member {
 
+    private ObjectId id;
     private String login;
+    private String password;
     private String email;
     private String name;
     private String avatar;
@@ -19,27 +26,40 @@ public class Member {
     private int group;
     private int xp;
     private String location;
-    private String data;
-    private List<Integer> dialogs;
-    private List<Integer> friends;
-    private List<Integer> friendRequests;
-    private String lastModified;
+    private Data data;
+    public List<Integer> dialogs;
+    public List<Integer> friends;
+    public List<Integer> friendRequests;
+    private Date lastModified;
     private String registrationDate;
+    private Date lastLoginAt;
 
-    public String getToken() {
-        return token;
+    public Member() {
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public Member(RegisterUser registerUser, int id) {
+        login = registerUser.login;
+        password = registerUser.getPassword();
+        email = registerUser.email;
+        name = registerUser.name;
+        avatar = registerUser.avatar;
+        token = Security.encrypt(login + ":" + password);
+        pdaId = id;
+        admin = blocked = group = xp = 0;
+        location = "Ч-4";
+        data = new Data();
+        dialogs = friends = friendRequests = new ArrayList<>();
+        lastModified = lastLoginAt = new Date();
+        System.out.println(new Date().toString());
+        registrationDate = new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date());
     }
 
-    public String getName() {
-        return name;
+    public ObjectId getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -50,12 +70,44 @@ public class Member {
         this.login = login;
     }
 
-    public Profile getProfile(){
-        return new Profile(this);
+    public String getPassword() {
+        return password;
     }
 
-    public Profile getRelateProfile(Member by) {
-        return new Profile(this, by);
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public int getPdaId() {
@@ -66,59 +118,99 @@ public class Member {
         this.pdaId = pdaId;
     }
 
-    public int getGroup() {
-        return group;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public List<Integer> getDialogs() {
-        return dialogs;
-    }
-
-    public List<Integer> getFriends() {
-        return friends;
-    }
-
-    public List<Integer> getFriendRequests() {
-        return friendRequests;
-    }
-
-    Data getData(Gson gson) {
-        if(data==null || data.equals("") || data.equals("null") || data.equals("{}")){
-            data = gson.toJson(new Data());
-        }
-
-        return gson.fromJson(data, Data.class);
-    }
-
     public int getAdmin() {
         return admin;
+    }
+
+    public void setAdmin(int admin) {
+        this.admin = admin;
     }
 
     public int getBlocked() {
         return blocked;
     }
 
+    public void setBlocked(int blocked) {
+        this.blocked = blocked;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
+    }
+
     public int getXp() {
         return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public String getLastModified() {
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public List<Integer> getDialogs() {
+        return dialogs;
+    }
+
+    public void setDialogs(List<Integer> dialogs) {
+        this.dialogs = dialogs;
+    }
+
+    public List<Integer> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<Integer> friends) {
+        this.friends = friends;
+    }
+
+    public List<Integer> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(List<Integer> friendRequests) {
+        this.friendRequests = friendRequests;
+    }
+
+    public Date getLastModified() {
         return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 
     public String getRegistrationDate() {
         return registrationDate;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public Date getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(Date lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 }

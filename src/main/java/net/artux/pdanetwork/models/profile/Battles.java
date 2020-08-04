@@ -4,9 +4,6 @@ package net.artux.pdanetwork.models.profile;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Battles {
 
     @SerializedName("count")
@@ -15,9 +12,9 @@ public class Battles {
     @SerializedName("wins")
     @Expose
     private Integer wins;
-    @SerializedName("history")
-    @Expose
-    private List<Object> history = new ArrayList<>();
+    //@SerializedName("history")
+    //@Expose
+    //private List<Object> history = new ArrayList<>();
 
     public Integer getCount() {
         return count;
@@ -35,12 +32,6 @@ public class Battles {
         this.wins = wins;
     }
 
-    public List<Object> getHistory() {
-        return history;
-    }
 
-    public void setHistory(List<Object> history) {
-        this.history = history;
-    }
 
 }

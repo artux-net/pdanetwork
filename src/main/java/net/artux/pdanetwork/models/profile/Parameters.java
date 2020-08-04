@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Params {
-    
-    public List<String> params = new ArrayList<>();
+public class Parameters {
+
+    public List<String> keys = new ArrayList<>();
     public HashMap<String, Integer> values = new HashMap<>();
 
 }

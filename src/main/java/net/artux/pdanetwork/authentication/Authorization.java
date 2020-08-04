@@ -25,10 +25,10 @@ public class Authorization {
 
         try {
             RegisterUser newUser = gson.fromJson(RequestReader.getString(request), RegisterUser.class);
-            Status status = ServletContext.mongoUsers.checkUser(newUser.getLogin(),
-                    newUser.getEmail());
+            Status status = ServletContext.mongoUsers.checkUser(newUser.login,
+                    newUser.email);
 
-            String token = Base64.getEncoder().encodeToString(newUser.getLogin().getBytes());
+            String token = Base64.getEncoder().encodeToString(newUser.login.getBytes());
 
             if(status.getSuccess()){
                 System.out.println(registerUserMap.keySet());

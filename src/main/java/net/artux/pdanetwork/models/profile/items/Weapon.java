@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.models.profile.items;
 
-public class Item {
+public class Weapon {
 
     public int id;
     public int type;
@@ -10,7 +10,13 @@ public class Item {
     public int library_id;
     public int price;
 
-    public Item() {
+    public float precision;
+    public float speed;
+    public float damage;
+    public float condition;
+    public int bullet_id;
+
+    public Weapon() {
     }
 
     public int getId() {
@@ -67,5 +73,45 @@ public class Item {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public float getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(float precision) {
+        this.precision = precision;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public float getDamage() {
+        return damage;
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
+    public float getCondition() {
+        return condition;
+    }
+
+    public void setCondition(float condition) {
+        this.condition = condition;
+    }
+
+    public int getBullet_id() {
+        return bullet_id;
+    }
+
+    public void setBullet_id(int bullet_id) {
+        this.bullet_id = bullet_id;
     }
 }

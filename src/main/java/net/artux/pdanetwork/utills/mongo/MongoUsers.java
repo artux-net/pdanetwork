@@ -1,6 +1,8 @@
 package net.artux.pdanetwork.utills.mongo;
 
-import com.google.gson.Gson;
+import com.mongodb.Block;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -14,38 +16,45 @@ import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.profile.Data;
-import net.artux.pdanetwork.utills.Security;
+import net.artux.pdanetwork.models.UserInfo;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public class MongoUsers {
 
     private MongoClient mongoClient;
-    private MongoCollection<Document> table;
-
-    private Gson gson = new Gson();
+    private MongoCollection<Member> table;
 
     // global settings for all users
     private int daysValidAccount = 90;
 
     public MongoUsers() throws MongoConfigurationException {
-        mongoClient = MongoClients.create("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
+
+        CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
+        MongoClientSettings clientSettings = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/"))
+                .codecRegistry(codecRegistry)
+                .build();
+
+        mongoClient = MongoClients.create(clientSettings);
         MongoDatabase db = mongoClient.getDatabase("users");
 
-        table = db.getCollection("usersCollection");
+        table = db.getCollection("usersCollection", Member.class);
     }
 
     public void close(){
@@ -53,25 +62,8 @@ public class MongoUsers {
     }
 
     public int add(RegisterUser user){
-        user.hashPassword();
-        Document document = Document.parse(gson.toJson(user));
-
         int pdaId = getPdaID();
-        document.put("token", Security.encrypt(user.getLogin()+":"+user.getPassword()));
-        document.put("pdaId", pdaId);
-        document.put("admin", 0);
-        document.put("blocked", 0);
-        document.put("group", 0);
-        document.put("xp", 0);
-        document.put("location","Ч-4");
-        document.put("data", gson.toJson(new Data()));
-        document.put("dialogs", new ArrayList<Integer>());
-        document.put("friends", new ArrayList<Integer>());
-        document.put("friendRequests", new ArrayList<Integer>());
-        document.put("lastModified", new Date().toString());
-        document.put("registrationDate", new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date()));
-        document.put("lastLoginAt", new Date());
-        table.insertOne(document);
+        table.insertOne(new Member(user, pdaId));
 
         table.createIndex(Indexes.ascending("lastLoginAt"),
                 new IndexOptions().expireAfter(Integer.toUnsignedLong( daysValidAccount * 24 * 3600), TimeUnit.SECONDS));
@@ -80,10 +72,10 @@ public class MongoUsers {
     }
 
     private int getPdaID(){
-        Document document = table.find().sort(new Document("_id",-1)).first();
+        Member member = table.find().sort(new Document("_id", -1)).first();
 
-        if(document!=null){
-            int res = document.getInteger("pdaId");
+        if (member != null) {
+            int res = member.getPdaId();
             return res+1;
         } else {
             return 1;
@@ -91,80 +83,65 @@ public class MongoUsers {
     }
 
     public boolean isBlocked(String token){
-        Document result = getDocument("token", token);
+        Member result = getMember(token);
 
         if(result!=null) {
-            int blocked = result.getInteger("blocked");
-            return blocked == 1;
+            return result.getBlocked() > 0;
         } else return false;
     }
 
     public Member getByToken(String token){
-        Document result = getDocument("token", token);
+        Member result = getMember(token);
 
         if(result!=null) {
-            Member user = gson.fromJson(result.toJson(), Member.class);
-
             table.updateOne(
                     eq("token", token),
-                    combine(set("lastLoginAt", new Date().toString())));
-
-            return user;
+                    combine(set("lastLoginAt", new Date())));
+            return result;
         } else return null;
     }
 
     public int getPdaIdByToken(String token){
-        Document result = getDocument("token", token);
+        Member result = getMember(token);
         //TODO if 0 then... What?
         if (result!=null)
-            return result.getInteger("pdaId");
+            return result.getPdaId();
         else
             return 0;
     }
 
     public Member getEmailUser(String loginOrEmail){
-        Document element = getDocument("login", loginOrEmail);
+        Member element = getMember("login", loginOrEmail);
         if (element!=null) {
-            return gson.fromJson(element.toJson(), Member.class);
+            return element;
         }
 
-        element = getDocument("email", loginOrEmail);
+        element = getMember("email", loginOrEmail);
 
-        if (element!=null){
-            return gson.fromJson(element.toJson(), Member.class);
-        }
-
-        return null;
+        return element;
     }
 
     public Profile getProfileByPdaId(int pdaId){
-        Document element = getDocument("pdaId", pdaId);
+        Member element = getMember(pdaId);
 
         if (element!=null) {
-            return gson.fromJson(element.toJson(), Member.class).getProfile();
+            return new Profile(element);
         }
-        System.out.println("null");
         return null;
     }
 
     public Profile getProfileByPdaId(String token, int pdaId) {
-        Document user = getDocument("token", token);
-        Document element = getDocument("pdaId", pdaId);
+        Member user = getMember(token);
+        Member element = getMember(pdaId);
 
         if (element != null) {
-            return gson.fromJson(element.toJson(), Member.class).getRelateProfile(gson.fromJson(user.toJson(), Member.class));
+            return new Profile(element, user);
         }
-        System.out.println("null");
         return null;
     }
 
     public boolean userExists(int pdaId){
-        Document query = new Document();
-        query.put("pdaId", pdaId);
-
-        Document result = table.find(query).first();
-
-        return result != null;
+        return getMember(pdaId) != null;
     }
 
     public void updateByLogin(String login, String newLogin){
@@ -190,13 +167,13 @@ public class MongoUsers {
     public Status checkUser(String login, String email){
 
         if (login!=null) {
-            if (getDocument("login", login) != null) {
+            if (getMember("login", login) != null) {
                 return new Status(false, "Пользователь с таким логином уже существует.");
             }
         }
 
         if (email!=null) {
-            if (getDocument("email", email) != null) {
+            if (getMember("email", email) != null) {
                 return new Status(false,"Пользователь с таким e-mail уже существует.");
             }
         }
@@ -205,12 +182,12 @@ public class MongoUsers {
     }
 
     public Status tryLogin(String emailOrLogin, String password){
-        Document element = getDocument("login", emailOrLogin);
+        Member element = getMember("login", emailOrLogin);
 
         if(element!=null){
           return checkPassword(element,password);
         } else {
-            element = getDocument("email", emailOrLogin);
+            element = getMember("email", emailOrLogin);
 
             if (element!=null){
                 return checkPassword(element,password);
@@ -221,12 +198,12 @@ public class MongoUsers {
     }
 
     public Status tryAdminLogin(String emailOrLogin, String password){
-        Document element = getDocument("login", emailOrLogin);
+        Member element = getMember("login", emailOrLogin);
 
         if(element!=null){
             return getLoginAdminStatus(password, element);
         } else {
-            element = getDocument("email", emailOrLogin);
+            element = getMember("email", emailOrLogin);
 
             if (element!=null){
                 return getLoginAdminStatus(password, element);
@@ -236,58 +213,49 @@ public class MongoUsers {
         }
     }
 
-    private Status getLoginAdminStatus(String password, Document element) {
-        if((Integer) element.get("admin")==1){
+    private Status getLoginAdminStatus(String password, Member element) {
+        if (element.getAdmin() > 0) {
             return checkPassword(element, password);
         } else {
             return new Status(false, "You aren't admin");
         }
     }
 
-    private Status checkPassword(Document element, String password){
-        if (String.valueOf(element.get("password")).equals(String.valueOf(password.hashCode()))){
-            return new Status(String.valueOf(element.get("token")));
+    private Status checkPassword(Member element, String password) {
+        if (element.getPassword().equals(String.valueOf(password.hashCode()))) {
+            return new Status(String.valueOf(element.getToken()));
         } else {
             return new Status(false, "Wrong password");
         }
     }
 
     public void friendRequest(String token, int id){
-        Document user = getDocument("token", token);
-        Document newFriend = getDocument("pdaId", id);
+        Member user = getMember(token);
+        Member newFriend = getMember(id);
 
-        ArrayList<Integer> friends = user.get("friends", new ArrayList<>());
-        friends.add(newFriend.get("pdaId", Integer.class));
-        changeField(user.get("token"), "friends", friends);
+        user.friends.add(newFriend.getPdaId());
+        updateMember(user);
 
-        int pda = user.get("pdaId", Integer.class);
-
-        ArrayList<Integer> requests = newFriend.get("friendRequests", new ArrayList<>());
-        requests.add(pda);
-        changeField(newFriend.get("token"), "friendRequests", requests);
+        newFriend.friendRequests.add(user.getPdaId());
+        updateMember(newFriend);
     }
 
-    public ArrayList<Integer> getFriends(int pdaId) {
-        Document user = getDocument("pdaId", pdaId);
-        return user.get("friends", new ArrayList<>());
+    public List<Integer> getFriends(int pdaId) {
+        return getMember(pdaId).friends;
     }
 
-    public ArrayList<Integer> getFriendRequests(int pdaId) {
-        Document user = getDocument("pdaId", pdaId);
-        return user.get("friendRequests", new ArrayList<>());
+    public List<Integer> getFriendRequests(int pdaId) {
+        return getMember(pdaId).friendRequests;
     }
 
     public boolean addFriend(String token, Integer id) {
-        Document user = getDocument("token", token);
-        List<Integer> requests = user.get("friendRequests", new ArrayList<>());
-        if(requests.contains(id)){
-            requests.remove(id);
-            List<Integer> friends = user.get("friends", new ArrayList<>());
-            if (!friends.contains(id)) {
-                friends.add(id);
+        Member user = getMember(token);
+        if (user.friendRequests.contains(id)) {
+            user.friendRequests.remove(id);
+            if (!user.friends.contains(id)) {
+                user.friends.add(id);
 
-                changeField(user.get("token"), "friendRequests", requests);
-                changeField(user.get("token"), "friends", friends);
+                updateMember(user);
             }
             return true;
         }else
@@ -295,23 +263,18 @@ public class MongoUsers {
     }
 
     public boolean removeFriend(String token, Integer id) {
-        Document user = getDocument("token", token);
-        List<Integer> friends = user.get("friends", new ArrayList<>());
-        List<Integer> requests = user.get("friendRequests", new ArrayList<>());
-        if(friends.contains(id)){
-            friends.remove(id);
-            changeField(user.get("token"), "friends", friends);
+        Member user = getMember(token);
+        if (user.friends.contains(id)) {
+            user.friends.remove(id);
+            updateMember(user);
 
-            Document oldFriend = getDocument("pdaId", id);
-            friends = oldFriend.get("friends", new ArrayList<>());
-            if (friends.contains(user.get("pdaId", Integer.class))) {
-                requests.add(id);
-                changeField(user.get("token"), "friendRequests", requests);
+            Member oldFriend = getMember(id);
+            if (oldFriend.friends.contains(user.getPdaId())) {
+                user.friendRequests.add(id);
+                updateMember(user);
             } else {
-                requests = oldFriend.get("friendRequests", new ArrayList<>());
-                requests.remove(user.get("pdaId", Integer.class));
-                changeField(oldFriend.get("token"), "friendRequests", requests);
-
+                oldFriend.friendRequests.remove(user.getPdaId());
+                updateMember(oldFriend);
             }
             return true;
         }else
@@ -319,19 +282,45 @@ public class MongoUsers {
     }
 
     public void addDialog(int pdaId, int conversation) {
-        Document user = getDocument("pdaId", pdaId);
+        Member user = getMember(pdaId);
         if (user != null) {
-            List<Integer> dialogs = user.get("dialogs", new ArrayList<>());
-            dialogs.add(conversation);
-            changeField(user.get("token"), "dialogs", dialogs);
+            user.dialogs.add(conversation);
+            updateMember(user);
         }
     }
 
-    private Document getDocument(String field, Object value){
+    private Member getMember(int pdaId) {
         Document query = new Document();
-        query.put(field, value);
+        query.put("pdaId", pdaId);
 
         return table.find(query).first();
+    }
+
+    private Member getMember(String token) {
+        Document query = new Document();
+        query.put("token", token);
+
+        return table.find(query).first();
+    }
+
+    private Member getMember(String key, Object value) {
+        Document query = new Document();
+        query.put(key, value);
+
+        return table.find(query).first();
+    }
+
+    public List<UserInfo> sort(int from) {
+        List<UserInfo> users = new ArrayList<>();
+        table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach((Block<Member>) member -> {
+            users.add(new UserInfo(member));
+        });
+        return users;
+    }
+
+    public UpdateResult updateMember(Member member) {
+        member.setLastModified(new Date());
+        return table.replaceOne(eq("token", member.getToken()), member);
     }
 
     public UpdateResult changeField(Object token, String field, Object newValue) {

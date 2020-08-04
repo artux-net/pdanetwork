@@ -46,7 +46,7 @@ public class UserManager {
         Member member = ServletContext.mongoUsers.getByToken(token);
         if (member!=null)
         try {
-            Data data = member.getData(gson);
+            Data data = member.getData();
             for (String key : map.keySet()) {
                 switch (key) {
                     case "add":
@@ -56,28 +56,28 @@ public class UserManager {
                                 data.getItems().add(fileGenerator.getItem(Integer.parseInt(value)));
                             } else if (value.contains(":")) {
                                 //add_value
-                                if (!data.params.values.containsKey(value.split(":")[0])) {
-                                    data.params.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                                if (!data.parameters.values.containsKey(value.split(":")[0])) {
+                                    data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
                                 }
                             } else {
                                 //add_param
-                                if (!data.params.params.contains(value)) data.params.params.add(value);
+                                if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
                             }
                         }
                         break;
                     case "add_param":
                         for (String value : map.get(key)) {
-                            if (!data.params.params.contains(value)) data.params.params.add(value);
+                            if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
                         }
                         break;
                     case "add_value":
                         for (String value : map.get(key)) {
-                            if (!data.params.values.containsKey(value.split(":")[0])) {
-                                data.params.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                            if (!data.parameters.values.containsKey(value.split(":")[0])) {
+                                data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
                             } else {
-                                data.params.
+                                data.parameters.
                                         values.put(value.split(":")[0],
-                                        data.params.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
+                                        data.parameters.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
                             }
                         }
                         break;
@@ -92,33 +92,33 @@ public class UserManager {
                                 int id = Integer.parseInt(pass);
                                 data.getItems().remove(fileGenerator.getItem(id));
                             } else {
-                                data.params.params.remove(pass);
-                                data.params.values.remove(pass);
+                                data.parameters.keys.remove(pass);
+                                data.parameters.values.remove(pass);
                             }
                         }
                         break;
                     case "=":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            data.params.values.put(vals[0], Integer.valueOf(vals[1]));
+                            data.parameters.values.put(vals[0], Integer.valueOf(vals[1]));
                         }
                         break;
                     case "+":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            data.params.values.put(vals[0], data.params.values.get(vals[0]) + Integer.valueOf(vals[1]));
+                            data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) + Integer.valueOf(vals[1]));
                         }
                         break;
                     case "-":
                         for (String pass : Objects.requireNonNull(map.get(key))) {
                             String[] vals = pass.split(":");
-                            data.params.values.put(vals[0], data.params.values.get(vals[0]) - Integer.parseInt(vals[1]));
+                            data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) - Integer.parseInt(vals[1]));
                         }
                         break;
                     case "*":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            data.params.values.put(vals[0], data.params.values.get(vals[0]) * Integer.parseInt(vals[1]));
+                            data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) * Integer.parseInt(vals[1]));
                         }
                         break;
                     case "set":
@@ -128,14 +128,14 @@ public class UserManager {
                                 if (vals[0].equals("type0"))
                                     for (Item item : data.getItems()) {
                                         if (item.id == Integer.parseInt(vals[1])) {
-                                            if (item.type == 0) {
-                                                /*Item old = data.getEquipment().getType0();
+                                            /*if (item.type == 0) {
+                                                Item old = data.getEquipment().getType0();
                                                 data.getItems().add(old);
                                                 data.getEquipment().setType0((Type0) item);
-                                                data.getItems().remove(item);*/
+                                                data.getItems().remove(item);
                                             } else {
                                                 System.out.println("Wrong type");
-                                            }
+                                            }*/
                                         }
                                     }
                             } else if (vals.length==4)
@@ -149,8 +149,7 @@ public class UserManager {
                                     }
                                 }
                                 if (!found){
-                                    Story  story = new Story(Arrays.copyOfRange(vals, 1, 4));
-                                    data.getStories().add(story);
+                                    data.getStories().add(new Story(Arrays.copyOfRange(vals, 1, 4)));
                                 }
                                 data.getTemp().put("currentStory", vals[1]);
                             }
@@ -162,8 +161,8 @@ public class UserManager {
                 }
             }
 
-            ServletContext.mongoUsers.changeField(token, "data", new Gson().toJson(data));
-            member.setData(new Gson().toJson(data));
+            member.setData(data);
+            ServletContext.mongoUsers.updateMember(member);
             return member;
         }catch (Exception e){
             e.printStackTrace();

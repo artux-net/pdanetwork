@@ -1,23 +1,14 @@
 
 package net.artux.pdanetwork.models.profile;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class Story {
 
-    @SerializedName("id")
-    @Expose
     private Integer id;
-    @SerializedName("lastChapter")
-    @Expose
     private Integer lastChapter;
-    @SerializedName("lastStage")
-    @Expose
     private Integer lastStage;
-    @SerializedName("state")
-    @Expose
-    private State state = new State();
+
+    public Story() {
+    }
 
     public Story(String[] values) {
         this.id = Integer.parseInt(values[0]);
@@ -49,12 +40,5 @@ public class Story {
         this.lastStage = lastStage;
     }
 
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
 
 }

@@ -1,38 +1,62 @@
 
 package net.artux.pdanetwork.models.profile;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import net.artux.pdanetwork.models.profile.items.Armor;
+import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
+import net.artux.pdanetwork.models.profile.items.Weapon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class Equipment {
 
-    @SerializedName("armor")
-    @Expose
-    private Item armor = new Item();
-    @SerializedName("type0")
-    @Expose
-    private Item firstWeapon = new Item();
-    @SerializedName("type1")
-    @Expose
-    private Item secondWeapon = new Item();
-    @SerializedName("detector")
-    @Expose
-    private Item detector = new Item();
-    @SerializedName("artifacts")
-    @Expose
-    private List<Object> artifacts = new ArrayList<>();
+    private Armor armor;
+    private Weapon firstWeapon;
+    private Weapon secondWeapon;
+    private Item detector;
+    private List<Artifact> artifacts;
 
-    public List<Object> getArtifacts() {
+    Equipment() {
+    }
+
+    public Armor getArmor() {
+        return armor;
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+    }
+
+    public Weapon getFirstWeapon() {
+        return firstWeapon;
+    }
+
+    public void setFirstWeapon(Weapon firstWeapon) {
+        this.firstWeapon = firstWeapon;
+    }
+
+    public Weapon getSecondWeapon() {
+        return secondWeapon;
+    }
+
+    public void setSecondWeapon(Weapon secondWeapon) {
+        this.secondWeapon = secondWeapon;
+    }
+
+    public Item getDetector() {
+        return detector;
+    }
+
+    public void setDetector(Item detector) {
+        this.detector = detector;
+    }
+
+    public List<Artifact> getArtifacts() {
         return artifacts;
     }
 
-    public void setArtifacts(List<Object> artifacts) {
+    public void setArtifacts(List<Artifact> artifacts) {
         this.artifacts = artifacts;
     }
-
 }

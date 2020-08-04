@@ -27,7 +27,7 @@ public class ProfileServlet extends HttpServlet {
         if(query_pairs.containsKey("pdaId")){
             profile = ServletContext.mongoUsers.getProfileByPdaId(httpServletRequest.getHeader("t"), Integer.parseInt(httpServletRequest.getParameter("pdaId")));
         } else {
-            profile = ServletContext.mongoUsers.getByToken(httpServletRequest.getHeader("t")).getProfile();
+            profile = new Profile(ServletContext.mongoUsers.getByToken(httpServletRequest.getHeader("t")));
         }
 
         httpServletResponse.setContentType("application/json; charset=UTF-8");

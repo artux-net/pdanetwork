@@ -39,10 +39,8 @@ public class FriendsServlet extends HttpServlet {
                     break;
                 case "1":
                     list = ServletContext.mongoUsers.getFriendRequests(pdaId);
-                    for (int id : list) {
+                    for (int id : list)
                         friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
-
-                    }
                     break;
             }
 
