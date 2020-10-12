@@ -1,7 +1,7 @@
 {
   "stages":[
       {
-        "id": 0,
+        "storyId": 0,
         "type_stage": 0,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfe0/8HZcNr7gBq0.jpg",
         "music_id":"http://st-web.at.ua/stalkerpda/client/bar_shti.mp3",
@@ -57,7 +57,7 @@
         }
     },
 	      {
-        "id": 1,
+        "storyId": 1,
         "type_stage": 0,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfc2/jak0IfjO9jg.jpg",
         "music_id":0,
@@ -113,7 +113,7 @@
         }
     },
 	      {
-        "id": 2,
+        "storyId": 2,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
         "music_id":0,
@@ -161,7 +161,7 @@
         }
     },
 	      {
-        "id": 3,
+        "storyId": 3,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
         "music_id":0,
@@ -195,7 +195,7 @@
         }
     },
 	      {
-        "id": 4,
+        "storyId": 4,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
         "music_id":0,
@@ -238,7 +238,7 @@
         }
     },
 	      {
-        "id": 5,
+        "storyId": 5,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c851520/v851520133/172d26/jj9Ry7srKHY.jpg",
         "music_id":0,
@@ -272,7 +272,7 @@
         }
     },
 	      {
-        "id": 7,
+        "storyId": 7,
         "type_stage": 0,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
         "music_id":0,
@@ -321,7 +321,7 @@
         }
     },
 	      {
-        "id": 8,
+        "storyId": 8,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
         "music_id":0,
@@ -371,7 +371,7 @@
         }
     },
 	      {
-        "id": 9,
+        "storyId": 9,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
         "music_id":0,
@@ -412,7 +412,7 @@
         }
     },
 	      {
-        "id": 10,
+        "storyId": 10,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428515/9cfb8/6DUQy618rnc.jpg",
         "music_id":0,
@@ -447,7 +447,7 @@
         }
     },
 	      {
-        "id": 11,
+        "storyId": 11,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24ce/m99B3Vu4Xl0.jpg",
         "music_id":0,
@@ -489,7 +489,7 @@
         }
     },
 	      {
-        "id": 12,
+        "storyId": 12,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24d8/CSlmCxncGq4.jpg",
         "music_id":0,
@@ -523,7 +523,7 @@
         }
     },
 	      {
-        "id": 13,
+        "storyId": 13,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
         "music_id":0,
@@ -557,7 +557,7 @@
         }
     },
 	      {
-        "id": 14,
+        "storyId": 14,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
         "music_id":0,
@@ -599,7 +599,7 @@
         }
     },
 	      {
-        "id": 15,
+        "storyId": 15,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
         "music_id":0,
@@ -634,7 +634,7 @@
         }
     },
 	      {
-        "id": 16,
+        "storyId": 16,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24c4/i9tlGISUs2k.jpg",
         "music_id":0,
@@ -669,7 +669,7 @@
         }
     },
 	      {
-        "id": 17,
+        "storyId": 17,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24e2/SBoF-aglkGQ.jpg",
         "music_id":0,
@@ -703,7 +703,7 @@
         }
     },
 	      {
-        "id": 18,
+        "storyId": 18,
         "type_stage": 1,
           "background_url":"https://pp.userapi.com/c855428/v855428255/a24e2/SBoF-aglkGQ.jpg",
         "music_id":0,
@@ -737,7 +737,7 @@
         }
     },
 	      {
-        "id": 19,
+        "storyId": 19,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24ba/nsvcWxThliQ.jpg",
         "music_id":0,
@@ -771,7 +771,7 @@
         }
     },
 	      {
-        "id": 20,
+        "storyId": 20,
         "type_stage": 1,
         "background_url":"https://pp.userapi.com/c855428/v855428255/a24ba/nsvcWxThliQ.jpg",
         "music_id":0,

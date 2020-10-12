@@ -2,7 +2,6 @@ package net.artux.pdanetwork.frontend.adminpanel;
 
 import net.artux.pdanetwork.authentication.login.model.LoginUser;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,10 +13,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
+
 @WebServlet(name = "LoginAdminController", urlPatterns = "/loginAdmin")
 public class LoginAdminController extends HttpServlet {
-
-    MongoUsers mongoUsers = new MongoUsers();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,10 +34,6 @@ public class LoginAdminController extends HttpServlet {
             throws ServletException, IOException {
 
         LoginUser loginUser = LoginUser.fromRequestParameters(request);
-
-        // setAttributes customer.setAsRequestAttributes(request);
-        List violations = loginUser.validate();
-
         Status status = mongoUsers.tryAdminLogin(loginUser.getEmailOrLogin(), loginUser.getPassword());
 
         if(status.isSuccess()){

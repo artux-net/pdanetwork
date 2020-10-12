@@ -1,14 +1,8 @@
 package net.artux.pdanetwork.models.profile.items;
 
-public class Artifact {
+import java.util.Objects;
 
-    public int id;
-    public int type;
-    private String icon;
-    public String title;
-    public float weight;
-    private int library_id;
-    private int price;
+public class Artifact extends Item {
 
     private int anomal_id;
 
@@ -20,6 +14,29 @@ public class Artifact {
     private int chemical;
     private int endurance;
     private int electric;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Artifact artifact = (Artifact) o;
+        return anomal_id == artifact.anomal_id &&
+                health == artifact.health &&
+                radio == artifact.radio &&
+                damage == artifact.damage &&
+                bleeding == artifact.bleeding &&
+                thermal == artifact.thermal &&
+                chemical == artifact.chemical &&
+                endurance == artifact.endurance &&
+                electric == artifact.electric;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), anomal_id, health, radio, damage, bleeding, thermal, chemical, endurance, electric);
+    }
 
     public Artifact() {
     }

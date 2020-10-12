@@ -1,14 +1,37 @@
 package net.artux.pdanetwork.models.profile.items;
 
+import java.util.Objects;
+
 public class Item {
 
     public int id;
     public int type;
-    public String icon;
+    String icon;
     public String title;
     public float weight;
-    public int library_id;
-    public int price;
+    int library_id;
+    int price;
+    public int quantity;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return id == item.id &&
+                type == item.type &&
+                Float.compare(item.weight, weight) == 0 &&
+                library_id == item.library_id &&
+                price == item.price &&
+                quantity == item.quantity &&
+                Objects.equals(icon, item.icon) &&
+                title.equals(item.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, icon, title, weight, library_id, price, quantity);
+    }
 
     public Item() {
     }
@@ -67,5 +90,35 @@ public class Item {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int sellerPrice() {
+        return quantity * price;
+    }
+
+    public int priceToSell() {
+        return (int) (0.9 * price);
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", type=" + type +
+                ", icon='" + icon + '\'' +
+                ", title='" + title + '\'' +
+                ", weight=" + weight +
+                ", library_id=" + library_id +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
     }
 }

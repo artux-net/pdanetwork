@@ -2,15 +2,7 @@
 package net.artux.pdanetwork.models.profile.items;
 
 
-public class Detector {
-
-    public int id;
-    public int type;
-    public String icon;
-    public String title;
-    public float weight;
-    public int library_id;
-    public int price;
+public class Detector extends Item {
 
     public Detector() {
     }

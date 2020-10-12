@@ -17,6 +17,8 @@ import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
+import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -90,6 +92,10 @@ public class MongoUsers {
         } else return false;
     }
 
+    public Member getById(int pdaId) {
+        return getMember(pdaId);
+    }
+
     public Member getByToken(String token){
         Member result = getMember(token);
 
@@ -144,17 +150,10 @@ public class MongoUsers {
         return getMember(pdaId) != null;
     }
 
-    public void updateByLogin(String login, String newLogin){
-        Document newData = new Document();
-
-        // задаем новый логин
-        newData.put("login", newLogin);
-
-        // указываем обновляемое поле и текущее его значение
-        Document searchQuery = new Document().append("login", login);
-
-        // обновляем запись
-        table.findOneAndUpdate(searchQuery, newData);
+    public void updatePassword(int pdaId, String password) {
+        Member member = getMember(pdaId);
+        member.hashPassword(password);
+        updateMember(member);
     }
 
     public void deleteByLogin(String login){
@@ -165,7 +164,6 @@ public class MongoUsers {
     }
 
     public Status checkUser(String login, String email){
-
         if (login!=null) {
             if (getMember("login", login) != null) {
                 return new Status(false, "Пользователь с таким логином уже существует.");
@@ -223,6 +221,8 @@ public class MongoUsers {
 
     private Status checkPassword(Member element, String password) {
         if (element.getPassword().equals(String.valueOf(password.hashCode()))) {
+            element.setToken(Security.encrypt(element.getLogin() + ":" + password));
+            updateMember(element);
             return new Status(String.valueOf(element.getToken()));
         } else {
             return new Status(false, "Wrong password");
@@ -318,10 +318,17 @@ public class MongoUsers {
         return users;
     }
 
+    public UpdateResult resetData(String token) {
+        Member member = getMember(token);
+        member.setData(new Data());
+        return updateMember(member);
+    }
+
     public UpdateResult updateMember(Member member) {
         member.setLastModified(new Date());
-        return table.replaceOne(eq("token", member.getToken()), member);
+        return table.replaceOne(eq("pdaId", member.getPdaId()), member);
     }
+
 
     public UpdateResult changeField(Object token, String field, Object newValue) {
         return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));

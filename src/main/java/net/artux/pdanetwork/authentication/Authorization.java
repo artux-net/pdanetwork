@@ -7,6 +7,7 @@ import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.mail.MailService;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
@@ -31,13 +32,16 @@ public class Authorization {
             String token = Base64.getEncoder().encodeToString(newUser.login.getBytes());
 
             if(status.getSuccess()){
-                System.out.println(registerUserMap.keySet());
                 if (!registerUserMap.containsKey(token))
-                    if(mailService.sendConfirmLetter(newUser, token)){
-                        addCurrent(token, newUser);
-                        status = new Status(200, "Проверьте почту", true);
-                    }else {
-                        status = new Status(500, "Не удалось отправить письмо, попробуйте позже", false);
+                    try {
+                        if (mailService.sendConfirmLetter(newUser, token)) {
+                            addCurrent(token, newUser);
+                            status = new Status(200, "Проверьте почту", true);
+                        } else {
+                            status = new Status(500, "Не удалось отправить письмо, попробуйте позже", false);
+                        }
+                    } catch (MessagingException e) {
+                        status = new Status(500, "Не удалось отправить письмо на " + newUser.email, false);
                     }
                 else
                     status = new Status(false, "Пользователь ожидает регистрации");
@@ -47,7 +51,7 @@ public class Authorization {
             response.getWriter().println(gson.toJson(status));
         } catch (Exception ex) {
             response.setStatus(400);
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 

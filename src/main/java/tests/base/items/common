@@ -1,6 +1,6 @@
 [
       {
-         "id":"0",
+         "storyId":"0",
          "type":"0",
          "icon":"pmm.gif",
          "title":"ПМм",
@@ -14,7 +14,7 @@
          "bullet_id":"26"
       },
       {
-         "id":"1",
+         "storyId":"1",
          "type":"0",
          "icon":"pb1s.gif",
          "title":"ПБс",
@@ -28,7 +28,7 @@
          "bullet_id":"26"
       },
       {
-         "id":"2",
+         "storyId":"2",
          "type":"0",
          "icon":"fora.gif",
          "title":"Фора-12",
@@ -42,7 +42,7 @@
          "bullet_id":"26"
       },
       {
-         "id":"3",
+         "storyId":"3",
          "type":"0",
          "icon":"volker.gif",
          "title":"Волкер П9м",
@@ -56,7 +56,7 @@
          "bullet_id":"28"
       },
       {
-         "id":"4",
+         "storyId":"4",
          "type":"0",
          "icon":"kora919.gif",
          "title":"Кора 919",
@@ -70,7 +70,7 @@
          "bullet_id":"30"
       },
       {
-         "id":"5",
+         "storyId":"5",
          "type":"0",
          "icon":"udp-compact.gif",
          "title":"УДП Компакт",
@@ -84,7 +84,7 @@
          "bullet_id":"30"
       },
       {
-         "id":"6",
+         "storyId":"6",
          "type":"0",
          "icon":"desert-e.gif",
          "title":"Чёрный ястреб",
@@ -98,7 +98,7 @@
          "bullet_id":"30"
       },
       {
-         "id":"7",
+         "storyId":"7",
          "type":"0",
          "icon":"sip-m200.gif",
          "title":"СИП-т М200",
@@ -112,7 +112,7 @@
          "bullet_id":"30"
       },
       {
-         "id":"8",
+         "storyId":"8",
          "type":"0",
          "icon":"marta.gif",
          "title":"Марта",
@@ -126,7 +126,7 @@
          "bullet_id":"28"
       },
       {
-         "id":"43",
+         "storyId":"43",
          "type":"0",
          "icon":"hpss1m.gif",
          "title":"ХПСС 1м",
@@ -140,7 +140,7 @@
          "bullet_id":"28"
       },
       {
-         "id":"9",
+         "storyId":"9",
          "type":"1",
          "icon":"mp5.gif",
          "title":"Гадюка 5",
@@ -154,7 +154,7 @@
          "bullet_id":"28"
       },
       {
-         "id":"10",
+         "storyId":"10",
          "type":"1",
          "icon":"akm-74-2u.gif",
          "title":"Акм 74/2у",
@@ -168,7 +168,7 @@
          "bullet_id":"35"
       },
       {
-         "id":"11",
+         "storyId":"11",
          "type":"1",
          "icon":"akm-74.gif",
          "title":"Акм 74/у",
@@ -182,7 +182,7 @@
          "bullet_id":"35"
       },
       {
-         "id":"12",
+         "storyId":"12",
          "type":"1",
          "icon":"obokan.gif",
          "title":"Обокан",
@@ -196,7 +196,7 @@
          "bullet_id":"35"
       },
       {
-         "id":"13",
+         "storyId":"13",
          "type":"1",
          "icon":"il86.gif",
          "title":"ИЛ-86",
@@ -210,7 +210,7 @@
          "bullet_id":"37"
       },
       {
-         "id":"14",
+         "storyId":"14",
          "type":"1",
          "icon":"vla.gif",
          "title":"Спецавтомат ВЛА",
@@ -224,7 +224,7 @@
          "bullet_id":"40"
       },
       {
-         "id":"15",
+         "storyId":"15",
          "type":"1",
          "icon":"groza.gif",
          "title":"Гром С14",
@@ -238,7 +238,7 @@
          "bullet_id":"40"
       },
       {
-         "id":"16",
+         "storyId":"16",
          "type":"1",
          "icon":"sig5k.gif",
          "title":"СГИ 5к",
@@ -252,7 +252,7 @@
          "bullet_id":"37"
       },
       {
-         "id":"17",
+         "storyId":"17",
          "type":"1",
          "icon":"trs301.gif",
          "title":"ТРс 301",
@@ -266,7 +266,7 @@
          "bullet_id":"37"
       },
       {
-         "id":"18",
+         "storyId":"18",
          "type":"1",
          "icon":"gp37.gif",
          "title":"ГП 37",
@@ -280,7 +280,7 @@
          "bullet_id":"37"
       },
       {
-         "id":"19",
+         "storyId":"19",
          "type":"1",
          "icon":"ft200m.gif",
          "title":"ФТ 200М",
@@ -294,7 +294,7 @@
          "bullet_id":"37"
       },
       {
-         "id":"20",
+         "storyId":"20",
          "type":"1",
          "icon":"obrez.gif",
          "title":"Обрез",
@@ -308,7 +308,7 @@
          "bullet_id":"32"
       },
       {
-         "id":"21",
+         "storyId":"21",
          "type":"1",
          "icon":"tost34.gif",
          "title":"ТОСТ-34",
@@ -322,7 +322,7 @@
          "bullet_id":"32"
       },
       {
-         "id":"22",
+         "storyId":"22",
          "type":"1",
          "icon":"cheyzer13.gif",
          "title":"Чейзер 13",
@@ -336,7 +336,7 @@
          "bullet_id":"32"
       },
       {
-         "id":"44",
+         "storyId":"44",
          "type":"1",
          "icon":"spas14.gif",
          "title":"СПСА 14",
@@ -350,7 +350,7 @@
          "bullet_id":"32"
       },
       {
-         "id":"23",
+         "storyId":"23",
          "type":"1",
          "icon":"vintar.gif",
          "title":"Винтарь ВС",
@@ -364,7 +364,7 @@
          "bullet_id":"40"
       },
       {
-         "id":"24",
+         "storyId":"24",
          "type":"1",
          "icon":"svu-mk2.gif",
          "title":"СВУ мк2",
@@ -378,7 +378,7 @@
          "bullet_id":"41"
       },
       {
-         "id":"25",
+         "storyId":"25",
          "type":"1",
          "icon":"svd-m2.gif",
          "title":"СВД м2",
@@ -392,7 +392,7 @@
          "bullet_id":"41"
       },
       {
-         "id":"45",
+         "storyId":"45",
          "type":"1",
          "icon":"gauss.gif",
          "title":"Гаусс пушка",
@@ -406,7 +406,7 @@
          "bullet_id":"46"
       }
       {
-         "id":"26",
+         "storyId":"26",
          "type":"2",
          "icon":"9x18.gif",
          "title":"9х18 мм",
@@ -415,7 +415,7 @@
          "price":"70"
       },
       {
-         "id":"27",
+         "storyId":"27",
          "type":"2",
          "icon":"9x18P.gif",
          "title":"9х18 мм +P+",
@@ -424,7 +424,7 @@
          "price":"80"
       },
       {
-         "id":"28",
+         "storyId":"28",
          "type":"2",
          "icon":"9x19zmo.gif",
          "title":"9х19 мм ЦМО",
@@ -433,7 +433,7 @@
          "price":"100"
       },
       {
-         "id":"29",
+         "storyId":"29",
          "type":"2",
          "icon":"9x19pbp.gif",
          "title":"9х19 мм РВР",
@@ -442,7 +442,7 @@
          "price":"120"
       },
       {
-         "id":"30",
+         "storyId":"30",
          "type":"2",
          "icon":"45ACP.gif",
          "title":".45 АСР",
@@ -451,7 +451,7 @@
          "price":"200"
       },
       {
-         "id":"31",
+         "storyId":"31",
          "type":"2",
          "icon":"45hidro.gif",
          "title":".45 АСР Гидрошок",
@@ -460,7 +460,7 @@
          "price":"215"
       },
       {
-         "id":"32",
+         "storyId":"32",
          "type":"2",
          "icon":"12x70drob.gif",
          "title":"12х70 мм дробь",
@@ -469,7 +469,7 @@
          "price":"50"
       },
       {
-         "id":"33",
+         "storyId":"33",
          "type":"2",
          "icon":"12x76jekan.gif",
          "title":"12х76 мм Жекан",
@@ -478,7 +478,7 @@
          "price":"60"
       },
       {
-         "id":"34",
+         "storyId":"34",
          "type":"2",
          "icon":"12x76drot.gif",
          "title":"12х76 мм Дротик",
@@ -487,7 +487,7 @@
          "price":"100"
       },
       {
-         "id":"35",
+         "storyId":"35",
          "type":"2",
          "icon":"5-45x39.gif",
          "title":"5.45х39 мм",
@@ -496,7 +496,7 @@
          "price":"200"
       },
       {
-         "id":"36",
+         "storyId":"36",
          "type":"2",
          "icon":"5-45x39AP.gif",
          "title":"5.45х39 мм АР",
@@ -505,7 +505,7 @@
          "price":"250"
       },
       {
-         "id":"37",
+         "storyId":"37",
          "type":"2",
          "icon":"5-56x45.gif",
          "title":"5.56х45 мм",
@@ -514,7 +514,7 @@
          "price":"320"
       },
       {
-         "id":"38",
+         "storyId":"38",
          "type":"2",
          "icon":"5-56x45AP.gif",
          "title":"5.56х45 мм АР",
@@ -523,7 +523,7 @@
          "price":"350"
       },
       {
-         "id":"39",
+         "storyId":"39",
          "type":"2",
          "icon":"9x39-SP-6.gif",
          "title":"9х39 СП-6",
@@ -532,7 +532,7 @@
          "price":"400"
       },
       {
-         "id":"40",
+         "storyId":"40",
          "type":"2",
          "icon":"9x39-SP-5.gif",
          "title":"9х39 СП-5",
@@ -541,7 +541,7 @@
          "price":"375"
       },
       {
-         "id":"41",
+         "storyId":"41",
          "type":"2",
          "icon":"7-62x54PP.gif",
          "title":"7.62х54 мм АР",
@@ -550,7 +550,7 @@
          "price":"950"
       },
       {
-         "id":"42",
+         "storyId":"42",
          "type":"2",
          "icon":"7-7-62x54-7H14.gif",
          "title":"7.62х54 мм 7Н14",
@@ -559,7 +559,7 @@
          "price":"1000"
       },
       {
-         "id":"46",
+         "storyId":"46",
          "type":"2",
          "icon":"accumulator.gif",
          "title":"2мм гаусс-патроны",

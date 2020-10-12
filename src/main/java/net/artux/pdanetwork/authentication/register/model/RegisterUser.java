@@ -6,6 +6,7 @@ public class RegisterUser {
     private String password;
     public String email;
     public String name;
+    public String nickname;
     public String avatar;
 
     public RegisterUser(String login, String name, String email, String password, String avatar) {
@@ -16,8 +17,12 @@ public class RegisterUser {
         this.avatar = avatar;
     }
 
-    public String getPassword() {
+    public String getHashPassword() {
         password = String.valueOf(password.hashCode());
+        return password;
+    }
+
+    public String getPassword() {
         return password;
     }
 }

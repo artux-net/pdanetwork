@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+import static net.artux.pdanetwork.utills.ServletContext.getPath;
+
 public class MailService {
 
     private Session session;
@@ -23,8 +25,8 @@ public class MailService {
 
     static {
         try {
-            mailTemplateReg = readFile("data/pdanetwork/mail/mail-template-reg.html");
-            mailTemplateCon = readFile("data/pdanetwork/mail/mail-template-con.html");
+            mailTemplateReg = readFile(getPath() + "mail/mail-template-reg.html");
+            mailTemplateCon = readFile(getPath() + "mail/mail-template-con.html");
         } catch (IOException e) {
             System.out.println("Can not find template files.");
             System.out.println("Error message: " + e.getMessage());
@@ -48,17 +50,17 @@ public class MailService {
                 });
     }
 
-    public void sendOldPassword(Member user) {
-            /*Message message = new MimeMessage(session);
+    public boolean askForPassword(Member user, String token) throws MessagingException {
+        Message message = new MimeMessage(session);
 
             message.setFrom(new InternetAddress("Сталкерский ПДА <"+email+">"));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
             message.setSubject("Восстановление пароля");
             message.setText(user.getLogin() +", "
-                    + "\n\n Ваш пароль: " + user.getPassword());
-            // TODO
-            Transport.send(message);*/
+                    + "\n\n ваша ссылка для смены пароля: " + "http://" + ServletContext.host + "/reset?t=" + token
+                    + "\n\n Действует в течение 30 минут.");
+        return sendMessage(message);
     }
 
     public boolean sendRegisterLetter(RegisterUser user, int pdaId) throws MessagingException{

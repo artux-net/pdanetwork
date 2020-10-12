@@ -1,11 +1,12 @@
 package net.artux.pdanetwork.frontend.adminpanel;
 
 import com.google.gson.Gson;
+import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.communication.model.UserMessage;
-import net.artux.pdanetwork.utills.ServletContext;
-import okhttp3.*;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
@@ -26,50 +26,49 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String token = (String) request.getSession().getAttribute("token");
+        response.setContentType("text/html;");
+        response.setCharacterEncoding("UTF-8");
 
         if(token!=null){
             String loginOfAdmin = mongoUsers.getByToken(token).getLogin();
             String loginedAs = "Вы вошли как: " + loginOfAdmin;
             request.getSession().setAttribute("userName", loginOfAdmin);
             request.setAttribute("loginedAs", loginedAs);
-            makePage(request, response);
+
+
+            String action = request.getParameter("action");
+            switch (action == null ? "info" : action) {
+                case "update":
+                    request.getRequestDispatcher("/update.jsp").forward(request, response);
+                    break;
+                case "info":
+                default:
+                    request.getRequestDispatcher("admin.jsp").forward(request, response);
+                    break;
+            }
+
         } else {
             response.sendRedirect(request.getContextPath() + "/");
         }
 
     }
 
-    private void makePage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setPage(request, response);
-
-        OkHttpClient client;
-        WebSocket ws;
-
-        client = new OkHttpClient();
-        Request request1 = new Request.Builder().url("ws://" + ServletContext.host + ":8080" + "/chat"
-                + "?t=" + request.getSession().getAttribute("token"))
-                .build();
-
-
-        EchoWebSocketListener listener = new EchoWebSocketListener(request);
-        ws = client.newWebSocket(request1, listener);
-
-        UserMessage userMessage = new UserMessage();
-        userMessage.avatarId = 30;
-        userMessage.time = new Date().toString();
-        userMessage.pdaId = 0;
-        userMessage.senderLogin = "System";
-
-        userMessage.groupId = 1;
-
-
-        client.dispatcher().executorService().shutdown();
-    }
-
     @Override
-    protected void doPost(HttpServletRequest request1, HttpServletResponse response) throws ServletException, IOException {
-        setPage(request1, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String action = request.getParameter("action");
 
+        switch (action) {
+            case "add":
+                UserManager userManager = new UserManager();
+                userManager.addItem(Integer.parseInt(request.getParameter("pdaId")),
+                        Integer.parseInt(request.getParameter("type")),
+                        Integer.parseInt(request.getParameter("item")),
+                        Integer.parseInt(request.getParameter("quantity")));
+                break;
+        }
+
+        request.getRequestDispatcher("/admin.jsp").forward(request, response);
     }
 
     private List<UserMessage> chatList = new ArrayList<>();
@@ -79,15 +78,6 @@ public class AdminController extends HttpServlet {
         chatList.add(userMessage);
         httpServletRequest.setAttribute("chatList", userMessage);
 
-    }
-
-    private void setPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html; charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("admin.jsp");
-        if (dispatcher != null) {
-            dispatcher.forward(request, response);
-        }
     }
 
     private final class EchoWebSocketListener extends WebSocketListener {

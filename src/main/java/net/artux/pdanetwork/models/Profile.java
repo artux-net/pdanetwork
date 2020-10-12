@@ -26,9 +26,9 @@ public class Profile {
      */
     private int friends;
     private int requests;
+    private List<Integer> relations;
 
     //TODO
-    private int[] relations;
     private List<Achievement> achievements;
 
     public Profile() {
@@ -47,6 +47,7 @@ public class Profile {
         this.registrationDate = member.getRegistrationDate();
         this.friends = member.getFriends().size();
         this.requests = member.getFriendRequests().size();
+        this.relations = member.getRelations();
     }
 
     public Profile(Member member, Member by) {
@@ -62,6 +63,7 @@ public class Profile {
         this.registrationDate = member.getRegistrationDate();
         this.friends = member.getFriends().size();
         this.requests = member.getFriendRequests().size();
+        this.relations = member.getRelations();
 
         setFriendStatus(member, by);
     }

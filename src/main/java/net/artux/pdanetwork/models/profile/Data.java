@@ -1,4 +1,3 @@
-
 package net.artux.pdanetwork.models.profile;
 
 import net.artux.pdanetwork.models.profile.items.Armor;
@@ -12,15 +11,15 @@ import java.util.List;
 
 public class Data {
 
-    private Equipment equipment;
+    private Equipment equipment = new Equipment();
     private Stats stats = new Stats();
 
-    private List<Armor> armors = new ArrayList<>();
-    private List<Weapon> weapons = new ArrayList<>();
-    private List<Artifact> artifacts = new ArrayList<>();
-    private List<Item> items = new ArrayList<>();
+    public List<Armor> armors = new ArrayList<>();
+    public List<Weapon> weapons = new ArrayList<>();
+    public List<Artifact> artifacts = new ArrayList<>();
+    public List<Item> items = new ArrayList<>();
 
-    private List<Story> stories = new ArrayList<>();
+    public List<Story> stories = new ArrayList<>();
     public Parameters parameters = new Parameters();
     private HashMap<String, String> temp = new HashMap<>();
 
@@ -40,7 +39,7 @@ public class Data {
     }
 
     public List<Story> getStories() {
-        return new ArrayList<>();
+        return stories;
     }
 
     public void setEquipment(Equipment equipment) {

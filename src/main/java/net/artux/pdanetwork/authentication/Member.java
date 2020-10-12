@@ -18,6 +18,7 @@ public class Member {
     private String password;
     private String email;
     private String name;
+    private String nickname;
     private String avatar;
     private String token;
     private int pdaId;
@@ -25,11 +26,13 @@ public class Member {
     private int blocked;
     private int group;
     private int xp;
+    private int money;
     private String location;
     private Data data;
     public List<Integer> dialogs;
     public List<Integer> friends;
     public List<Integer> friendRequests;
+    public List<Integer> relations;
     private Date lastModified;
     private String registrationDate;
     private Date lastLoginAt;
@@ -39,18 +42,22 @@ public class Member {
 
     public Member(RegisterUser registerUser, int id) {
         login = registerUser.login;
-        password = registerUser.getPassword();
+        password = registerUser.getHashPassword();
         email = registerUser.email;
         name = registerUser.name;
+        nickname = registerUser.nickname;
         avatar = registerUser.avatar;
         token = Security.encrypt(login + ":" + password);
         pdaId = id;
         admin = blocked = group = xp = 0;
         location = "Ч-4";
         data = new Data();
+        money = 500;
         dialogs = friends = friendRequests = new ArrayList<>();
         lastModified = lastLoginAt = new Date();
-        System.out.println(new Date().toString());
+        relations = new ArrayList<>();
+        for (int i = 0; i < 9; i++)
+            relations.add(0);
         registrationDate = new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date());
     }
 
@@ -76,6 +83,11 @@ public class Member {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void hashPassword(String password) {
+        this.password = String.valueOf(password.hashCode());
+        token = Security.encrypt(login + ":" + password);
     }
 
     public String getEmail() {
@@ -212,5 +224,37 @@ public class Member {
 
     public void setData(Data data) {
         this.data = data;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public List<Integer> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<Integer> relations) {
+        this.relations = relations;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public boolean buy(int price) {
+        if (money >= price) {
+            money -= price;
+            return true;
+        } else
+            return false;
     }
 }

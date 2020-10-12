@@ -6,6 +6,7 @@ import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,9 +16,9 @@ public class Equipment {
     private Weapon firstWeapon;
     private Weapon secondWeapon;
     private Item detector;
-    private List<Artifact> artifacts;
+    private List<Artifact> artifacts = new ArrayList<>();
 
-    Equipment() {
+    public Equipment() {
     }
 
     public Armor getArmor() {

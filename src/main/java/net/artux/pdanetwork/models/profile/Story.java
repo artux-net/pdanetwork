@@ -3,7 +3,7 @@ package net.artux.pdanetwork.models.profile;
 
 public class Story {
 
-    private Integer id;
+    private Integer storyId;
     private Integer lastChapter;
     private Integer lastStage;
 
@@ -11,17 +11,23 @@ public class Story {
     }
 
     public Story(String[] values) {
-        this.id = Integer.parseInt(values[0]);
+        this.storyId = Integer.parseInt(values[0]);
         this.lastChapter = Integer.parseInt(values[1]);
         this.lastStage = Integer.parseInt(values[2]);
     }
 
-    public Integer getId() {
-        return id;
+    public Story(Integer storyId, Integer lastChapter, Integer lastStage) {
+        this.storyId = storyId;
+        this.lastChapter = lastChapter;
+        this.lastStage = lastStage;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getStoryId() {
+        return storyId;
+    }
+
+    public void setStoryId(Integer storyId) {
+        this.storyId = storyId;
     }
 
     public Integer getLastChapter() {
@@ -40,5 +46,12 @@ public class Story {
         this.lastStage = lastStage;
     }
 
-
+    @Override
+    public String toString() {
+        return "Story{" +
+                "storyId=" + storyId +
+                ", lastChapter=" + lastChapter +
+                ", lastStage=" + lastStage +
+                '}';
+    }
 }

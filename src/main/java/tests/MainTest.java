@@ -1,14 +1,37 @@
 package tests;
 
-import net.artux.pdanetwork.communication.utilities.MongoMessages;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
 
 public class MainTest {
 
 
     public static void main(String[] args)  {
-        MongoMessages mongoMessages = new MongoMessages();
-        //mongoMessages.newConversation(1, new ArrayList<>(Collections.singletonList(2)));
-        System.out.println(mongoMessages.getDialogID(3,2));
+
+
+        HashMap<Integer, Integer> integerIntegerHashMap = new HashMap<>();
+        int a = integerIntegerHashMap.get(0) + 6;
+        Gson gson = new Gson();
+        System.out.println(a);
     }
 
+
+    static class A {
+        public int a;
+    }
+
+    static class B extends A {
+        public int b;
+
+        B(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        @Override
+        public String toString() {
+            return a + " " + b;
+        }
+    }
 }

@@ -11,13 +11,13 @@
 <h1>Войдите</h1>
 <form action="${pageContext.request.contextPath}/loginAdmin" method="post">
     <label for="login">Email or login: </label>
-    <input type="text" name="login" id="login" value="${login}">
+    <input type="text" name="login" value="${login}">
     <p><label for="password">Password: </label>
-    <input type="password" name="password" id="password" value="${password}">
+        <input type="password" name="password" value="${password}">
     </p>
     <input type="submit" name="sign in" value="Sign in">
 </form>
-<p>${violation}.</p>
+    <p>${violation}</p>
 </div>
 
 </body>
