@@ -3,13 +3,19 @@ package net.artux.pdanetwork.communication.utilities;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import net.artux.pdanetwork.communication.model.Conversation;
+import net.artux.pdanetwork.communication.model.UserMessage;
+import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 import net.artux.pdanetwork.utills.ServletContext;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.codecs.pojo.PojoCodecProvider;
 
 import javax.websocket.Session;
 import java.io.IOException;
@@ -19,6 +25,10 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
+import static net.artux.pdanetwork.utills.ServletContext.mongoMessages;
+import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
+import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoMessages {
 
@@ -28,7 +38,15 @@ public class MongoMessages {
     private MongoCollection<Document> conversations;
 
     public MongoMessages(){
-        mongoClient = MongoClients.create("mongodb://admin:f8a9s5t@localhost:27017/");
+
+        CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
+        MongoClientSettings clientSettings = MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@localhost:27017/"))
+                .codecRegistry(codecRegistry)
+                .build();
+
+        mongoClient = MongoClients.create(clientSettings);
         db = mongoClient.getDatabase("messages");
         conversations = db.getCollection("conversations");
 
@@ -108,20 +126,21 @@ public class MongoMessages {
     }
 
     public void sendLastMessages(int id, Session session){
-        Block<Document> printBlock = document -> {
+        Block<DBMessage> printBlock = document -> {
             try {
-                session.getBasicRemote().sendText(document.toJson());
+                session.getBasicRemote().sendText(
+                        new UserMessage(mongoUsers.getById(document.pdaId), document).toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         };
 
-        db.getCollection(String.valueOf(id)).find().sort(new BasicDBObject()).limit(30).forEach(printBlock);
+        getConversationCollection(id).find().sort(new BasicDBObject()).limit(30).forEach(printBlock);
     }
 
 
-    public MongoCollection<Document> getConversationCollection(int id){
-        return db.getCollection(String.valueOf(id));
+    public MongoCollection<DBMessage> getConversationCollection(int id) {
+        return db.getCollection(String.valueOf(id), DBMessage.class);
     }
 
     public List<Integer> getIDs(int id){
@@ -135,8 +154,14 @@ public class MongoMessages {
         } else return null;
     }
 
-    public void updateConversation(int id, String message){
-      conversations.updateOne(eq("id", id), set("lastMessage", message));
+    public void updateConversation(int id, UserMessage userMessage) {
+        mongoMessages.getConversationCollection(id).insertOne(new DBMessage(userMessage));
+        if (userMessage.message.length() > 40)
+            userMessage.message = userMessage.message.substring(0, 40).strip() + "..";
+
+        conversations.updateOne(eq("id", id),
+                set("lastMessage", userMessage.senderLogin + ": " + userMessage.message));
+
     }
 
     public Conversation getConversation(int id){

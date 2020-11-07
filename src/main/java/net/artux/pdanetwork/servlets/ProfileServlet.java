@@ -42,6 +42,8 @@ public class ProfileServlet extends HttpServlet {
         UserManager userManager = new UserManager();
         Member m = userManager.doUserActions(actions, token);
         if (m!=null){
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.setCharacterEncoding("UTF-8");
             resp.getWriter().print(gson.toJson(m));
         }else {
             resp.setStatus(500);

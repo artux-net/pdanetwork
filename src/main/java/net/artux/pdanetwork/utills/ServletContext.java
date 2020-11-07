@@ -6,6 +6,8 @@ import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.mail.MailService;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
@@ -13,7 +15,6 @@ import javax.servlet.annotation.WebListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Date;
 
 @WebListener
 public class ServletContext implements javax.servlet.ServletContextListener {
@@ -22,14 +23,19 @@ public class ServletContext implements javax.servlet.ServletContextListener {
     public static MongoUsers mongoUsers = new MongoUsers();
     public static MongoMessages mongoMessages = new MongoMessages();
     public static UserManager userManager = new UserManager();
-    private static boolean debug = false;
+    private static final boolean debug = false;
+
+    private static Logger logger;
 
     public static String host;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        log("Servlets initialized, server started.");
 
+        System.setProperty("log4j.configurationFile", getPath() + "config/log.conf");
+        System.setProperty("log-path", getPath() + "logs");
+        logger = LogManager.getLogger(ServletContext.class);
+        log("Servlets initialized, server started.");
         Socket socket = new Socket();
         try {
             socket.connect(new InetSocketAddress("google.com", 80));
@@ -49,12 +55,20 @@ public class ServletContext implements javax.servlet.ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        System.out.println("Servlet eliminated, please check the status.");
+        log("Servlet eliminated, please check the status.");
         mongoUsers.close();
     }
 
-    private void log(String msg){
-        System.out.println(new Date() +" "+msg);
+    public static void log(String msg) {
+        logger.info(msg);
+    }
+
+    public static void error(String msg, Throwable thr) {
+        logger.error(msg, thr);
+    }
+
+    public static Logger getLogger() {
+        return logger;
     }
 
     public static String getPath() {

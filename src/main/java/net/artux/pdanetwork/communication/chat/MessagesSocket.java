@@ -1,11 +1,12 @@
 package net.artux.pdanetwork.communication.chat;
 
 
+import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.communication.chat.configurators.MessagesConfigurator;
+import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
-import org.bson.Document;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -24,36 +25,44 @@ public class MessagesSocket {
 
     @OnOpen
     public void onOpen(Session userSession, EndpointConfig config) throws IOException {
-        System.out.println("Opened session: " + userSession.getId());
         Map<String, String> params = RequestReader.splitQuery(userSession.getQueryString());
 
         String token = (String) config.getUserProperties().get("t");
-        int pdaId = ServletContext.mongoUsers.getPdaIdByToken(token);
+        Member member = ServletContext.mongoUsers.getByToken(token);
+        if (member != null) {
+            int pdaId = member.getPdaId();
 
-        userSession.getUserProperties().put("t", token);
-        userSession.getUserProperties().put("pda", pdaId);
-        if (params.containsKey("to")) {
-            int id = Integer.parseInt(params.get("to"));
-            int conversationId = mongoMessages.getDialogID(pdaId, id);
-            if (conversationId != 0) {
-                addToConversation(conversationId, userSession);
-            } else {
-                userSession.getUserProperties().put("first", true);
-                userSession.getUserProperties().put("pda", pdaId);
-                userSession.getUserProperties().put("to", id);
-            }
-        } else if (params.containsKey("c")) {
-            int conversationId = Integer.parseInt(params.get("c"));
-            if (mongoMessages.hasConversation(conversationId)
-                    && mongoMessages.conversationHas(conversationId, pdaId)) {
-                addToConversation(conversationId, userSession);
+            ServletContext.log("Opened session(" + userSession.getId() + ") for pda: " + pdaId + ", query: "
+                    + userSession.getQueryString());
+
+            userSession.getUserProperties().put("m", member);
+            userSession.getUserProperties().put("pda", pdaId);
+            if (params.containsKey("to")) {
+                int id = Integer.parseInt(params.get("to"));
+                int conversationId = mongoMessages.getDialogID(pdaId, id);
+                if (conversationId != 0) {
+                    addToConversation(conversationId, userSession);
+                } else {
+                    userSession.getUserProperties().put("first", true);
+                    userSession.getUserProperties().put("pda", pdaId);
+                    userSession.getUserProperties().put("to", id);
+                }
+            } else if (params.containsKey("c")) {
+                int conversationId = Integer.parseInt(params.get("c"));
+                if (mongoMessages.hasConversation(conversationId)
+                        && mongoMessages.conversationHas(conversationId, pdaId)) {
+                    addToConversation(conversationId, userSession);
+                } else {
+                    CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
+                    userSession.close(closeReason);
+                }
             } else {
                 CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
                 userSession.close(closeReason);
             }
         } else {
-            CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, "Wrong req");
-            userSession.close(closeReason);
+            ServletContext.log("Messages: failed for auth token " + token);
+            userSession.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, "Auth failed"));
         }
     }
 
@@ -63,7 +72,8 @@ public class MessagesSocket {
             sessions.add(session);
             conversations.put(conversationId, sessions);
         }else {
-            conversations.get(conversationId).add(session);
+            conversations.get(conversationId)
+                    .add(session);
         }
         session.getUserProperties().put("conversation", conversationId);
 
@@ -79,36 +89,37 @@ public class MessagesSocket {
             if (conversations.get(conversation).size() == 0)
                 conversations.remove(conversation);
         }
-        System.out.println("Closed session: " + userSession.getId());
+        ServletContext.log("Closed session: " + userSession.getId());
     }
 
     @OnMessage
     public void onMessage(String message, Session userSession) {
         checkFirst(userSession);
         int conversation = (int) userSession.getUserProperties().get("conversation");
+        UserMessage userMessage = new UserMessage((Member) userSession.getUserProperties().get("m"), message);
 
         for (Session session : conversations.get(conversation)){
-            session.getAsyncRemote().sendText(message);
+            session.getAsyncRemote().sendText(userMessage.toString());
         }
 
-        mongoMessages.updateConversation(conversation, message);
-        mongoMessages.getConversationCollection(conversation).insertOne(Document.parse(message));
+        mongoMessages.updateConversation(conversation, userMessage);
     }
 
     @OnError
     public void onError(Session session, Throwable thr) {
+        ServletContext.error("onError - MessagesSocket for session-id: " + session.getId(), thr);
         thr.printStackTrace();
     }
 
     private void checkFirst(Session userSession) {
-        if ((Boolean) userSession.getUserProperties().get("first")) {
-            int pdaId = (int) userSession.getUserProperties().get("pda");
-            int id = (int) userSession.getUserProperties().get("to");
+        if (userSession.getUserProperties().get("first") != null)
+            if ((Boolean) userSession.getUserProperties().get("first")) {
+                int pdaId = (int) userSession.getUserProperties().get("pda");
+                int id = (int) userSession.getUserProperties().get("to");
 
-            int conversationId = ServletContext.mongoMessages.newConversation(pdaId, id);
-            addToConversation(conversationId, userSession);
-        }
-
+                int conversationId = ServletContext.mongoMessages.newConversation(pdaId, id);
+                addToConversation(conversationId, userSession);
+            }
     }
 
 }
