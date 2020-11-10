@@ -1,0 +1,116 @@
+body {
+    font: 13pt Arial, Helvetica, sans-serif; /* Шрифт теста */
+    background: #0a0a0a; /* Цвет фона */
+    color: #fff;
+}
+
+h2 {
+    font-size: 18px; /* Размер шрифта в заголовке */
+    color: #fff; /* Цвет заголовка */
+    margin-top: 0; /* Отступ сверху */
+}
+
+a {
+    color: #fff;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+a:hover {
+    color: #ff0000 !important;
+}
+
+.container {
+    width: 800px; /* Ширина слоя */
+    margin: 0 auto; /* Выравнивнить весь блок по центру */
+    background: #151719; /* Цвет фона левой колонки */
+}
+
+.header {
+    font-size: 38px; /* Размер текста в шапке */
+    text-align: center; /* Выравнивание текст шапки по центру */
+    padding: 5px; /* Отступы внутри блока шапки */
+    background: #151719; /* Цвет фона шапки */
+    color: #fff; /* Цвет текста */
+}
+
+.sidebar {
+    margin-top: 10px;
+    width: 110px; /* Ширина блока */
+    padding: 0 10px; /* Отступы внутри левого блока */
+    float: left; /* Обтекание блока по правому краю */
+}
+
+.content {
+    margin-left: 130px; /* Отступ слева */
+    padding: 10px; /* Отступы внутри правого блока */
+    background: #161a1e; /* Цвет фона правого блока */
+}
+
+.footer {
+    background: #151719; /* Цвет фона нижнего блока-подвала */
+    color: #fff; /* Цвет текста подвала */
+    padding: 5px; /* Отступы внутри блока */
+    clear: left; /* Отменяем действие float */
+}
+
+#zatemnenie:target {
+
+    display: block;
+
+}
+
+#zatemnenie {
+
+    background: rgba(102, 102, 102, 0.68);
+
+    width: 100%;
+
+    height: 100%;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    display: none;
+
+    z-index: 9999999999;
+
+}
+
+window {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    width: 400px;
+
+    border: 1px solid #cecece;
+
+    padding: 50px;
+
+    transform: translate(-50%, -50%);
+
+    background-color: #000;
+
+}
+
+div#main_text a.close_window {
+
+    position: absolute;
+
+    right: 10px;
+
+    top: 4px;
+
+    border: none;
+
+} 

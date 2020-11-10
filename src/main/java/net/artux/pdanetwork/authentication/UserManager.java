@@ -246,6 +246,15 @@ public class UserManager {
             return new Status(false, "Неудалось продать предмет.");
     }
 
+    public boolean addMoney(int pdaId, int money) {
+        Member member = mongoUsers.getById(pdaId);
+        if (member != null) {
+            member.setMoney(member.getMoney() + money);
+            mongoUsers.updateMember(member);
+            return true;
+        } else return false;
+    }
+
     public Status buy(String token, Item item, Sellers sellers, int sellerId) {
         Member member = mongoUsers.getByToken(token);
         if (sellers.getSeller(sellerId).getAllItems().contains(item)) {

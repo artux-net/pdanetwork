@@ -22,4 +22,31 @@ public class UserInfo {
         regDate = member.getRegistrationDate();
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public int getPdaId() {
+        return pdaId;
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public String getRegDate() {
+        return regDate;
+    }
 }

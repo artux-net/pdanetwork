@@ -1,0 +1,88 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Админ панель - Сталкерский ПДА | Artux</title>
+    <style>
+        <%@include file="/css/style.css" %>
+    </style>
+    <c:if test="${not empty msg}">
+        <script>
+            window.addEventListener("load", function () {
+                alert("${msg}");
+            }
+        </script>
+    </c:if>
+</head>
+<body>
+<div class="container">
+    <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
+    <div class="sidebar">
+        <p><a href="#">${username}</a></p>
+        <b><p><a href="${link_index}">Статистика</a></p></b>
+        <p><a href="${link_chat}">Чат</a></p>
+        <p><a href="${link_users}">Профили</a></p>
+        <p><a href="${link_reports}">Репорты</a></p>
+        <p><a href="${link_logs}">Логи</a></p>
+        <p><a href="${link_reset}">Выйти</a></p>
+    </div>
+    <div class="content">
+        <h2>Пользователи</h2>
+        <form name="users-search" method="post" action="${pageContext.request.contextPath}/admin?action=find">
+            <input type="text" placeholder="Искать по ID или логину" value="${q}" name="q">
+            <button type="submit">Поиск</button>
+        </form>
+
+        <table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+            <tbody>
+            <tr>
+                <td><b>ID</b></td>
+                <td><b>Ник</b></td>
+                <td><b>Часов</b></td>
+                <td><b>Ранг</b></td>
+                <td><b>Прочее</b></td>
+            </tr>
+            <c:forEach items="${users}" var="user" varStatus="item">
+                <tr>
+                    <td>${user.pdaId}</td>
+                    <td>${user.login}</td>
+                    <td>${user.registrationDate}</td>
+                    <td>${user.xp}</td>
+                    <td><a href="#zatemnenie">Изменить</a>
+                        <div id="zatemnenie">
+                            <window>
+                                <a href="#close_window" class="close_window">X</a>
+                                <p>Денег: ${user.money};</p>
+                                <form name="add_money" method="post"
+                                      action="${pageContext.request.contextPath}/admin?action=addmoney&pda=${user.pdaId}">
+                                    <input type="number" placeholder="Добавить денег" value="${money}" name="money">
+                                    <button type="submit">Добавить</button>
+                                </form>
+                                Добавить снаряжение:
+                                <form name="add_gun" method="post" action=".php">
+                                    <select typegun>
+                                        <option typegun>Броня</option>
+                                        <option typegun>Пистолет</option>
+                                        <option typegun>Пистолет</option>
+                                        <option typegun>Пистолет</option>
+                                    </select>
+                                </form>
+                                <form name="add_gun_id" method="post" action="">
+                                    <input type="text" placeholder="ID снаряжения">
+                                    <button type="submit">Добавить</button>
+                                </form>
+                            </window>
+                        </div>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="footer">${footer_version}</div>
+</div>
+</body>
+</html>

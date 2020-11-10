@@ -22,7 +22,7 @@ public class LoginAdminController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
         if (dispatcher != null) {
             dispatcher.forward(request, response);
         }
@@ -38,11 +38,12 @@ public class LoginAdminController extends HttpServlet {
 
         if(status.isSuccess()){
             request.getSession().setAttribute("token", status.getToken());
+            request.getSession().setAttribute("m", mongoUsers.getByToken(status.getToken()));
             response.sendRedirect(request.getContextPath() + "/admin");
         } else {
             String violation = status.getDescription();
             request.setAttribute("violation", violation);
-            request.getRequestDispatcher("/").forward(request, response);
+            doGet(request, response);
         }
     }
 
