@@ -28,9 +28,12 @@ public class DialogsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String token = req.getHeader("t");
         Member member = ServletContext.mongoUsers.getByToken(token);
-        resp.setContentType("application/json; charset=UTF-8");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().println(gson.toJson(getResponseList(member.getDialogs(), token)));
+        if (member != null) {
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.setCharacterEncoding("UTF-8");
+            resp.getWriter().println(gson.toJson(getResponseList(member.getDialogs(), token)));
+        } else
+            resp.sendError(400);
     }
 
     private List<DialogResponse> getResponseList(List<Integer> dialogs, String token){
@@ -63,11 +66,15 @@ public class DialogsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String token = httpServletRequest.getHeader("t");
         Member member = ServletContext.mongoUsers.getByToken(token);
-        Type type = new TypeToken<List<Integer>>(){}.getType();
-        List<Integer> members = new Gson().fromJson(RequestReader.getString(httpServletRequest), type);
-        ServletContext.mongoMessages.newConversation(member.getPdaId(), members);
-        httpServletResponse.setContentType("application/json; charset=UTF-8");
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.getWriter().print(gson.toJson(new Status(true, "Added")));
+        if (member != null) {
+            Type type = new TypeToken<List<Integer>>() {
+            }.getType();
+            List<Integer> members = gson.fromJson(RequestReader.getString(httpServletRequest), type);
+            ServletContext.mongoMessages.newConversation(member.getPdaId(), members);
+            httpServletResponse.setContentType("application/json; charset=UTF-8");
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.getWriter().print(gson.toJson(new Status(true, "Added")));
+        } else
+            httpServletResponse.sendError(400);
     }
 }

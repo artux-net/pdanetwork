@@ -31,6 +31,7 @@ public class AdminController extends HttpServlet {
             request.setAttribute("link_chat", "/admin/chat");
             request.setAttribute("link_users", "/admin?action=users");
             request.setAttribute("link_reset", "/admin?action=reset");
+            request.setAttribute("link_manager", "/manager");
             switch (action == null ? "info" : action) {
                 case "update":
                     request.getRequestDispatcher("/update.jsp").forward(request, response);
@@ -39,16 +40,12 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("users", mongoAdmin.find(""));
                     request.getRequestDispatcher("/users.jsp").forward(request, response);
                     break;
-                case "info":
-                    request.setAttribute("total_registrations", mongoAdmin.getSize());
-                    request.setAttribute("rating", mongoAdmin.getRating(0));
-                    request.getRequestDispatcher("/admin.jsp").forward(request, response);
-                    break;
                 case "reset":
                     request.getSession().invalidate();
                     request.getRequestDispatcher("/loginAdmin").forward(request, response);
                     break;
                 default:
+                    request.setAttribute("total_registrations", mongoAdmin.getSize());
                     request.setAttribute("rating", mongoAdmin.getRating(0));
                     request.getRequestDispatcher("/admin.jsp").forward(request, response);
                     break;

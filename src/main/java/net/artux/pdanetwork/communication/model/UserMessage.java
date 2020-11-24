@@ -3,21 +3,16 @@ package net.artux.pdanetwork.communication.model;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
 
 public class UserMessage {
 
     public String senderLogin;
     public String message;
-    public Date time;
+    public Instant time;
     public int groupId;
     public String avatarId;
     public int pdaId;
-
-    //TODO !!!!!!!!!!!!!!!!
-    DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm:ss a");
 
     public UserMessage() {
         senderLogin = "System";
@@ -30,7 +25,7 @@ public class UserMessage {
         senderLogin = member.getLogin();
         this.message = message.strip();
 
-        time = new Date();
+        time = Instant.now();
         groupId = member.getGroup();
         avatarId = member.getAvatar();
         pdaId = member.getPdaId();
@@ -50,7 +45,7 @@ public class UserMessage {
         UserMessage userMessage = new UserMessage();
         userMessage.message = message;
 
-        userMessage.time = new Date();
+        userMessage.time = Instant.now();
         return userMessage;
         //TODO: different locales!
     }
@@ -61,7 +56,7 @@ public class UserMessage {
         return "{" +
                 "\"senderLogin\":\"" + senderLogin + "\"," +
                 "\"message\":\"" + message + "\"," +
-                "\"time\":\"" + dateFormat.format(time) + "\"," +
+                "\"time\":\"" + time + "\"," +
                 "\"groupId\":\"" + groupId + "\"," +
                 "\"avatarId\":\"" + avatarId + "\"," +
                 "\"pdaId\":\"" + pdaId + "\"" +

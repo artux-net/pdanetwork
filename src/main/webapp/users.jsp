@@ -26,6 +26,7 @@
         <p><a href="${link_users}">Профили</a></p>
         <p><a href="${link_reports}">Репорты</a></p>
         <p><a href="${link_logs}">Логи</a></p>
+        <p><a href="${link_manager}">Tomcat Manager</a></p>
         <p><a href="${link_reset}">Выйти</a></p>
     </div>
     <div class="content">
@@ -54,6 +55,23 @@
                         <div id="zatemnenie">
                             <window>
                                 <a href="#close_window" class="close_window">X</a>
+                                <p>Email: ${user.email};</p>
+                                <p>Статус бана: ${user.blocked};</p>
+                                <p>Группировка:
+                                    <c:choose>
+                                        <c:when test="${user.group == 0}">Одиночки</c:when>
+                                        <c:when test="${user.group == 1}">Бандиты</c:when>
+                                        <c:when test="${user.group == 2}">Военные</c:when>
+                                        <c:when test="${user.group == 3}">Свобода</c:when>
+                                        <c:when test="${user.group == 4}">Долг</c:when>
+                                        <c:when test="${user.group == 5}">Монолит</c:when>
+                                        <c:when test="${user.group == 6}">Наёмники</c:when>
+                                        <c:when test="${user.group == 7}">Ученые</c:when>
+                                        <c:when test="${user.group == 8}">Чистое небо</c:when>
+                                        <c:otherwise>undefined</c:otherwise>
+                                    </c:choose>
+                                    ;</p>
+
                                 <p>Денег: ${user.money};</p>
                                 <form name="add_money" method="post"
                                       action="${pageContext.request.contextPath}/admin?action=addmoney&pda=${user.pdaId}">

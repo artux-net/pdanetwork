@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
+import static net.artux.pdanetwork.utills.ServletContext.*;
 
 public class UserManager {
 
@@ -108,6 +108,14 @@ public class UserManager {
                                 String[] vals = pass.split(":");
                                 data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) * Integer.parseInt(vals[1]));
                             }
+                            break;
+                        case "money":
+                            for (String pass : map.get(key))
+                                member.money(Integer.parseInt(pass));
+                            break;
+                        case "xp":
+                            for (String pass : map.get(key))
+                                member.xp(Integer.parseInt(pass));
                             break;
                         case "set":
                             for (String pass : map.get(key)) {
@@ -276,15 +284,20 @@ public class UserManager {
     }
 
     private Data addItems(Data data, String[] values) {
-        if (values.length == 3) {
-            int type = Integer.parseInt(values[0]);
-            int id = Integer.parseInt(values[1]);
-            int quantity = Integer.parseInt(values[2]);
-            Item item = items.getItem(type, id);
-            item.quantity = quantity;
-            return addItems(data, item);
-        } else
-            return data;
+        try {
+            if (values.length == 3) {
+                int type = Integer.parseInt(values[0]);
+                int id = Integer.parseInt(values[1]);
+                int quantity = Integer.parseInt(values[2]);
+                log("try to add item, type: " + type + ", id: " + id);
+                Item item = items.getItem(type, id);
+                item.quantity = quantity;
+                return addItems(data, item);
+            }
+        } catch (Exception e) {
+            error("Item err", e);
+        }
+        return data;
     }
 
     private Data addItems(Data data, Item item) {
@@ -297,8 +310,10 @@ public class UserManager {
                 return items.addArtifact(data, (Artifact) item);
             else
                 return items.addItem(data, item);
-        } else
+        } else {
+            log("item null");
             return data;
+        }
     }
 
     private Data deleteItem(Data data, Item item) {

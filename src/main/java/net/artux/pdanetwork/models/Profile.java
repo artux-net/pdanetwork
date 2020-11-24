@@ -109,14 +109,16 @@ public class Profile {
     }
 
     private void setFriendStatus(Member member, Member by) {
-        if (member.getFriendRequests().contains(by.getPdaId())) {
-            friendStatus = 3;
-        } else if (by.getFriendRequests().contains(pdaId)) {
-            friendStatus = 2;
-        } else if (member.getFriends().contains(by.getPdaId())) {
-            friendStatus = 1;
-        } else {
-            friendStatus = 0;
-        }
+        if (member.getFriendRequests() != null)
+            if (member.getFriendRequests().contains(by.getPdaId())) {
+                friendStatus = 3;
+            } else if (by.getFriendRequests().contains(pdaId)) {
+                friendStatus = 2;
+            } else if (member.getFriends().contains(by.getPdaId())) {
+                friendStatus = 1;
+            } else {
+                friendStatus = 0;
+            }
+        else friendStatus = 0;
     }
 }

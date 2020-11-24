@@ -8,17 +8,19 @@ import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-@ServerEndpoint(value="/chat", configurator= ChatSocketConfigurator.class)
+@ServerEndpoint(value = "/chat/{token}", configurator = ChatSocketConfigurator.class)
 public class ChatSocket {
 
     private LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>();
 
     @OnOpen
-    public void onOpen(Session userSession, EndpointConfig config) throws IOException {
-        String token = (String) config.getUserProperties().get("t");
+    public void onOpen(Session userSession, EndpointConfig config, @PathParam("token") String token) throws IOException {
+        if (token.equals("*"))
+            token = (String) config.getUserProperties().get("t");
         Member member = ServletContext.mongoUsers.getByToken(token);
         if (member != null) {
             userSession.getUserProperties().put("m", member);

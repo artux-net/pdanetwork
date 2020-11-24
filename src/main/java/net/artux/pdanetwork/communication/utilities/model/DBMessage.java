@@ -2,12 +2,12 @@ package net.artux.pdanetwork.communication.utilities.model;
 
 import net.artux.pdanetwork.communication.model.UserMessage;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class DBMessage {
 
     public String message;
-    public Date time;
+    public Instant time;
     public int pdaId;
 
     public DBMessage() {
@@ -27,11 +27,11 @@ public class DBMessage {
         this.message = message;
     }
 
-    public Date getTime() {
+    public Instant getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Instant time) {
         this.time = time;
     }
 

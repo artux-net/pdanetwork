@@ -250,6 +250,18 @@ public class Member {
         this.money = money;
     }
 
+    public void money(int money) {
+        this.money += money;
+        if (this.money < 0)
+            this.money = 0;
+    }
+
+    public void xp(int xp) {
+        this.xp += xp;
+        if (this.xp < 0)
+            this.xp = 0;
+    }
+
     public boolean buy(int price) {
         if (money >= price) {
             money -= price;

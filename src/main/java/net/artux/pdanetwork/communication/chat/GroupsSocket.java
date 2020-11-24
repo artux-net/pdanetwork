@@ -7,11 +7,12 @@ import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 
-@ServerEndpoint(value="/groupChat", configurator= GroupsSocketConfigurator.class)
+@ServerEndpoint(value = "/groupChat/{token}/{group}", configurator = GroupsSocketConfigurator.class)
 public class GroupsSocket {
 
     private HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = getLastMessages();
@@ -30,14 +31,20 @@ public class GroupsSocket {
     }
 
     @OnOpen
-    public void onOpen(Session userSession, EndpointConfig config) throws IOException {
-        String token = (String) config.getUserProperties().get("t");
+    public void onOpen(Session userSession, EndpointConfig config,
+                       @PathParam("token") String token, @PathParam("group") String gr) throws IOException {
+        if (token.equals("*"))
+            token = (String) config.getUserProperties().get("t");
 
         Member member = ServletContext.mongoUsers.getByToken(token);
         if (member != null) {
-            userSession.getUserProperties().put("m", member);
+            int group = 0;
+            if (gr.equals("*"))
+                group = ServletContext.mongoUsers.getByToken(token).getGroup();
+            else if (member.getAdmin() != 0)
+                group = Integer.parseInt(gr);
 
-            int group = ServletContext.mongoUsers.getByToken(token).getGroup();
+            userSession.getUserProperties().put("m", member);
 
             if (group != 0) {
                 for (UserMessage userMessage : lastMessages.get(group))

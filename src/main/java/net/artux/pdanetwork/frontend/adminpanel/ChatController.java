@@ -25,17 +25,13 @@ public class ChatController extends HttpServlet {
             request.getSession().setAttribute("username", member.getLogin());
             request.setAttribute("username", member.getLogin());
 
-            request.setAttribute("link_back", "/admin/chat?action=back");
+            request.setAttribute("link_back", "/admin");
 
             String action = request.getParameter("action");
             switch (action == null ? "info" : action) {
                 case "info":
                     request.getRequestDispatcher("/chat.jsp").forward(request, response);
                     break;
-                case "back":
-                    request.getRequestDispatcher("/admin").forward(request, response);
-                    break;
-
             }
 
         } else {

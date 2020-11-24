@@ -18,6 +18,7 @@
         <p><a href="${link_users}">Профили</a></p>
         <p><a href="${link_reports}">Репорты</a></p>
         <p><a href="${link_logs}">Логи</a></p>
+        <p><a href="${link_manager}">Tomcat Manager</a></p>
         <p><a href="${link_reset}">Выйти</a></p>
     </div>
     <div class="content">

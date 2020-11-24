@@ -1,4 +1,4 @@
-var socket = new WebSocket("ws://35.204.191.66:8080/chat?t=9a4a8b475020a4c6fe2b0027d3c151dfd3a54d24a54ce025bceb840eed1c83617d0216d6d597c904927dd9dc0575979e");
+var socket = new WebSocket("ws://pda.artux.net/chat/${}");
 
 socket.onopen = function() {
     alert('open');
