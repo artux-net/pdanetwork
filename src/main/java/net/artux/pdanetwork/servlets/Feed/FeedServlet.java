@@ -17,8 +17,6 @@ import static net.artux.pdanetwork.utills.ServletContext.mongoFeed;
 @WebServlet("/feed")
 public class FeedServlet extends HttpServlet {
 
-    Gson gson = new Gson();
-
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         if(httpServletRequest.getParameter("id")!=null){

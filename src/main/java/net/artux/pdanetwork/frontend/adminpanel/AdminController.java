@@ -58,6 +58,10 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("articles", mongoFeed.getArticles(0));
                     request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                     break;
+                case "editArticle":
+                    request.setAttribute("a", mongoFeed.getArticle(Integer.parseInt(request.getParameter("feedId"))));
+                    request.getRequestDispatcher("/editArticle.jsp").forward(request, response);
+                    break;
 
                 default:
                     request.setAttribute("total_registrations", mongoAdmin.getSize());
@@ -98,7 +102,7 @@ public class AdminController extends HttpServlet {
             case "addArticle":
                 mongoFeed.addArticle(request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
-                        request.getParameter("tags"), request.getParameter("editor"));;
+                        request.getParameter("tags"), request.getParameter("content"));;
                 request.setAttribute("articles", mongoFeed.getArticles(0));
                 request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                 break;
@@ -110,7 +114,7 @@ public class AdminController extends HttpServlet {
             case "editArticle":
                 mongoFeed.editArticle(Integer.parseInt(request.getParameter("feedId")), request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
-                        request.getParameter("tags"), request.getParameter("editor"));
+                        request.getParameter("tags"), request.getParameter("content"));
                 request.setAttribute("articles", mongoFeed.getArticles(0));
                 request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                 break;

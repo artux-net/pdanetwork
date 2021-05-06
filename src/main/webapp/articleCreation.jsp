@@ -25,14 +25,22 @@
             <input type="text" name="pic" placeholder="Ссылка на картинку" value="${pic}"/>
             <input type="text" name="desc" placeholder="Описание" value="${desc}"/>
             <input type="text" name="tags" placeholder="Теги через запятую" value="${tags}"/>
-            <textarea name="editor" id="editor">${editor}</textarea>
+            <textarea name="editor" id="editor">${content}</textarea>
             <button type="submit">Добавить статью</button>
         </form>
         <c:forEach items="${articles}" var="a" varStatus="item">
             <div>
+                <hr>
                 <form name="addArticle" method="post"
-                      action="${pageContext.request.contextPath}/admin?action=removeArticle&feedId=${a.feedId}">
+                      action="${pageContext.request.contextPath}/admin?action=removeArticle">
+                    <input type="hidden" name="feedId" value="${a.feedId}" />
                     <button type="submit">Удалить статью</button>
+                </form>
+                <form name="editArticle" method="get"
+                      action="${pageContext.request.contextPath}/admin">
+                    <input type="hidden" name="action" value="editArticle" />
+                    <input type="hidden" name="feedId" value="${a.feedId}" />
+                    <button type="submit">Изменить статью</button>
                 </form>
                 <h1>${a.title}</h1>
                 <p>${a.description}</p>
@@ -40,6 +48,7 @@
                 <p>${a.image}</p>
                 <p>${a.published}</p>
                 <div>${a.content}</div>
+                <hr>
             </div>
         </c:forEach>
 
