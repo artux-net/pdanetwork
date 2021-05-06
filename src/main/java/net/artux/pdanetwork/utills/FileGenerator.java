@@ -25,7 +25,11 @@ public class FileGenerator {
 
     public static class Articles{
         public static String getArticle(String id) throws IOException {
-            return readFile(getPath() + "base/enc/" + id + ".html", StandardCharsets.UTF_8);
+            if (id.equals("list"))
+                return FileGenerator.readFile(getPath() + "base/list", StandardCharsets.UTF_8);
+            else if (new File(getPath() + "base/enc/" + id + ".html").exists())
+                return readFile(getPath() + "base/enc/" + id + ".html", StandardCharsets.UTF_8);
+            else return readFile(getPath() + "base/enc/empty.html", StandardCharsets.UTF_8);
         }
     }
 

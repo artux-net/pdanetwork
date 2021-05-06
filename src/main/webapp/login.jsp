@@ -12,7 +12,7 @@
 <div class="container">
     <div class="header">Artux</div>
     <div class="sidebar">
-        <b><p><a href="https://artux.net/pda">Я не туда попал..</a></p></b>
+        <b><p><a href="https://pda.artux.net/">Я не туда попал..</a></p></b>
     </div>
     <div class="content">
         <h2>Вход в панель</h2>

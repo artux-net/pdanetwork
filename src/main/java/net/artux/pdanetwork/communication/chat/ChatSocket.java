@@ -1,8 +1,10 @@
 package net.artux.pdanetwork.communication.chat;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.ChatSocketConfigurator;
+import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
@@ -12,10 +14,12 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-@ServerEndpoint(value = "/chat/{token}", configurator = ChatSocketConfigurator.class)
+@ServerEndpoint(value = "/chat/{token}", configurator = SocketConfigurator.class)
 public class ChatSocket {
 
-    private LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>();
+    private final LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>(150);
+
+    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     @OnOpen
     public void onOpen(Session userSession, EndpointConfig config, @PathParam("token") String token) throws IOException {
@@ -27,8 +31,7 @@ public class ChatSocket {
             {
                 //TODO Logic for ban
                 if (!ServletContext.mongoUsers.isBlocked(token)) {
-                    for (UserMessage userMessage : lastMessages)
-                        userSession.getAsyncRemote().sendText(userMessage.toString());
+                    userSession.getAsyncRemote().sendText(gson.toJson(lastMessages));
                 } else {
                     sendMessage(userSession, "Вы были заблокированы за нарушение правил.");
                     userSession.close();
@@ -55,10 +58,11 @@ public class ChatSocket {
         if(!BadWordsFilter.contains(userMessage)) {
             lastMessages.add(userMessage);
             for (Session session : userSession.getOpenSessions()) {
-                session.getAsyncRemote().sendText(userMessage.toString());
+                session.getAsyncRemote().sendText(gson.toJson(userMessage));
             }
         } else {
-            sendMessage(userSession,"Мат в общих чатах запрещен.");
+            sendMessage(userSession, "Мат в общих чатах запрещен.");
+            ServletContext.log("Bad word detected, pdaId: " + userMessage.pdaId + ", message: " + userMessage.message);
         }
     }
 

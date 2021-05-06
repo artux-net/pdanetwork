@@ -2,8 +2,8 @@ package net.artux.pdanetwork.servlets;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.models.FriendModel;
-import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.utills.ServletHelper;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,12 +18,12 @@ import java.util.Map;
 @WebServlet("/friends")
 public class FriendsServlet extends HttpServlet {
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
-        String token = RequestReader.getHeaders(httpServletRequest).get("t");
-        Map<String, String> query = RequestReader.splitQuery(httpServletRequest.getQueryString());
+        String token = ServletHelper.getHeaders(httpServletRequest).get("t");
+        Map<String, String> query = ServletHelper.splitQuery(httpServletRequest.getQueryString());
 
         int pdaId = Integer.parseInt(query.get("pdaId"));
         List<FriendModel> friendModels = new ArrayList<>();
@@ -52,7 +52,7 @@ public class FriendsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String token = RequestReader.getHeaders(httpServletRequest).get("t");
+        String token = ServletHelper.getHeaders(httpServletRequest).get("t");
         Enumeration<String> names = httpServletRequest.getParameterNames();
         while(names.hasMoreElements()){
             String param = names.nextElement();

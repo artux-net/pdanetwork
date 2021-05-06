@@ -13,7 +13,7 @@
         var socket;
 
         function connect() {
-            socket = new WebSocket("wss://pda.artux.net/chat/${m.token}");
+            socket = new WebSocket("wss://api.artux.net/pda/chat/${m.token}");
 
             socket.onopen = function () {
                 console.log('session opened.');
@@ -39,37 +39,46 @@
 
             function addRow(data) {
                 var message = JSON.parse(data);
+                if ("time" in message) {
+                    addMessage(message);
+                } else {
+                    for (var i = 0; i < message.length; i++) {
+                        addMessage(message[i]);
+                    }
+                }
 
-                var spn = document.createElement('span');
-                spn.innerHTML = "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%\">\n" +
-                    "            <tbody>\n" +
-                    "            <tr>\n" +
-                    "                <td>" + message.senderLogin + " PDAID #" + message.pdaId + "</td>\n" +
-                    "            </tr>\n" +
-                    "            <tr>\n" +
-                    "                <td>\n" +
-                    "                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%\">\n" +
-                    "                        <tbody>\n" +
-                    "                        <tr>\n" +
-                    "                            <td>" + message.message + "</td>\n" +
-                    "                            <td>" + message.time + "</td>\n" +
-                    "                        </tr>\n" +
-                    "                        </tbody>\n" +
-                    "                    </table>\n" +
-                    "                    <p align=\"center\"><a href=\"{chat_delete_message}\">Удалить</a> | <a href=\"chat_ban_1hours\">Бан на\n" +
-                    "                        час</a></p>\n" +
-                    "                </td>\n" +
-                    "            </tr>\n" +
-                    "            </tbody>\n" +
-                    "        </table>\n" +
-                    "        <hr>";
-                document.getElementById('messages').appendChild(spn);
                 var window = document.getElementById("messages");
                 window.scrollTop = window.scrollHeight;
                 if (window.childElementCount > 50) {
                     window.removeChild(window.firstChild);
                 }
             }
+        }
+
+        function addMessage(message) {
+            var spn = document.createElement('span');
+            spn.innerHTML =
+                "            <tbody>\n" +
+                "            <tr>\n" +
+                "                <td>" + message.senderLogin + " PDAID #" + message.pdaId + "</td>\n" +
+                "            </tr>\n" +
+                "            <tr>\n" +
+                "                <td>\n" +
+                "                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%\">\n" +
+                "                        <tbody>\n" +
+                "                        <tr>\n" +
+                "                            <td>" + message.message + "</td>\n" +
+                "                            <td>" + new Date(message.time).toString() + "</td>\n" +
+                "                        </tr>\n" +
+                "                        </tbody>\n" +
+                "                    </table>\n" +
+                "                    <p align=\"center\"><a href=\"{chat_delete_message}\">Удалить</a> | <a href=\"chat_ban_1hours\">Бан на\n" +
+                "                        час</a></p>\n" +
+                "                </td>\n" +
+                "            </tr>\n" +
+                "            </tbody>\n" +
+                "        <hr>";
+            document.getElementById('messages').appendChild(spn);
         }
 
         connect();
@@ -96,21 +105,19 @@
         }
 
     </script>
-
 </head>
 <body>
 <div class="container">
     <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
-    <div class="sidebar">
-        <p>${username}</p>
-        <p><a href="${link_back}">Назад</a></p>
-    </div>
+    <jsp:include page="/sidebar.jsp"/>
     <div class="content">
         <h2>Чат</h2>
 
-        <div id="messages" style="height: 400px; overflow: auto;">
-            <!--Начало сообщения-->
-            <!--Конец сообщения-->
+        <div style="height: 400px; overflow: auto;">
+
+            <table id="messages" border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+
+            </table>
         </div>
         <p>Сообщение<Br>
             <textarea name="comment" cols="40" rows="3" id="input_text"></textarea></p>

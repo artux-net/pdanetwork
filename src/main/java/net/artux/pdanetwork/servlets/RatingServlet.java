@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.servlets;
 
 import com.google.gson.Gson;
-import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.utills.ServletHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ public class RatingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
-        Map<String, String> params = RequestReader.splitQuery(httpServletRequest.getQueryString());
+        Map<String, String> params = ServletHelper.splitQuery(httpServletRequest.getQueryString());
         httpServletResponse.setCharacterEncoding("UTF-8");
         if (!params.containsKey("from"))
             httpServletResponse.getWriter().print(gson

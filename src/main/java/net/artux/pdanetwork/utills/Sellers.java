@@ -27,7 +27,7 @@ public class Sellers {
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, Seller.class).getType();
             return new Gson().fromJson(commonFile, itemsListType);
         } catch (IOException e) {
-            e.printStackTrace();
+            ServletContext.error("Sellers error", e);
         }
         return null;
     }

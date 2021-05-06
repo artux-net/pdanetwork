@@ -12,23 +12,14 @@
         <script>
             window.addEventListener("load", function () {
                 alert("${msg}");
-            }
+            });
         </script>
     </c:if>
 </head>
 <body>
 <div class="container">
     <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
-    <div class="sidebar">
-        <p><a href="#">${username}</a></p>
-        <b><p><a href="${link_index}">Статистика</a></p></b>
-        <p><a href="${link_chat}">Чат</a></p>
-        <p><a href="${link_users}">Профили</a></p>
-        <p><a href="${link_reports}">Репорты</a></p>
-        <p><a href="${link_logs}">Логи</a></p>
-        <p><a href="${link_manager}">Tomcat Manager</a></p>
-        <p><a href="${link_reset}">Выйти</a></p>
-    </div>
+    <jsp:include page="/sidebar.jsp"/>
     <div class="content">
         <h2>Пользователи</h2>
         <form name="users-search" method="post" action="${pageContext.request.contextPath}/admin?action=find">
@@ -52,7 +43,7 @@
                     <td>${user.registrationDate}</td>
                     <td>${user.xp}</td>
                     <td><a href="#zatemnenie">Изменить</a>
-                        <div id="zatemnenie">
+                        <div cid="zatemnenie">
                             <window>
                                 <a href="#close_window" class="close_window">X</a>
                                 <p>Email: ${user.email};</p>
@@ -74,7 +65,7 @@
 
                                 <p>Денег: ${user.money};</p>
                                 <form name="add_money" method="post"
-                                      action="${pageContext.request.contextPath}/admin?action=addmoney&pda=${user.pdaId}">
+                                      action="${pageContext.request.contextPath}/admin?action=addMoney&pda=${user.pdaId}">
                                     <input type="number" placeholder="Добавить денег" value="${money}" name="money">
                                     <button type="submit">Добавить</button>
                                 </form>

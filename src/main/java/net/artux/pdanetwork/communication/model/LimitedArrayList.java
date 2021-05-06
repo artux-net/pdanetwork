@@ -2,9 +2,13 @@ package net.artux.pdanetwork.communication.model;
 
 import java.util.ArrayList;
 
-public class LimitedArrayList <Object> extends ArrayList<Object> {
+public class LimitedArrayList<Object> extends ArrayList<Object> {
 
-    int limitMessages = 150;
+    int limitMessages;
+
+    public LimitedArrayList(int limitMessages) {
+        this.limitMessages = limitMessages;
+    }
 
     @Override
     public boolean add(Object e) {

@@ -39,8 +39,12 @@ public class LoginAdminController extends HttpServlet {
         if(status.isSuccess()){
             request.getSession().setAttribute("token", status.getToken());
             request.getSession().setAttribute("m", mongoUsers.getByToken(status.getToken()));
+            log("Success admin login: " + loginUser.getEmailOrLogin() + ", ip: " + request.getRemoteAddr()
+                    + ", session: ");
             response.sendRedirect(request.getContextPath() + "/admin");
+
         } else {
+            log("Failure admin login: " + loginUser.getEmailOrLogin());
             String violation = status.getDescription();
             request.setAttribute("violation", violation);
             doGet(request, response);

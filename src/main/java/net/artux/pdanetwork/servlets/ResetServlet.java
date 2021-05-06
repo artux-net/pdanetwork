@@ -1,12 +1,11 @@
 package net.artux.pdanetwork.servlets;
 
 
-import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.utills.RequestReader;
 import net.artux.pdanetwork.utills.Security;
 import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.utills.ServletHelper;
 
 import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
@@ -23,12 +22,11 @@ import java.util.Map;
 @WebServlet("/reset")
 public class ResetServlet extends HttpServlet {
 
-    private Gson gson = new Gson();
-    private HashMap<String, Integer> requests = new HashMap<>();
+    private final HashMap<String, Integer> requests = new HashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
-        Map<String, String> headers = RequestReader.getHeaders(httpServletRequest);
+        Map<String, String> headers = ServletHelper.getHeaders(httpServletRequest);
 
         if (headers.containsKey("q")) {
             String loginOrEmail = headers.get("q");
@@ -41,18 +39,18 @@ public class ResetServlet extends HttpServlet {
                 try {
                     if (ServletContext.mailService.askForPassword(user, token)) {
                         addCurrent(token, user);
-                        httpServletResponse.getWriter().println(gson.toJson(
-                                new Status(true, "Мы отправили письмо с паролем на Вашу почту")));
+                        httpServletResponse.getWriter().println(
+                                new Status(true, "Мы отправили письмо с паролем на Вашу почту"));
                     } else
                         httpServletResponse.setStatus(500);
                 } catch (MessagingException e) {
-                    httpServletResponse.getWriter().println(gson.toJson(new Status(false, e.getMessage())));
+                    httpServletResponse.getWriter().println(new Status(false, e.getMessage()));
                 }
             } else {
-                httpServletResponse.getWriter().println(gson.toJson(
-                        new Status(false, "Такого пользователя не существует, либо письмо уже отправлено")));
+                httpServletResponse.getWriter().println(
+                        new Status(false, "Такого пользователя не существует, либо письмо уже отправлено"));
             }
-        } else if (RequestReader.splitQuery(httpServletRequest.getQueryString()).containsKey("t")) {
+        } else if (ServletHelper.splitQuery(httpServletRequest.getQueryString()).containsKey("t")) {
             httpServletResponse.setContentType("text/html;");
             if (requests.containsKey(httpServletRequest.getParameter("t"))) {
                 RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher("password.jsp");

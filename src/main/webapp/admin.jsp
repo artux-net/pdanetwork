@@ -11,16 +11,7 @@
 <body>
 <div class="container">
     <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
-    <div class="sidebar">
-        <p>${username}</p>
-        <b><p><a href="${link_index}">Статистика</a></p></b>
-        <p><a href="${link_chat}">Чат</a></p>
-        <p><a href="${link_users}">Профили</a></p>
-        <p><a href="${link_reports}">Репорты</a></p>
-        <p><a href="${link_logs}">Логи</a></p>
-        <p><a href="${link_manager}">Tomcat Manager</a></p>
-        <p><a href="${link_reset}">Выйти</a></p>
-    </div>
+    <jsp:include page="/sidebar.jsp"/>
     <div class="content">
         <h2>Статистика</h2>
         <table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
@@ -32,8 +23,8 @@
                 <td>{registrations_per_day}</td>
             </tr>
             <tr>
-                <td><b>Онлайн сейчас</b></td>
-                <td>{online_users}</td>
+                <td><b>Время на сервере</b></td>
+                <td>${server_time}</td>
                 <td><b>Денег в обороте</b></td>
                 <td>{total_money}</td>
             </tr>

@@ -4,13 +4,13 @@ import net.artux.pdanetwork.authentication.Member;
 
 public class UserInfo {
 
-    private String login;
-    private int pdaId;
-    private int group;
-    private String avatar;
-    private String location;
-    private int xp;
-    private String regDate;
+    private final String login;
+    private final int pdaId;
+    private final int group;
+    private final String avatar;
+    private final String location;
+    private final int xp;
+    private final String regDate;
 
     public UserInfo(Member member) {
         login = member.getLogin();
@@ -48,5 +48,10 @@ public class UserInfo {
 
     public String getRegDate() {
         return regDate;
+    }
+
+    @Override
+    public String toString() {
+        return "{\"login\" : " + (login == null ? null : "\"" + login + "\"") + ",\"pdaId\" : " + pdaId + ",\"group\" : " + group + ",\"avatar\" : " + (avatar == null ? null : "\"" + avatar + "\"") + ",\"location\" : " + (location == null ? null : "\"" + location + "\"") + ",\"xp\" : " + xp + ",\"regDate\" : " + (regDate == null ? null : "\"" + regDate + "\"") + "}";
     }
 }

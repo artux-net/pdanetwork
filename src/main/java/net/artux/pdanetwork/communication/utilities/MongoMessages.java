@@ -1,14 +1,12 @@
 package net.artux.pdanetwork.communication.utilities;
 
-import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Indexes;
 import net.artux.pdanetwork.communication.model.Conversation;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
@@ -17,8 +15,6 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
-import javax.websocket.Session;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,36 +28,43 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoMessages {
 
-    private MongoClient mongoClient;
-    private MongoDatabase db;
-    private Gson gson = new Gson();
-    private MongoCollection<Document> conversations;
+    private final MongoClient mongoClient;
+    private final MongoDatabase db;
+    private final MongoCollection<Conversation> conversations;
+    private static final ConnectionString connectionString;
 
-    public MongoMessages(){
+    static {
+        if (ServletContext.debug)
+            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@35.237.32.236:27017/");
+        else
+            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@localhost:27017/");
+    }
 
+
+    public MongoMessages() {
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@localhost:27017/"))
+                .applyConnectionString(connectionString)
                 .codecRegistry(codecRegistry)
                 .build();
 
         mongoClient = MongoClients.create(clientSettings);
         db = mongoClient.getDatabase("messages");
-        conversations = db.getCollection("conversations");
-
+        conversations = db.getCollection("conversations", Conversation.class);
+        conversations.createIndex(Indexes.ascending("cid"));
     }
 
-    public int newConversation(int ownerId, List<Integer> members){
+    public int newConversation(int ownerId, List<Integer> members) {
         int id = getNewId();
         List<Integer> owners = new ArrayList<>(Collections.singletonList(ownerId));
         Conversation conversation = new Conversation(id, owners, members);
-        Document document = Document.parse(gson.toJson(conversation));
-        for (int i : conversation.getMembers()) {
+
+        for (int i : conversation.allMembers()) {
             ServletContext.mongoUsers.addDialog(i, id);
         }
 
-        conversations.insertOne(document);
+        conversations.insertOne(conversation);
         return id;
     }
 
@@ -70,10 +73,10 @@ public class MongoMessages {
     }
 
     private int getNewId(){
-        Document document = conversations.find().sort(new Document("_id",-1)).first();
+        Conversation document = conversations.find().sort(new Document("_id", -1)).first();
 
         if(document!=null){
-            int res = document.getInteger("id");
+            int res = document.cid;
             return res+1;
         } else {
             return 1;
@@ -89,15 +92,12 @@ public class MongoMessages {
 
     public boolean conversationHas(int id, int pda){
         Document query = new Document();
-        query.put("id", id);
+        query.put("cid", id);
 
-        Document document = conversations.find(query).first();
+        Conversation document = conversations.find(query).first();
         if (document != null) {
-            List<Integer> ids = document.get("members", new ArrayList<>());
-            if (!ids.contains(pda)) {
-                ids = document.get("owners", new ArrayList<>());
-                return ids.contains(pda);
-            } else return true;
+            List<Integer> ids = document.allMembers();
+            return ids.contains(pda);
         } else return false;
     }
 
@@ -107,10 +107,10 @@ public class MongoMessages {
         Document query = new Document();
         query.put("members", members);
         query.put("owners", owners);
-        Document document = conversations.find(query).first();
+        Conversation document = conversations.find(query).first();
 
         if (document!=null)
-            return document.getInteger("id");
+            return document.cid;
         else {
             members = Collections.singletonList(pda2);
             owners = Collections.singletonList(pda1);
@@ -119,23 +119,22 @@ public class MongoMessages {
             query.put("owners", owners);
             document = conversations.find(query).first();
             if (document != null)
-                return document.getInteger("id");
+                return document.cid;
             else
                 return 0;
         }
     }
 
-    public void sendLastMessages(int id, Session session){
-        Block<DBMessage> printBlock = document -> {
-            try {
-                session.getBasicRemote().sendText(
-                        new UserMessage(mongoUsers.getById(document.pdaId), document).toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-
-        getConversationCollection(id).find().sort(new BasicDBObject()).limit(30).forEach(printBlock);
+    public List<UserMessage> getLastMessages(int id, int size, int page) {
+        ArrayList<UserMessage> messages = new ArrayList<>();
+        getConversationCollection(id).find()
+                .sort(new Document("_id", -1))
+                .skip(page * size)
+                .limit(size)
+                .forEach(dbMessage -> {
+                    messages.add(0, new UserMessage(mongoUsers.getById(dbMessage.pdaId), dbMessage));
+                });
+        return messages;
     }
 
 
@@ -143,14 +142,14 @@ public class MongoMessages {
         return db.getCollection(String.valueOf(id), DBMessage.class);
     }
 
-    public List<Integer> getIDs(int id){
+    public List<Integer> getIDs(int id) {
         Document query = new Document();
-        query.put("id", id);
+        query.put("cid", id);
 
-        Document result = conversations.find(query).first();
+        Conversation result = conversations.find(query).first();
 
         if(result!=null) {
-            return new Gson().fromJson(result.toJson(), Conversation.class).getMembers();
+            return result.allMembers();
         } else return null;
     }
 
@@ -159,21 +158,17 @@ public class MongoMessages {
         if (userMessage.message.length() > 40)
             userMessage.message = userMessage.message.substring(0, 40).strip() + "..";
 
-        conversations.updateOne(eq("id", id),
+        conversations.updateOne(eq("cid", id),
                 set("lastMessage", userMessage.senderLogin + ": " + userMessage.message));
 
     }
 
-    public Conversation getConversation(int id){
+    public Conversation getConversation(int id) {
         Document query = new Document();
-        query.put("id", id);
+        query.put("cid", id);
 
-        Document result = conversations.find(query).first();
-        if (result!=null){
-            return gson.fromJson(result.toJson(), Conversation.class);
-        } else {
-            return null;
-        }
+        return conversations.find(query).first();
     }
-    
+
+
 }

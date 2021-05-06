@@ -2,6 +2,7 @@ package net.artux.pdanetwork.authentication;
 
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.models.profile.Note;
 import net.artux.pdanetwork.utills.Security;
 import org.bson.types.ObjectId;
 
@@ -29,10 +30,12 @@ public class Member {
     private int money;
     private String location;
     private Data data;
-    public List<Integer> dialogs;
-    public List<Integer> friends;
-    public List<Integer> friendRequests;
-    public List<Integer> relations;
+    public List<Integer> dialogs = new ArrayList<>();
+    public List<Integer> friends = new ArrayList<>();
+    public List<Integer> friendRequests = new ArrayList<>();
+    public List<Integer> relations = new ArrayList<>();
+    public List<Note> notes = new ArrayList<>();
+    public List<Integer> achievements = new ArrayList<>();
     private Date lastModified;
     private String registrationDate;
     private Date lastLoginAt;
@@ -240,6 +243,34 @@ public class Member {
 
     public void setRelations(List<Integer> relations) {
         this.relations = relations;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void addNote(String title) {
+        addNote(title, "");
+    }
+
+    public void addNote(String title, String content) {
+        if (notes.size() != 0)
+            notes.add(new Note(notes.get(notes.size() - 1).cid + 1,
+                    title, content));
+        else
+            notes.add(new Note(1, title, content));
+    }
+
+    public List<Integer> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<Integer> achievements) {
+        this.achievements = achievements;
     }
 
     public int getMoney() {

@@ -1,9 +1,7 @@
 package net.artux.pdanetwork.utills.mongo;
 
-import com.mongodb.Block;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoConfigurationException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -14,18 +12,22 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.communication.Waiter;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.utills.Security;
+import net.artux.pdanetwork.utills.ServletContext;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,18 +40,26 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoUsers {
 
-    private MongoClient mongoClient;
-    private MongoCollection<Member> table;
+    private static final MongoClient mongoClient;
+    private static final MongoCollection<Member> table;
 
     // global settings for all users
-    private int daysValidAccount = 90;
+    private final int daysValidAccount = 90;
 
-    public MongoUsers() throws MongoConfigurationException {
+    private static final ConnectionString connectionString;
 
+    static {
+        if (ServletContext.debug)
+            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@35.237.32.236:27017/");
+        else
+            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
+    }
+
+    static {
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/"))
+                .applyConnectionString(connectionString)
                 .codecRegistry(codecRegistry)
                 .build();
 
@@ -57,6 +67,7 @@ public class MongoUsers {
         MongoDatabase db = mongoClient.getDatabase("users");
 
         table = db.getCollection("usersCollection", Member.class);
+        table.createIndex(Indexes.ascending("token", "pdaId", "login"));
     }
 
     public void close(){
@@ -77,8 +88,7 @@ public class MongoUsers {
         Member member = table.find().sort(new Document("_id", -1)).first();
 
         if (member != null) {
-            int res = member.getPdaId();
-            return res+1;
+            return member.getPdaId() + 1;
         } else {
             return 1;
         }
@@ -156,39 +166,52 @@ public class MongoUsers {
         updateMember(member);
     }
 
-    public void deleteByLogin(String login){
+    public void deleteByLogin(String login) {
         Document query = new Document();
         query.put("login", login);
 
         table.findOneAndDelete(query);
     }
 
-    public Status checkUser(String login, String email){
-        if (login!=null) {
-            if (getMember("login", login) != null) {
+    public Status checkUser(RegisterUser user) {
+        if (user.login != null && !user.login.equals("")) {
+            if (getMember("login", user.login) != null) {
                 return new Status(false, "Пользователь с таким логином уже существует.");
             }
+        } else {
+            return new Status(false, "Логин не соответствует требованиям");
         }
-
-        if (email!=null) {
-            if (getMember("email", email) != null) {
-                return new Status(false,"Пользователь с таким e-mail уже существует.");
+        if (user.email != null && !user.email.equals("")
+                && user.email.contains("@") && user.email.contains(".")) {
+            if (getMember("email", user.email) != null) {
+                return new Status(false, "Пользователь с таким e-mail уже существует.");
             }
+        } else {
+            return new Status(false, "E-mail не соответствует требованиям");
         }
 
-        return new Status(true,"Логин и почта свободны.");
+        if (user.name != null && user.name.equals(""))
+            return new Status(false, "Имя не может быть пустым");
+
+        if (user.nickname != null && user.nickname.equals(""))
+            return new Status(false, "Кличка не может быть пустой");
+
+        if (user.getPassword() != null && user.getPassword().length() < 8)
+            return new Status(false, "В пароле минимум 8 символов");
+
+        return new Status(true, "Логин и почта свободны.");
     }
 
     public Status tryLogin(String emailOrLogin, String password){
         Member element = getMember("login", emailOrLogin);
 
         if(element!=null){
-          return checkPassword(element,password);
+            return checkPassword(element, password, true);
         } else {
             element = getMember("email", emailOrLogin);
 
             if (element!=null){
-                return checkPassword(element,password);
+                return checkPassword(element, password, true);
             }else {
                 return new Status(false,"Wrong login or email");
             }
@@ -213,18 +236,22 @@ public class MongoUsers {
 
     private Status getLoginAdminStatus(String password, Member element) {
         if (element.getAdmin() > 0) {
-            return checkPassword(element, password);
+            return checkPassword(element, password, false);
         } else {
+            ServletContext.log("Not admin tried to use admin panel " + element.getLogin());
             return new Status(false, "You aren't admin");
         }
     }
 
-    private Status checkPassword(Member element, String password) {
+    private Status checkPassword(Member element, String password, boolean resetToken) {
         if (element.getPassword().equals(String.valueOf(password.hashCode()))) {
-            element.setToken(Security.encrypt(element.getLogin() + ":" + password));
-            updateMember(element);
+            if (resetToken) {
+                element.setToken(Security.encrypt(element.getLogin() + ":" + password));
+                updateMember(element);
+            }
             return new Status(String.valueOf(element.getToken()));
         } else {
+            ServletContext.log("Wrong password for " + element.getLogin());
             return new Status(false, "Wrong password");
         }
     }
@@ -277,33 +304,65 @@ public class MongoUsers {
                 updateMember(oldFriend);
             }
             return true;
-        }else
+        } else
             return false;
+    }
+
+    private final HashMap<Integer, Waiter> waitMap = new HashMap<>();
+
+    public void addToWaitList(Member member, Waiter context) {
+        waitMap.put(member.getPdaId(), context);
+    }
+
+    public void removeFromWaitList(Member member) {
+        Waiter waiter = waitMap.get(member.getPdaId());
+        if (waiter != null)
+            waiter.complete();
+        waitMap.remove(member.getPdaId());
+    }
+
+    private void updateClient(int pdaId) {
+        Waiter context = waitMap.get(pdaId);
+        if (context != null)
+            context.complete();
+        waitMap.remove(pdaId);
     }
 
     public void addDialog(int pdaId, int conversation) {
         Member user = getMember(pdaId);
+
         if (user != null) {
             user.dialogs.add(conversation);
             updateMember(user);
+            updateClient(pdaId);
         }
     }
 
-    private Member getMember(int pdaId) {
+    public void updateDialog(int pdaId, Integer conversation) {
+        Member user = getMember(pdaId);
+        if (user != null) {
+            user.dialogs.remove(conversation);
+            user.dialogs.add(0, conversation);
+            updateMember(user);
+            updateClient(pdaId);
+        }
+    }
+
+    public static Member getMember(int pdaId) {
         Document query = new Document();
         query.put("pdaId", pdaId);
 
         return table.find(query).first();
     }
 
-    private Member getMember(String token) {
+    private static Member getMember(String token) {
         Document query = new Document();
         query.put("token", token);
 
         return table.find(query).first();
     }
 
-    private Member getMember(String key, Object value) {
+    private static Member getMember(String key, Object value) {
         Document query = new Document();
         query.put(key, value);
 
@@ -312,9 +371,7 @@ public class MongoUsers {
 
     public List<UserInfo> sort(int from) {
         List<UserInfo> users = new ArrayList<>();
-        table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach((Block<Member>) member -> {
-            users.add(new UserInfo(member));
-        });
+        table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach(member -> users.add(new UserInfo(member)));
         return users;
     }
 
@@ -324,11 +381,10 @@ public class MongoUsers {
         return updateMember(member);
     }
 
-    public UpdateResult updateMember(Member member) {
+    public static UpdateResult updateMember(@NotNull Member member) {
         member.setLastModified(new Date());
         return table.replaceOne(eq("pdaId", member.getPdaId()), member);
     }
-
 
     public UpdateResult changeField(Object token, String field, Object newValue) {
         return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));

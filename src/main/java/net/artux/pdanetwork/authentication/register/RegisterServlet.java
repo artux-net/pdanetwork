@@ -12,12 +12,7 @@ import java.io.IOException;
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
-    private Authorization authorization;
-
-    @Override
-    public void init() {
-        authorization = new Authorization();
-    }
+    private final Authorization authorization = new Authorization();
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {

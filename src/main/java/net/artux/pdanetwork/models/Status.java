@@ -64,10 +64,11 @@ public class Status {
         return success;
     }
 
-    public String toString(){
-        return "success: " + success + "\n"
-                + "code: " + code + "\n"
-                + "desc: " + description + "\n";
 
+    @Override
+    public String toString() {
+        return "{\"success\" : " + success
+                + ",\"code\" : " + code
+                + ",\"description\" : " + (description == null ? null : "\"" + description + "\"") + ",\"token\" : " + (token == null ? null : "\"" + token + "\"") + "}";
     }
 }

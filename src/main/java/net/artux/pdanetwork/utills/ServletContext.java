@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext;
 import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.mail.MailService;
+import net.artux.pdanetwork.utills.mongo.MongoFeed;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,9 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.annotation.WebListener;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.URL;
 
 @WebListener
 public class ServletContext implements javax.servlet.ServletContextListener {
@@ -22,8 +24,9 @@ public class ServletContext implements javax.servlet.ServletContextListener {
     public static MailService mailService = new MailService();
     public static MongoUsers mongoUsers = new MongoUsers();
     public static MongoMessages mongoMessages = new MongoMessages();
+    public static MongoFeed mongoFeed = new MongoFeed();
     public static UserManager userManager = new UserManager();
-    private static final boolean debug = false;
+    public static final boolean debug = true;
 
     private static Logger logger;
 
@@ -31,23 +34,37 @@ public class ServletContext implements javax.servlet.ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         System.setProperty("log4j.configurationFile", getPath() + "config/log.conf");
         System.setProperty("log-path", getPath() + "logs");
+
+        System.setProperty("DEBUG.MONGO", "true");
+        System.setProperty("DB.TRACE", "true");
+
         logger = LogManager.getLogger(ServletContext.class);
         log("Servlets initialized, server started.");
-        Socket socket = new Socket();
+        InetAddress localhost = null;
         try {
-            socket.connect(new InetSocketAddress("google.com", 80));
             if (debug)
-                host = "192.168.0.200";
-            else
-                host = "35.204.191.66";
-            System.out.println("Host Address: " + host);
-        } catch (IOException e) {
-            System.out.println("Cannot define host, start local mode");
-            host = "127.0.0.1";
+                host = "35.237.32.236";
+            else {
+                localhost = InetAddress.getLocalHost();
+                log("System IP Address : " +
+                        (localhost.getHostAddress()).trim());
+                URL url_name = new URL("http://bot.whatismyipaddress.com");
+
+                BufferedReader sc =
+                        new BufferedReader(new InputStreamReader(url_name.openStream()));
+                String systemipaddress = "";
+                systemipaddress = sc.readLine().trim();
+
+                log("Public IP Address: " + systemipaddress + "\n");
+                host = systemipaddress;
+            }
+
+        } catch (Exception e) {
+            error("Can not determine IP", e);
         }
+
         log("Server info: " + servletContextEvent.getServletContext().getServerInfo());
         log("Working Directory:" + System.getProperty("user.dir"));
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);

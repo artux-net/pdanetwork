@@ -9,7 +9,7 @@ public class UserMessage {
 
     public String senderLogin;
     public String message;
-    public Instant time;
+    public long time;
     public int groupId;
     public String avatarId;
     public int pdaId;
@@ -25,7 +25,7 @@ public class UserMessage {
         senderLogin = member.getLogin();
         this.message = message.strip();
 
-        time = Instant.now();
+        time = Instant.now().toEpochMilli();
         groupId = member.getGroup();
         avatarId = member.getAvatar();
         pdaId = member.getPdaId();
@@ -45,7 +45,7 @@ public class UserMessage {
         UserMessage userMessage = new UserMessage();
         userMessage.message = message;
 
-        userMessage.time = Instant.now();
+        userMessage.time = Instant.now().toEpochMilli();
         return userMessage;
         //TODO: different locales!
     }

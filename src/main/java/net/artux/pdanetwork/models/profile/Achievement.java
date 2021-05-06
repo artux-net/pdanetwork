@@ -3,9 +3,10 @@ package net.artux.pdanetwork.models.profile;
 
 public class Achievement {
 
-    String title;
-    String picture;
-    String desc;
+    public int cid;
+    public String title;
+    public String imageURL;
+    public String desc;
 
     public Achievement() {
     }
@@ -18,12 +19,20 @@ public class Achievement {
         this.title = title;
     }
 
-    public String getPicture() {
-        return picture;
+    public int getCid() {
+        return cid;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setCid(int cid) {
+        this.cid = cid;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public String getDesc() {

@@ -6,13 +6,13 @@ import java.util.Objects;
 
 public class Armor extends Item {
 
-    public float thermal_pr;
-    public float electric_pr;
-    public float chemical_pr;
-    public float radio_pr;
-    public float psy_pr;
-    public float damage_pr;
-    public float condition;
+    private float thermal_pr;
+    private float electric_pr;
+    private float chemical_pr;
+    private float radio_pr;
+    private float psy_pr;
+    private float damage_pr;
+    private float condition;
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.authentication;
 
+import com.google.gson.Gson;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.Equipment;
@@ -10,8 +11,10 @@ import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
 import net.artux.pdanetwork.utills.Items;
 import net.artux.pdanetwork.utills.Sellers;
+import net.artux.pdanetwork.utills.mongo.MongoUsers;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +23,8 @@ import static net.artux.pdanetwork.utills.ServletContext.*;
 
 public class UserManager {
 
-    private Items items = new Items();
+    private final Items items = new Items();
+    private final Sellers sellers = new Sellers();
 
     public Member doUserActions(HashMap<String, List<String>> map, String token) {
         Member member = mongoUsers.getByToken(token);
@@ -71,8 +75,11 @@ public class UserManager {
                             }
                             break;
                         case "remove":
-                            // TODO remove items
                             for (String pass : map.get(key)) {
+                                if (isInteger(pass)) {
+                                    int id = Integer.parseInt(pass);
+                                    data.weapons.removeIf(weapon -> weapon.id == id);
+                                }
                                 data.parameters.keys.remove(pass);
                                 data.parameters.values.remove(pass);
                             }
@@ -117,6 +124,44 @@ public class UserManager {
                             for (String pass : map.get(key))
                                 member.xp(Integer.parseInt(pass));
                             break;
+                        case "note":
+                            for (String pass : map.get(key)) {
+                                String[] values = pass.split(":");
+                                member.addNote(values[0], values[1]);
+                            }
+                            break;
+                        case "achieve":
+                            for (String pass : map.get(key))
+                                member.achievements.add(Integer.parseInt(pass));
+                            break;
+                        case "location":
+                            for (String pass : map.get(key))
+                                member.setLocation(pass);
+                            break;
+                        case "reset":
+                            if (map.get(key).size() == 0) {
+                                data.weapons = new ArrayList<>();
+                                data.armors = new ArrayList<>();
+                                data.artifacts = new ArrayList<>();
+                                data.items = new ArrayList<>();
+                            } else {
+                                for (String pass : map.get(key))
+                                    if (isInteger(pass)) {
+                                        int storyId = Integer.parseInt(pass);
+                                        for (Story story : data.stories)
+                                            if (story.storyId == storyId) {
+                                                story.lastChapter = 1;
+                                                story.lastStage = 0;
+                                            }
+                                    } else if (pass.contains("relation")) {
+                                        int group = Integer.parseInt(pass.split("_")[1]);
+                                        member.relations.set(group, 0);
+                                    }
+                            }
+                            break;
+                        case "reset_current":
+                            data.getTemp().remove("currentStory");
+                            break;
                         case "set":
                             for (String pass : map.get(key)) {
                                 String[] vals = pass.split(":");
@@ -125,10 +170,10 @@ public class UserManager {
                                         boolean found = false;
                                         for (int i = 0; i < data.stories.size(); i++) {
                                             Story story = data.stories.get(i);
-                                            if (story.getStoryId() == Integer.parseInt(vals[1])) {
+                                            if (story.storyId == Integer.parseInt(vals[1])) {
                                                 found = true;
-                                                story.setLastChapter(Integer.parseInt(vals[2]));
-                                                story.setLastStage(Integer.parseInt(vals[3]));
+                                                story.lastChapter = Integer.parseInt(vals[2]);
+                                                story.lastStage = Integer.parseInt(vals[3]);
                                                 data.stories.set(i, story);
                                             }
                                         }
@@ -144,12 +189,12 @@ public class UserManager {
                             }
                             break;
                         default:
-                            System.out.println("unsupported: " + key + "_" + map.get(key));
+                            log("UserManager, unsupported operation: " + key + ", value: " + map.get(key));
                             break;
                     }
                 }
                 member.setData(data);
-                mongoUsers.updateMember(member);
+                MongoUsers.updateMember(member);
 
                 return member;
             } catch (Exception e) {
@@ -183,7 +228,7 @@ public class UserManager {
                 equipment.setSecondWeapon(item);
 
             data.setEquipment(equipment);
-            mongoUsers.updateMember(member);
+            MongoUsers.updateMember(member);
             return new Status(true, "Success.");
         } else
             return new Status(false, "You don't have this item.");
@@ -203,7 +248,7 @@ public class UserManager {
 
             equipment.setArmor(item);
             data.setEquipment(equipment);
-            mongoUsers.updateMember(member);
+            MongoUsers.updateMember(member);
             return new Status(true, "Success.");
         } else
             return new Status(false, "You don't have this item.");
@@ -213,6 +258,8 @@ public class UserManager {
         if (item != null) {
             Member member = mongoUsers.getByToken(token);
             Data data = member.getData();
+            boolean removed = false;
+
             switch (item.type) {
                 case 0:
                 case 1:
@@ -220,6 +267,7 @@ public class UserManager {
                         if (data.weapons.get(i).equals(item)) {
                             member.setMoney(member.getMoney() + data.weapons.get(i).priceToSell());
                             data.weapons.remove(i);
+                            removed = true;
                             break;
                         }
                     }
@@ -228,6 +276,7 @@ public class UserManager {
                         if (data.items.get(i).equals(item)) {
                             member.setMoney(member.getMoney() + data.items.get(i).priceToSell());
                             data.items.remove(i);
+                            removed = true;
                             break;
                         }
                     }
@@ -236,20 +285,28 @@ public class UserManager {
                         if (data.artifacts.get(i).equals(item)) {
                             member.setMoney(member.getMoney() + data.artifacts.get(i).priceToSell());
                             data.artifacts.remove(i);
+                            removed = true;
                             break;
                         }
                     }
                 case 4:
                     for (int i = 0; i < data.armors.size(); i++) {
+                        System.out.println(new Gson().toJson(item));
+                        System.out.println(new Gson().toJson(data.armors));
                         if (data.armors.get(i).equals(item)) {
                             member.setMoney(member.getMoney() + data.armors.get(i).priceToSell());
                             data.armors.remove(i);
+                            removed = true;
                             break;
                         }
                     }
             }
             member.setData(data);
-            return new Status(true, "Предмет продан.");
+            MongoUsers.updateMember(member);
+            if (removed)
+                return new Status(true, "Предмет продан.");
+            else
+                return new Status(false, "Неудалось продать предмет.");
         } else
             return new Status(false, "Неудалось продать предмет.");
     }
@@ -258,16 +315,17 @@ public class UserManager {
         Member member = mongoUsers.getById(pdaId);
         if (member != null) {
             member.setMoney(member.getMoney() + money);
-            mongoUsers.updateMember(member);
+            MongoUsers.updateMember(member);
             return true;
         } else return false;
     }
 
-    public Status buy(String token, Item item, Sellers sellers, int sellerId) {
+    public Status buy(String token, Item item, int sellerId) {
         Member member = mongoUsers.getByToken(token);
         if (sellers.getSeller(sellerId).getAllItems().contains(item)) {
-            if (member.buy(item.priceToSell())) {
+            if (member.buy(item.sellerPrice())) {
                 member.setData(addItems(member.getData(), item));
+                MongoUsers.updateMember(member);
                 return new Status(true, "Покупка прошла успешно.");
             } else
                 return new Status(false, "Недостаточно средств на счете.");
@@ -280,7 +338,7 @@ public class UserManager {
         Member member = mongoUsers.getById(pdaId);
         Data data = member.getData();
         member.setData(addItems(data, new String[]{String.valueOf(type), String.valueOf(id), String.valueOf(quantity)}));
-        mongoUsers.updateMember(member);
+        MongoUsers.updateMember(member);
     }
 
     private Data addItems(Data data, String[] values) {
@@ -289,7 +347,7 @@ public class UserManager {
                 int type = Integer.parseInt(values[0]);
                 int id = Integer.parseInt(values[1]);
                 int quantity = Integer.parseInt(values[2]);
-                log("try to add item, type: " + type + ", id: " + id);
+                log("try to add item, type: " + type + ", cid: " + id);
                 Item item = items.getItem(type, id);
                 item.quantity = quantity;
                 return addItems(data, item);
@@ -303,9 +361,9 @@ public class UserManager {
     private Data addItems(Data data, Item item) {
         if (item != null) {
             if (item instanceof Weapon)
-                return items.addWeapon(data, (Weapon) item, item.quantity);
+                return items.addWeapon(data, (Weapon) item, 1);
             else if (item instanceof Armor)
-                return items.addArmor(data, (Armor) item, item.quantity);
+                return items.addArmor(data, (Armor) item, 1);
             else if (item instanceof Artifact)
                 return items.addArtifact(data, (Artifact) item);
             else
@@ -329,5 +387,33 @@ public class UserManager {
         } else
             data.items.remove(item);
         return data;
+    }
+
+    public Sellers getSellers() {
+        return sellers;
+    }
+
+    public static boolean isInteger(String str) {
+        if (str == null) {
+            return false;
+        }
+        int length = str.length();
+        if (length == 0) {
+            return false;
+        }
+        int i = 0;
+        if (str.charAt(0) == '-') {
+            if (length == 1) {
+                return false;
+            }
+            i = 1;
+        }
+        for (; i < length; i++) {
+            char c = str.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
     }
 }

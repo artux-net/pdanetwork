@@ -3,9 +3,9 @@ package net.artux.pdanetwork.models.profile;
 
 public class Story {
 
-    private Integer storyId;
-    private Integer lastChapter;
-    private Integer lastStage;
+    public Integer storyId;
+    public Integer lastChapter;
+    public Integer lastStage;
 
     public Story() {
     }
@@ -19,30 +19,6 @@ public class Story {
     public Story(Integer storyId, Integer lastChapter, Integer lastStage) {
         this.storyId = storyId;
         this.lastChapter = lastChapter;
-        this.lastStage = lastStage;
-    }
-
-    public Integer getStoryId() {
-        return storyId;
-    }
-
-    public void setStoryId(Integer storyId) {
-        this.storyId = storyId;
-    }
-
-    public Integer getLastChapter() {
-        return lastChapter;
-    }
-
-    public void setLastChapter(Integer lastChapter) {
-        this.lastChapter = lastChapter;
-    }
-
-    public Integer getLastStage() {
-        return lastStage;
-    }
-
-    public void setLastStage(Integer lastStage) {
         this.lastStage = lastStage;
     }
 

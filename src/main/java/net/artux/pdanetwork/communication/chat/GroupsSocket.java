@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.communication.chat;
 
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.GroupsSocketConfigurator;
+import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
@@ -12,7 +12,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 
-@ServerEndpoint(value = "/groupChat/{token}/{group}", configurator = GroupsSocketConfigurator.class)
+@ServerEndpoint(value = "/groupChat/{token}/{group}", configurator = SocketConfigurator.class)
 public class GroupsSocket {
 
     private HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = getLastMessages();
@@ -20,12 +20,13 @@ public class GroupsSocket {
     private HashMap<Integer, LimitedArrayList<UserMessage>> getLastMessages() {
         lastMessages = new HashMap<>();
 
-        lastMessages.put(1, new LimitedArrayList<>());
-        lastMessages.put(2, new LimitedArrayList<>());
-        lastMessages.put(3, new LimitedArrayList<>());
-        lastMessages.put(4, new LimitedArrayList<>());
-        lastMessages.put(5, new LimitedArrayList<>());
-        lastMessages.put(6, new LimitedArrayList<>());
+        int limit = 150;
+        lastMessages.put(1, new LimitedArrayList<>(limit));
+        lastMessages.put(2, new LimitedArrayList<>(limit));
+        lastMessages.put(3, new LimitedArrayList<>(limit));
+        lastMessages.put(4, new LimitedArrayList<>(limit));
+        lastMessages.put(5, new LimitedArrayList<>(limit));
+        lastMessages.put(6, new LimitedArrayList<>(limit));
 
         return lastMessages;
     }

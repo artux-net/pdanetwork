@@ -16,15 +16,15 @@ import static net.artux.pdanetwork.utills.ServletContext.getPath;
 
 public class Items {
 
-    private static Types types = new Types();
+    private static final Types types = new Types();
 
     static class Types {
-        private List<Armor> armors;
-        private List<Artifact> artifacts;
+        private final List<Armor> armors;
+        private final List<Artifact> artifacts;
         private List<Detector> detectors;
-        private List<Weapon> rifles;
-        private List<Weapon> pistols;
-        private List<Item> items;
+        private final List<Weapon> rifles;
+        private final List<Weapon> pistols;
+        private final List<Item> items;
 
         /*
         0 - pistols
@@ -37,11 +37,11 @@ public class Items {
         static Gson gson = new Gson();
 
         Types() {
-            armors = getType(4, Armor.class);
             pistols = getType(0, Weapon.class);
             rifles = getType(1, Weapon.class);
             items = getType(2, Item.class);
             artifacts = getType(3, Artifact.class);
+            armors = getType(4, Armor.class);
         }
 
         <T extends Item> List<T> getType(int type, Class c) {
@@ -75,46 +75,56 @@ public class Items {
 
     private Weapon getPistol(int id) {
         for (Weapon item : types.pistols) {
-            if (item.id == id)
+            if (item.id == id) {
+                item.type = 0;
                 return item;
+            }
         }
         return null;
     }
 
     private Weapon getRifle(int id) {
         for (Weapon item : types.rifles) {
-            if (item.id == id)
+            if (item.id == id) {
+                item.type = 1;
                 return item;
+            }
         }
         return null;
     }
 
     private Item getItem(int id) {
         for (Item item : types.items) {
-            if (item.id == id)
+            if (item.id == id) {
+                item.type = 2;
                 return item;
+            }
         }
         return null;
     }
 
     private Armor getArmor(int id) {
         for (Armor item : types.armors) {
-            if (item.id == id)
+            if (item.id == id) {
+                item.type = 4;
                 return item;
+            }
         }
         return null;
     }
 
     private Artifact getArtifact(int id) {
         for (Artifact item : types.artifacts) {
-            if (item.id == id)
+            if (item.id == id) {
+                item.type = 3;
                 return item;
+            }
         }
         return null;
     }
 
     public Data addWeapon(Data data, Weapon weapon, int quantity) {
-        weapon.quantity = 1;
+        weapon.quantity = quantity;
         for (int i = 0; i < quantity; i++) {
             data.weapons.add(weapon);
         }
@@ -122,7 +132,7 @@ public class Items {
     }
 
     public Data addArmor(Data data, Armor armor, int quantity) {
-        armor.quantity = 1;
+        armor.quantity = quantity;
         for (int i = 0; i < quantity; i++) {
             data.armors.add(armor);
         }

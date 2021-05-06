@@ -56,8 +56,8 @@
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.8.0</version>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -96,6 +96,11 @@
             <version>5.1.5.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
     </dependencies>
 
 

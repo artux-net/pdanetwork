@@ -5,8 +5,7 @@ import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
-import net.artux.pdanetwork.utills.RequestReader;
-import net.artux.pdanetwork.utills.Sellers;
+import net.artux.pdanetwork.utills.ServletHelper;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,30 +19,34 @@ import static net.artux.pdanetwork.utills.ServletContext.userManager;
 @WebServlet("/items")
 public class ItemsServlet extends HttpServlet {
 
-    private Sellers sellers = new Sellers();
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         int id = Integer.parseInt(httpServletRequest.getParameter("id"));
-        httpServletResponse.getWriter().println(gson.toJson(sellers.getSeller(id)));
+        httpServletResponse.setContentType("application/json; charset=UTF-8");
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        httpServletResponse.getWriter().println(gson.toJson(userManager.getSellers().getSeller(id)));
     }
 
     @Override
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String action = httpServletRequest.getParameter("action");
-        Map<String, String> headers = RequestReader.getHeaders(httpServletRequest);
+        Map<String, String> headers = ServletHelper.getHeaders(httpServletRequest);
         String token = headers.get("t");
 
         int type = Integer.parseInt(headers.get("type"));
-        String body = RequestReader.getString(httpServletRequest);
+        String body = ServletHelper.getString(httpServletRequest);
         Item item = getItem(type, body);
+
+        httpServletResponse.setContentType("application/json; charset=UTF-8");
+        httpServletResponse.setCharacterEncoding("UTF-8");
 
         if (item != null)
             switch (action) {
                 case "buy":
-                    int sellerId = Integer.parseInt(headers.get("sellerId"));
-                    httpServletResponse.getWriter().println(gson.toJson(userManager.buy(token, item, sellers, sellerId)));
+                    int sellerId = Integer.parseInt(httpServletRequest.getParameter("id"));
+                    httpServletResponse.getWriter().println(gson.toJson(userManager.buy(token, item, sellerId)));
                     break;
                 case "sell":
                     httpServletResponse.getWriter().println(gson.toJson(userManager.sell(token, item)));

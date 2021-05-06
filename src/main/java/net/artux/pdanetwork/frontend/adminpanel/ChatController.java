@@ -25,7 +25,12 @@ public class ChatController extends HttpServlet {
             request.getSession().setAttribute("username", member.getLogin());
             request.setAttribute("username", member.getLogin());
 
-            request.setAttribute("link_back", "/admin");
+            request.setAttribute("link_index", "/admin");
+            request.setAttribute("link_chat", "/admin/chat");
+            request.setAttribute("link_articles", "/admin?action=article");
+            request.setAttribute("link_users", "/admin?action=users");
+            request.setAttribute("link_reset", "/admin?action=reset");
+            request.setAttribute("link_manager", "/manager");
 
             String action = request.getParameter("action");
             switch (action == null ? "info" : action) {

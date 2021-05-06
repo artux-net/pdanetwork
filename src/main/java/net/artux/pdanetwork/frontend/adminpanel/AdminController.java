@@ -10,11 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static net.artux.pdanetwork.utills.ServletContext.mongoFeed;
 
 @WebServlet(name = "AdminController", urlPatterns = "/admin")
 public class AdminController extends HttpServlet {
 
     MongoAdmin mongoAdmin = new MongoAdmin();
+
+    SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -23,12 +30,15 @@ public class AdminController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         if (member != null) {
+            Date d1 = new Date();
             request.getSession().setAttribute("username", member.getLogin());
+            request.getSession().setAttribute("server_time", df.format(d1));
             request.setAttribute("username", member.getLogin());
 
             String action = request.getParameter("action");
             request.setAttribute("link_index", "/admin");
             request.setAttribute("link_chat", "/admin/chat");
+            request.setAttribute("link_articles", "/admin?action=article");
             request.setAttribute("link_users", "/admin?action=users");
             request.setAttribute("link_reset", "/admin?action=reset");
             request.setAttribute("link_manager", "/manager");
@@ -44,6 +54,11 @@ public class AdminController extends HttpServlet {
                     request.getSession().invalidate();
                     request.getRequestDispatcher("/loginAdmin").forward(request, response);
                     break;
+                case "article":
+                    request.setAttribute("articles", mongoFeed.getArticles(0));
+                    request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
+                    break;
+
                 default:
                     request.setAttribute("total_registrations", mongoAdmin.getSize());
                     request.setAttribute("rating", mongoAdmin.getRating(0));
@@ -74,15 +89,30 @@ public class AdminController extends HttpServlet {
                 request.setAttribute("users", mongoAdmin.find(q));
                 request.getRequestDispatcher("/users.jsp").forward(request, response);
                 break;
-            case "addmoney":
+            case "addMoney":
                 int money = Integer.parseInt(request.getParameter("money"));
                 int pdaId = Integer.parseInt(request.getParameter("pda"));
                 request.setAttribute("msg", userManager.addMoney(pdaId, money));
                 request.getRequestDispatcher("/users.jsp").forward(request, response);
                 break;
+            case "addArticle":
+                mongoFeed.addArticle(request.getParameter("title"),
+                        request.getParameter("desc"), request.getParameter("pic"),
+                        request.getParameter("tags"), request.getParameter("editor"));
+                request.getRequestDispatcher("/admin?action=article").forward(request, response);
+                break;
+            case "removeArticle":
+                mongoFeed.removeArticle(Integer.parseInt(request.getParameter("feedId")));
+                break;
+            case "editArticle":
+                mongoFeed.editArticle(Integer.parseInt(request.getParameter("feedId")), request.getParameter("title"),
+                        request.getParameter("desc"), request.getParameter("pic"),
+                        request.getParameter("tags"), request.getParameter("editor"));
+                break;
+            default:
+                request.getRequestDispatcher("/admin.jsp").forward(request, response);
+                break;
         }
-
-        request.getRequestDispatcher("/admin.jsp").forward(request, response);
     }
 
 }

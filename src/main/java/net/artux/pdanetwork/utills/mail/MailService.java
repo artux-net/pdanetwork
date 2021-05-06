@@ -17,9 +17,9 @@ import static net.artux.pdanetwork.utills.ServletContext.getPath;
 
 public class MailService {
 
-    private Session session;
-    private static String email = "pda@stalker-uc.ru";
-    private static String password = "xxxccc111";
+    private final Session session;
+    private static final String email = "pda@stalker-uc.ru";
+    private static final String password = "xxxccc111";
     private static String mailTemplateReg;
     private static String mailTemplateCon;
 
@@ -28,8 +28,7 @@ public class MailService {
             mailTemplateReg = readFile(getPath() + "mail/mail-template-reg.html");
             mailTemplateCon = readFile(getPath() + "mail/mail-template-con.html");
         } catch (IOException e) {
-            System.out.println("Can not find template files.");
-            System.out.println("Error message: " + e.getMessage());
+            ServletContext.error("MailService Error", e);
         }
     }
 
@@ -97,8 +96,7 @@ public class MailService {
             Transport.send(message);
             return true;
         } catch (MessagingException e) {
-            System.out.println("Can not sent letter.");
-            System.out.println(e.getMessage());
+            ServletContext.error("MailService Error while sending", e);
             return false;
         }
     }

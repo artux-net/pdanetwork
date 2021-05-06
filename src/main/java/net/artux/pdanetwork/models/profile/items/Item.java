@@ -23,7 +23,6 @@ public class Item {
                 Float.compare(item.weight, weight) == 0 &&
                 library_id == item.library_id &&
                 price == item.price &&
-                quantity == item.quantity &&
                 Objects.equals(icon, item.icon) &&
                 title.equals(item.title);
     }
@@ -101,7 +100,10 @@ public class Item {
     }
 
     public int sellerPrice() {
-        return quantity * price;
+        if (quantity > 0)
+            return quantity * price;
+        else
+            return price;
     }
 
     public int priceToSell() {
@@ -111,7 +113,7 @@ public class Item {
     @Override
     public String toString() {
         return "Item{" +
-                "id=" + id +
+                "cid=" + id +
                 ", type=" + type +
                 ", icon='" + icon + '\'' +
                 ", title='" + title + '\'' +
