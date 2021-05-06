@@ -36,11 +36,11 @@ public class AdminController extends HttpServlet {
             request.setAttribute("username", member.getLogin());
 
             String action = request.getParameter("action");
-            request.setAttribute("link_index", "/admin");
-            request.setAttribute("link_chat", "/admin/chat");
-            request.setAttribute("link_articles", "/admin?action=article");
-            request.setAttribute("link_users", "/admin?action=users");
-            request.setAttribute("link_reset", "/admin?action=reset");
+            request.setAttribute("link_index", "/pda/admin");
+            request.setAttribute("link_chat", "/pda/admin/chat");
+            request.setAttribute("link_articles", "/pda/admin?action=article");
+            request.setAttribute("link_users", "/pda/admin?action=users");
+            request.setAttribute("link_reset", "/pda/admin?action=reset");
             request.setAttribute("link_manager", "/manager");
             switch (action == null ? "info" : action) {
                 case "update":
@@ -98,19 +98,24 @@ public class AdminController extends HttpServlet {
             case "addArticle":
                 mongoFeed.addArticle(request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
-                        request.getParameter("tags"), request.getParameter("editor"));
-                request.getRequestDispatcher("/admin?action=article").forward(request, response);
+                        request.getParameter("tags"), request.getParameter("editor"));;
+                request.setAttribute("articles", mongoFeed.getArticles(0));
+                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                 break;
             case "removeArticle":
                 mongoFeed.removeArticle(Integer.parseInt(request.getParameter("feedId")));
+                request.setAttribute("articles", mongoFeed.getArticles(0));
+                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                 break;
             case "editArticle":
                 mongoFeed.editArticle(Integer.parseInt(request.getParameter("feedId")), request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
                         request.getParameter("tags"), request.getParameter("editor"));
+                request.setAttribute("articles", mongoFeed.getArticles(0));
+                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
                 break;
             default:
-                request.getRequestDispatcher("/admin.jsp").forward(request, response);
+                doGet(request, response);
                 break;
         }
     }

@@ -21,8 +21,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
-import static net.artux.pdanetwork.utills.ServletContext.mongoMessages;
-import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
+import static net.artux.pdanetwork.utills.ServletContext.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -31,14 +30,14 @@ public class MongoMessages {
     private final MongoClient mongoClient;
     private final MongoDatabase db;
     private final MongoCollection<Conversation> conversations;
-    private static final ConnectionString connectionString;
-
-    static {
+    private final ConnectionString connectionString;
+    {
         if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@35.237.32.236:27017/");
+            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@"+host+":27017/");
         else
             connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@localhost:27017/");
     }
+
 
 
     public MongoMessages() {

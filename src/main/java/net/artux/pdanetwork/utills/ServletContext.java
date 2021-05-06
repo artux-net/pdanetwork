@@ -17,20 +17,46 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 @WebListener
 public class ServletContext implements javax.servlet.ServletContextListener {
+
+    public static final boolean debug = true;
+    public static String host = "104.196.8.207";
+    {
+        if (!debug){
+            InetAddress localhost = null;
+            try {
+                localhost = InetAddress.getLocalHost();
+
+                log("System IP Address : " +
+                        (localhost.getHostAddress()).trim());
+                URL url_name = new URL("http://bot.whatismyipaddress.com");
+
+                BufferedReader sc =
+                        new BufferedReader(new InputStreamReader(url_name.openStream()));
+                String systemipaddress = "";
+                systemipaddress = sc.readLine().trim();
+
+                log("Public IP Address: " + systemipaddress + "\n");
+                host = systemipaddress;
+            } catch (Exception e) {
+                error("Init error", e);
+            }
+        }
+    }
+
 
     public static MailService mailService = new MailService();
     public static MongoUsers mongoUsers = new MongoUsers();
     public static MongoMessages mongoMessages = new MongoMessages();
     public static MongoFeed mongoFeed = new MongoFeed();
     public static UserManager userManager = new UserManager();
-    public static final boolean debug = true;
 
     private static Logger logger;
 
-    public static String host;
+
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -45,7 +71,7 @@ public class ServletContext implements javax.servlet.ServletContextListener {
         InetAddress localhost = null;
         try {
             if (debug)
-                host = "35.237.32.236";
+                host = "104.196.8.207";
             else {
                 localhost = InetAddress.getLocalHost();
                 log("System IP Address : " +
@@ -77,11 +103,20 @@ public class ServletContext implements javax.servlet.ServletContextListener {
     }
 
     public static void log(String msg) {
-        logger.info(msg);
+        if (logger!=null)
+            logger.info(msg);
+        else {
+            System.out.println(msg);
+        }
     }
 
     public static void error(String msg, Throwable thr) {
-        logger.error(msg, thr);
+        if (logger!=null)
+            logger.error(msg, thr);
+        else {
+            System.out.println(msg + " ->");
+            thr.printStackTrace();
+        }
     }
 
     public static Logger getLogger() {

@@ -16,6 +16,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.artux.pdanetwork.utills.ServletContext.host;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -28,7 +29,7 @@ public class MongoAdmin {
 
     static {
         if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@35.237.32.236:27017/");
+            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@"+host+":27017/");
         else
             connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
     }

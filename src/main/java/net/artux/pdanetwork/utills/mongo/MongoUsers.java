@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
+import static net.artux.pdanetwork.utills.ServletContext.host;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -50,7 +51,7 @@ public class MongoUsers {
 
     static {
         if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@35.237.32.236:27017/");
+            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@"+host+":27017/");
         else
             connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
     }

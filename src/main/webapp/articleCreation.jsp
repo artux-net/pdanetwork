@@ -13,7 +13,7 @@
         <%@include file="/css/style.css" %>
 
     </style>
-    <script type="text/javascript" src="/js/jodit.es2018.min.js"></script>
+    <script type="text/javascript" src="/pda/js/jodit.es2018.min.js"></script>
 </head>
 <body>
 <div class="container">

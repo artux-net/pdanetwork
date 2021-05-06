@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static net.artux.pdanetwork.utills.ServletContext.host;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -32,7 +33,7 @@ public class MongoFeed {
 
     static {
         if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-root:XWA47iIgQrPhuaukTryu@35.237.32.236:27017/");
+            connectionString = new ConnectionString("mongodb://mongo-root:XWA47iIgQrPhuaukTryu@"+host+":27017/");
         else
             connectionString = new ConnectionString("mongodb://mongo-root:XWA47iIgQrPhuaukTryu@localhost:27017/");
     }
@@ -59,11 +60,7 @@ public class MongoFeed {
 
     public List<Article> getFeed(int skip, int limit) {
         ArrayList<Article> list = new ArrayList<>();
-        table.find()
-                .sort(new Document("_id", -1))
-                .skip(skip)
-                .limit(limit)
-                .forEach(list::add);
+        table.find().sort(new Document("published", -1)).skip(skip).limit(limit).forEach(list::add);
         return list;
     }
 
@@ -87,6 +84,10 @@ public class MongoFeed {
         return table.deleteOne(new Document("feedId", id)).getDeletedCount();
     }
 
+    public Article getArticle(int feedId){
+        return table.find(new Document("feedId", feedId)).first();
+    }
+
     public int getFeedId() {
         Article article = table.find().sort(new Document("_id", -1)).first();
 
@@ -98,9 +99,7 @@ public class MongoFeed {
     }
 
     public List<Article> getArticles(int from) {
-        ArrayList<Article> articles = new ArrayList<>();
-        table.find().sort(new Document("published", -1)).skip(from).limit(15).forEach(articles::add);
-        return articles;
+        return getFeed(from, 15);
     }
 
     public void editArticle(Article article) {

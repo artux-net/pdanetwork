@@ -26,6 +26,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.9.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -50,8 +56,8 @@
         </dependency>
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.1</version>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -69,6 +75,11 @@
             <artifactId>javaee-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun.mail</groupId>
@@ -114,11 +125,6 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>api</warName>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.heroku.sdk</groupId>
-                <artifactId>heroku-maven-plugin</artifactId>
-                <version>2.0.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
