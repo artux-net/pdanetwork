@@ -1,5 +1,16 @@
+<%@ page import="net.artux.pdanetwork.servlets.Feed.Models.Article" %>
+ <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%!
+    String getTags(List<String> tags){
+        return tags.toString()
+                .replaceAll("\\[", "")
+                .replaceAll("]", "")
+                .replaceAll(" ","");
+    }
+%>
 
 <!DOCTYPE html>
 
@@ -24,7 +35,8 @@
             <input type="text" name="title" placeholder="Название" value="${a.title}"/>
             <input type="text" name="pic" placeholder="Ссылка на картинку" value="${a.image}"/>
             <input type="text" name="desc" placeholder="Описание" value="${a.description}"/>
-            <input type="text" name="tags" placeholder="Теги через запятую" value="${a.tags}"/>
+            <input type="text" name="tags" placeholder="Теги через запятую"
+                   value="<%=getTags(((Article)request.getAttribute("a")).tags)%>"/>
             <input type="hidden" name="action" value="editArticle" />
             <input type="hidden" name="feedId" value="${a.feedId}" />
             <textarea name="content" id="content">${a.content}</textarea>

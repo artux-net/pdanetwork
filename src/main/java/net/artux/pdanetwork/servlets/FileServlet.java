@@ -64,10 +64,12 @@ public class FileServlet extends HttpServlet {
                     filename = filename.replace(" ", "-");
 
                     File file = new File(ServletContext.getPath() + "/uploads/articles/" + filename);
+
                     try (OutputStream outputStream = new FileOutputStream(file)) {
                         IOUtils.copy(fileContent, outputStream);
                         filenames.add(filename);
                     } catch (IOException e) {
+                        messages.add(e.getMessage());
                         ServletContext.error("Files", e);
                     }
                 }

@@ -21,11 +21,11 @@
     <jsp:include page="/sidebar.jsp"/>
     <div class="content">
         <form name="addArticle" method="post" action="${pageContext.request.contextPath}/admin?action=addArticle">
-            <input type="text" name="title" placeholder="Название" value="${title}"/>
-            <input type="text" name="pic" placeholder="Ссылка на картинку" value="${pic}"/>
-            <input type="text" name="desc" placeholder="Описание" value="${desc}"/>
-            <input type="text" name="tags" placeholder="Теги через запятую" value="${tags}"/>
-            <textarea name="editor" id="editor">${content}</textarea>
+            <input type="text" name="title" placeholder="Название"/>
+            <input type="text" name="pic" placeholder="Ссылка на картинку"/>
+            <input type="text" name="desc" placeholder="Описание"/>
+            <input type="text" name="tags" placeholder="Теги через запятую"/>
+            <textarea name="content" id="editor"></textarea>
             <button type="submit">Добавить статью</button>
         </form>
         <c:forEach items="${articles}" var="a" varStatus="item">
@@ -42,12 +42,16 @@
                     <input type="hidden" name="feedId" value="${a.feedId}" />
                     <button type="submit">Изменить статью</button>
                 </form>
-                <h1>${a.title}</h1>
-                <p>${a.description}</p>
-                <p>${a.tags}</p>
-                <p>${a.image}</p>
-                <p>${a.published}</p>
-                <div>${a.content}</div>
+                <form name="showArticle" method="get"
+                      action="${pageContext.request.contextPath}/feed">
+                    <input type="hidden" name="id" value="${a.feedId}" />
+                    <button type="submit">Показать статью</button>
+                </form>
+                <h1>Название: ${a.title}</h1>
+                <p>Описание: ${a.description}</p>
+                <p>Теги: ${a.tags}</p>
+                <p>Ссылка на картинку: ${a.image}</p>
+                <p>Время публикации: ${a.published}</p>
                 <hr>
             </div>
         </c:forEach>
@@ -55,7 +59,7 @@
         <script type="text/javascript">
             var editor = new Jodit('#editor', {
                 uploader: {
-                    url: 'http://localhost/files'
+                    url: 'https://api.artux.net/pda/files'
                 },
                 "language": "en",
                 "theme": "dark",

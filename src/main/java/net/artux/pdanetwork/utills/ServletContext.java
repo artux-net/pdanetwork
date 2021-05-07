@@ -23,10 +23,10 @@ import java.net.UnknownHostException;
 public class ServletContext implements javax.servlet.ServletContextListener {
 
     public static final boolean debug = true;
-    public static String host = "104.196.8.207";
+    public static String host = "35.237.32.236";
     {
         if (!debug){
-            InetAddress localhost = null;
+            InetAddress localhost;
             try {
                 localhost = InetAddress.getLocalHost();
 

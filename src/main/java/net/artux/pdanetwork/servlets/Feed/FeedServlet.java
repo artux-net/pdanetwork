@@ -22,6 +22,7 @@ public class FeedServlet extends HttpServlet {
         if(httpServletRequest.getParameter("id")!=null){
             Article article = mongoFeed.getArticle(Integer.parseInt(httpServletRequest.getParameter("id")));
             if (article!=null) {
+
                 httpServletRequest.setAttribute("title", article.getTitle());
                 httpServletRequest.setAttribute("content", article.getContent());
                 httpServletRequest.getRequestDispatcher("/article.jsp").forward(httpServletRequest, httpServletResponse);
