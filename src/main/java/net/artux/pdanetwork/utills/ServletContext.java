@@ -22,7 +22,8 @@ import java.net.UnknownHostException;
 @WebListener
 public class ServletContext implements javax.servlet.ServletContextListener {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
+    //mongodb://mongo-root:XWA47iIgQrPhuaukTryu@35.237.32.236:27017/
     public static String host = "35.237.32.236";
     {
         if (!debug){
@@ -71,7 +72,7 @@ public class ServletContext implements javax.servlet.ServletContextListener {
         InetAddress localhost = null;
         try {
             if (debug)
-                host = "104.196.8.207";
+                host = "35.237.32.236";
             else {
                 localhost = InetAddress.getLocalHost();
                 log("System IP Address : " +
@@ -124,9 +125,6 @@ public class ServletContext implements javax.servlet.ServletContextListener {
     }
 
     public static String getPath() {
-        if (debug)
-            return "data/pdanetwork/";
-        else
             return "/data/pdanetwork/";
     }
 }

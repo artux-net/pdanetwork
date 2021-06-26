@@ -110,14 +110,14 @@ public class MessagesSocket {
     @OnMessage
     public void onMessage(String message, Session userSession) throws IOException {
         int conversation = (int) userSession.getUserProperties().get("conversation");
-        UserMessage userMessage = new UserMessage((Member) userSession.getUserProperties().get("m"), message);
+        UserMessage userMessage = new UserMessage(conversation, (Member) userSession.getUserProperties().get("m"), message);
 
         for (Session session : conversations.get(conversation)) {
-            session.getAsyncRemote().sendText(userMessage.toString());
+            session.getAsyncRemote().sendText(gson.toJson(userMessage));
         }
 
-        mongoMessages.updateConversation(conversation, userMessage);
-        updateDialog(userSession);
+        mongoMessages.addMessageToConversation(conversation, userMessage);
+        updateDialog(userSession, userMessage);
     }
 
     @OnError
@@ -125,22 +125,27 @@ public class MessagesSocket {
         ServletContext.error("onError - MessagesSocket for session-cid: " + session.getId(), thr);
     }
 
-    private void updateDialog(Session userSession) throws IOException {
+    private void updateDialog(Session userSession, UserMessage message) throws IOException {
         if (userSession.getUserProperties().get("first") != null &&
                 (Boolean) userSession.getUserProperties().get("first")) {
             //add new conv
             int pdaId = (int) userSession.getUserProperties().get("pda");
             int id = (int) userSession.getUserProperties().get("to");
 
-            int conversationId = ServletContext.mongoMessages.newConversation(pdaId, id);
-            addToConversation(conversationId, userSession);
+            Conversation conversation = ServletContext.mongoMessages.newConversation(pdaId, id);
+            addToConversation(conversation.getCid(), userSession);
+            for (int ids : conversation.allMembers()) {
+                mongoUsers.updateDialog(pdaId, conversation.cid);
+                SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+            }
         } else {
             //up conv
             Conversation conversation = mongoMessages
                     .getConversation((int) userSession.getUserProperties().get("conversation"));
-            for (int pdaId :
-                    conversation.allMembers())
-                mongoUsers.updateDialog(pdaId, conversation.cid);
+            for (int ids : conversation.allMembers()) {
+                mongoUsers.updateDialog(ids, conversation.cid);
+                SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+            }
         }
     }
 

@@ -55,8 +55,7 @@ public class FileServlet extends HttpServlet {
         Collection<Part> parts = request.getParts();
         List<String> filenames = new ArrayList<>();
         List<String> messages = new ArrayList<>();
-        for (Part part :
-                parts) {
+        for (Part part : parts) {
             if (part.getName().contains("files")) {
                 String filename = getFilename(part);
                 if (filename != null) {
@@ -64,7 +63,6 @@ public class FileServlet extends HttpServlet {
                     filename = filename.replace(" ", "-");
 
                     File file = new File(ServletContext.getPath() + "/uploads/articles/" + filename);
-
                     try (OutputStream outputStream = new FileOutputStream(file)) {
                         IOUtils.copy(fileContent, outputStream);
                         filenames.add(filename);

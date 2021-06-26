@@ -2,13 +2,15 @@ package net.artux.pdanetwork.communication.arena;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
-import org.apache.commons.lang3.SerializationUtils;
+import net.artux.pdanetwork.models.Profile;
 
 import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+
+import static net.artux.pdanetwork.utills.ServletContext.log;
 
 public class ServerThread implements Runnable {
 
@@ -25,17 +27,32 @@ public class ServerThread implements Runnable {
         }
     }
 
-    public void move(Session session, Vector2 position) {
-        state.entities.get(session.getUserProperties().get("id")).move(position);
+    public void move(Session session, Vector2 velocity) {
+        state.players.get(session.getId()).velocity = velocity;
     }
+
+    public void shoot(Session session, Vector2 velocity) {
+        for(Map.Entry<String, Entity> entry : state.players.entrySet()) {
+            Entity value = entry.getValue();
+            if (state.players.get(session.getId()).position.isRayHit(velocity, value.getCollider().getLeft(), value.getCollider().getRight()))
+                value.health -= 5;
+        }
+    }
+
 
     public void addSession(Session session) {
         sessions.add(session);
-        state.entities.put((String) session.getUserProperties().get("id"), new Entity(new Vector2(0, 0), (Member) session.getUserProperties().get("m")));
+        Member member = (Member) session.getUserProperties().get("m");
+        state.addPlayer(session, new Profile(member));
+
+        log("New player has connected, pdaId: " +  member.getPdaId());
     }
 
     public void closeSession(Session session) {
-        state.entities.remove(session.getUserProperties().get("id"));
+        Member member =(Member) session.getUserProperties().get("m");
+        log("Player has disconnected, pdaId: " +  member.getPdaId());
+
+        state.removePlayer(session);
         sessions.remove(session);
     }
 
@@ -43,21 +60,22 @@ public class ServerThread implements Runnable {
     public void run() {
         while (running) {
             try {
-                SerializationUtils.serialize(this.state);
+                //SerializationUtils.serialize(this.state);
+                state.act();
                 for (Session session : sessions) {
-                    //session.getBasicRemote().sendBinary();
-                    session.getBasicRemote().sendObject(this.state);
+                    if (session.isOpen())
+                        session.getBasicRemote().sendText(gson.toJson(this.state));
                 }
+                state.dispose();
 
-
-                Thread.sleep(50);
+                Thread.sleep(30); // update 1000/50=20 times per second
             } catch (InterruptedException e) {
                 try {
                     terminate();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-            } catch (IOException | EncodeException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

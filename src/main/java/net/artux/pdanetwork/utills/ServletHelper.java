@@ -3,6 +3,7 @@ package net.artux.pdanetwork.utills;
 import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -66,6 +67,14 @@ public class ServletHelper {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().println(gson.toJson(body));
+    }
+
+    public static void setError(int code, String message, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        response.setContentType("application/html");
+        response.setCharacterEncoding("UTF-8");
+        request.setAttribute("code", code);
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
 
     public static void setStringResponse(HttpServletResponse response, String body) throws IOException {

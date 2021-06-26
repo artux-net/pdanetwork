@@ -40,6 +40,7 @@ public class AdminController extends HttpServlet {
             request.setAttribute("link_chat", "/pda/admin/chat");
             request.setAttribute("link_articles", "/pda/admin?action=article");
             request.setAttribute("link_users", "/pda/admin?action=users");
+            request.setAttribute("link_logs", "/pda/log");
             request.setAttribute("link_reset", "/pda/admin?action=reset");
             request.setAttribute("link_manager", "/manager");
             switch (action == null ? "info" : action) {
@@ -66,6 +67,8 @@ public class AdminController extends HttpServlet {
                 default:
                     request.setAttribute("total_registrations", mongoAdmin.getSize());
                     request.setAttribute("rating", mongoAdmin.getRating(0));
+                    request.setAttribute("online", mongoAdmin.getOnline());
+                    request.setAttribute("registrations", mongoAdmin.getRegistrations());
                     request.getRequestDispatcher("/admin.jsp").forward(request, response);
                     break;
             }

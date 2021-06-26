@@ -306,9 +306,9 @@ public class UserManager {
             if (removed)
                 return new Status(true, "Предмет продан.");
             else
-                return new Status(false, "Неудалось продать предмет.");
+                return new Status(false, "Не удалось продать предмет.");
         } else
-            return new Status(false, "Неудалось продать предмет.");
+            return new Status(false, "Не удалось продать предмет.");
     }
 
     public boolean addMoney(int pdaId, int money) {

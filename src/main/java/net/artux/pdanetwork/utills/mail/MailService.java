@@ -57,7 +57,7 @@ public class MailService {
                     InternetAddress.parse(user.getName() + " <" + user.getEmail() + ">"));
             message.setSubject("Восстановление пароля");
             message.setText(user.getLogin() +", "
-                    + "\n\n ваша ссылка для смены пароля: " + "http://" + ServletContext.host + "/reset?t=" + token
+                    + "\n\n ваша ссылка для смены пароля: " + "https://" + ServletContext.host + "/pda/reset?t=" + token
                     + "\n\n Действует в течение 30 минут.");
         return sendMessage(message);
     }

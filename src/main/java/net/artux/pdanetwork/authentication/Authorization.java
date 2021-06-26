@@ -9,6 +9,7 @@ import net.artux.pdanetwork.utills.ServletHelper;
 import net.artux.pdanetwork.utills.mail.MailService;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
@@ -61,7 +62,7 @@ public class Authorization {
         new Timer(30*60*1000, e -> registerUserMap.remove(token)).start();
     }
 
-    public void handleConfirmation(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void handleConfirmation(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (registerUserMap.containsKey(request.getParameter("t"))) {
             int pdaId = ServletContext.mongoUsers.add(registerUserMap.get(request.getParameter("t")));
             ServletContext.log("Registered user" + registerUserMap.get(request.getParameter("t")).email + " with pdaId:" + pdaId);
@@ -69,13 +70,15 @@ public class Authorization {
             try {
                 mailService.sendRegisterLetter(registerUserMap.get(request.getParameter("t")), pdaId);
             } catch (Exception e) {
-                response.setStatus(400);
+                ServletHelper.setError(500, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!",
+                        request, response);
                 ServletContext.error("Confirmation Error", e);
             } finally {
-                response.getWriter().println(pdaId);
+                ServletHelper.setError(pdaId, "Это ваш pdaId, мы вас зарегистрировали, спасибо!",
+                        request, response);
             }
         }else{
-            response.setStatus(400);
+            ServletHelper.setError(400, "Ссылка устарела или не существует", request, response);
             ServletContext.log("Wrong token for confirmation " + request.getParameter("t"));
         }
     }

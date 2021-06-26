@@ -13,7 +13,9 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 
-@ServerEndpoint(value = "/arena/{token}", configurator = SocketConfigurator.class)
+import static net.artux.pdanetwork.utills.ServletContext.log;
+
+@ServerEndpoint(value = "/arena/{token}/{session}", configurator = SocketConfigurator.class)
 public class ArenaSocket {
 
     private final HashMap<Integer, ServerThread> states = new HashMap<>();
@@ -26,7 +28,8 @@ public class ArenaSocket {
     }
 
     @OnOpen
-    public void onOpen(Session userSession, EndpointConfig config, @PathParam("token") String token) throws IOException {
+    public void onOpen(Session userSession, EndpointConfig config, @PathParam("token") String token,  @PathParam("session") String session) throws IOException {
+        log("new session attempt");
         if (token.equals("*"))
             token = (String) config.getUserProperties().get("t");
         Member member = ServletContext.mongoUsers.getByToken(token);
@@ -45,16 +48,19 @@ public class ArenaSocket {
         states.get(0).closeSession(userSession);
     }
 
-
     @OnMessage
     public void onMessage(String message, Session userSession) throws IllegalStateException, JsonSyntaxException {
         Action action = gson.fromJson(message, Action.class);
+
         switch (action.getAction()) {
             case "move":
                 Vector2 position = gson.fromJson(action.getData(), Vector2.class);
-                userSession.getUserProperties().get("id");
                 states.get(0).move(userSession, position);
                 break;
+          case "shoot":
+            Vector2 direction = gson.fromJson(action.getData(), Vector2.class);
+            states.get(0).shoot(userSession, direction);
+            break;
         }
 
     }

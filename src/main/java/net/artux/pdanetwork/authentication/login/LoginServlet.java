@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.UpdateData;
 import net.artux.pdanetwork.authentication.login.model.LoginUser;
+import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.ServletHelper;
 import org.bson.conversions.Bson;
 
@@ -33,9 +35,13 @@ public class LoginServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         try {
             LoginUser loginUser = gson.fromJson(ServletHelper.getString(request), LoginUser.class);
-            response.getWriter().println(mongoUsers.tryLogin(loginUser.getEmailOrLogin(), loginUser.getPassword()));
+            ServletContext.log("New login " + loginUser.getEmailOrLogin());
+            Status status = mongoUsers.tryLogin(loginUser.getEmailOrLogin(), loginUser.getPassword());
+            ServletContext.log("result of " + loginUser.getEmailOrLogin() + " code "
+                    +status.getCode() + " desc "+ status.getDescription());
+            ServletHelper.setResponse(response, status);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            ServletContext.error("Login Error", ex);
             response.setStatus(400);
         }
     }
@@ -45,13 +51,10 @@ public class LoginServlet extends HttpServlet {
         /*
             обновление информации профиля с сервера
          */
-
         String token = req.getHeader("t");
         if (token!=null){
             Member member = mongoUsers.getByToken(token);
-            resp.setContentType("application/json;");
-            resp.setCharacterEncoding("UTF-8");
-            resp.getWriter().println(gson.toJson(member));
+            ServletHelper.setResponse(resp, member);
         } else {
           resp.sendError(400);
         }

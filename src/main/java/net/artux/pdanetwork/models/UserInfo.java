@@ -10,7 +10,7 @@ public class UserInfo {
     private final String avatar;
     private final String location;
     private final int xp;
-    private final String regDate;
+    private final Long regDate;
 
     public UserInfo(Member member) {
         login = member.getLogin();
@@ -46,7 +46,7 @@ public class UserInfo {
         return xp;
     }
 
-    public String getRegDate() {
+    public Long getRegDate() {
         return regDate;
     }
 

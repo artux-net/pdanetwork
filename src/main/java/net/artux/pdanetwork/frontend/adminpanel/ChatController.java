@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.frontend.adminpanel;
 
 import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.communication.chat.ChatSocket;
 import net.artux.pdanetwork.utills.mongo.MongoAdmin;
 
 import javax.servlet.ServletException;
@@ -25,16 +26,16 @@ public class ChatController extends HttpServlet {
             request.getSession().setAttribute("username", member.getLogin());
             request.setAttribute("username", member.getLogin());
 
-            request.setAttribute("link_index", "/admin");
-            request.setAttribute("link_chat", "/admin/chat");
-            request.setAttribute("link_articles", "/admin?action=article");
-            request.setAttribute("link_users", "/admin?action=users");
-            request.setAttribute("link_reset", "/admin?action=reset");
+            request.setAttribute("link_index", "/pda/admin");
+            request.setAttribute("link_chat", "/pda/admin/chat");
+            request.setAttribute("link_articles", "/pda/admin?action=article");
+            request.setAttribute("link_users", "/pda/admin?action=users");
+            request.setAttribute("link_reset", "/pda/admin?action=reset");
             request.setAttribute("link_manager", "/manager");
 
             String action = request.getParameter("action");
             switch (action == null ? "info" : action) {
-                case "info":
+                default:
                     request.getRequestDispatcher("/chat.jsp").forward(request, response);
                     break;
             }
@@ -44,5 +45,19 @@ public class ChatController extends HttpServlet {
         }
     }
 
-
+    @Override
+    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+        String action = httpServletRequest.getParameter("action");
+        switch (action == null ? "info" : action) {
+            case "ban":
+                Integer pdaId = Integer.parseInt(httpServletRequest.getParameter("pdaId"));
+                ChatSocket.addToBanList(pdaId, "");
+                break;
+            case "remove":
+                Long time = Long.parseLong(httpServletRequest.getParameter("time"));
+                ChatSocket.removeMessage(time);
+                break;
+        }
+        doGet(httpServletRequest, httpServletResponse);
+    }
 }

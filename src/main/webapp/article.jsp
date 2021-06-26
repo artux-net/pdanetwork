@@ -3,16 +3,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>
-        <%@include file="/css/style.css" %>
+        body {
+            background-color: #1a1b1d;
+            color: #bcbcbe;
+            font-family: Arial;
+        }
+        hr { background: url("http://static-ptl-ru.gcdn.co/static/3.35.6/common/css/scss/content/hrs/img/delimeter.png") no-repeat center top;
+            border: none;
+            height: 2px;
+            display: block;
+            overflow: hidden;}
+        h2 {
+            color: #fff;
+        }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="content">
-            ${content}
-        </div>
-    </div>
+<table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+    <tbody>
+    <tr>
+        <td style="width: 15px;"><img alt="" height="15" src="https://api.artux.net/images/news/icons/category.png" width="15"></td>
+        <td>${tags}</td>
+        <td style="width: 15px;"><img alt="" src="https://api.artux.net/images/news/icons/date.png"></td>
+        <td>${date}</td>
+        <td style="width: 15px;"><img alt="" height="15" src="https://api.artux.net/images/news/icons/comments.png" width="15"></td>
+        <td>${comments}</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div>
+    ${content}
+</div>
 </body>
+
 </html>

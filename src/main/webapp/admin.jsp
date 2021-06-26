@@ -20,7 +20,7 @@
                 <td><b>Пользователей</b></td>
                 <td>${total_registrations}</td>
                 <td><b>Регистраций за сутки</b></td>
-                <td>{registrations_per_day}</td>
+                <td>${registrations}</td>
             </tr>
             <tr>
                 <td><b>Время на сервере</b></td>
@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td><b>Онлайн за сутки</b></td>
-                <td>{online_per_day}</td>
+                <td>${online}</td>
                 <td><b>Средний онлайн за сутки</b></td>
                 <td>{average_online} ч.</td>
             </tr>

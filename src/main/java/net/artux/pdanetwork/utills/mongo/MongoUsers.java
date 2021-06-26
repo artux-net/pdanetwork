@@ -13,6 +13,7 @@ import com.mongodb.client.result.UpdateResult;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.communication.Waiter;
+import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
@@ -25,8 +26,8 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
 
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
 import static net.artux.pdanetwork.utills.ServletContext.host;
+import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -103,6 +105,15 @@ public class MongoUsers {
         } else return false;
     }
 
+    public boolean setBlocked(int pdaId, int blocked){
+        Member result = getMember(pdaId);
+
+        if(result!=null) {
+            result.setBlocked(blocked);
+            updateMember(result);
+            return true;
+        } else return false;
+    }
     public Member getById(int pdaId) {
         return getMember(pdaId);
     }
@@ -113,7 +124,7 @@ public class MongoUsers {
         if(result!=null) {
             table.updateOne(
                     eq("token", token),
-                    combine(set("lastLoginAt", new Date())));
+                    combine(set("lastLoginAt", Instant.now().toEpochMilli())));
             return result;
         } else return null;
     }
@@ -309,33 +320,12 @@ public class MongoUsers {
             return false;
     }
 
-    private final HashMap<Integer, Waiter> waitMap = new HashMap<>();
-
-    public void addToWaitList(Member member, Waiter context) {
-        waitMap.put(member.getPdaId(), context);
-    }
-
-    public void removeFromWaitList(Member member) {
-        Waiter waiter = waitMap.get(member.getPdaId());
-        if (waiter != null)
-            waiter.complete();
-        waitMap.remove(member.getPdaId());
-    }
-
-    private void updateClient(int pdaId) {
-        Waiter context = waitMap.get(pdaId);
-        if (context != null)
-            context.complete();
-        waitMap.remove(pdaId);
-    }
-
     public void addDialog(int pdaId, int conversation) {
         Member user = getMember(pdaId);
 
         if (user != null) {
             user.dialogs.add(conversation);
             updateMember(user);
-            updateClient(pdaId);
         }
     }
 
@@ -345,7 +335,6 @@ public class MongoUsers {
             user.dialogs.remove(conversation);
             user.dialogs.add(0, conversation);
             updateMember(user);
-            updateClient(pdaId);
         }
     }
 
@@ -383,16 +372,16 @@ public class MongoUsers {
     }
 
     public static UpdateResult updateMember(@NotNull Member member) {
-        member.setLastModified(new Date());
+        member.setLastModified(Instant.now().toEpochMilli());
         return table.replaceOne(eq("pdaId", member.getPdaId()), member);
     }
 
     public UpdateResult changeField(Object token, String field, Object newValue) {
-        return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", new Date().toString())));
+        return table.updateOne (eq("token", token), combine(set(field, newValue),set("lastModified", Instant.now().toEpochMilli())));
     }
 
     public UpdateResult changeFields(Object token, List<Bson> updates) {
-        updates.add(set("lastModified", new Date().toString()));
+        updates.add(set("lastModified", Instant.now().toEpochMilli()));
         return table.updateOne (eq("token", token), combine(updates), new UpdateOptions().upsert(true).bypassDocumentValidation(true));
     }
 

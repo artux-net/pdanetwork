@@ -76,8 +76,6 @@ public class MongoFeed {
         return table.replaceOne(new Document("feedId", feedId), new Article(feedId, title, image,
                 Arrays.asList(tags.split(",")),
                 desc, content)).getModifiedCount();
-
-
     }
 
     public long removeArticle(int id) {
@@ -102,11 +100,4 @@ public class MongoFeed {
         return getFeed(from, 15);
     }
 
-    public void editArticle(Article article) {
-        table.replaceOne(new Document("feedId", article.getFeedId()), article);
-    }
-
-    public void deleteArticle(int feedId) {
-        table.deleteOne(new Document("feedId", feedId));
-    }
 }

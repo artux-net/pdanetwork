@@ -7,6 +7,7 @@ import net.artux.pdanetwork.utills.Security;
 import org.bson.types.ObjectId;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,9 +37,9 @@ public class Member {
     public List<Integer> relations = new ArrayList<>();
     public List<Note> notes = new ArrayList<>();
     public List<Integer> achievements = new ArrayList<>();
-    private Date lastModified;
-    private String registrationDate;
-    private Date lastLoginAt;
+    private Long lastModified;
+    private Long registrationDate;
+    private Long lastLoginAt;
 
     public Member() {
     }
@@ -57,11 +58,10 @@ public class Member {
         data = new Data();
         money = 500;
         dialogs = friends = friendRequests = new ArrayList<>();
-        lastModified = lastLoginAt = new Date();
+        lastModified = lastLoginAt = registrationDate =Instant.now().toEpochMilli();
         relations = new ArrayList<>();
         for (int i = 0; i < 9; i++)
             relations.add(0);
-        registrationDate = new SimpleDateFormat("dd MM yyyy", Locale.US).format(new Date());
     }
 
     public ObjectId getId() {
@@ -197,27 +197,27 @@ public class Member {
         this.friendRequests = friendRequests;
     }
 
-    public Date getLastModified() {
+    public Long getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(Long lastModified) {
         this.lastModified = lastModified;
     }
 
-    public String getRegistrationDate() {
+    public Long getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
+    public void setRegistrationDate(Long registrationDate) {
         this.registrationDate = registrationDate;
     }
 
-    public Date getLastLoginAt() {
+    public Long getLastLoginAt() {
         return lastLoginAt;
     }
 
-    public void setLastLoginAt(Date lastLoginAt) {
+    public void setLastLoginAt(Long lastLoginAt) {
         this.lastLoginAt = lastLoginAt;
     }
 

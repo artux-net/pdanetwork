@@ -2,24 +2,61 @@ package net.artux.pdanetwork.communication.arena;
 
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.models.Profile;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 
 public class Entity implements Serializable {
 
 
-    final static double MOVEMENT = 0.4;
+    final static double MOVEMENT = 5;
 
-    private final Vector2 position;
-    private Vector2 velocity;
-    private final Profile profile;
+    public final int id;
+    private final String name;
+    public double health = 100;
+    public final Vector2 position;
+    public Vector2 velocity;
+    public Vector2 size;
 
-    public Entity(Vector2 position, Member profile) {
+    public Entity(Vector2 position, Profile profile) {
         this.position = position;
-        this.profile = new Profile(profile);
+        velocity = new Vector2(0,0);
+        this.id = profile.getPdaId();
+        name = profile.getLogin();
+        size = new Vector2(32, 32);
     }
 
-    public void move(Vector2 position) {
-        this.position.moveBy(position.x * MOVEMENT, position.y * MOVEMENT);
+    public Entity(Vector2 position, Vector2 direction) {
+        this.position = position;
+        velocity = direction;
+        this.id = -1;
+        name = "bullet";
+    }
+
+    public void act(){
+        if(velocity.x!=0 || velocity.y != 0){
+            this.position.moveBy( velocity.x * MOVEMENT,  velocity.y * MOVEMENT);
+        }
+
+    }
+
+    public Pair<Vector2, Vector2> getCollider(){
+        return new Pair<>() {
+            @Override
+            public Vector2 setValue(Vector2 value) {
+                return null;
+            }
+
+            @Override
+            public Vector2 getLeft() {
+                return position;
+            }
+
+            @Override
+            public Vector2 getRight() {
+                //TODO rotate
+                return new Vector2(position.x + size.x, position.y + size.y);
+            }
+        };
     }
 }

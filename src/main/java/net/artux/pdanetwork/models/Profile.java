@@ -16,7 +16,7 @@ public class Profile {
     private int pdaId;
     private int xp;
     private String location;
-    private String registrationDate;
+    private Long registrationDate;
     private int friendStatus;
     /*
     0 - is not friend
@@ -104,7 +104,7 @@ public class Profile {
         return location;
     }
 
-    public String getRegistrationDate() {
+    public Long getRegistrationDate() {
         return registrationDate;
     }
 

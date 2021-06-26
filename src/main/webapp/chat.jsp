@@ -42,6 +42,7 @@
                 if ("time" in message) {
                     addMessage(message);
                 } else {
+                    document.getElementById('messages').innerHTML = '';
                     for (var i = 0; i < message.length; i++) {
                         addMessage(message[i]);
                     }
@@ -72,8 +73,9 @@
                 "                        </tr>\n" +
                 "                        </tbody>\n" +
                 "                    </table>\n" +
-                "                    <p align=\"center\"><a href=\"{chat_delete_message}\">Удалить</a> | <a href=\"chat_ban_1hours\">Бан на\n" +
-                "                        час</a></p>\n" +
+                "                    <p align=\"center\">" +
+                "" + "<form method=\"POST\" action=\"${pageContext.request.contextPath}/admin/chat?action=remove&time=" + message.time + "\"><button type=\"submit\">Удалить</button></form>" +
+                "" + "<form method=\"POST\" action=\"${pageContext.request.contextPath}/admin/chat?action=ban&pdaId=" + message.pdaId + "\"><button type=\"submit\">Бан на час</button></form>"
                 "                </td>\n" +
                 "            </tr>\n" +
                 "            </tbody>\n" +

@@ -3,6 +3,7 @@ package net.artux.pdanetwork.communication.chat.configurators;
 import net.artux.pdanetwork.communication.FeedSocket;
 import net.artux.pdanetwork.communication.arena.ArenaSocket;
 import net.artux.pdanetwork.communication.chat.ChatSocket;
+import net.artux.pdanetwork.communication.chat.DialogsSocket;
 import net.artux.pdanetwork.communication.chat.GroupsSocket;
 import net.artux.pdanetwork.communication.chat.MessagesSocket;
 
@@ -13,11 +14,12 @@ import javax.websocket.server.ServerEndpointConfig.Configurator;
 
 public class SocketConfigurator extends Configurator {
 
-    private static final ChatSocket chatServer = new ChatSocket();
-    private static final GroupsSocket groupServer = new GroupsSocket();
-    private static final MessagesSocket messagesServer = new MessagesSocket();
-    private static final ArenaSocket arenaSocket = new ArenaSocket();
-    private static final FeedSocket feedSocket = new FeedSocket();
+    public static final ChatSocket chatServer = new ChatSocket();
+    public static final GroupsSocket groupServer = new GroupsSocket();
+    public static final MessagesSocket messagesServer = new MessagesSocket();
+    public static final ArenaSocket arenaSocket = new ArenaSocket();
+    public static final DialogsSocket dialogsSocket = new DialogsSocket();
+    public static final FeedSocket feedSocket = new FeedSocket();
 
     @Override
     public <T> T getEndpointInstance(Class<T> endpointClass) {
@@ -29,6 +31,8 @@ public class SocketConfigurator extends Configurator {
             return (T) messagesServer;
         else if (endpointClass.equals(ArenaSocket.class))
             return (T) arenaSocket;
+        else if (endpointClass.equals(DialogsSocket.class))
+            return (T) dialogsSocket;
         else return (T) feedSocket;
     }
 

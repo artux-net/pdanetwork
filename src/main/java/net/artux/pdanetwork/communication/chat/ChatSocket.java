@@ -9,15 +9,21 @@ import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
 
+import javax.swing.*;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Predicate;
 
 @ServerEndpoint(value = "/chat/{token}", configurator = SocketConfigurator.class)
 public class ChatSocket {
 
-    private final LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>(150);
+    private static LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>(150);
+    private static boolean updateMessages = false;
+    private static HashMap<Integer, String> banMap = new HashMap<>();
 
     Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
@@ -29,7 +35,6 @@ public class ChatSocket {
         if (member != null) {
             userSession.getUserProperties().put("m", member);
             {
-                //TODO Logic for ban
                 if (!ServletContext.mongoUsers.isBlocked(token)) {
                     userSession.getAsyncRemote().sendText(gson.toJson(lastMessages));
                 } else {
@@ -48,17 +53,24 @@ public class ChatSocket {
     }
 
     @OnClose
-    public void onClose(Session userSession) {
-        userSession.getAsyncRemote();
+    public void onClose(Session userSession) throws IOException {
+        userSession.close();
     }
 
     @OnMessage
     public void onMessage(String message, Session userSession) throws IllegalStateException, JsonSyntaxException {
         UserMessage userMessage = new UserMessage((Member) userSession.getUserProperties().get("m"), message);
         if(!BadWordsFilter.contains(userMessage)) {
-            lastMessages.add(userMessage);
-            for (Session session : userSession.getOpenSessions()) {
-                session.getAsyncRemote().sendText(gson.toJson(userMessage));
+            if (!banMap.containsKey(userMessage.pdaId)){
+                lastMessages.add(userMessage);
+                for (Session session : userSession.getOpenSessions()) {
+                    if (updateMessages) {
+                        userSession.getAsyncRemote().sendText(gson.toJson(lastMessages));
+                        updateMessages = false;
+                    } else session.getAsyncRemote().sendText(gson.toJson(userMessage));
+                }
+            }else{
+                sendMessage(userSession, "Вы заблокированы на час.");
             }
         } else {
             sendMessage(userSession, "Мат в общих чатах запрещен.");
@@ -71,5 +83,22 @@ public class ChatSocket {
         ServletContext.error("Error at chat socket", thr);
         thr.printStackTrace();
     }
+
+    public static void addToBanList(Integer pdaId, String reason){
+        banMap.put(pdaId, reason);
+        ServletContext.log("pdaId: " + pdaId + " banned for hour in general chat: " + reason);
+        new Timer(60*60*1000, e -> banMap.remove(pdaId)).start();
+    }
+
+    public static void removeMessage(Long time){
+        lastMessages.removeIf(userMessage -> {
+            if (userMessage.time == time)
+                return true;
+            else
+                return false;
+        });
+        updateMessages = true;
+    }
+
 
 }

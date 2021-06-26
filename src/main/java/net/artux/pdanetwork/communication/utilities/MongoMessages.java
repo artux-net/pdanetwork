@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Indexes;
 import net.artux.pdanetwork.communication.model.Conversation;
+import net.artux.pdanetwork.communication.model.ConversationRequest;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 import net.artux.pdanetwork.utills.ServletContext;
@@ -54,21 +55,21 @@ public class MongoMessages {
         conversations.createIndex(Indexes.ascending("cid"));
     }
 
-    public int newConversation(int ownerId, List<Integer> members) {
+    private Conversation addConversation(int ownerId, Conversation conversation) {
         int id = getNewId();
-        List<Integer> owners = new ArrayList<>(Collections.singletonList(ownerId));
-        Conversation conversation = new Conversation(id, owners, members);
-
         for (int i : conversation.allMembers()) {
             ServletContext.mongoUsers.addDialog(i, id);
         }
 
         conversations.insertOne(conversation);
-        return id;
+        return conversation;
     }
 
-    public int newConversation(int ownerId, int pdaId){
-        return newConversation(ownerId, new ArrayList<>(Collections.singletonList(pdaId)));
+    public Conversation newConversation(int ownerId, int pdaId){
+        return addConversation(ownerId,  new Conversation(getNewId(), ownerId, pdaId));
+    }
+    public Conversation newConversation(int ownerId, ConversationRequest request){
+        return addConversation(ownerId,  new Conversation(getNewId(), ownerId, request));
     }
 
     private int getNewId(){
@@ -152,7 +153,22 @@ public class MongoMessages {
         } else return null;
     }
 
-    public void updateConversation(int id, UserMessage userMessage) {
+    public boolean updateConversation(ConversationRequest request) {
+        Conversation result = conversations.find(eq("cid", request.cid)).first();
+
+        if(result!=null) {
+            if (result.title != null && !request.title.equals(""))
+                result.title = request.title;
+            result.owners.addAll(request.owners);
+            result.owners.removeAll(request.deleteOwners);
+            result.members.addAll(request.members);
+            result.members.removeAll(request.deleteMembers);
+            conversations.replaceOne(eq("cid", request.cid), result);
+            return true;
+        } else return false;
+    }
+
+    public void addMessageToConversation(int id, UserMessage userMessage) {
         mongoMessages.getConversationCollection(id).insertOne(new DBMessage(userMessage));
         if (userMessage.message.length() > 40)
             userMessage.message = userMessage.message.substring(0, 40).strip() + "..";

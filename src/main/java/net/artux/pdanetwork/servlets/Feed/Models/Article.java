@@ -48,6 +48,18 @@ public class Article extends FeedModel {
         return tags;
     }
 
+    public String getStringTags() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (tags.size()!=0) {
+            for (int i = 0; i < tags.size() - 1; i++) {
+                stringBuilder.append(tags.get(i) + ", ");
+            }
+            stringBuilder.append(tags.get(tags.size()-1));
+        }
+        return stringBuilder.toString();
+    }
+
+
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
