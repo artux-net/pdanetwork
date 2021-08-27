@@ -8,38 +8,29 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Indexes;
 import net.artux.pdanetwork.servlets.Feed.Models.Article;
-import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.artux.pdanetwork.utills.ServletContext.host;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+@Service
 public class MongoFeed {
 
-    private static final MongoClient mongoClient;
-    private static final MongoCollection<Article> table;
+    private final MongoClient mongoClient;
+    private final MongoCollection<Article> table;
 
-    // global settings for all users
-    private final int daysValidAccount = 90;
+    private final ConnectionString connectionString;
 
-    private static final ConnectionString connectionString;
-
-    static {
-        if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-root:XWA47iIgQrPhuaukTryu@"+host+":27017/");
-        else
-            connectionString = new ConnectionString("mongodb://mongo-root:XWA47iIgQrPhuaukTryu@localhost:27017/");
-    }
-
-    static {
-
+    public MongoFeed(ValuesService valuesService){
+        connectionString = new ConnectionString(valuesService.getMongoUri());
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
@@ -64,16 +55,17 @@ public class MongoFeed {
         return list;
     }
 
-    public int addArticle(String title, String desc, String image, String tags, String content) {
-        Article article = new Article(getFeedId(), title, image,
-                Arrays.asList(tags.split(",")),
+    public String addArticle(String title, String desc, String image, List<String> tags, String content) {
+        Article article = new Article(title, image,
+                tags,
                 desc, content);
+        System.out.println(article);
         table.insertOne(article);
-        return article.getFeedId();
+        return article.getId();
     }
 
-    public long editArticle(int feedId, String title, String desc, String image, String tags, String content) {
-        return table.replaceOne(new Document("feedId", feedId), new Article(feedId, title, image,
+    public long editArticle(String feedId, String title, String desc, String image, String tags, String content) {
+        return table.replaceOne(new Document("id", feedId), new Article( title, image,
                 Arrays.asList(tags.split(",")),
                 desc, content)).getModifiedCount();
     }
@@ -84,16 +76,6 @@ public class MongoFeed {
 
     public Article getArticle(int feedId){
         return table.find(new Document("feedId", feedId)).first();
-    }
-
-    public int getFeedId() {
-        Article article = table.find().sort(new Document("_id", -1)).first();
-
-        if (article != null) {
-            return article.getFeedId() + 1;
-        } else {
-            return 1;
-        }
     }
 
     public List<Article> getArticles(int from) {

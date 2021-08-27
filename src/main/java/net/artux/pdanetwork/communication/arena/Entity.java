@@ -1,8 +1,9 @@
 package net.artux.pdanetwork.communication.arena;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.models.Profile;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 
@@ -41,22 +42,15 @@ public class Entity implements Serializable {
     }
 
     public Pair<Vector2, Vector2> getCollider(){
-        return new Pair<>() {
-            @Override
-            public Vector2 setValue(Vector2 value) {
-                return null;
-            }
+        return new Pair<>(position, new Vector2(position.x + size.x, position.y + size.y));
+    }
 
-            @Override
-            public Vector2 getLeft() {
-                return position;
-            }
+    @RequiredArgsConstructor
+    @Getter
+    static class Pair<T,Y>{
 
-            @Override
-            public Vector2 getRight() {
-                //TODO rotate
-                return new Vector2(position.x + size.x, position.y + size.y);
-            }
-        };
+        private final T right;
+        private final Y left;
+
     }
 }

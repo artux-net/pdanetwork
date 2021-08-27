@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="head"/>
+<body>
+<div class="container">
+    <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
+    <div th:insert="sidebar"/>
+    <div class="content">
+        <h2>Статистика</h2>
+        <table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+            <tbody>
+            <tr>
+                <td><b>Пользователей</b></td>
+                <td th:text="${total_registrations}"/>
+                <td><b>Регистраций за сутки</b></td>
+                <td th:text="${registrations}"/>
+            </tr>
+            <tr>
+                <td><b>Время на сервере</b></td>
+                <td th:text="${server_time}"/>
+            </tr>
+            <tr>
+                <td><b>Онлайн за сутки</b></td>
+                <td th:text="${online}"/>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <h2>Топ пользователей</h2>
+        <table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+            <tbody>
+            <tr>
+                <td><b>№</b></td>
+                <td><b>#ПДА</b></td>
+                <td><b>Ник</b></td>
+                <td><b>Опыт</b></td>
+                <td><b>Денег</b></td>
+            </tr>
+
+            <th:block th:each="user,iter : ${rating}">
+                <tr>
+                    <td th:text="${iter.index+1}"/>
+                    <td th:text="${user.pdaId}"/>
+                    <td th:text="${user.login}"/>
+                    <td th:text="${user.xp}"/>
+                    <td th:text="${user.money}"/>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="footer">${footer_version}</div>
+</div>
+</body>
+</html>

@@ -12,7 +12,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 
-@ServerEndpoint(value = "/groupChat/{token}/{group}", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/groupChat/{token}/{group}")
 public class GroupsSocket {
 
     private HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = getLastMessages();
@@ -42,8 +42,8 @@ public class GroupsSocket {
             int group = 0;
             if (gr.equals("*"))
                 group = ServletContext.mongoUsers.getByToken(token).getGroup();
-            else if (member.getAdmin() != 0)
-                group = Integer.parseInt(gr);
+            //else if (member.getAdmin() != 0)
+              //  group = Integer.parseInt(gr);
 
             userSession.getUserProperties().put("m", member);
 

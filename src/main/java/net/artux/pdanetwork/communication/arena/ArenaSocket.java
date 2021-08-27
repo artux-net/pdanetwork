@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import static net.artux.pdanetwork.utills.ServletContext.log;
 
-@ServerEndpoint(value = "/arena/{token}/{session}", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/arena/{token}/{session}")
 public class ArenaSocket {
 
     private final HashMap<Integer, ServerThread> states = new HashMap<>();

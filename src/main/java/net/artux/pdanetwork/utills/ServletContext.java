@@ -2,9 +2,8 @@ package net.artux.pdanetwork.utills;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
-import net.artux.pdanetwork.authentication.UserManager;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
-import net.artux.pdanetwork.utills.mail.MailService;
+import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.mongo.MongoFeed;
 import net.artux.pdanetwork.utills.mongo.MongoUsers;
 import org.apache.logging.log4j.LogManager;
@@ -12,20 +11,22 @@ import org.apache.logging.log4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
-import javax.servlet.annotation.WebListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 
-@WebListener
-public class ServletContext implements javax.servlet.ServletContextListener {
+public class ServletContext{
 
     public static final boolean debug = false;
     //mongodb://mongo-root:XWA47iIgQrPhuaukTryu@35.237.32.236:27017/
+    public static String getAddress(){
+        return "https://api.artux.net/pda/";
+    }
+
     public static String host = "35.237.32.236";
     {
+        System.setProperty("java.rmi.server.hostname","35.237.32.236");
         if (!debug){
             InetAddress localhost;
             try {
@@ -49,17 +50,14 @@ public class ServletContext implements javax.servlet.ServletContextListener {
     }
 
 
-    public static MailService mailService = new MailService();
+    //public static MailService mailService = new MailService();
     public static MongoUsers mongoUsers = new MongoUsers();
-    public static MongoMessages mongoMessages = new MongoMessages();
-    public static MongoFeed mongoFeed = new MongoFeed();
-    public static UserManager userManager = new UserManager();
+    public static MongoMessages mongoMessages = new MongoMessages(new ValuesService());
+    public static MongoFeed mongoFeed = new MongoFeed(new ValuesService());
+    //public static ActionService actionService = new ActionService();
 
     private static Logger logger;
 
-
-
-    @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.setProperty("log4j.configurationFile", getPath() + "config/log.conf");
         System.setProperty("log-path", getPath() + "logs");
@@ -97,7 +95,6 @@ public class ServletContext implements javax.servlet.ServletContextListener {
         ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
     }
 
-    @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         log("Servlet eliminated, please check the status.");
         mongoUsers.close();

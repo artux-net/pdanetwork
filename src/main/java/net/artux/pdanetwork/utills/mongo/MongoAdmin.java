@@ -8,35 +8,29 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import static net.artux.pdanetwork.utills.ServletContext.host;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+@Service
 public class MongoAdmin {
 
     private final MongoClient mongoClient;
     private final MongoCollection<Member> table;
 
-    private static final ConnectionString connectionString;
+    private final ConnectionString connectionString;
 
-    static {
-        if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@35.237.32.236:27017/");
-        else
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
-    }
-
-    public MongoAdmin() {
+    public MongoAdmin(ValuesService valuesService) {
+        connectionString = new ConnectionString(valuesService.getMongoUri());
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
@@ -45,9 +39,9 @@ public class MongoAdmin {
                 .build();
 
         mongoClient = MongoClients.create(clientSettings);
-        MongoDatabase db = mongoClient.getDatabase("users");
+        MongoDatabase db = mongoClient.getDatabase("test");
 
-        table = db.getCollection("usersCollection", Member.class);
+        table = db.getCollection("member", Member.class);
     }
 
     public long getSize() {

@@ -1,22 +1,27 @@
 package net.artux.pdanetwork.models;
 
+import lombok.Data;
+import lombok.Getter;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.models.profile.Achievement;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 
 import java.util.List;
 
+@Data
+@Getter
 public class Profile {
 
     private String login;
     private String name;
-    private int admin;
+    private String role;
     private int blocked;
     private int group;
     private String avatar;
     private int pdaId;
     private int xp;
     private String location;
-    private Long registrationDate;
+    private Long registration;
     private int friendStatus;
     /*
     0 - is not friend
@@ -28,8 +33,7 @@ public class Profile {
     private int requests;
     private List<Integer> relations;
 
-    //TODO
-    private List<Achievement> achievements;
+    private int achievements;
 
     public Profile() {
     }
@@ -37,14 +41,14 @@ public class Profile {
     public Profile(Member member) {
         this.login = member.getLogin();
         this.name = member.getName();
-        this.admin = member.getAdmin();
+        this.role = member.getRole();
         this.blocked = member.getBlocked();
         this.group = member.getGroup();
         this.avatar = member.getAvatar();
         this.pdaId = member.getPdaId();
         this.xp = member.getXp();
         this.location = member.getLocation();
-        this.registrationDate = member.getRegistrationDate();
+        this.registration = member.getRegistration();
         this.friends = member.getFriends().size();
         this.requests = member.getFriendRequests().size();
         this.relations = member.getRelations();
@@ -53,59 +57,19 @@ public class Profile {
     public Profile(Member member, Member by) {
         this.login = member.getLogin();
         this.name = member.getName();
-        this.admin = member.getAdmin();
+        this.role = member.getRole();
         this.blocked = member.getBlocked();
         this.group = member.getGroup();
         this.avatar = member.getAvatar();
         this.pdaId = member.getPdaId();
         this.xp = member.getXp();
         this.location = member.getLocation();
-        this.registrationDate = member.getRegistrationDate();
+        this.registration = member.getRegistration();
         this.friends = member.getFriends().size();
         this.requests = member.getFriendRequests().size();
         this.relations = member.getRelations();
 
         setFriendStatus(member, by);
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAdmin() {
-        return admin;
-    }
-
-    public int getBlocked() {
-        return blocked;
-    }
-
-    public int getGroup() {
-        return group;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public int getPdaId() {
-        return pdaId;
-    }
-
-    public int getXp() {
-        return xp;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public Long getRegistrationDate() {
-        return registrationDate;
     }
 
     private void setFriendStatus(Member member, Member by) {

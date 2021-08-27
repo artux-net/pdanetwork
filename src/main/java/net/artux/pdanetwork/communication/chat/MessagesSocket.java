@@ -3,12 +3,12 @@ package net.artux.pdanetwork.communication.chat;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.communication.model.Conversation;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.ServletHelper;
+import net.artux.pdanetwork.service.util.ValuesService;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -17,12 +17,12 @@ import java.util.*;
 
 import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 
-@ServerEndpoint(value = "/dialog", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/dialog")
 public class MessagesSocket {
 
     private final HashMap<Integer, List<Session>> conversations = new HashMap<>();
 
-    private final MongoMessages mongoMessages = new MongoMessages();
+    private final MongoMessages mongoMessages = new MongoMessages(new ValuesService());
     Gson gson = new Gson();
 
     @OnOpen
@@ -136,7 +136,7 @@ public class MessagesSocket {
             addToConversation(conversation.getCid(), userSession);
             for (int ids : conversation.allMembers()) {
                 mongoUsers.updateDialog(pdaId, conversation.cid);
-                SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+                //SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
             }
         } else {
             //up conv
@@ -144,7 +144,7 @@ public class MessagesSocket {
                     .getConversation((int) userSession.getUserProperties().get("conversation"));
             for (int ids : conversation.allMembers()) {
                 mongoUsers.updateDialog(ids, conversation.cid);
-                SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+                //SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
             }
         }
     }

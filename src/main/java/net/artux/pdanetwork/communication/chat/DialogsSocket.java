@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@ServerEndpoint(value = "/dialogs/{token}", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/dialogs/{token}")
 public class DialogsSocket {
 
     private static LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>(150);

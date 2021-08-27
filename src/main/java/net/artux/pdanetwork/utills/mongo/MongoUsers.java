@@ -12,35 +12,31 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
-import net.artux.pdanetwork.communication.Waiter;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.utills.Security;
-import net.artux.pdanetwork.utills.ServletContext;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;
 import static com.mongodb.client.model.Updates.set;
-import static net.artux.pdanetwork.utills.ServletContext.host;
-import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-
+@Service
 public class MongoUsers {
 
     private static final MongoClient mongoClient;
@@ -52,13 +48,7 @@ public class MongoUsers {
     private static final ConnectionString connectionString;
 
     static {
-        if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@"+host+":27017/");
-        else
-            connectionString = new ConnectionString("mongodb://mongo-users:slVtKwrvFE2Er3JRTFxO@localhost:27017/");
-    }
-
-    static {
+        connectionString = new ConnectionString("mongodb://localhost:27017/");
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
@@ -70,7 +60,7 @@ public class MongoUsers {
         MongoDatabase db = mongoClient.getDatabase("users");
 
         table = db.getCollection("usersCollection", Member.class);
-        table.createIndex(Indexes.ascending("token", "pdaId", "login"));
+        //table.createIndex(Indexes.ascending("token", "pdaId", "login"));
     }
 
     public void close(){
@@ -79,7 +69,7 @@ public class MongoUsers {
 
     public int add(RegisterUser user){
         int pdaId = getPdaID();
-        table.insertOne(new Member(user, pdaId));
+        table.insertOne(new Member(user, pdaId, new BCryptPasswordEncoder()));
 
         table.createIndex(Indexes.ascending("lastLoginAt"),
                 new IndexOptions().expireAfter(Integer.toUnsignedLong( daysValidAccount * 24 * 3600), TimeUnit.SECONDS));
@@ -186,26 +176,26 @@ public class MongoUsers {
     }
 
     public Status checkUser(RegisterUser user) {
-        if (user.login != null && !user.login.equals("")) {
-            if (getMember("login", user.login) != null) {
+        if (user.getLogin() != null && !user.getLogin().equals("")) {
+            if (getMember("login", user.getLogin()) != null) {
                 return new Status(false, "Пользователь с таким логином уже существует.");
             }
         } else {
             return new Status(false, "Логин не соответствует требованиям");
         }
-        if (user.email != null && !user.email.equals("")
-                && user.email.contains("@") && user.email.contains(".")) {
-            if (getMember("email", user.email) != null) {
+        if (user.getEmail() != null && !user.getEmail().equals("")
+                && user.getEmail().contains("@") && user.getEmail().contains(".")) {
+            if (getMember("email", user.getEmail()) != null) {
                 return new Status(false, "Пользователь с таким e-mail уже существует.");
             }
         } else {
             return new Status(false, "E-mail не соответствует требованиям");
         }
 
-        if (user.name != null && user.name.equals(""))
+        if (user.getName() != null && user.getName().equals(""))
             return new Status(false, "Имя не может быть пустым");
 
-        if (user.nickname != null && user.nickname.equals(""))
+        if (user.getNickname() != null && user.getNickname().equals(""))
             return new Status(false, "Кличка не может быть пустой");
 
         if (user.getPassword() != null && user.getPassword().length() < 8)
@@ -247,10 +237,10 @@ public class MongoUsers {
     }
 
     private Status getLoginAdminStatus(String password, Member element) {
-        if (element.getAdmin() > 0) {
+        if (element.getRole().equals("admin")) {
             return checkPassword(element, password, false);
         } else {
-            ServletContext.log("Not admin tried to use admin panel " + element.getLogin());
+            //ServletContext.log("Not admin tried to use admin panel " + element.getLogin());
             return new Status(false, "You aren't admin");
         }
     }
@@ -261,9 +251,9 @@ public class MongoUsers {
                 element.setToken(Security.encrypt(element.getLogin() + ":" + password));
                 updateMember(element);
             }
-            return new Status(String.valueOf(element.getToken()));
+            return new Status();
         } else {
-            ServletContext.log("Wrong password for " + element.getLogin());
+            //ServletContext.log("Wrong password for " + element.getLogin());
             return new Status(false, "Wrong password");
         }
     }
@@ -361,7 +351,7 @@ public class MongoUsers {
 
     public List<UserInfo> sort(int from) {
         List<UserInfo> users = new ArrayList<>();
-        table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach(member -> users.add(new UserInfo(member)));
+        //table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach(member -> users.add(new UserInfo(member)));
         return users;
     }
 

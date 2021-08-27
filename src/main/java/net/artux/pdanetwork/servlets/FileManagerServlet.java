@@ -54,7 +54,7 @@ public class FileManagerServlet extends HttpServlet {
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     Member member = (Member) request.getSession().getAttribute("m");
-    if (member!= null && member.getAdmin()>0) {
+    if (member!= null && member.getRole().equals("admin")) {
       Files files = null;
       File file = null, parent;
       String path = request.getParameter("path"), type = request.getContentType(), search = request.getParameter("search"), mode;

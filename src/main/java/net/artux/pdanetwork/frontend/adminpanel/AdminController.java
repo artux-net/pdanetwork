@@ -1,11 +1,10 @@
 package net.artux.pdanetwork.frontend.adminpanel;
 
 import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.authentication.UserManager;
+import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.mongo.MongoAdmin;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +14,10 @@ import java.util.Date;
 
 import static net.artux.pdanetwork.utills.ServletContext.mongoFeed;
 
-@WebServlet(name = "AdminController", urlPatterns = "/admin")
+//@WebServlet(name = "AdminController", urlPatterns = "/admin")
 public class AdminController extends HttpServlet {
 
-    MongoAdmin mongoAdmin = new MongoAdmin();
+    MongoAdmin mongoAdmin = new MongoAdmin(new ValuesService());
 
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
 
@@ -40,7 +39,7 @@ public class AdminController extends HttpServlet {
             request.setAttribute("link_chat", "/pda/admin/chat");
             request.setAttribute("link_articles", "/pda/admin?action=article");
             request.setAttribute("link_users", "/pda/admin?action=users");
-            request.setAttribute("link_logs", "/pda/log");
+            request.setAttribute("link_logsx", "/pda/log");
             request.setAttribute("link_reset", "/pda/admin?action=reset");
             request.setAttribute("link_manager", "/manager");
             switch (action == null ? "info" : action) {
@@ -49,7 +48,7 @@ public class AdminController extends HttpServlet {
                     break;
                 case "users":
                     request.setAttribute("users", mongoAdmin.find(""));
-                    request.getRequestDispatcher("/users.jsp").forward(request, response);
+                    request.getRequestDispatcher("/users.html").forward(request, response);
                     break;
                 case "reset":
                     request.getSession().invalidate();
@@ -57,11 +56,11 @@ public class AdminController extends HttpServlet {
                     break;
                 case "article":
                     request.setAttribute("articles", mongoFeed.getArticles(0));
-                    request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
+                    request.getRequestDispatcher("/articleCreation.html").forward(request, response);
                     break;
                 case "editArticle":
                     request.setAttribute("a", mongoFeed.getArticle(Integer.parseInt(request.getParameter("feedId"))));
-                    request.getRequestDispatcher("/editArticle.jsp").forward(request, response);
+                    request.getRequestDispatcher("/editArticle.html").forward(request, response);
                     break;
 
                 default:
@@ -69,7 +68,7 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("rating", mongoAdmin.getRating(0));
                     request.setAttribute("online", mongoAdmin.getOnline());
                     request.setAttribute("registrations", mongoAdmin.getRegistrations());
-                    request.getRequestDispatcher("/admin.jsp").forward(request, response);
+                    request.getRequestDispatcher("/admin.html").forward(request, response);
                     break;
             }
 
@@ -83,10 +82,10 @@ public class AdminController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        UserManager userManager = new UserManager();
+        /*ActionService actionService = new ActionService();
         switch (action) {
             case "add":
-                userManager.addItem(Integer.parseInt(request.getParameter("pdaId")),
+                actionService.addItem(Integer.parseInt(request.getParameter("pdaId")),
                         Integer.parseInt(request.getParameter("type")),
                         Integer.parseInt(request.getParameter("item")),
                         Integer.parseInt(request.getParameter("quantity")));
@@ -94,37 +93,37 @@ public class AdminController extends HttpServlet {
             case "find":
                 String q = request.getParameter("q");
                 request.setAttribute("users", mongoAdmin.find(q));
-                request.getRequestDispatcher("/users.jsp").forward(request, response);
+                request.getRequestDispatcher("/users.html").forward(request, response);
                 break;
             case "addMoney":
                 int money = Integer.parseInt(request.getParameter("money"));
                 int pdaId = Integer.parseInt(request.getParameter("pda"));
-                request.setAttribute("msg", userManager.addMoney(pdaId, money));
-                request.getRequestDispatcher("/users.jsp").forward(request, response);
+                request.setAttribute("msg", actionService.addMoney(pdaId, money));
+                request.getRequestDispatcher("/users.html").forward(request, response);
                 break;
             case "addArticle":
-                mongoFeed.addArticle(request.getParameter("title"),
+                *//*mongoFeed.addArticle(request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
-                        request.getParameter("tags"), request.getParameter("content"));;
+                        request.getParameter("tags"), request.getParameter("content"));;*//*
                 request.setAttribute("articles", mongoFeed.getArticles(0));
-                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
+                request.getRequestDispatcher("/articleCreation.html").forward(request, response);
                 break;
             case "removeArticle":
                 mongoFeed.removeArticle(Integer.parseInt(request.getParameter("feedId")));
                 request.setAttribute("articles", mongoFeed.getArticles(0));
-                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
+                request.getRequestDispatcher("/articleCreation.html").forward(request, response);
                 break;
             case "editArticle":
-                mongoFeed.editArticle(Integer.parseInt(request.getParameter("feedId")), request.getParameter("title"),
+                mongoFeed.editArticle(request.getParameter("feedId"), request.getParameter("title"),
                         request.getParameter("desc"), request.getParameter("pic"),
                         request.getParameter("tags"), request.getParameter("content"));
                 request.setAttribute("articles", mongoFeed.getArticles(0));
-                request.getRequestDispatcher("/articleCreation.jsp").forward(request, response);
+                request.getRequestDispatcher("/articleCreation.html").forward(request, response);
                 break;
             default:
                 doGet(request, response);
                 break;
-        }
+        }*/
     }
 
 }

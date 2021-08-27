@@ -15,7 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/friends")
+//@WebServlet("/friends")
 public class FriendsServlet extends HttpServlet {
 
     private final Gson gson = new Gson();

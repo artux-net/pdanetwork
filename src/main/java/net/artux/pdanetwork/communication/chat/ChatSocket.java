@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
-@ServerEndpoint(value = "/chat/{token}", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/chat/{token}")
 public class ChatSocket {
 
     private static LimitedArrayList<UserMessage> lastMessages = new LimitedArrayList<>(150);

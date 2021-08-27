@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet("/ratings")
+//@WebServlet("/ratings")
 public class RatingServlet extends HttpServlet {
 
     Gson gson = new Gson();

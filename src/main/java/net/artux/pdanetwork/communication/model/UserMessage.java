@@ -1,10 +1,12 @@
 package net.artux.pdanetwork.communication.model;
 
+import lombok.Data;
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 
 import java.time.Instant;
 
+@Data
 public class UserMessage {
 
     public int cid;
@@ -25,7 +27,7 @@ public class UserMessage {
     public UserMessage(int cid, Member member, String message) {
         this.cid = cid;
         senderLogin = member.getLogin();
-        this.message = message.strip();
+        this.message = message.trim();
 
         time = Instant.now().toEpochMilli();
         groupId = member.getGroup();
@@ -35,7 +37,7 @@ public class UserMessage {
 
     public UserMessage(Member member, String message) {
         senderLogin = member.getLogin();
-        this.message = message.strip();
+        this.message = message.trim();
 
         time = Instant.now().toEpochMilli();
         groupId = member.getGroup();

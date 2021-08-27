@@ -1,0 +1,35 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<style type="text/css">body {
+		font-family:"Museo Sans Cyrl",sans-serif;
+		color:#fff;
+		 font-size:12px;
+		 line-height:24px;
+		 font-weight:300;
+		 min-height:100%;
+		 position:relative;
+		 background:#1a1b1d;
+		 overflow-y:scroll;
+		}
+	</style>
+</head>
+<body link="#d8d8da" vlink="#d8d8da" alink="#d8d8da">
+	<th:block th:each="i : ${items}">
+		<table border="0" cellpadding="5" cellspacing="1" style="width:100%;">
+			<tbody>
+				<tr>
+					<td style="text-align: center;"><b><a th:href="@{'/enc/' + ${type} + '/' + ${i.id}}" th:text="${i.title}"/></b></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td style="width: 120px; text-align: center;"><a th:href="@{'/enc/' + ${type} +'/' + ${i.id}}"><img alt="" width="120px"   th:src="${'/base/enc/items/icons/' + ${i.icon}}" ></a></td>
+					<td style="vertical-align: top;"><span style="font-size:12px;" th:text="${i.desc}"/></td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+	</th:block>
+</body>
+</html>
+

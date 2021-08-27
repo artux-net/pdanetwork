@@ -1,5 +1,7 @@
 package net.artux.pdanetwork.models.profile;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
@@ -8,7 +10,11 @@ import net.artux.pdanetwork.models.profile.items.Weapon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
+@lombok.Data
+@Getter
+@Setter
 public class Data {
 
     private Equipment equipment = new Equipment();
@@ -26,75 +32,21 @@ public class Data {
     public Data() {
     }
 
-    public Equipment getEquipment() {
-        return equipment;
-    }
-
-    public Stats getStats() {
-        return stats;
-    }
-
-    public List<Item> getItems() {
+    public List<Item> getAllItems() {
+        List<Item> items = new ArrayList<>(armors);
+        items.addAll(weapons);
+        items.addAll(artifacts);
+        items.addAll(this.items);
         return items;
     }
 
-    public List<Story> getStories() {
-        return stories;
+    public Optional<Item> getItemByHashCode(int hashCode){
+        for (Item item:getAllItems()){
+            if (item.hashCode() == hashCode){
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
     }
 
-    public void setEquipment(Equipment equipment) {
-        this.equipment = equipment;
-    }
-
-    public void setStats(Stats stats) {
-        this.stats = stats;
-    }
-
-    public List<Armor> getArmors() {
-        return armors;
-    }
-
-    public void setArmors(List<Armor> armors) {
-        this.armors = armors;
-    }
-
-    public List<Weapon> getWeapons() {
-        return weapons;
-    }
-
-    public void setWeapons(List<Weapon> weapons) {
-        this.weapons = weapons;
-    }
-
-    public List<Artifact> getArtifacts() {
-        return artifacts;
-    }
-
-    public void setArtifacts(List<Artifact> artifacts) {
-        this.artifacts = artifacts;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
-    public void setStories(List<Story> stories) {
-        this.stories = stories;
-    }
-
-    public Parameters getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(Parameters parameters) {
-        this.parameters = parameters;
-    }
-
-    public HashMap<String, String> getTemp() {
-        return temp;
-    }
-
-    public void setTemp(HashMap<String, String> temp) {
-        this.temp = temp;
-    }
 }

@@ -1,8 +1,17 @@
 package net.artux.pdanetwork.servlets.Feed.Models;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+@Data
 public class Article extends FeedModel {
 
     private String content;
@@ -10,81 +19,10 @@ public class Article extends FeedModel {
     public Article() {
     }
 
-    public Article(int feedId, String title, String image, List<String> tags, String description, String content) {
-        this.feedId = feedId;
-        this.title = title;
-        this.image = image;
-        this.tags = tags;
-        this.description = description;
-        this.content = content;
-        this.published = Instant.now().toEpochMilli();
-    }
-
-    public int getFeedId() {
-        return feedId;
-    }
-
-    public void setFeedId(int feedId) {
-        this.feedId = feedId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public String getStringTags() {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (tags.size()!=0) {
-            for (int i = 0; i < tags.size() - 1; i++) {
-                stringBuilder.append(tags.get(i) + ", ");
-            }
-            stringBuilder.append(tags.get(tags.size()-1));
-        }
-        return stringBuilder.toString();
-    }
-
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+    public Article(String title, String image, List<String> tags, String description, String content) {
+        super(title, image, tags, description, Instant.now().toEpochMilli());
         this.content = content;
     }
 
-    public long getPublished() {
-        return published;
-    }
 
-    public void setPublished(long published) {
-        this.published = published;
-    }
 }

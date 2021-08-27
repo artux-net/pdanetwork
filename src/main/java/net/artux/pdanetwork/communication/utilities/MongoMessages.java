@@ -12,9 +12,11 @@ import net.artux.pdanetwork.communication.model.ConversationRequest;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,22 +28,16 @@ import static net.artux.pdanetwork.utills.ServletContext.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
+@Service
 public class MongoMessages {
 
     private final MongoClient mongoClient;
     private final MongoDatabase db;
     private final MongoCollection<Conversation> conversations;
     private final ConnectionString connectionString;
-    {
-        if (ServletContext.debug)
-            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@"+host+":27017/");
-        else
-            connectionString = new ConnectionString("mongodb://mongo-messages:8bxLKrsNpwAa1M@localhost:27017/");
-    }
 
-
-
-    public MongoMessages() {
+    public MongoMessages(ValuesService valuesService) {
+        connectionString = new ConnectionString(valuesService.getMongoUri());
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
@@ -171,7 +167,7 @@ public class MongoMessages {
     public void addMessageToConversation(int id, UserMessage userMessage) {
         mongoMessages.getConversationCollection(id).insertOne(new DBMessage(userMessage));
         if (userMessage.message.length() > 40)
-            userMessage.message = userMessage.message.substring(0, 40).strip() + "..";
+            userMessage.message = userMessage.message.substring(0, 40).trim() + "..";
 
         conversations.updateOne(eq("cid", id),
                 set("lastMessage", userMessage.senderLogin + ": " + userMessage.message));

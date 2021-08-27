@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head th:insert="head"/>
+<body>
+<div class="container">
+    <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
+    <head th:insert="sidebar"/>
+    <div class="content">
+
+        <form name="addArticle" method="post" action="#" th:action="@{/utility/articles}" th:object="${article}">
+            <input type="text" th:field="*{title}" placeholder="Название"/>
+            <input type="text" th:field="*{image}" placeholder="Ссылка на картинку"/>
+            <input type="text" th:field="*{description}" placeholder="Описание"/>
+            <input type="text" th:field="*{tags}" placeholder="Теги через запятую"/>
+            <textarea name="content" th:field="*{content}" id="editor"></textarea>
+            <input type="hidden" th:field="*{id}" th:value="${id}" />
+            <button type="submit">Добавить/ статью</button>
+        </form>
+
+        <form name="addArticle" method="post" action="${pageContext.request.contextPath}/admin">
+            <input type="text" name="title" placeholder="Название" value="${a.title}"/>
+            <input type="text" name="pic" placeholder="Ссылка на картинку" value="${a.image}"/>
+            <input type="text" name="desc" placeholder="Описание" value="${a.description}"/>
+            <input type="text" name="tags" placeholder="Теги через запятую"
+                   value="<%=getTags(((Article)request.getAttribute("a")).tags)%>"/>
+            <input type="hidden" name="action" value="editArticle" />
+            <input type="hidden" name="feedId" value="${a.feedId}" />
+            <textarea name="content" id="content">${a.content}</textarea>
+            <button type="submit">Изменить статью</button>
+        </form>
+
+
+        <script type="text/javascript">
+            var editor = new Jodit('#content', {
+                uploader: {
+                    url: 'http://localhost/files'
+                },
+                "language": "en",
+                "theme": "dark",
+                "disablePlugins": "about"
+            });
+        </script>
+    </div>
+    <div class="footer">${footer_version}</div>
+</div>
+</body>
+</html>

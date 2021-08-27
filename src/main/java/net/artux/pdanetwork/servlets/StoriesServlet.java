@@ -2,7 +2,6 @@ package net.artux.pdanetwork.servlets;
 
 import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.ServletHelper;
-import net.artux.pdanetwork.utills.Stories;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-@WebServlet("/stories")
+//@WebServlet("/stories")
 public class StoriesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        Map<String, String> params = ServletHelper.splitQuery(req.getQueryString());
+        /*Map<String, String> params = ServletHelper.splitQuery(req.getQueryString());
 
         try {
             if (params.get("story") != null && params.get("chapter") != null) {
@@ -41,6 +40,6 @@ public class StoriesServlet extends HttpServlet {
         } catch (Exception e) {
             ServletContext.error("StoriesError", e);
             resp.setStatus(400);
-        }
+        }*/
     }
 }

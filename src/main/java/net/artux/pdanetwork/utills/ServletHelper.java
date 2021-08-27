@@ -48,7 +48,8 @@ public class ServletHelper {
             String[] pairs = query.split("&");
             for (String pair : pairs) {
                 int idx = pair.indexOf("=");
-                query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8), URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8));
+                //query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8),
+                     //   URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8));
             }
         }
         return query_pairs;
@@ -74,7 +75,7 @@ public class ServletHelper {
         response.setCharacterEncoding("UTF-8");
         request.setAttribute("code", code);
         request.setAttribute("message", message);
-        request.getRequestDispatcher("/error.jsp").forward(request, response);
+        request.getRequestDispatcher("/error.html").forward(request, response);
     }
 
     public static void setStringResponse(HttpServletResponse response, String body) throws IOException {

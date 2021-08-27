@@ -2,20 +2,16 @@ package net.artux.pdanetwork.frontend.adminpanel;
 
 import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.communication.chat.ChatSocket;
-import net.artux.pdanetwork.utills.mongo.MongoAdmin;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/admin/chat")
+//@WebServlet("/admin/chat")
 public class ChatController extends HttpServlet {
-
-    MongoAdmin mongoAdmin = new MongoAdmin();
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Member member = (Member) request.getSession().getAttribute("m");
@@ -36,7 +32,7 @@ public class ChatController extends HttpServlet {
             String action = request.getParameter("action");
             switch (action == null ? "info" : action) {
                 default:
-                    request.getRequestDispatcher("/chat.jsp").forward(request, response);
+                    request.getRequestDispatcher("/chat.html").forward(request, response);
                     break;
             }
 

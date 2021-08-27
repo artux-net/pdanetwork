@@ -16,7 +16,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
-@ServerEndpoint(value = "/feed/{token}/{load}", configurator = SocketConfigurator.class)
+@ServerEndpoint(value = "/feed/{token}/{load}")
 public class FeedSocket {
 
     private final LimitedArrayList<FeedMessage> waitList = new LimitedArrayList<>(150);

@@ -14,7 +14,7 @@ import static net.artux.pdanetwork.utills.ServletHelper.getBody;
 import static net.artux.pdanetwork.utills.ServletHelper.getMember;
 import static net.artux.pdanetwork.utills.mongo.MongoUsers.updateMember;
 
-@WebServlet("/notes")
+//@WebServlet("/notes")
 public class NoteServlet extends HttpServlet {
 
     @Override
@@ -42,7 +42,7 @@ public class NoteServlet extends HttpServlet {
         //creating note
         Member member = getMember(httpServletRequest);
         if (member != null) {
-            member.addNote(ServletHelper.getString(httpServletRequest));
+            member.addNote("Новая заметка", ServletHelper.getString(httpServletRequest));
             updateMember(member);
             ServletHelper.setResponse(httpServletResponse, member);
         }
