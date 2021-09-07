@@ -1,14 +1,14 @@
 package net.artux.pdanetwork.service.note;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.models.profile.Note;
 import net.artux.pdanetwork.repository.MemberRepository;
 import net.artux.pdanetwork.service.member.MemberService;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -35,9 +35,11 @@ public class NoteServiceImpl implements NoteService {
   @Override
   public Note editNote(Note note) {
     Member member = memberService.getMember();
+    note.setTime(Instant.now().toEpochMilli());
     for (int i = 0; i < member.notes.size(); i++)
       if (member.notes.get(i).cid == note.cid) {
         member.notes.set(i, note);
+        memberRepository.save(member);
         return note;
       }
     note = member.addNote(note.title, note.content);

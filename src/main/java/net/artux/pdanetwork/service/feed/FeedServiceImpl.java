@@ -27,15 +27,15 @@ public class FeedServiceImpl implements FeedService {
   }
 
   @Override
-  public String addArticle(Article article) {
+  public void addArticle(Article article) {
     Optional<Article> optionalArticle = articleRepository.findById(article.getId());
     if(optionalArticle.isPresent()){
       if (!optionalArticle.get().equals(article)){
-        return articleRepository.save(article).getId();
+        articleRepository.save(article);
       }
-      return article.getId();
-    }else
-      return articleRepository.save(article).getId();
+    }else {
+      articleRepository.save(article);
+    }
   }
 
   @Override

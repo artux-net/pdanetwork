@@ -2,14 +2,13 @@ package net.artux.pdanetwork.models;
 
 import lombok.Data;
 import lombok.Getter;
-import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.models.profile.Achievement;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import lombok.Setter;
 
 import java.util.List;
 
 @Data
 @Getter
+@Setter
 public class Profile {
 
     private String login;
@@ -30,7 +29,7 @@ public class Profile {
     3 - requested
      */
     private int friends;
-    private int requests;
+    private int subs;
     private List<Integer> relations;
 
     private int achievements;
@@ -49,8 +48,8 @@ public class Profile {
         this.xp = member.getXp();
         this.location = member.getLocation();
         this.registration = member.getRegistration();
-        this.friends = member.getFriends().size();
-        this.requests = member.getFriendRequests().size();
+        this.friends = member.getSubs().size();
+        this.subs = member.getRequests().size();
         this.relations = member.getRelations();
     }
 
@@ -65,24 +64,24 @@ public class Profile {
         this.xp = member.getXp();
         this.location = member.getLocation();
         this.registration = member.getRegistration();
-        this.friends = member.getFriends().size();
-        this.requests = member.getFriendRequests().size();
+        this.friends = member.getSubs().size();
+        this.subs = member.getRequests().size();
         this.relations = member.getRelations();
 
-        setFriendStatus(member, by);
+        friendStatus = getFriendStatus(member, by);
     }
 
-    private void setFriendStatus(Member member, Member by) {
-        if (member.getFriendRequests() != null)
-            if (member.getFriendRequests().contains(by.getPdaId())) {
-                friendStatus = 3;
-            } else if (by.getFriendRequests().contains(pdaId)) {
-                friendStatus = 2;
-            } else if (member.getFriends().contains(by.getPdaId())) {
-                friendStatus = 1;
+    public static int getFriendStatus(Member member, Member by) {
+        if (member.getRequests() != null)
+            if (member.getSubs().contains(by.get_id())) {
+                return 3;
+            } else if (member.getRequests().contains(by.get_id())) {
+                return 2;
+            } else if (member.getFriends().contains(by.get_id())) {
+                return 1;
             } else {
-                friendStatus = 0;
+                return  0;
             }
-        else friendStatus = 0;
+        else return 0;
     }
 }

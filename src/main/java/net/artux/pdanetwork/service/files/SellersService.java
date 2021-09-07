@@ -62,8 +62,9 @@ public class SellersService implements FileService{
         sellers = new ArrayList<>();
         sellerDtos = new ArrayList<>();
         sellers = readSellers();
-        for(Seller seller : getSellers()){
-            sellerDtos.add(new SellerDto(seller, types));
-        }
+        if (sellers!=null)
+            for(Seller seller : getSellers()){
+                sellerDtos.add(new SellerDto(seller, types));
+            }
     }
 }

@@ -1,8 +1,7 @@
 package net.artux.pdanetwork.communication.chat;
 
 import com.google.gson.*;
-import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.model.*;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
@@ -94,13 +93,13 @@ public class DialogsSocket {
         //update conversation with new title, members, owners
         ConversationRequest request = gson.fromJson(message, ConversationRequest.class);
         if (request.cid == 0){
-            if (member.friends.containsAll(request.members))
+            if (member.subs.containsAll(request.members))
                 ServletContext.mongoMessages.newConversation(member.getPdaId(), request);
             else
                 sendError(userSession, "Участники должны находится у вас в друзьях");
         }else{
             if (ServletContext.mongoMessages.getConversation(request.cid).owners.contains(member.getPdaId()))
-                if (member.friends.containsAll(request.members))
+                if (member.subs.containsAll(request.members))
                     ServletContext.mongoMessages.updateConversation(request);
                 else
                     sendError(userSession, "Участники должны находится у вас в друзьях");

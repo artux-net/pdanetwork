@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@Api(tags = "Профили")
+@Api(tags = "Профиль")
 @RequestMapping("/profile")
 public class ProfileController {
 

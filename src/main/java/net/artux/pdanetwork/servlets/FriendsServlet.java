@@ -31,17 +31,17 @@ public class FriendsServlet extends HttpServlet {
         if (query.containsKey("pdaId") && query.containsKey("type")) {
             switch (query.get("type")) {
                 case "0":
-                    List<Integer> list = ServletContext.mongoUsers.getFriends(pdaId);
+                    /*List<Integer> list = ServletContext.mongoUsers.getFriends(pdaId);
                     for (int id : list) {
                         if (ServletContext.mongoUsers.getFriends(id).contains(pdaId))
                             friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
-                    }
+                    }*/
                     break;
                 case "1":
-                    list = ServletContext.mongoUsers.getFriendRequests(pdaId);
+                    /*list = ServletContext.mongoUsers.getFriendRequests(pdaId);
                     for (int id : list)
                         friendModels.add(new FriendModel(ServletContext.mongoUsers.getProfileByPdaId(id)));
-                    break;
+                    break;*/
             }
 
             httpServletResponse.getWriter().print(gson.toJson(friendModels));

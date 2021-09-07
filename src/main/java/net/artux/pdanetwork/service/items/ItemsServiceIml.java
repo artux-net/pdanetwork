@@ -2,11 +2,8 @@ package net.artux.pdanetwork.service.items;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.service.action.ActionService;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.profile.items.Armor;
-import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Weapon;
 import net.artux.pdanetwork.service.member.MemberService;
 import org.springframework.stereotype.Component;
 

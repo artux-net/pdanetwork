@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.repository;
 
-import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.servlets.Feed.Models.Article;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;

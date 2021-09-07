@@ -1,8 +1,9 @@
 package net.artux.pdanetwork.service.member;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.service.action.ActionService;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.controller.UserValidator;
 import net.artux.pdanetwork.models.*;
@@ -13,6 +14,7 @@ import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;
 import net.artux.pdanetwork.utills.Security;
 import net.artux.pdanetwork.service.util.Utils;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -73,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
 
   public Status handleConfirmation(String token){
     if (registerUserMap.containsKey(token)) {
-      Optional<Member> member = memberRepository.findTopByOrderByPdaId();
+      Optional<Member> member = memberRepository.findTopByOrderByPdaIdDesc();
       int pdaId = 1;
       if (member.isPresent())
         pdaId = member.get().getPdaId() + 1;
@@ -107,6 +109,11 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public MemberDto getMemberDto() {
+    return memberMapper.memberDto(getMember());
+  }
+
+  @Override
   public Member getMember(String base64) {
     if (Utils.isEmpty(base64))
       return null;
@@ -122,13 +129,18 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public Member getMember(ObjectId objectId) {
+    return memberRepository.getMemberBy_id(objectId).orElseThrow(()->new RuntimeException("Пользователя не существует"));
+  }
+
+  @Override
   public Member getMemberByPdaId(Integer id) {
-    return memberRepository.getMemberByPdaId(id).orElseThrow(()->new UsernameNotFoundException("Пользователя не существует"));
+    return memberRepository.getMemberByPdaId(id).orElseThrow(()->new RuntimeException("Пользователя не существует"));
   }
 
   @Override
   public Member getMemberByEmail(String email) {
-    return memberRepository.getMemberByEmail(email).orElseThrow(()->new UsernameNotFoundException("Пользователя не существует"));
+    return memberRepository.getMemberByEmail(email).orElseThrow(()->new RuntimeException("Пользователя не существует"));
   }
 
 

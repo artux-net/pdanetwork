@@ -3,13 +3,13 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.QueryPage;
 import net.artux.pdanetwork.models.ResponsePage;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
-import net.artux.pdanetwork.models.profile.Achievement;
 import net.artux.pdanetwork.service.member.MemberService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +26,8 @@ public class MemberController {
 
   @ApiOperation(value = "Пользователь")
   @GetMapping("/login")
-  public Member loginUser(){
-    return memberService.getMember();
+  public MemberDto loginUser(){
+    return memberService.getMemberDto();
   }
 
   @ApiOperation(value = "Редактирование информации")

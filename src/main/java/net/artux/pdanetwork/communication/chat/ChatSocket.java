@@ -3,8 +3,7 @@ package net.artux.pdanetwork.communication.chat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;
@@ -14,9 +13,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 @ServerEndpoint(value = "/chat/{token}")
 public class ChatSocket {

@@ -1,5 +1,6 @@
 <div class="sidebar">
-    <p th:text="${username}"/>
+    <p th:text="${'Вы вошли как ' + username}"/>
+    <p th:text="${'Роль ' + role}"/>
     <b><p><a th:href="@{/utility}">Статистика</a></p></b>
     <p><a th:href="@{/utility/chat}">Чат</a></p>
     <p><a th:href="@{/utility/articles}">Лента</a></p>

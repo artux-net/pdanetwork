@@ -22,6 +22,12 @@ public class EncController {
   private final Types types;
   private final ItemsManager itemsManager;
 
+  @GetMapping
+  public String getMainPage(Model model){
+    model.addAttribute("types", types.getItemTypes());
+    return "enc/main";
+  }
+
   @GetMapping("/{type}")
   public String getTypeList(Model model, @PathVariable Integer type){
     model.addAttribute("items", types.getEncTypeList(type));
@@ -35,8 +41,6 @@ public class EncController {
     model.addAttribute("item", item);
 
     if (type == 4) {
-      Armor armor = (Armor) item;
-
       return "enc/armor";
     } else if(type == 1 || type == 0){
       Weapon weapon = (Weapon) item;

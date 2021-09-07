@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.profile;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.models.MemberMapper;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.profile.Achievement;
@@ -23,7 +23,7 @@ public class ProfileServiceIml implements ProfileService {
 
   @Override
   public Profile getProfile(Integer pdaId) {
-    return memberMapper.profile(memberService.getMemberByPdaId(pdaId));
+    return memberMapper.profile(memberService.getMemberByPdaId(pdaId), memberService.getMember());
   }
 
   @Override

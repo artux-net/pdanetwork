@@ -2,7 +2,6 @@ package net.artux.pdanetwork.communication.arena;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
 import net.artux.pdanetwork.models.Profile;
 
 import java.io.Serializable;

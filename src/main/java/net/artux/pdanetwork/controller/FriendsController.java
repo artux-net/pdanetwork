@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Друзья")
+@Api(tags = "Профиль - Друзья")
 @RequestMapping("/friends")
 public class FriendsController {
 
@@ -29,8 +29,8 @@ public class FriendsController {
 
   @ApiOperation(value = "Получить друзей по pdaId")
   @GetMapping("/{id}")
-  public List<FriendModel> getFriends(@PathParam("id") Integer pdaId){
-    return friendService.getFriends(pdaId);
+  public List<FriendModel> getFriends(@PathVariable("id") Integer id){
+    return friendService.getFriends(id);
   }
 
   @ApiOperation(value = "Получить друзей")
@@ -45,27 +45,21 @@ public class FriendsController {
     return friendService.getFriendRequests();
   }
 
-  @ApiOperation(value = "Получить запросы дружбы по pdaId")
-  @GetMapping("/requests/{id}")
-  public List<FriendModel> getFriendsRequests(@PathParam("id") Integer pdaId){
-    return friendService.getFriendRequests(pdaId);
+  @ApiOperation(value = "Получить подписчиков")
+  @GetMapping("/subs")
+  public List<FriendModel> getSubs(){
+    return friendService.getFriendRequests();
   }
 
-  @ApiOperation(value = "Добавить в друзья по запросу")
-  @PostMapping("/add")
+  @ApiOperation(value = "Получить подписчиков по pdaId")
+  @GetMapping("/subs/{id}")
+  public List<FriendModel> getSubs(@PathVariable("id") Integer id){
+    return friendService.getSubs(id);
+  }
+
+  @ApiOperation(value = "Запросить/добавить/удалить друга")
+  @PostMapping
   public Status addFriend(@QueryParam("pdaId") Integer pdaId){
     return friendService.addFriend(pdaId);
-  }
-
-  @ApiOperation(value = "Запрос дружбы")
-  @PostMapping("/requests")
-  public Status requestFriend(@QueryParam("pdaId") Integer pdaId){
-    return friendService.requestFriend(pdaId);
-  }
-
-  @ApiOperation(value = "Удалить с друзей/запросов")
-  @PostMapping("/remove")
-  public Status removeFriend(@QueryParam("pdaId") Integer pdaId){
-    return friendService.removeFriend(pdaId);
   }
 }

@@ -13,7 +13,7 @@ import javax.ws.rs.QueryParam;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Предметы")
+@Api(tags = "Профиль - Предметы")
 @RequestMapping("/items")
 public class ItemsController {
 
@@ -28,14 +28,14 @@ public class ItemsController {
 
   @ApiOperation(value = "Операция с предметом")
   @PostMapping("/{action}")
-  public Status actionWithItem(@PathVariable String action, @QueryParam("seller") Integer sellerId, @QueryParam("hash") int itemHash){
+  public Status actionWithItem(@PathVariable String action, @QueryParam("seller") Integer seller, @QueryParam("hash") int hash){
     switch (action) {
       case "buy":
-        return itemsService.buy(sellerId, itemHash);
+        return itemsService.buy(seller, hash);
       case "sell":
-        return itemsService.sell(itemHash);
+        return itemsService.sell(hash);
       case "set":
-        return itemsService.set(itemHash);
+        return itemsService.set(hash);
       default:
         return new Status(false, "Action wrong");
     }

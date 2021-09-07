@@ -10,7 +10,7 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
@@ -262,27 +262,23 @@ public class MongoUsers {
         Member user = getMember(token);
         Member newFriend = getMember(id);
 
-        user.friends.add(newFriend.getPdaId());
+        /*user.subs.add(newFriend.getPdaId());
         updateMember(user);
 
-        newFriend.friendRequests.add(user.getPdaId());
+        newFriend.requests.add(user.getPdaId());*/
         updateMember(newFriend);
     }
 
-    public List<Integer> getFriends(int pdaId) {
-        return getMember(pdaId).friends;
-    }
-
-    public List<Integer> getFriendRequests(int pdaId) {
-        return getMember(pdaId).friendRequests;
-    }
+    /*public List<Integer> getFriendRequests(int pdaId) {
+        return getMember(pdaId).requests;
+    }*/
 
     public boolean addFriend(String token, Integer id) {
         Member user = getMember(token);
-        if (user.friendRequests.contains(id)) {
-            user.friendRequests.remove(id);
-            if (!user.friends.contains(id)) {
-                user.friends.add(id);
+        if (user.requests.contains(id)) {
+            user.requests.remove(id);
+            if (!user.subs.contains(id)) {
+                //user.subs.add(id);
 
                 updateMember(user);
             }
@@ -293,16 +289,16 @@ public class MongoUsers {
 
     public boolean removeFriend(String token, Integer id) {
         Member user = getMember(token);
-        if (user.friends.contains(id)) {
-            user.friends.remove(id);
+        if (user.subs.contains(id)) {
+            user.subs.remove(id);
             updateMember(user);
 
             Member oldFriend = getMember(id);
-            if (oldFriend.friends.contains(user.getPdaId())) {
-                user.friendRequests.add(id);
+            if (oldFriend.subs.contains(user.getPdaId())) {
+                //user.requests.add(id);
                 updateMember(user);
             } else {
-                oldFriend.friendRequests.remove(user.getPdaId());
+                oldFriend.requests.remove(user.getPdaId());
                 updateMember(oldFriend);
             }
             return true;

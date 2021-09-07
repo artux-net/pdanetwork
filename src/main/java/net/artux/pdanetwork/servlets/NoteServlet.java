@@ -1,10 +1,9 @@
 package net.artux.pdanetwork.servlets;
 
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.models.profile.Note;
 import net.artux.pdanetwork.utills.ServletHelper;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

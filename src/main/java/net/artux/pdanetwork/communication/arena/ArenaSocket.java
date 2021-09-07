@@ -2,9 +2,8 @@ package net.artux.pdanetwork.communication.arena;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.Action;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
 import net.artux.pdanetwork.utills.ServletContext;
 
 import javax.websocket.*;

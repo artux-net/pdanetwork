@@ -1,7 +1,6 @@
 package net.artux.pdanetwork.communication.chat;
 
-import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.communication.chat.configurators.SocketConfigurator;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.utills.ServletContext;

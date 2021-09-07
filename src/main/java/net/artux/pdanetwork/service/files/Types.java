@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 @Getter
 public class Types implements FileService {
 
-    int[] types = {0,1,2,3,4};
+    private List<ItemType> itemTypes = new ArrayList<>();
     private static HashMap<Integer, List<? extends Item>> items = new HashMap<>();
     private static HashMap<Integer, List<EncItem>> encItems = new HashMap<>();
 
@@ -40,13 +39,28 @@ public class Types implements FileService {
     }
 
     public void reset(){
+        itemTypes = initTypes();
         items = new HashMap<>();
         encItems = new HashMap<>();
-        for (int type:types){
-            items.put(type, getType(type));
-            encItems.put(type, getEncType(type));
-        }
+        if (itemTypes!=null)
+            for (ItemType type: itemTypes){
+                items.put(type.getId(), getType(type.getId()));
+                encItems.put(type.getId(), getEncType(type.getId()));
+            }
     }
+
+    private List<ItemType> initTypes() {
+        Class c = ItemType.class;
+        try {
+            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/types/info.json", StandardCharsets.UTF_8);
+            Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
+            return gson.fromJson(commonFile, itemsListType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     private <T extends Item> List<T> getType(int type) {
         Class<? extends Item> c = getClassByType(type);

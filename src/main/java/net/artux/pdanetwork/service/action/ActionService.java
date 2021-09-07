@@ -1,8 +1,7 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
-import net.artux.pdanetwork.models.Seller;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.models.SellerDto;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.profile.Data;
@@ -12,16 +11,16 @@ import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
-import net.artux.pdanetwork.utills.ItemsManager;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import net.artux.pdanetwork.utills.ItemsManager;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
-import static net.artux.pdanetwork.utills.ServletContext.*;
+import static net.artux.pdanetwork.utills.ServletContext.error;
+import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 
 @Service
 @RequiredArgsConstructor

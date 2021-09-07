@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.authentication;
+package net.artux.pdanetwork.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,8 +44,9 @@ public class Member {
     private String location;
     private Data data;
     public List<Integer> dialogs = new ArrayList<>();
-    public List<Integer> friends = new ArrayList<>();
-    public List<Integer> friendRequests = new ArrayList<>();
+    public List<ObjectId> subs = new ArrayList<>();
+    public List<ObjectId> friends = new ArrayList<>();
+    public List<ObjectId> requests = new ArrayList<>();
     public List<Integer> relations = new ArrayList<>();
     public List<Note> notes = new ArrayList<>();
     public List<Integer> achievements = new ArrayList<>();
@@ -67,7 +68,8 @@ public class Member {
         location = "Ч-4";
         data = new Data();
         money = 500;
-        dialogs = friends = friendRequests = new ArrayList<>();
+        dialogs = new ArrayList<>();
+        subs = friends = requests = new ArrayList<>();
         lastModified = lastLoginAt = registration =Instant.now().toEpochMilli();
         relations = new ArrayList<>();
         for (int i = 0; i < 9; i++)

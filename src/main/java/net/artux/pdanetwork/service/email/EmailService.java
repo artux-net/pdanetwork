@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.service.email;
 
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 
 public interface EmailService {

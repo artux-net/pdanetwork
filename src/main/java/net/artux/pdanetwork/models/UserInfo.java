@@ -3,7 +3,6 @@ package net.artux.pdanetwork.models;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
 
 @Data
 @Getter

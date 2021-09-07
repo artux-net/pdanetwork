@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.model.*;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.service.member.MemberService;
-import net.artux.pdanetwork.utills.mongo.MongoUsers;
+import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -20,12 +20,12 @@ public class DialogsHandler extends SocketHandler {
 
   private static HashMap<Integer, WebSocketSession> sessions = new HashMap<>();
   private final MongoMessages mongoMessages;
-  private final MongoUsers mongoUsers;
+  private final ProfileService profileService;
 
-  public DialogsHandler(MemberService memberService, MongoMessages mongoMessages, MongoUsers mongoUsers) {
+  public DialogsHandler(MemberService memberService, MongoMessages mongoMessages, ProfileService profileService) {
     super(memberService);
     this.mongoMessages = mongoMessages;
-    this.mongoUsers = mongoUsers;
+    this.profileService = profileService;
   }
 
   @Override
@@ -44,7 +44,7 @@ public class DialogsHandler extends SocketHandler {
 
       if (conversation.allMembers().size() <= 2) {
         int anotherId = getAnotherId(conversation.allMembers(), pda);
-        Profile profile = mongoUsers.getProfileByPdaId(anotherId);
+        Profile profile = profileService.getProfile(anotherId);
         response.add(new DialogResponse(conversation, profile));
       } else {
         response.add(new DialogResponse(conversation));
@@ -75,13 +75,13 @@ public class DialogsHandler extends SocketHandler {
     //update conversation with new title, members, owners
     ConversationRequest request = get(ConversationRequest.class, webSocketMessage);
     if (request.cid == 0){
-      if (member.friends.containsAll(request.members))
+      if (member.subs.containsAll(request.members))
         mongoMessages.newConversation(member.getPdaId(), request);
       else
         sendError(userSession, "Участники должны находится у вас в друзьях");
     }else{
       if (mongoMessages.getConversation(request.cid).owners.contains(member.getPdaId()))
-        if (member.friends.containsAll(request.members))
+        if (member.subs.containsAll(request.members))
           mongoMessages.updateConversation(request);
         else
           sendError(userSession, "Участники должны находится у вас в друзьях");

@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.communication.model;
 
 import lombok.Data;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 
 import java.time.Instant;

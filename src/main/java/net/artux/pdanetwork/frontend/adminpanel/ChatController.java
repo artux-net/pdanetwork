@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.frontend.adminpanel;
 
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.communication.chat.ChatSocket;
 
 import javax.servlet.ServletException;

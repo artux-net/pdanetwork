@@ -2,7 +2,7 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.Member;
+import net.artux.pdanetwork.models.Member;
 import net.artux.pdanetwork.handlers.ChatHandler;
 import net.artux.pdanetwork.models.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;
@@ -34,8 +34,8 @@ public class AdminController {
   private final ChatHandler chatHandler;
   private final Types types;
   private final SellersService sellersService;
-
-  private static Date readTime;
+  
+  private static Date readTime = new Date();
 
 
   @Value("${server.host}")
@@ -45,14 +45,19 @@ public class AdminController {
   @Value("${server.servlet.contextPath}")
   private String context;
 
-  @GetMapping
-  public String getMainPage(Model model){
+  public void setupInfo(Model model){
     Member member = memberService.getMember();
 
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
-    model.addAttribute("username", member.getLogin());
     model.addAttribute("server_time", df.format(new Date()));
     model.addAttribute("username", member.getLogin());
+    model.addAttribute("role", member.getRole());
+    model.addAttribute("version", "test");
+  }
+
+  @GetMapping
+  public String getMainPage(Model model){
+    setupInfo(model);
 
     model.addAttribute("total_registrations", mongoAdmin.getSize());
     model.addAttribute("rating", mongoAdmin.getRating(0));
@@ -86,6 +91,7 @@ public class AdminController {
 
   @GetMapping("/articles")
   public String getArticlePage(Model model){
+    setupInfo(model);
     List<Article> articleList = feedService.getPageArticles(new QueryPage()).getData();
     model.addAttribute("articles", articleList);
     return "articles";
@@ -93,24 +99,28 @@ public class AdminController {
 
   @GetMapping("/articles/")
   public String articleCreation(Model model){
+    setupInfo(model);
     model.addAttribute("article", new Article());
     return "articleCreation";
   }
 
   @GetMapping("/articles/{id}")
   public String getArticle(Model model, @PathVariable String id){
+    setupInfo(model);
     model.addAttribute("article", feedService.getArticle(id));
     return "articleCreation";
   }
 
   @GetMapping("/articles/remove/{id}")
   public String deleteArticle(Model model, @PathVariable String id){
+    setupInfo(model);
     feedService.deleteArticle(id);
     return getArticlePage(model);
   }
 
   @GetMapping("/chat")
   public String getChatPage(Model model){
+    setupInfo(model);
     model.addAttribute("url", protocol+"://" + host + context + "/chat");
     return "chat";
   }
@@ -129,6 +139,7 @@ public class AdminController {
 
   @GetMapping("/users")
   public String getUsersPage(Model model){
+    setupInfo(model);
     return "users";
   }
 
