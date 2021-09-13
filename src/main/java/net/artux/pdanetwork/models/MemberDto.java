@@ -3,16 +3,12 @@ package net.artux.pdanetwork.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.Note;
-import net.artux.pdanetwork.utills.Security;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.Id;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 

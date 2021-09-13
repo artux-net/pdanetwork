@@ -13,7 +13,7 @@ import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
-import net.artux.pdanetwork.utills.ItemsManager;
+import net.artux.pdanetwork.service.ItemsManager;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;

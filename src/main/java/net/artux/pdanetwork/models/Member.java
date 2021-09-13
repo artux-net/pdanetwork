@@ -3,7 +3,6 @@ package net.artux.pdanetwork.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.Note;
 import net.artux.pdanetwork.utills.Security;

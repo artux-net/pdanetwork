@@ -3,17 +3,10 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Profile;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
 import net.artux.pdanetwork.models.profile.Achievement;
-import net.artux.pdanetwork.service.feed.FeedService;
 import net.artux.pdanetwork.service.profile.ProfileService;
-import net.artux.pdanetwork.servlets.Feed.Models.Article;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

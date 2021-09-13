@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.service.member.MemberService;
 import org.springframework.stereotype.Controller;

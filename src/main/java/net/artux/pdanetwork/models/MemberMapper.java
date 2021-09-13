@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.models;
 
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

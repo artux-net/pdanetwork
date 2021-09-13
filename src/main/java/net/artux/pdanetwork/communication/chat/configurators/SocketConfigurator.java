@@ -1,20 +1,5 @@
 package net.artux.pdanetwork.communication.chat.configurators;
 
-import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.communication.FeedSocket;
-import net.artux.pdanetwork.communication.arena.ArenaSocket;
-import net.artux.pdanetwork.communication.chat.ChatSocket;
-import net.artux.pdanetwork.communication.chat.DialogsSocket;
-import net.artux.pdanetwork.communication.chat.GroupsSocket;
-import net.artux.pdanetwork.communication.chat.MessagesSocket;
-import net.artux.pdanetwork.handlers.ChatHandler;
-import org.springframework.context.annotation.Configuration;
-
-import javax.websocket.HandshakeResponse;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpointConfig;
-import javax.websocket.server.ServerEndpointConfig.Configurator;
-
 
 public class SocketConfigurator {
 

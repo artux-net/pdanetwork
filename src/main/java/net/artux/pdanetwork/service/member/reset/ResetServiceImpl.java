@@ -2,7 +2,7 @@ package net.artux.pdanetwork.service.member.reset;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Member;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.member.MemberService;

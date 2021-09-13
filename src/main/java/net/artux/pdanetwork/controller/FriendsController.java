@@ -4,19 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.FriendModel;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.service.feed.FeedService;
 import net.artux.pdanetwork.service.friends.FriendService;
-import net.artux.pdanetwork.servlets.Feed.Models.Article;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import java.util.Date;
 import java.util.List;
 
 @RestController

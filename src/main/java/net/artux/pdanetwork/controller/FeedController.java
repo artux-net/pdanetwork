@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.QueryPage;
 import net.artux.pdanetwork.models.ResponsePage;
 import net.artux.pdanetwork.service.feed.FeedService;
-import net.artux.pdanetwork.servlets.Feed.Models.Article;
+import net.artux.pdanetwork.models.feed.Article;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

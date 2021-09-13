@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.models.Member;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.controller.UserValidator;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.models.profile.Data;

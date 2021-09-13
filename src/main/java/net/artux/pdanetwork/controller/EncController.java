@@ -2,10 +2,9 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
-import net.artux.pdanetwork.utills.ItemsManager;
+import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.Types;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

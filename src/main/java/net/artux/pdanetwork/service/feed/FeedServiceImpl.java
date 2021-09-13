@@ -6,7 +6,7 @@ import net.artux.pdanetwork.models.ResponsePage;
 import net.artux.pdanetwork.repository.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;
-import net.artux.pdanetwork.servlets.Feed.Models.Article;
+import net.artux.pdanetwork.models.feed.Article;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

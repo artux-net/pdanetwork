@@ -2,7 +2,7 @@ package net.artux.pdanetwork.service.email;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Member;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.mail.javamail.JavaMailSender;

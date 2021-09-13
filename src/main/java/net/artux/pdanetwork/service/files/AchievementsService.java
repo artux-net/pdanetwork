@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.artux.pdanetwork.utills.FileGenerator.readFile;
-
 @Service
 public class AchievementsService implements FileService{
 

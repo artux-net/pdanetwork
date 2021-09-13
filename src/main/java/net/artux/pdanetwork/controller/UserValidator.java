@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.authentication.register.model.RegisterUser;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.repository.MemberRepository;
 import org.springframework.stereotype.Component;

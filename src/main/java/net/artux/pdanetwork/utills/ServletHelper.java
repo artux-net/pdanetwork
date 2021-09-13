@@ -58,28 +58,4 @@ public class ServletHelper {
         return ServletContext.mongoUsers.getByToken(token);
     }
 
-    public static <T> T getBody(HttpServletRequest req, Class<T> object) throws IOException {
-        return gson.fromJson(getString(req), object);
-    }
-
-    public static void setResponse(HttpServletResponse response, Object body) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().println(gson.toJson(body));
-    }
-
-    public static void setError(int code, String message, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("application/html");
-        response.setCharacterEncoding("UTF-8");
-        request.setAttribute("code", code);
-        request.setAttribute("message", message);
-        request.getRequestDispatcher("/error.html").forward(request, response);
-    }
-
-    public static void setStringResponse(HttpServletResponse response, String body) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().println(body);
-    }
-
 }
