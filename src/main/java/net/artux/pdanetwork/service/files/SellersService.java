@@ -29,7 +29,7 @@ public class SellersService implements FileService{
 
     private List<Seller> readSellers(){
         try {
-            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/sellers.json", StandardCharsets.UTF_8);
+            String commonFile = readFile(valuesService.getConfigUrl() + "base/items/sellers.json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, Seller.class).getType();
             return new Gson().fromJson(commonFile, itemsListType);
         } catch (IOException e) {

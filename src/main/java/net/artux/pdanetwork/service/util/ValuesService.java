@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Getter
 public class ValuesService {
 
-  @Value("${pdanetwork.workingDirectory}")
-  private String workingDirectory;
+  @Value("${pdanetwork.configsUrl}")
+  private String configUrl;
 
   @Value("${server.servlet.contextPath}")
   private String contextPath;

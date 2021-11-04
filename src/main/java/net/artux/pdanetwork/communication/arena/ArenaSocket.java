@@ -31,15 +31,15 @@ public class ArenaSocket {
         log("new session attempt");
         if (token.equals("*"))
             token = (String) config.getUserProperties().get("t");
-        Member member = ServletContext.mongoUsers.getByToken(token);
-        if (member != null) {
+        //Member member = ServletContext.mongoUsers.getByToken(token);
+        /*if (member != null) {
             userSession.getUserProperties().put("m", member);
             userSession.getUserProperties().put("id", String.valueOf(member.getPdaId()));
 
             states.get(0).addSession(userSession);
         } else {
             userSession.close();
-        }
+        }*/
     }
 
     @OnClose

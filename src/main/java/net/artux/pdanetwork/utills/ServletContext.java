@@ -1,14 +1,9 @@
 package net.artux.pdanetwork.utills;
 
-import net.artux.pdanetwork.communication.utilities.MongoMessages;
-import net.artux.pdanetwork.service.util.ValuesService;
-import net.artux.pdanetwork.service.mongo.MongoUsers;
 import org.apache.logging.log4j.Logger;
 
 public class ServletContext{
 
-    public static MongoUsers mongoUsers = new MongoUsers();
-    public static MongoMessages mongoMessages = new MongoMessages(new ValuesService());
 
     private static Logger logger;
 

@@ -11,7 +11,7 @@ import net.artux.pdanetwork.communication.model.Conversation;
 import net.artux.pdanetwork.communication.model.ConversationRequest;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
-import net.artux.pdanetwork.utills.ServletContext;
+import net.artux.pdanetwork.service.mongo.MongoUsers;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
-import static net.artux.pdanetwork.utills.ServletContext.*;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -35,8 +34,11 @@ public class MongoMessages {
     private final MongoDatabase db;
     private final MongoCollection<Conversation> conversations;
     private final ConnectionString connectionString;
+    private final MongoUsers mongoUsers;
 
-    public MongoMessages(ValuesService valuesService) {
+    public MongoMessages(MongoUsers mongoUsers, ValuesService valuesService) {
+        this.mongoUsers = mongoUsers;
+
         connectionString = new ConnectionString(valuesService.getMongoUri());
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
@@ -54,7 +56,7 @@ public class MongoMessages {
     private Conversation addConversation(int ownerId, Conversation conversation) {
         int id = getNewId();
         for (int i : conversation.allMembers()) {
-            ServletContext.mongoUsers.addDialog(i, id);
+            mongoUsers.addDialog(i, id);
         }
 
         conversations.insertOne(conversation);
@@ -165,7 +167,7 @@ public class MongoMessages {
     }
 
     public void addMessageToConversation(int id, UserMessage userMessage) {
-        mongoMessages.getConversationCollection(id).insertOne(new DBMessage(userMessage));
+        getConversationCollection(id).insertOne(new DBMessage(userMessage));
         if (userMessage.message.length() > 40)
             userMessage.message = userMessage.message.substring(0, 40).trim() + "..";
 

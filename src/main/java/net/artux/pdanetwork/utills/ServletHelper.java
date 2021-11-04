@@ -13,33 +13,6 @@ import java.util.Map;
 
 public class ServletHelper {
 
-    static Gson gson = new Gson();
-
-    public static String getString(HttpServletRequest request) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        String s;
-        while ((s = request.getReader().readLine()) != null) {
-            sb.append(s);
-        }
-        if (sb.charAt(0) == '"')
-            sb.deleteCharAt(0);
-        if (sb.charAt(sb.length() - 1) == '"')
-            sb.deleteCharAt(sb.length() - 1);
-        String s1 = sb.toString();
-
-        return s1.replaceAll("\\\\", "");
-    }
-
-    public static Map<String, String> getHeaders(HttpServletRequest req){
-        Enumeration<String> enumeration = req.getHeaderNames();
-        Map<String, String> headers = new LinkedHashMap<>();
-        while(enumeration.hasMoreElements()){
-            String name = enumeration.nextElement();
-            headers.put(name, req.getHeader(name));
-        }
-        return headers;
-    }
-
     public static Map<String, String> splitQuery(String  query) {
         Map<String, String> query_pairs = new LinkedHashMap<>();
         if (query != null) {
@@ -52,10 +25,4 @@ public class ServletHelper {
         }
         return query_pairs;
     }
-
-    public static Member getMember(HttpServletRequest req) {
-        String token = req.getHeader("t");
-        return ServletContext.mongoUsers.getByToken(token);
-    }
-
 }

@@ -5,6 +5,8 @@ import net.artux.pdanetwork.communication.model.Conversation;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.mongo.MongoUsers;
+import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.ServletHelper;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,6 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.*;
 
-import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 
 @Service
 public class MessagesHandler extends SocketHandler {
@@ -22,9 +23,11 @@ public class MessagesHandler extends SocketHandler {
   private final HashMap<Integer, List<WebSocketSession>> conversations = new HashMap<>();
 
   private final MongoMessages mongoMessages;
+  private final MongoUsers mongoUsers;
 
-  public MessagesHandler(MemberService memberService, MongoMessages mongoMessages) {
+  public MessagesHandler(MongoUsers mongoUsers, MemberService memberService, MongoMessages mongoMessages) {
     super(memberService);
+    this.mongoUsers = mongoUsers;
     this.mongoMessages = mongoMessages;
   }
 
@@ -121,7 +124,7 @@ public class MessagesHandler extends SocketHandler {
       int pdaId = (int) userSession.getAttributes().get("pda");
       int id = (int) userSession.getAttributes().get("to");
 
-      Conversation conversation = ServletContext.mongoMessages.newConversation(pdaId, id);
+      Conversation conversation = mongoMessages.newConversation(pdaId, id);
       addToConversation(conversation.getCid(), userSession);
       for (int ids : conversation.allMembers()) {
         mongoUsers.updateDialog(pdaId, conversation.cid);

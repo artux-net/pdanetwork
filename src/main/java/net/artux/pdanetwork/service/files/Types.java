@@ -52,7 +52,7 @@ public class Types implements FileService {
     private List<ItemType> initTypes() {
         Class c = ItemType.class;
         try {
-            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/types/info.json", StandardCharsets.UTF_8);
+            String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/info.json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
             return gson.fromJson(commonFile, itemsListType);
         } catch (IOException e) {
@@ -65,7 +65,7 @@ public class Types implements FileService {
     private <T extends Item> List<T> getType(int type) {
         Class<? extends Item> c = getClassByType(type);
         try {
-            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/types/" + type + ".json", StandardCharsets.UTF_8);
+            String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
             return gson.fromJson(commonFile, itemsListType);
         } catch (IOException e) {
@@ -77,7 +77,7 @@ public class Types implements FileService {
     private List<EncItem> getEncType(int type) {
         Class c = EncItem.class;
         try {
-            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/types/" + type + ".json", StandardCharsets.UTF_8);
+            String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
             return gson.fromJson(commonFile, itemsListType);
         } catch (IOException e) {

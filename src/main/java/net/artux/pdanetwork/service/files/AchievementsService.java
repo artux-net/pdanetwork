@@ -25,11 +25,11 @@ public class AchievementsService implements FileService{
 
     private List<Achievement> setupAchievements() {
         try {
-            String commonFile = readFile(valuesService.getWorkingDirectory() + "base/items/achievements", StandardCharsets.UTF_8);
+            String commonFile = readFile(valuesService.getConfigUrl() + "base/items/achievements.json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, Achievement.class).getType();
             return new Gson().fromJson(commonFile, itemsListType);
         } catch (IOException e) {
-            //ServletContext.error("Achievements error", e);
+            e.printStackTrace();
         }
         return null;
     }

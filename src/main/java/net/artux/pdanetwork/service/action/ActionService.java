@@ -11,16 +11,15 @@ import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
 import net.artux.pdanetwork.models.profile.items.Weapon;
+import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
-import net.artux.pdanetwork.service.ItemsManager;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 import static net.artux.pdanetwork.utills.ServletContext.error;
-import static net.artux.pdanetwork.utills.ServletContext.mongoUsers;
 
 @Service
 @RequiredArgsConstructor
@@ -301,13 +300,13 @@ public class ActionService {
             return new Status(false, "Не удалось продать предмет.");
     }
 
-    public boolean addMoney(int pdaId, int money) {
+   /* public boolean addMoney(int pdaId, int money) {
         Member member = mongoUsers.getById(pdaId);
         if (member != null) {
             member.setMoney(member.getMoney() + money);
             return true;
         } else return false;
-    }
+    }*/
 
     public Status buy(Member member, int itemHash, int sellerId) {
         SellerDto seller = sellersService.getSellerDto(sellerId);

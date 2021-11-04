@@ -16,6 +16,7 @@ import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
 import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -39,16 +40,16 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 @Service
 public class MongoUsers {
 
-    private static final MongoClient mongoClient;
-    private static final MongoCollection<Member> table;
+    private final MongoClient mongoClient;
+    private final MongoCollection<Member> table;
 
     // global settings for all users
     private final int daysValidAccount = 90;
 
-    private static final ConnectionString connectionString;
+    private final ConnectionString connectionString;
 
-    static {
-        connectionString = new ConnectionString("mongodb://localhost:27017/");
+    MongoUsers(ValuesService valuesService){
+        connectionString = new ConnectionString(valuesService.getMongoUri());
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
         MongoClientSettings clientSettings = MongoClientSettings.builder()
@@ -324,21 +325,21 @@ public class MongoUsers {
         }
     }
 
-    public static Member getMember(int pdaId) {
+    public Member getMember(int pdaId) {
         Document query = new Document();
         query.put("pdaId", pdaId);
 
         return table.find(query).first();
     }
 
-    private static Member getMember(String token) {
+    private Member getMember(String token) {
         Document query = new Document();
         query.put("token", token);
 
         return table.find(query).first();
     }
 
-    private static Member getMember(String key, Object value) {
+    private Member getMember(String key, Object value) {
         Document query = new Document();
         query.put(key, value);
 
@@ -357,7 +358,7 @@ public class MongoUsers {
         return updateMember(member);
     }
 
-    public static UpdateResult updateMember(@NotNull Member member) {
+    public UpdateResult updateMember(@NotNull Member member) {
         member.setLastModified(Instant.now().toEpochMilli());
         return table.replaceOne(eq("pdaId", member.getPdaId()), member);
     }
