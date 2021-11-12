@@ -2,15 +2,11 @@ package net.artux.pdanetwork.models.feed;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Getter
-@Setter
 @Data
 public class Article extends FeedModel {
 

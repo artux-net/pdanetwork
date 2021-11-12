@@ -1,12 +1,8 @@
 package net.artux.pdanetwork.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@Getter
-@RequiredArgsConstructor
 public class UserInfo {
 
     private final String login;

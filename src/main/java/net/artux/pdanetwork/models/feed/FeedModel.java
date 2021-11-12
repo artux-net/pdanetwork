@@ -1,16 +1,14 @@
 package net.artux.pdanetwork.models.feed;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class FeedModel {
 
     @Id

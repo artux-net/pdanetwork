@@ -1,7 +1,6 @@
 package net.artux.pdanetwork.models;
 
 import lombok.Data;
-import lombok.Getter;
 import net.artux.pdanetwork.models.profile.items.Armor;
 import net.artux.pdanetwork.models.profile.items.Artifact;
 import net.artux.pdanetwork.models.profile.items.Item;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Data
-@Getter
 public class SellerDto {
 
     private int id;

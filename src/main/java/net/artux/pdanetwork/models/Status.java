@@ -1,14 +1,10 @@
 package net.artux.pdanetwork.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Data
-@Getter
-@Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Status {
 
     private boolean success;
@@ -22,6 +18,10 @@ public class Status {
         else
             code=400;
         this.description = description;
+    }
+
+    public Status(boolean success) {
+        this.success = success;
     }
 
 }
