@@ -16,6 +16,9 @@ public class UserValidator {
     private final MemberRepository memberRepository;
 
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z][a-zA-Z0-9-_.]+$";
+    private static final String NAME_VALIDATION_REGEX = "^[а-яА-ЯёЁa-zA-Z]+$";
+    private static final String PASSWORD_VALIDATION_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)([a-zA-Z\\d])*$";
 
     public Status checkUser(RegisterUser user) {
         return Stream.of(checkLogin(user.getLogin()),
@@ -32,10 +35,13 @@ public class UserValidator {
         if (!StringUtils.hasText(login)) {
             return new Status(false, "Логин не может быть пустым.");
         }
-        if (login.trim().length() < 4 || login.trim().length() > 16) {
+        if (!login.matches(LOGIN_VALIDATION_REGEX)) {
+            return new Status(false, "Логин содержит запрещённые символы.");
+        }
+        if (login.length() < 4 || login.length() > 16) {
             return new Status(false, "Логин должен содержать не менее 4 и не более 16 символов.");
         }
-        if (memberRepository.getMemberByLogin(login.trim()).isPresent()) {
+        if (memberRepository.getMemberByLogin(login).isPresent()) {
             return new Status(false, "Пользователь с таким логином уже существует.");
         }
         return new Status(true);
@@ -45,7 +51,10 @@ public class UserValidator {
         if (!StringUtils.hasText(name)) {
             return new Status(false, "Имя не может быть пустым.");
         }
-        if (name.trim().length() < 2 || name.trim().length() > 16) {
+        if (!name.matches(NAME_VALIDATION_REGEX)) {
+            return new Status(false, "Имя содержит запрещённые символы.");
+        }
+        if (name.length() < 2 || name.length() > 16) {
             return new Status(false, "Имя должно содержать не менее 2 и не более 16 символов.");
         }
         return new Status(true);
@@ -55,7 +64,10 @@ public class UserValidator {
         if (!StringUtils.hasText(nickname)) {
             return new Status(false, "Кличка не может быть пустой.");
         }
-        if (nickname.trim().length() < 2 || nickname.trim().length() > 16) {
+        if (!nickname.matches(NAME_VALIDATION_REGEX)) {
+            return new Status(false, "Кличка содержит запрещённые символы.");
+        }
+        if (nickname.length() < 2 || nickname.length() > 16) {
             return new Status(false, "Кличка должна содержать не менее 2 и не более 16 символов.");
         }
         return new Status(true);
@@ -65,7 +77,10 @@ public class UserValidator {
         if (!StringUtils.hasText(password)) {
             return new Status(false, "Пароль не может быть пустым.");
         }
-        if (password.trim().length() < 8) {
+        if (!password.matches(PASSWORD_VALIDATION_REGEX)) {
+            return new Status(false, "Пароль содержит запрещённые символы.");
+        }
+        if (password.length() < 8) {
             return new Status(false, "Пароль должен содержать не менее 8 символов.");
         }
         return new Status(true);
