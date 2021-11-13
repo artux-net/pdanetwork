@@ -69,7 +69,7 @@ public class UserValidator {
 
     private Status checkNickname(String nickname) {
         if (!StringUtils.hasText(nickname)) {
-            return new Status(false, "Прозвище не может быть пустой.");
+            return new Status(false, "Прозвище не может быть пустым.");
         }
         Collection<String> defectSymbols = checkStringSymbolsByRegexp(nickname, NAME_VALIDATION_REGEX);
         if (!defectSymbols.isEmpty()) {
@@ -77,7 +77,7 @@ public class UserValidator {
                     "Прозвище содержит запрещённые символы: " + String.join(", ", defectSymbols));
         }
         if (nickname.length() < 2 || nickname.length() > 16) {
-            return new Status(false, "Прозвище должна содержать не менее 2 и не более 16 символов.");
+            return new Status(false, "Прозвище должно содержать не менее 2 и не более 16 символов.");
         }
         return new Status(true);
     }
