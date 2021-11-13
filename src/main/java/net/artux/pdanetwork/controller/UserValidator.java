@@ -92,7 +92,7 @@ public class UserValidator {
                     "Пароль содержит запрещённые символы: " + String.join(", ", defectSymbols));
         }
         if (password.length() < 8 || password.length() > 24) {
-            return new Status(false, "Пароль должен содержать не менее 8 символов.");
+            return new Status(false, "Пароль должен содержать не менее 8 и не более 24 символов.");
         }
         return new Status(true);
     }
