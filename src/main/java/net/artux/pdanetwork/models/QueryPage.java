@@ -15,7 +15,7 @@ public class QueryPage {
   @Min(value = 1, message = "{queryPage.sizePage.lessThan}")
   private int size = 15;
 
-  private Sort.Direction sortDirection = Sort.Direction.ASC;
+  private Sort.Direction sortDirection = Sort.Direction.DESC;
 
   private String sortBy = "id";
 }
