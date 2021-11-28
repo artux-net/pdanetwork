@@ -16,7 +16,7 @@ public interface MemberService {
 
   Status registerUser(RegisterUser registerUser);
   Status handleConfirmation(String token);
-  Status resetData();
+  MemberDto resetData();
   Member getMember();
   MemberDto getMemberDto();
   Member getMember(String base64);

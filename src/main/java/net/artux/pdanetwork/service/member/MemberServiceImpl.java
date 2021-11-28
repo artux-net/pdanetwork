@@ -45,7 +45,6 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public Status registerUser(RegisterUser newUser) {
-//    ServletContext.log("Try to register new user: " + newUser.email + ", login" + newUser.login);
     Status status = userValidator.checkUser(newUser);
 
     String token = Security.encrypt(newUser.getLogin());
@@ -63,7 +62,6 @@ public class MemberServiceImpl implements MemberService {
         status = new Status(false, "Пользователь ожидает регистрации, проверьте почту.");
     }
 
-    //ServletContext.log(newUser.email + " : " + status);
     return status;
   }
 
@@ -80,24 +78,22 @@ public class MemberServiceImpl implements MemberService {
       if (member.isPresent())
         pdaId = member.get().getPdaId() + 1;
       memberRepository.insert(new Member(registerUserMap.get(token), pdaId, passwordEncoder));
-      //ServletContext.log("Registered user " + registerUserMap.get(token).email + " with pdaId:" + pdaId);
       try {
         emailService.sendRegisterLetter(registerUserMap.get(token), pdaId);
         registerUserMap.remove(token);
         return new Status(true, pdaId + " - Это ваш pdaId, мы вас зарегистрировали, спасибо!");
       } catch (Exception e) {
-        //ServletContext.error("Confirmation Error", e);
         return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
       }
     }else return new Status(false, "Ссылка устарела или не существует");
   }
 
   @Override
-  public Status resetData() {
+  public MemberDto resetData() {
     Member member = getMember();
     member.setData(new Data());
     memberRepository.save(member);
-    return new Status(true, "Success!");
+    return memberMapper.memberDto(member);
   }
 
   @Override
