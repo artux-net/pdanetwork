@@ -4,6 +4,7 @@ services:
   db:
     image: 'postgres:13.1-alpine'
     container_name: db
+    restart: unless-stopped
     environment:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
@@ -11,7 +12,7 @@ services:
   mongo:
     image: mongo
     container_name: mongo
-    restart: always
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
@@ -21,7 +22,7 @@ services:
   mongo-express:
       image: mongo-express
       container_name: mongo-express
-      restart: always
+      restart: unless-stopped
       depends_on:
         - mongo
       ports:
@@ -38,10 +39,10 @@ services:
   app:
     image: 'pdanetwork'
     container_name: pdanetwork
+    restart: unless-stopped
     depends_on:
       - db
       - mongo
-      - mongo-express
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
@@ -53,7 +54,31 @@ services:
       - SPRING_DATA_MONGODB_PASSWORD=example
       - SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE=admin
     ports:
-      - "80:8080"
+       - "8080:8080"
     build:
       context: /
 
+  swag:
+    depends_on:
+      - app
+      - mongo-express
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - URL=app.artux.net
+      - VALIDATION=http
+      - SUBDOMAINS=www, #optional
+      - DNSPLUGIN=cloudflare #optional
+      - ONLY_SUBDOMAINS=false #optional
+
+    volumes:
+      - /apps/config:/config
+    ports:
+      - "443:443"
+      - "80:80"
+    restart: unless-stopped

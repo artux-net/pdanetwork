@@ -1,6 +1,83 @@
 # PDA Network
-PDA Network with API for application "Сталкерский ПДА"
+##Setup server
+На сервере необходим развернутый докер с доступом по сети к его демону.
+После первого запуска compose необходимо задать настройки nginx в папке -
 
+    sudo nano /apps/config/nginx/site-confs/default
+
+Файл должен включать следующее содержимое:
+
+        upstream backend {
+            server app:8080;
+        }
+        
+        upstream express{
+            server mongo-express:8081;
+        }
+        
+        server{
+            server_name app.artux.net 143.47.186.141;        
+            proxy_connect_timeout 600;
+            proxy_send_timeout 600;
+            proxy_read_timeout 600;
+            send_timeout 600;
+            proxy_buffering off;
+            ignore_invalid_headers off;
+            
+            location / {
+                    add_header X-Frame-Options SAMEORIGIN always;
+                    proxy_set_header X-Forwarded-Host $host;
+                    proxy_set_header X-Forwarded-Server $host;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://backend;
+            }
+    
+            location /mongo/utility {
+                    proxy_set_header X-Forwarded-Host $host;
+                    proxy_set_header X-Forwarded-Server $host;
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://express/;
+            }
+    
+              location /pdanetwork/dialog{
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header HOST $host;
+                proxy_set_header X_Forwarded_For $remote_addr;
+                proxy_pass http://backend;
+                proxy_redirect default;
+                client_max_body_size 1000m;
+            }
+            location /pdanetwork/dialogs{
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header HOST $host;
+                proxy_set_header X_Forwarded_For $remote_addr;
+                proxy_pass http://backend;
+                proxy_redirect default;
+                client_max_body_size 1000m;
+            }
+             location /pdanetwork/chat{
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header HOST $host;
+                proxy_set_header X_Forwarded_For $remote_addr;
+                proxy_pass http://backend;
+                proxy_redirect default;
+                client_max_body_size 1000m;
+            }
+            location /pdanetwork/groups{
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header HOST $host;
+                proxy_set_header X_Forwarded_For $remote_addr;
+                proxy_pass http://backend;
+                proxy_redirect default;
+                client_max_body_size 1000m;
+            }
+        }
+
+PDA Network with API for application "Сталкерский ПДА"
 
 ### Groups
 

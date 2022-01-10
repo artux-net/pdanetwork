@@ -1,13 +1,7 @@
 package net.artux.pdanetwork.utills;
 
-import com.google.gson.Gson;
-import net.artux.pdanetwork.models.Member;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Enumeration;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,8 +13,8 @@ public class ServletHelper {
             String[] pairs = query.split("&");
             for (String pair : pairs) {
                 int idx = pair.indexOf("=");
-                //query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8),
-                     //   URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8));
+                query_pairs.put(URLDecoder.decode(pair.substring(0, idx), StandardCharsets.UTF_8),
+                     URLDecoder.decode(pair.substring(idx + 1), StandardCharsets.UTF_8));
             }
         }
         return query_pairs;

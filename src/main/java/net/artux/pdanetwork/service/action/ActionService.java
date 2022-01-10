@@ -141,6 +141,7 @@ public class ActionService {
                             break;
                         case "reset":
                             if (map.get(key).size() == 0) {
+                                member.setMoney(0);
                                 data.weapons = new ArrayList<>();
                                 data.armors = new ArrayList<>();
                                 data.artifacts = new ArrayList<>();

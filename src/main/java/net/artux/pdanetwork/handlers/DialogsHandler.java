@@ -31,9 +31,9 @@ public class DialogsHandler extends SocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession userSession){
     super.afterConnectionEstablished(userSession);
-
-    //sessions.put(member.getPdaId(), userSession);
-    sendObject(userSession, getDialogs(getMember(userSession)));
+    Member member = getMember(userSession);
+    sessions.put(member.getPdaId(), userSession);
+    sendObject(userSession, getDialogs(member));
   }
 
   private List<DialogResponse> getDialogs(Member member){
@@ -62,10 +62,13 @@ public class DialogsHandler extends SocketHandler {
     return 0;
   }
 
-  public void sendUpdate(int pdaId, String json){
-    if (sessions.containsKey(pdaId)){
-      //sessions.get(pdaId).getAsyncRemote().sendText(json);
+  public void sendUpdates(Conversation conversation, UserMessage userMessage){
+    for (int pdaId : conversation.allMembers()) {
+      if (sessions.containsKey(pdaId)){
+        sendObject(sessions.get(pdaId), userMessage);
+      }
     }
+
   }
 
 

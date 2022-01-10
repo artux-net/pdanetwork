@@ -6,8 +6,6 @@ import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.service.member.MemberService;
 import net.artux.pdanetwork.service.mongo.MongoUsers;
-import net.artux.pdanetwork.service.util.ValuesService;
-import net.artux.pdanetwork.utills.ServletContext;
 import net.artux.pdanetwork.utills.ServletHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
@@ -24,20 +22,26 @@ public class MessagesHandler extends SocketHandler {
 
   private final MongoMessages mongoMessages;
   private final MongoUsers mongoUsers;
+  private final DialogsHandler dialogsHandler;
 
-  public MessagesHandler(MongoUsers mongoUsers, MemberService memberService, MongoMessages mongoMessages) {
+  public MessagesHandler(MongoUsers mongoUsers, MemberService memberService, MongoMessages mongoMessages, DialogsHandler dialogsHandler) {
     super(memberService);
     this.mongoUsers = mongoUsers;
     this.mongoMessages = mongoMessages;
+    this.dialogsHandler = dialogsHandler;
   }
 
   @Override
   public void afterConnectionEstablished(WebSocketSession userSession) {
     super.afterConnectionEstablished(userSession);
+    System.out.println(userSession.getUri().toString());
+    System.out.println(userSession.getUri().getRawQuery());
     Map<String, String> params = ServletHelper.splitQuery(userSession.getUri().getRawQuery());
+    //TODO params плохо читается, все ломается
+    System.out.println(params);
+
     Member member = getMember(userSession);
     int pdaId = member.getPdaId();
-
     //ServletContext.log("Opened session(" + userSession.getId() + ") for pda: " + pdaId + ", query: " + userSession.getQueryString());
 
     if (params.containsKey("to")) {
@@ -77,6 +81,7 @@ public class MessagesHandler extends SocketHandler {
 
   @Override
   public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
+    updateDialog(userSession);
     int conversation = (int) userSession.getAttributes().get("conversation");
     UserMessage userMessage = new UserMessage(conversation, (Member) userSession.getAttributes().get("user"), webSocketMessage.getPayload().toString());
 
@@ -85,7 +90,7 @@ public class MessagesHandler extends SocketHandler {
     }
 
     mongoMessages.addMessageToConversation(conversation, userMessage);
-    updateDialog(userSession, userMessage);
+    dialogsHandler.sendUpdates(mongoMessages.getConversation(conversation), userMessage);
   }
 
   private void addToConversation(int conversationId, WebSocketSession session){
@@ -117,7 +122,7 @@ public class MessagesHandler extends SocketHandler {
     //ServletContext.log("Closed session: " + userSession.getId());
   }
 
-  private void updateDialog(WebSocketSession userSession, UserMessage message){
+  private void updateDialog(WebSocketSession userSession){
     if (userSession.getAttributes().get("first") != null &&
             (Boolean) userSession.getAttributes().get("first")) {
       //add new conv
@@ -127,8 +132,8 @@ public class MessagesHandler extends SocketHandler {
       Conversation conversation = mongoMessages.newConversation(pdaId, id);
       addToConversation(conversation.getCid(), userSession);
       for (int ids : conversation.allMembers()) {
-        mongoUsers.updateDialog(pdaId, conversation.cid);
-        //SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+        mongoUsers.updateDialog(ids, conversation.cid);
+
       }
     } else {
       //up conv
@@ -136,7 +141,7 @@ public class MessagesHandler extends SocketHandler {
               .getConversation((int) userSession.getAttributes().get("conversation"));
       for (int ids : conversation.allMembers()) {
         mongoUsers.updateDialog(ids, conversation.cid);
-        //SocketConfigurator.dialogsSocket.sendUpdate(ids, gson.toJson(message));
+
       }
     }
   }

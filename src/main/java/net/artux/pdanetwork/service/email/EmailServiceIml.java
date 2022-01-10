@@ -65,14 +65,14 @@ public class EmailServiceIml implements EmailService {
 
   public void sendRegisterLetter(RegisterUser user, int pdaId){
     sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
-            .replace("login", user.getLogin())
-            .replace("pass" , user.getPassword())
-            .replace("pdaId" , String.valueOf(pdaId)));
+            .replace("${login}", user.getLogin())
+            .replace("${pass}" , user.getPassword())
+            .replace("${pdaId}" , String.valueOf(pdaId)));
   }
 
   public void sendConfirmLetter(RegisterUser user, String token) {
     sendSimpleMessage(user.getEmail(), "Подтвердите регистацию", mailTemplateCon
-            .replace("link" ,  valuesService.getAddress() + "/register?token=" + token));
+            .replace("${link}" ,  valuesService.getAddress() + "/register?token=" + token));
   }
 
 
