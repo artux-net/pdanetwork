@@ -34,11 +34,7 @@ public class MessagesHandler extends SocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession userSession) {
     super.afterConnectionEstablished(userSession);
-    System.out.println(userSession.getUri().toString());
-    System.out.println(userSession.getUri().getRawQuery());
     Map<String, String> params = ServletHelper.splitQuery(userSession.getUri().getRawQuery());
-    //TODO params плохо читается, все ломается
-    System.out.println(params);
 
     Member member = getMember(userSession);
     int pdaId = member.getPdaId();
@@ -96,6 +92,7 @@ public class MessagesHandler extends SocketHandler {
   private void addToConversation(int conversationId, WebSocketSession session){
     if (!conversations.containsKey(conversationId)) {
       List<WebSocketSession> sessions = new ArrayList<>();
+      sessions.add(session);
       accept(session);
       conversations.put(conversationId, sessions);
     } else {
@@ -123,26 +120,23 @@ public class MessagesHandler extends SocketHandler {
   }
 
   private void updateDialog(WebSocketSession userSession){
+    Conversation conversation;
     if (userSession.getAttributes().get("first") != null &&
             (Boolean) userSession.getAttributes().get("first")) {
       //add new conv
       int pdaId = (int) userSession.getAttributes().get("pda");
       int id = (int) userSession.getAttributes().get("to");
 
-      Conversation conversation = mongoMessages.newConversation(pdaId, id);
+      conversation = mongoMessages.newConversation(pdaId, id);
       addToConversation(conversation.getCid(), userSession);
-      for (int ids : conversation.allMembers()) {
-        mongoUsers.updateDialog(ids, conversation.cid);
-
-      }
     } else {
       //up conv
-      Conversation conversation = mongoMessages
+      conversation = mongoMessages
               .getConversation((int) userSession.getAttributes().get("conversation"));
-      for (int ids : conversation.allMembers()) {
-        mongoUsers.updateDialog(ids, conversation.cid);
 
-      }
+    }
+    for (int ids : conversation.allMembers()) {
+      mongoUsers.updateDialog(ids, conversation.cid);
     }
   }
 

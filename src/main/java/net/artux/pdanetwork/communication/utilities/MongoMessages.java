@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.communication.utilities;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -19,6 +20,7 @@ import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -103,18 +105,17 @@ public class MongoMessages {
         List<Integer> members = Collections.singletonList(pda1);
         List<Integer> owners = Collections.singletonList(pda2);
         Document query = new Document();
-        query.put("members", members);
-        query.put("owners", owners);
+        query.put("members", new BasicDBObject("$in", Arrays.asList(members)));
+        query.put("owners", new BasicDBObject("$in", Arrays.asList(owners)));
+
         Conversation document = conversations.find(query).first();
 
         if (document!=null)
             return document.cid;
         else {
-            members = Collections.singletonList(pda2);
-            owners = Collections.singletonList(pda1);
             query.clear();
-            query.put("members", members);
-            query.put("owners", owners);
+            query.put("members", new BasicDBObject("$in", Arrays.asList(owners)));
+            query.put("owners", new BasicDBObject("$in", Arrays.asList(members)));
             document = conversations.find(query).first();
             if (document != null)
                 return document.cid;

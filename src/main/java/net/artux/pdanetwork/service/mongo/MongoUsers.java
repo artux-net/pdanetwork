@@ -58,9 +58,9 @@ public class MongoUsers {
                 .build();
 
         mongoClient = MongoClients.create(clientSettings);
-        MongoDatabase db = mongoClient.getDatabase("users");
+        MongoDatabase db = mongoClient.getDatabase("test");
 
-        table = db.getCollection("usersCollection", Member.class);
+        table = db.getCollection("member", Member.class);
         //table.createIndex(Indexes.ascending("token", "pdaId", "login"));
     }
 
@@ -350,12 +350,6 @@ public class MongoUsers {
         List<UserInfo> users = new ArrayList<>();
         //table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach(member -> users.add(new UserInfo(member)));
         return users;
-    }
-
-    public UpdateResult resetData(String token) {
-        Member member = getMember(token);
-        member.setData(new Data());
-        return updateMember(member);
     }
 
     public UpdateResult updateMember(@NotNull Member member) {
