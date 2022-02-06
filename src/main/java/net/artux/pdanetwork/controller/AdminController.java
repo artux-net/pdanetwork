@@ -2,7 +2,7 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.handlers.ChatHandler;
 import net.artux.pdanetwork.models.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;
@@ -46,12 +46,12 @@ public class AdminController {
   private String context;
 
   public void setupInfo(Model model){
-    Member member = memberService.getMember();
+    UserEntity userEntity = memberService.getMember();
 
     SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
     model.addAttribute("server_time", df.format(new Date()));
-    model.addAttribute("username", member.getLogin());
-    model.addAttribute("role", member.getRole());
+    model.addAttribute("username", userEntity.getLogin());
+    model.addAttribute("role", userEntity.getRole());
     model.addAttribute("version", "test");
   }
 

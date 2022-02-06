@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.communication.arena;
 
 import com.google.gson.Gson;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.Profile;
 
 import javax.websocket.CloseReason;
@@ -42,15 +42,15 @@ public class ServerThread implements Runnable {
 
     public void addSession(Session session) {
         sessions.add(session);
-        Member member = (Member) session.getUserProperties().get("m");
-        state.addPlayer(session, new Profile(member));
+        UserEntity userEntity = (UserEntity) session.getUserProperties().get("m");
+        state.addPlayer(session, new Profile(userEntity));
 
-        log("New player has connected, pdaId: " +  member.getPdaId());
+        log("New player has connected, pdaId: " +  userEntity.getPdaId());
     }
 
     public void closeSession(Session session) {
-        Member member =(Member) session.getUserProperties().get("m");
-        log("Player has disconnected, pdaId: " +  member.getPdaId());
+        UserEntity userEntity =(UserEntity) session.getUserProperties().get("m");
+        log("Player has disconnected, pdaId: " +  userEntity.getPdaId());
 
         state.removePlayer(session);
         sessions.remove(session);

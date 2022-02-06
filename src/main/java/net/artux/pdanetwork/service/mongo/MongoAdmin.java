@@ -7,7 +7,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -25,7 +25,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoAdmin {
 
     private final MongoClient mongoClient;
-    private final MongoCollection<Member> table;
+    private final MongoCollection<UserEntity> table;
 
     private final ConnectionString connectionString;
 
@@ -41,15 +41,15 @@ public class MongoAdmin {
         mongoClient = MongoClients.create(clientSettings);
         MongoDatabase db = mongoClient.getDatabase("test");
 
-        table = db.getCollection("member", Member.class);
+        table = db.getCollection("member", UserEntity.class);
     }
 
     public long getSize() {
         return table.countDocuments();
     }
 
-    public List<Member> getRating(int from) {
-        List<Member> users = new ArrayList<>();
+    public List<UserEntity> getRating(int from) {
+        List<UserEntity> users = new ArrayList<>();
         table.find().sort(new Document("xp", -1)).skip(from).limit(30).forEach(users::add);
         return users;
     }
@@ -73,8 +73,8 @@ public class MongoAdmin {
     }
 
 
-    public List<Member> find(String q) {
-        List<Member> users = new ArrayList<>();
+    public List<UserEntity> find(String q) {
+        List<UserEntity> users = new ArrayList<>();
 
         table.find(Filters.regex("login", q)).forEach(users::add);
         return users;

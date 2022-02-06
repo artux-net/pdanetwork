@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Artifact extends Item {
+public class ArtifactEntity extends ItemEntity {
 
     private int anomal_id;
 
@@ -24,16 +24,16 @@ public class Artifact extends Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Artifact artifact = (Artifact) o;
-        return anomal_id == artifact.anomal_id &&
-                health == artifact.health &&
-                radio == artifact.radio &&
-                damage == artifact.damage &&
-                bleeding == artifact.bleeding &&
-                thermal == artifact.thermal &&
-                chemical == artifact.chemical &&
-                endurance == artifact.endurance &&
-                electric == artifact.electric;
+        ArtifactEntity artifactEntity = (ArtifactEntity) o;
+        return anomal_id == artifactEntity.anomal_id &&
+                health == artifactEntity.health &&
+                radio == artifactEntity.radio &&
+                damage == artifactEntity.damage &&
+                bleeding == artifactEntity.bleeding &&
+                thermal == artifactEntity.thermal &&
+                chemical == artifactEntity.chemical &&
+                endurance == artifactEntity.endurance &&
+                electric == artifactEntity.electric;
     }
 
     @Override

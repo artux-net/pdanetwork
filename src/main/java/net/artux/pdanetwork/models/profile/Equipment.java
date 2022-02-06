@@ -1,10 +1,10 @@
 
 package net.artux.pdanetwork.models.profile;
 
-import net.artux.pdanetwork.models.profile.items.Armor;
-import net.artux.pdanetwork.models.profile.items.Artifact;
-import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Weapon;
+import net.artux.pdanetwork.models.profile.items.ArmorEntity;
+import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
+import net.artux.pdanetwork.models.profile.items.ItemEntity;
+import net.artux.pdanetwork.models.profile.items.WeaponEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,52 +12,52 @@ import java.util.List;
 
 public class Equipment {
 
-    private Armor armor;
-    private Weapon firstWeapon;
-    private Weapon secondWeapon;
-    private Item detector;
-    private List<Artifact> artifacts = new ArrayList<>();
+    private ArmorEntity armorEntity;
+    private WeaponEntity firstWeaponEntity;
+    private WeaponEntity secondWeaponEntity;
+    private ItemEntity detector;
+    private List<ArtifactEntity> artifactEntities = new ArrayList<>();
 
     public Equipment() {
     }
 
-    public Armor getArmor() {
-        return armor;
+    public ArmorEntity getArmor() {
+        return armorEntity;
     }
 
-    public void setArmor(Armor armor) {
-        this.armor = armor;
+    public void setArmor(ArmorEntity armorEntity) {
+        this.armorEntity = armorEntity;
     }
 
-    public Weapon getFirstWeapon() {
-        return firstWeapon;
+    public WeaponEntity getFirstWeapon() {
+        return firstWeaponEntity;
     }
 
-    public void setFirstWeapon(Weapon firstWeapon) {
-        this.firstWeapon = firstWeapon;
+    public void setFirstWeapon(WeaponEntity firstWeaponEntity) {
+        this.firstWeaponEntity = firstWeaponEntity;
     }
 
-    public Weapon getSecondWeapon() {
-        return secondWeapon;
+    public WeaponEntity getSecondWeapon() {
+        return secondWeaponEntity;
     }
 
-    public void setSecondWeapon(Weapon secondWeapon) {
-        this.secondWeapon = secondWeapon;
+    public void setSecondWeapon(WeaponEntity secondWeaponEntity) {
+        this.secondWeaponEntity = secondWeaponEntity;
     }
 
-    public Item getDetector() {
+    public ItemEntity getDetector() {
         return detector;
     }
 
-    public void setDetector(Item detector) {
+    public void setDetector(ItemEntity detector) {
         this.detector = detector;
     }
 
-    public List<Artifact> getArtifacts() {
-        return artifacts;
+    public List<ArtifactEntity> getArtifacts() {
+        return artifactEntities;
     }
 
-    public void setArtifacts(List<Artifact> artifacts) {
-        this.artifacts = artifacts;
+    public void setArtifacts(List<ArtifactEntity> artifactEntities) {
+        this.artifactEntities = artifactEntities;
     }
 }

@@ -19,10 +19,10 @@
 			<tbody>
 			<tr>
 				<td style="width: 300px;"><span style="font-size:12px;">&nbsp;</span></td>
-				<td><span style="font-size:12px;"><strong th:text="${item.title}"></strong></span></td>
+				<td><span style="font-size:12px;"><strong th:text="${itemEntity.title}"></strong></span></td>
 			</tr>
 			<tr>
-				<td style="text-align: center;"><span style="font-size:12px;"><img alt="" th:src="'/base/items/icons/' + ${item.icon}" /></span></td>
+				<td style="text-align: center;"><span style="font-size:12px;"><img alt="" th:src="'/base/itemEntities/icons/' + ${itemEntity.icon}" /></span></td>
 				<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${enc.desc}"></span></span></td>
 			</tr>
 			<tr>
@@ -43,15 +43,15 @@
 						</tr>
 						<tr>
 							<td style="text-align: right;"><span style="font-size:12px;"><strong>Вес:</strong></span></td>
-							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${item.weight} +' кг'"></span></span></td>
+							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${itemEntity.weight} +' кг'"></span></span></td>
 						</tr>
 						<tr>
 							<td style="text-align: right;"><span style="font-size:12px;"><span style="font-size:12px;"><strong>Цена</strong>:</span></span></td>
-							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${item.price} + ' Ракушек'"></span></span></td>
+							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${itemEntity.price} + ' Ракушек'"></span></span></td>
 						</tr>
 						<tr>
 							<td style="text-align: right;"><span style="font-size:12px;"><span style="font-size:12px;"><strong>Кол-во патронов:</strong></span></span></td>
-							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${item.bullet_quantity}"></span></span></td>
+							<td><span style="font-size:12px;"><span style="font-size:12px;" th:text="${itemEntity.bullet_quantity}"></span></span></td>
 						</tr>
 						<tr>
 							<td style="text-align: right;"><span style="font-size:12px;"><span style="font-size:12px;"><strong>Патроны:</strong></span></span></td>

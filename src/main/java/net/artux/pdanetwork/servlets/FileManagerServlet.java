@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.swing.filechooser.FileSystemView;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import org.apache.commons.fileupload.ParameterParser;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -51,8 +51,8 @@ public class FileManagerServlet extends HttpServlet {
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    Member member = (Member) request.getSession().getAttribute("m");
-    if (member!= null && member.getRole().equals("admin")) {
+    UserEntity userEntity = (UserEntity) request.getSession().getAttribute("m");
+    if (userEntity != null && userEntity.getRole().equals("admin")) {
       Files files = null;
       File file = null, parent;
       String path = request.getParameter("path"), type = request.getContentType(), search = request.getParameter("search"), mode;

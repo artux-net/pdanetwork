@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.profile.Note;
+import net.artux.pdanetwork.models.profile.NoteEntity;
 import net.artux.pdanetwork.service.note.NoteService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +19,18 @@ public class NoteController {
   private final NoteService noteService;
 
   @GetMapping
-  public List<Note> getNotes(){
+  public List<NoteEntity> getNotes(){
     return noteService.getNotes();
   }
 
   @PostMapping
-  public Note createNote(@RequestBody String title){
+  public NoteEntity createNote(@RequestBody String title){
     return noteService.createNote(title);
   }
 
   @PutMapping
-  public Note editNote(@RequestBody Note note){
-    return noteService.editNote(note);
+  public NoteEntity editNote(@RequestBody NoteEntity noteEntity){
+    return noteService.editNote(noteEntity);
   }
 
   @DeleteMapping

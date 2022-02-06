@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.friends;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.FriendModel;
 import net.artux.pdanetwork.models.MemberMapper;
 import net.artux.pdanetwork.models.Status;
@@ -58,8 +58,8 @@ public class FriendServiceIml implements FriendService {
   @Override
   @Transactional // TODO everywhere
   public Status addFriend(Integer pdaId) {
-    Member user = memberService.getMember();
-    Member another = memberService.getMemberByPdaId(pdaId);
+    UserEntity user = memberService.getMember();
+    UserEntity another = memberService.getMemberByPdaId(pdaId);
 
     Status status;
 

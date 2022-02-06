@@ -1,39 +1,33 @@
 package net.artux.pdanetwork.models;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.artux.pdanetwork.models.profile.Data;
-import net.artux.pdanetwork.models.profile.Note;
+import net.artux.pdanetwork.models.profile.NoteEntity;
 import net.artux.pdanetwork.utills.Security;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@lombok.Data
 @NoArgsConstructor
 //@RequiredArgsConstructor
-public class Member {
+@Entity
+@Table(name = "users")
+public class UserEntity extends BaseEntity {
 
-    @Id
-    private ObjectId _id;
-    @Indexed(unique = true)
     private String login;
     private String password;
-    @Indexed(unique = true)
     private String email;
     private String name;
-    @Indexed(unique = true)
     private String nickname;
     private String avatar;
     private String token;
-    @Indexed(unique = true)
     private int pdaId;
     private String role;
     private int blocked;
@@ -41,19 +35,26 @@ public class Member {
     private int xp;
     private int money;
     private String location;
-    private Data data;
-    public List<Integer> dialogs = new ArrayList<>();
+
+    //public Integer[] relations;
+
+
+    @OneToMany(fetch = FetchType.LAZY)
+    public List<NoteEntity> noteEntities;
+
+    //private Data data; - ok
+    /*public List<Integer> dialogs = new ArrayList<>();
     public List<ObjectId> subs = new ArrayList<>();
     public List<ObjectId> friends = new ArrayList<>();
     public List<ObjectId> requests = new ArrayList<>();
-    public List<Integer> relations = new ArrayList<>();
-    public List<Note> notes = new ArrayList<>();
-    public List<Integer> achievements = new ArrayList<>();
+
+
+    public List<Integer> achievements = new ArrayList<>();*/
     private Long lastModified;
     private Long registration;
     private Long lastLoginAt;
 
-    public Member(RegisterUser registerUser, int id, PasswordEncoder passwordEncoder) {
+    public UserEntity(RegisterUser registerUser, int id, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
@@ -65,11 +66,12 @@ public class Member {
         role = "user";
         blocked = group = xp = 0;
         location = "Ч-4";
-        data = new Data();
         money = 500;
+        lastModified = lastLoginAt = registration =Instant.now().toEpochMilli();
+
+        data = new Data();
         dialogs = new ArrayList<>();
         subs = friends = requests = new ArrayList<>();
-        lastModified = lastLoginAt = registration =Instant.now().toEpochMilli();
         relations = new ArrayList<>();
         for (int i = 0; i < 9; i++)
             relations.add(0);
@@ -80,16 +82,16 @@ public class Member {
         token = Security.encrypt(login + ":" + password);
     }
 
-    public Note addNote(String title, String content) {
-        Note note;
-        if (notes.size() != 0)
-            note = new Note(notes.get(notes.size() - 1).cid + 1,
+    /*public NoteEntity addNote(String title, String content) {
+        NoteEntity noteEntity;
+        if (noteEntities.size() != 0)
+            noteEntity = new NoteEntity(noteEntities.get(noteEntities.size() - 1).cid + 1,
                     title, content);
         else
-            note = new Note(1, title, content);
-        notes.add(note);
-        return note;
-    }
+            noteEntity = new NoteEntity(title, content);
+        noteEntities.add(noteEntity);
+        return noteEntity;
+    }*/
 
     public void money(int money) {
         this.money += money;

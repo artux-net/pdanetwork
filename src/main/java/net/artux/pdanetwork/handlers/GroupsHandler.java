@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.service.member.MemberService;
@@ -37,8 +37,8 @@ public class GroupsHandler extends SocketHandler {
   public void afterConnectionEstablished(WebSocketSession userSession){
     super.afterConnectionEstablished(userSession);
 
-    Member member = getMember(userSession);
-    int group = member.getGroup();
+    UserEntity userEntity = getMember(userSession);
+    int group = userEntity.getGroup();
     if (group != 0) {
         sendObject(userSession, lastMessages.get(group));
     } else {

@@ -8,20 +8,20 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = MemberMapperHelper.class)
 public interface MemberMapper {
 
-    UserInfo info(Member member);
-    List<UserInfo> info(List<Member> member);
-    RegisterUser regUser(Member member);
-    FriendModel friendModel(Member member);
-    MemberDto memberDto(Member member);
+    UserInfo info(UserEntity userEntity);
+    List<UserInfo> info(List<UserEntity> userEntity);
+    RegisterUser regUser(UserEntity userEntity);
+    FriendModel friendModel(UserEntity userEntity);
+    MemberDto memberDto(UserEntity userEntity);
 
     @Mapping(target = "friends", expression = "java(member.getFriends().size())")
     @Mapping(target = "subs", expression = "java(member.getSubs().size())")
     @Mapping(target = "achievements", expression = "java(member.getAchievements().size())")
-    Profile profile(Member member);
+    Profile profile(UserEntity userEntity);
 
-    default Profile profile(Member member, Member by){
-        Profile profile = profile(member);
-        profile.setFriendStatus(Profile.getFriendStatus(member, by));
+    default Profile profile(UserEntity userEntity, UserEntity by){
+        Profile profile = profile(userEntity);
+        profile.setFriendStatus(Profile.getFriendStatus(userEntity, by));
         return profile;
     }
 

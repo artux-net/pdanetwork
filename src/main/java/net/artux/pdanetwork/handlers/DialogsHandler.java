@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.communication.model.*;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.models.Profile;
@@ -31,15 +31,15 @@ public class DialogsHandler extends SocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession userSession){
     super.afterConnectionEstablished(userSession);
-    Member member = getMember(userSession);
-    sessions.put(member.getPdaId(), userSession);
-    sendObject(userSession, getDialogs(member));
+    UserEntity userEntity = getMember(userSession);
+    sessions.put(userEntity.getPdaId(), userSession);
+    sendObject(userSession, getDialogs(userEntity));
   }
 
-  private List<DialogResponse> getDialogs(Member member){
+  private List<DialogResponse> getDialogs(UserEntity userEntity){
     List<DialogResponse> response = new ArrayList<>();
-    int pda = member.getPdaId();
-    for (int id : member.getDialogs()) {
+    int pda = userEntity.getPdaId();
+    for (int id : userEntity.getDialogs()) {
       Conversation conversation = mongoMessages.getConversation(id);
 
       if (conversation.allMembers().size() <= 2) {
@@ -74,17 +74,17 @@ public class DialogsHandler extends SocketHandler {
 
   @Override
   public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage){
-    Member member = getMember(userSession);
+    UserEntity userEntity = getMember(userSession);
     //update conversation with new title, members, owners
     ConversationRequest request = get(ConversationRequest.class, webSocketMessage);
     if (request.cid == 0){
-      if (member.subs.containsAll(request.members))
-        mongoMessages.newConversation(member.getPdaId(), request);
+      if (userEntity.subs.containsAll(request.members))
+        mongoMessages.newConversation(userEntity.getPdaId(), request);
       else
         sendError(userSession, "Участники должны находится у вас в друзьях");
     }else{
-      if (mongoMessages.getConversation(request.cid).owners.contains(member.getPdaId()))
-        if (member.subs.containsAll(request.members))
+      if (mongoMessages.getConversation(request.cid).owners.contains(userEntity.getPdaId()))
+        if (userEntity.subs.containsAll(request.members))
           mongoMessages.updateConversation(request);
         else
           sendError(userSession, "Участники должны находится у вас в друзьях");

@@ -2,8 +2,8 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Weapon;
+import net.artux.pdanetwork.models.profile.items.ItemEntity;
+import net.artux.pdanetwork.models.profile.items.WeaponEntity;
 import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.Types;
 import org.springframework.stereotype.Controller;
@@ -35,18 +35,18 @@ public class EncController {
 
   @GetMapping("/{type}/{id}")
   public String getItemPage(Model model, @PathVariable Integer type, @PathVariable Integer id){
-    Item item = types.getItem(type,id);
+    ItemEntity itemEntity = types.getItem(type,id);
     model.addAttribute("enc", types.getEncItem(type,id));
-    model.addAttribute("item", item);
+    model.addAttribute("item", itemEntity);
 
     if (type == 4) {
       return "enc/armor";
     } else if(type == 1 || type == 0){
-      Weapon weapon = (Weapon) item;
-      model.addAttribute("precision", weapon.getPrecision());
-      model.addAttribute("damage", weapon.getDamage());
-      model.addAttribute("speed", weapon.getSpeed());
-      model.addAttribute("bullet", types.getItem(2, weapon.getBullet_id()));
+      WeaponEntity weaponEntity = (WeaponEntity) itemEntity;
+      model.addAttribute("precision", weaponEntity.getPrecision());
+      model.addAttribute("damage", weaponEntity.getDamage());
+      model.addAttribute("speed", weaponEntity.getSpeed());
+      model.addAttribute("bullet", types.getItem(2, weaponEntity.getBullet_id()));
       return "enc/weapon";
     }
     return "enc/weapon";

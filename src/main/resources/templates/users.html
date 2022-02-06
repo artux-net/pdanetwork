@@ -21,7 +21,7 @@
                 <td><b>Ранг</b></td>
                 <td><b>Прочее</b></td>
             </tr>
-            <c:forEach items="${users}" var="user" varStatus="item">
+            <c:forEach itemEntities="${users}" var="user" varStatus="itemEntity">
                 <tr>
                     <td>${user.pdaId}</td>
                     <td>${user.login}</td>

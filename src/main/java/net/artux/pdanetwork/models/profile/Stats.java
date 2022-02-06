@@ -7,7 +7,6 @@ import java.util.List;
 public class Stats {
 
     private List<Achievement> achievements = new ArrayList<>();
-    private Battles battles = new Battles();
 
     public Stats() {
     }
@@ -18,14 +17,6 @@ public class Stats {
 
     public void setAchievements(List<Achievement> achievements) {
         this.achievements = achievements;
-    }
-
-    public Battles getBattles() {
-        return battles;
-    }
-
-    public void setBattles(Battles battles) {
-        this.battles = battles;
     }
 
 }

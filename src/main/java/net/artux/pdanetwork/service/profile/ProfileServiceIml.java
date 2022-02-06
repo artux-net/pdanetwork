@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.profile;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.MemberMapper;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.profile.Achievement;
@@ -34,9 +34,9 @@ public class ProfileServiceIml implements ProfileService {
   @Override
   public List<Achievement> getAchievements(Integer pdaId) {
     List<Achievement> achievementsOfMember = new ArrayList<>();
-    Member member = memberService.getMemberByPdaId(pdaId);
+    UserEntity userEntity = memberService.getMemberByPdaId(pdaId);
     for (Achievement achievement : achievementsService.getAchievements()) {
-      if (member.achievements.contains(achievement.cid))
+      if (userEntity.achievements.contains(achievement.cid))
         achievementsOfMember.add(achievement);
     }
     return achievementsOfMember;

@@ -1,25 +1,30 @@
 package net.artux.pdanetwork.models.profile;
 
+import lombok.Data;
+import net.artux.pdanetwork.models.BaseEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.Instant;
 
-public class Note {
+@Data
+@Entity
+@Table(name = "note")
+public class NoteEntity extends BaseEntity {
 
-    public int cid;
     public String title;
     public String content;
     public long time;
 
-    public Note() {
+    public NoteEntity() {
     }
 
-    public Note(int cid, String title) {
-        this.cid = cid;
+    public NoteEntity(String title) {
         this.title = title;
         time = Instant.now().toEpochMilli();
     }
 
-    public Note(int cid, String title, String content) {
-        this.cid = cid;
+    public NoteEntity(String title, String content) {
         this.title = title;
         this.content = content;
         time = Instant.now().toEpochMilli();

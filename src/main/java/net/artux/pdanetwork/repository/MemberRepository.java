@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.repository;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public interface MemberRepository extends MongoRepository<Member, ObjectId> {
+public interface MemberRepository extends MongoRepository<UserEntity, ObjectId> {
 
-    Optional<Member> getMemberBy_id(ObjectId objectId);
-    Optional<Member> getMemberByPdaId(int pdaId);
-    Optional<Member> getMemberByLogin(String login);
-    Optional<Member> getMemberByEmail(String email);
-    Optional<Member> findTopByOrderByPdaIdDesc();
+    Optional<UserEntity> getMemberBy_id(ObjectId objectId);
+    Optional<UserEntity> getMemberByPdaId(int pdaId);
+    Optional<UserEntity> getMemberByLogin(String login);
+    Optional<UserEntity> getMemberByEmail(String email);
+    Optional<UserEntity> findTopByOrderByPdaIdDesc();
 
 
 }

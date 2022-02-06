@@ -1,15 +1,15 @@
 package net.artux.pdanetwork.service.note;
 
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.profile.Note;
+import net.artux.pdanetwork.models.profile.NoteEntity;
 
 import java.util.List;
 
 public interface NoteService {
 
-  List<Note> getNotes();
-  Note createNote(String content);
-  Note editNote(Note note);
+  List<NoteEntity> getNotes();
+  NoteEntity createNote(String content);
+  NoteEntity editNote(NoteEntity noteEntity);
   Status deleteNote(Integer id);
 
 }

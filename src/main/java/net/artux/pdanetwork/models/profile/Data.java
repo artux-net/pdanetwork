@@ -2,10 +2,10 @@ package net.artux.pdanetwork.models.profile;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.artux.pdanetwork.models.profile.items.Armor;
-import net.artux.pdanetwork.models.profile.items.Artifact;
-import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Weapon;
+import net.artux.pdanetwork.models.profile.items.ArmorEntity;
+import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
+import net.artux.pdanetwork.models.profile.items.ItemEntity;
+import net.artux.pdanetwork.models.profile.items.WeaponEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,30 +20,30 @@ public class Data {
     private Equipment equipment = new Equipment();
     private Stats stats = new Stats();
 
-    public List<Armor> armors = new ArrayList<>();
-    public List<Weapon> weapons = new ArrayList<>();
-    public List<Artifact> artifacts = new ArrayList<>();
-    public List<Item> items = new ArrayList<>();
+    public List<ArmorEntity> armorEntities = new ArrayList<>();
+    public List<WeaponEntity> weaponEntities = new ArrayList<>();
+    public List<ArtifactEntity> artifactEntities = new ArrayList<>();
+    public List<ItemEntity> itemEntities = new ArrayList<>();
 
     public List<Story> stories = new ArrayList<>();
-    public Parameters parameters = new Parameters();
+    public ParameterEntity parameterEntity = new ParameterEntity();
     private HashMap<String, String> temp = new HashMap<>();
 
     public Data() {
     }
 
-    public List<Item> getAllItems() {
-        List<Item> items = new ArrayList<>(armors);
-        items.addAll(weapons);
-        items.addAll(artifacts);
-        items.addAll(this.items);
-        return items;
+    public List<ItemEntity> getAllItems() {
+        List<ItemEntity> itemEntities = new ArrayList<>(armorEntities);
+        itemEntities.addAll(weaponEntities);
+        itemEntities.addAll(artifactEntities);
+        itemEntities.addAll(this.itemEntities);
+        return itemEntities;
     }
 
-    public Optional<Item> getItemByHashCode(int hashCode){
-        for (Item item:getAllItems()){
-            if (item.hashCode() == hashCode){
-                return Optional.of(item);
+    public Optional<ItemEntity> getItemByHashCode(int hashCode){
+        for (ItemEntity itemEntity :getAllItems()){
+            if (itemEntity.hashCode() == hashCode){
+                return Optional.of(itemEntity);
             }
         }
         return Optional.empty();

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Weapon extends Item {
+public class WeaponEntity extends ItemEntity {
 
     private float precision;
     private float speed;
@@ -19,12 +19,12 @@ public class Weapon extends Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Weapon weapon = (Weapon) o;
-        return Float.compare(weapon.precision, precision) == 0 &&
-                Float.compare(weapon.speed, speed) == 0 &&
-                Float.compare(weapon.damage, damage) == 0 &&
-                Float.compare(weapon.condition, condition) == 0 &&
-                bullet_id == weapon.bullet_id;
+        WeaponEntity weaponEntity = (WeaponEntity) o;
+        return Float.compare(weaponEntity.precision, precision) == 0 &&
+                Float.compare(weaponEntity.speed, speed) == 0 &&
+                Float.compare(weaponEntity.damage, damage) == 0 &&
+                Float.compare(weaponEntity.condition, condition) == 0 &&
+                bullet_id == weaponEntity.bullet_id;
     }
 
     @Override

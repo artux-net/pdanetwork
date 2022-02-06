@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.email;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.apache.commons.io.IOUtils;
@@ -56,7 +56,7 @@ public class EmailServiceIml implements EmailService {
     mailSender.send(mimeMessage);
   }
 
-  public void askForPassword(Member user, String token) {
+  public void askForPassword(UserEntity user, String token) {
     sendSimpleMessage(user.getEmail(), "Восстановление пароля", user.getLogin() +", "
             + "\n\n ваша ссылка для смены пароля: " +valuesService.getAddress() +"/reset/password?t=" + token
             + "\n\n Действует в течение 30 минут.");

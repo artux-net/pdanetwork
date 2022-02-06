@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +18,8 @@ import java.util.List;
 public class Types implements FileService {
 
     private List<ItemType> itemTypes = new ArrayList<>();
-    private static HashMap<Integer, List<? extends Item>> items = new HashMap<>();
-    private static HashMap<Integer, List<EncItem>> encItems = new HashMap<>();
+    private static HashMap<Integer, List<? extends ItemEntity>> items = new HashMap<>();
+    private static HashMap<Integer, List<EncItemEntity>> encItems = new HashMap<>();
 
     private final ValuesService valuesService;
         /*
@@ -62,8 +61,8 @@ public class Types implements FileService {
     }
 
 
-    private <T extends Item> List<T> getType(int type) {
-        Class<? extends Item> c = getClassByType(type);
+    private <T extends ItemEntity> List<T> getType(int type) {
+        Class<? extends ItemEntity> c = getClassByType(type);
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
@@ -74,8 +73,8 @@ public class Types implements FileService {
         return null;
     }
 
-    private List<EncItem> getEncType(int type) {
-        Class c = EncItem.class;
+    private List<EncItemEntity> getEncType(int type) {
+        Class c = EncItemEntity.class;
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
             Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
@@ -86,51 +85,51 @@ public class Types implements FileService {
         return null;
     }
 
-    private Class<? extends Item> getClassByType(int type){
+    private Class<? extends ItemEntity> getClassByType(int type){
         switch (type){
             case 0:
             case 1:
-                return Weapon.class;
+                return WeaponEntity.class;
             case 3:
-                return Artifact.class;
+                return ArtifactEntity.class;
             case 4:
-                return Armor.class;
+                return ArmorEntity.class;
             default:
-                return Item.class;
+                return ItemEntity.class;
 
         }
     }
 
-    public List<? extends Item> getTypeList(int type){
+    public List<? extends ItemEntity> getTypeList(int type){
         return items.get(type);
     }
 
-    public List<EncItem> getEncTypeList(int type){
+    public List<EncItemEntity> getEncTypeList(int type){
         return encItems.get(type);
     }
 
-    public Item getItem(int type, int id) {
-        for (Item item : getTypeList(type)) {
-            if (item.getId() == id) {
-                item.setType(type);
-                return item;
+    public ItemEntity getItem(int type, int id) {
+        for (ItemEntity itemEntity : getTypeList(type)) {
+            if (itemEntity.getId() == id) {
+                itemEntity.setType(type);
+                return itemEntity;
             }
         }
         return null;
     }
 
-    public List<? extends Item> getItems(int type, List<Integer> ids) {
-        List<Item> items = new ArrayList<>();
-        for (Item item : getTypeList(type)) {
-            if (ids.contains(item.getId())) {
-                item.setType(type);
-                items.add(item);
+    public List<? extends ItemEntity> getItems(int type, List<Integer> ids) {
+        List<ItemEntity> itemEntities = new ArrayList<>();
+        for (ItemEntity itemEntity : getTypeList(type)) {
+            if (ids.contains(itemEntity.getId())) {
+                itemEntity.setType(type);
+                itemEntities.add(itemEntity);
             }
         }
-        return items;
+        return itemEntities;
     }
-    public EncItem getEncItem(int type, int id) {
-        for (EncItem item : getEncTypeList(type)) {
+    public EncItemEntity getEncItem(int type, int id) {
+        for (EncItemEntity item : getEncTypeList(type)) {
             if (item.getId() == id) {
                 item.setType(type);
                 return item;

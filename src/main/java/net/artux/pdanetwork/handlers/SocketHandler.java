@@ -3,7 +3,7 @@ package net.artux.pdanetwork.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.service.member.MemberService;
 import net.artux.pdanetwork.service.util.Utils;
@@ -62,18 +62,18 @@ public abstract class SocketHandler implements WebSocketHandler {
 
   }
 
-  protected Member getMember(WebSocketSession userSession){
+  protected UserEntity getMember(WebSocketSession userSession){
     if (userSession.getAttributes().containsKey(USER))
-      return (Member) userSession.getAttributes().get(USER);
+      return (UserEntity) userSession.getAttributes().get(USER);
     String base64 = userSession.getHandshakeHeaders().getFirst("authorization");
-    Member member = memberService.getMember(base64);
-    if (member == null) {
+    UserEntity userEntity = memberService.getMember(base64);
+    if (userEntity == null) {
       reject(userSession, "Авторизация не пройдена");
       throw new RuntimeException("Авторизация не пройдена");
     }
     else {
-      userSession.getAttributes().put(USER, member);
-      return member;
+      userSession.getAttributes().put(USER, userEntity);
+      return userEntity;
     }
   }
 

@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.communication.model.Conversation;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
@@ -36,8 +36,8 @@ public class MessagesHandler extends SocketHandler {
     super.afterConnectionEstablished(userSession);
     Map<String, String> params = ServletHelper.splitQuery(userSession.getUri().getRawQuery());
 
-    Member member = getMember(userSession);
-    int pdaId = member.getPdaId();
+    UserEntity userEntity = getMember(userSession);
+    int pdaId = userEntity.getPdaId();
     //ServletContext.log("Opened session(" + userSession.getId() + ") for pda: " + pdaId + ", query: " + userSession.getQueryString());
 
     if (params.containsKey("to")) {
@@ -79,7 +79,7 @@ public class MessagesHandler extends SocketHandler {
   public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
     updateDialog(userSession);
     int conversation = (int) userSession.getAttributes().get("conversation");
-    UserMessage userMessage = new UserMessage(conversation, (Member) userSession.getAttributes().get("user"), webSocketMessage.getPayload().toString());
+    UserMessage userMessage = new UserMessage(conversation, (UserEntity) userSession.getAttributes().get("user"), webSocketMessage.getPayload().toString());
 
     for (WebSocketSession session : conversations.get(conversation)) {
       sendObject(session,userMessage);

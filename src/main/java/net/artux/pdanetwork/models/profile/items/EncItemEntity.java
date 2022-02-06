@@ -1,15 +1,13 @@
 package net.artux.pdanetwork.models.profile.items;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Setter
-public class EncItem extends Item{
+public class EncItemEntity extends ItemEntity {
 
     protected String desc;
     protected String content;

@@ -10,12 +10,11 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
-import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
@@ -41,7 +40,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 public class MongoUsers {
 
     private final MongoClient mongoClient;
-    private final MongoCollection<Member> table;
+    private final MongoCollection<UserEntity> table;
 
     // global settings for all users
     private final int daysValidAccount = 90;
@@ -60,7 +59,7 @@ public class MongoUsers {
         mongoClient = MongoClients.create(clientSettings);
         MongoDatabase db = mongoClient.getDatabase("test");
 
-        table = db.getCollection("member", Member.class);
+        table = db.getCollection("member", UserEntity.class);
         //table.createIndex(Indexes.ascending("token", "pdaId", "login"));
     }
 
@@ -70,7 +69,7 @@ public class MongoUsers {
 
     public int add(RegisterUser user){
         int pdaId = getPdaID();
-        table.insertOne(new Member(user, pdaId, new BCryptPasswordEncoder()));
+        table.insertOne(new UserEntity(user, pdaId, new BCryptPasswordEncoder()));
 
         table.createIndex(Indexes.ascending("lastLoginAt"),
                 new IndexOptions().expireAfter(Integer.toUnsignedLong( daysValidAccount * 24 * 3600), TimeUnit.SECONDS));
@@ -79,17 +78,17 @@ public class MongoUsers {
     }
 
     private int getPdaID(){
-        Member member = table.find().sort(new Document("_id", -1)).first();
+        UserEntity userEntity = table.find().sort(new Document("_id", -1)).first();
 
-        if (member != null) {
-            return member.getPdaId() + 1;
+        if (userEntity != null) {
+            return userEntity.getPdaId() + 1;
         } else {
             return 1;
         }
     }
 
     public boolean isBlocked(String token){
-        Member result = getMember(token);
+        UserEntity result = getMember(token);
 
         if(result!=null) {
             return result.getBlocked() > 0;
@@ -97,7 +96,7 @@ public class MongoUsers {
     }
 
     public boolean setBlocked(int pdaId, int blocked){
-        Member result = getMember(pdaId);
+        UserEntity result = getMember(pdaId);
 
         if(result!=null) {
             result.setBlocked(blocked);
@@ -105,12 +104,12 @@ public class MongoUsers {
             return true;
         } else return false;
     }
-    public Member getById(int pdaId) {
+    public UserEntity getById(int pdaId) {
         return getMember(pdaId);
     }
 
-    public Member getByToken(String token){
-        Member result = getMember(token);
+    public UserEntity getByToken(String token){
+        UserEntity result = getMember(token);
 
         if(result!=null) {
             table.updateOne(
@@ -121,7 +120,7 @@ public class MongoUsers {
     }
 
     public int getPdaIdByToken(String token){
-        Member result = getMember(token);
+        UserEntity result = getMember(token);
         //TODO if 0 then... What?
         if (result!=null)
             return result.getPdaId();
@@ -129,8 +128,8 @@ public class MongoUsers {
             return 0;
     }
 
-    public Member getEmailUser(String loginOrEmail){
-        Member element = getMember("login", loginOrEmail);
+    public UserEntity getEmailUser(String loginOrEmail){
+        UserEntity element = getMember("login", loginOrEmail);
         if (element!=null) {
             return element;
         }
@@ -141,7 +140,7 @@ public class MongoUsers {
     }
 
     public Profile getProfileByPdaId(int pdaId){
-        Member element = getMember(pdaId);
+        UserEntity element = getMember(pdaId);
 
         if (element!=null) {
             return new Profile(element);
@@ -150,8 +149,8 @@ public class MongoUsers {
     }
 
     public Profile getProfileByPdaId(String token, int pdaId) {
-        Member user = getMember(token);
-        Member element = getMember(pdaId);
+        UserEntity user = getMember(token);
+        UserEntity element = getMember(pdaId);
 
         if (element != null) {
             return new Profile(element, user);
@@ -164,9 +163,9 @@ public class MongoUsers {
     }
 
     public void updatePassword(int pdaId, String password) {
-        Member member = getMember(pdaId);
-        member.hashPassword(password);
-        updateMember(member);
+        UserEntity userEntity = getMember(pdaId);
+        userEntity.hashPassword(password);
+        updateMember(userEntity);
     }
 
     public void deleteByLogin(String login) {
@@ -206,7 +205,7 @@ public class MongoUsers {
     }
 
     public Status tryLogin(String emailOrLogin, String password){
-        Member element = getMember("login", emailOrLogin);
+        UserEntity element = getMember("login", emailOrLogin);
 
         if(element!=null){
             return checkPassword(element, password, true);
@@ -222,7 +221,7 @@ public class MongoUsers {
     }
 
     public Status tryAdminLogin(String emailOrLogin, String password){
-        Member element = getMember("login", emailOrLogin);
+        UserEntity element = getMember("login", emailOrLogin);
 
         if(element!=null){
             return getLoginAdminStatus(password, element);
@@ -237,7 +236,7 @@ public class MongoUsers {
         }
     }
 
-    private Status getLoginAdminStatus(String password, Member element) {
+    private Status getLoginAdminStatus(String password, UserEntity element) {
         if (element.getRole().equals("admin")) {
             return checkPassword(element, password, false);
         } else {
@@ -246,7 +245,7 @@ public class MongoUsers {
         }
     }
 
-    private Status checkPassword(Member element, String password, boolean resetToken) {
+    private Status checkPassword(UserEntity element, String password, boolean resetToken) {
         if (element.getPassword().equals(String.valueOf(password.hashCode()))) {
             if (resetToken) {
                 element.setToken(Security.encrypt(element.getLogin() + ":" + password));
@@ -260,8 +259,8 @@ public class MongoUsers {
     }
 
     public void friendRequest(String token, int id){
-        Member user = getMember(token);
-        Member newFriend = getMember(id);
+        UserEntity user = getMember(token);
+        UserEntity newFriend = getMember(id);
 
         /*user.subs.add(newFriend.getPdaId());
         updateMember(user);
@@ -275,7 +274,7 @@ public class MongoUsers {
     }*/
 
     public boolean addFriend(String token, Integer id) {
-        Member user = getMember(token);
+        UserEntity user = getMember(token);
         if (user.requests.contains(id)) {
             user.requests.remove(id);
             if (!user.subs.contains(id)) {
@@ -289,12 +288,12 @@ public class MongoUsers {
     }
 
     public boolean removeFriend(String token, Integer id) {
-        Member user = getMember(token);
+        UserEntity user = getMember(token);
         if (user.subs.contains(id)) {
             user.subs.remove(id);
             updateMember(user);
 
-            Member oldFriend = getMember(id);
+            UserEntity oldFriend = getMember(id);
             if (oldFriend.subs.contains(user.getPdaId())) {
                 //user.requests.add(id);
                 updateMember(user);
@@ -308,7 +307,7 @@ public class MongoUsers {
     }
 
     public void addDialog(int pdaId, int conversation) {
-        Member user = getMember(pdaId);
+        UserEntity user = getMember(pdaId);
 
         if (user != null) {
             user.dialogs.add(conversation);
@@ -317,7 +316,7 @@ public class MongoUsers {
     }
 
     public void updateDialog(int pdaId, Integer conversation) {
-        Member user = getMember(pdaId);
+        UserEntity user = getMember(pdaId);
         if (user != null) {
             user.dialogs.remove(conversation);
             user.dialogs.add(0, conversation);
@@ -325,21 +324,21 @@ public class MongoUsers {
         }
     }
 
-    public Member getMember(int pdaId) {
+    public UserEntity getMember(int pdaId) {
         Document query = new Document();
         query.put("pdaId", pdaId);
 
         return table.find(query).first();
     }
 
-    private Member getMember(String token) {
+    private UserEntity getMember(String token) {
         Document query = new Document();
         query.put("token", token);
 
         return table.find(query).first();
     }
 
-    private Member getMember(String key, Object value) {
+    private UserEntity getMember(String key, Object value) {
         Document query = new Document();
         query.put(key, value);
 
@@ -352,9 +351,9 @@ public class MongoUsers {
         return users;
     }
 
-    public UpdateResult updateMember(@NotNull Member member) {
-        member.setLastModified(Instant.now().toEpochMilli());
-        return table.replaceOne(eq("pdaId", member.getPdaId()), member);
+    public UpdateResult updateMember(@NotNull UserEntity userEntity) {
+        userEntity.setLastModified(Instant.now().toEpochMilli());
+        return table.replaceOne(eq("pdaId", userEntity.getPdaId()), userEntity);
     }
 
     public UpdateResult changeField(Object token, String field, Object newValue) {

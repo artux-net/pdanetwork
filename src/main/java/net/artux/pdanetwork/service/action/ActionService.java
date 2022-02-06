@@ -1,16 +1,16 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.SellerDto;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.Equipment;
 import net.artux.pdanetwork.models.profile.Story;
-import net.artux.pdanetwork.models.profile.items.Armor;
-import net.artux.pdanetwork.models.profile.items.Artifact;
-import net.artux.pdanetwork.models.profile.items.Item;
-import net.artux.pdanetwork.models.profile.items.Weapon;
+import net.artux.pdanetwork.models.profile.items.ArmorEntity;
+import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
+import net.artux.pdanetwork.models.profile.items.ItemEntity;
+import net.artux.pdanetwork.models.profile.items.WeaponEntity;
 import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
@@ -29,9 +29,9 @@ public class ActionService {
     private final Types types;
     private final SellersService sellersService;
 
-    public Member doUserActions(HashMap<String, List<String>> map, Member member) {
+    public UserEntity doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
         try {
-            Data data = member.getData();
+            Data data = userEntity.getData();
             for (String key : map.keySet()) {
                 switch (key) {
                     case "add":
@@ -41,28 +41,28 @@ public class ActionService {
                                 data = addItems(data, values);
                             } else if (values.length == 2) {
                                 //add_value
-                                if (!data.parameters.values.containsKey(value.split(":")[0])) {
-                                    data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                                if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
+                                    data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
                                 }
                             } else {
                                 //add_param
-                                if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
+                                if (!data.parameterEntity.keys.contains(value)) data.parameterEntity.keys.add(value);
                             }
                         }
                         break;
                     case "add_param":
                         for (String value : map.get(key)) {
-                            if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
+                            if (!data.parameterEntity.keys.contains(value)) data.parameterEntity.keys.add(value);
                         }
                         break;
                     case "add_value":
                         for (String value : map.get(key)) {
-                            if (!data.parameters.values.containsKey(value.split(":")[0])) {
-                                data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                            if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
+                                data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
                             } else {
-                                data.parameters.
+                                data.parameterEntity.
                                         values.put(value.split(":")[0],
-                                                data.parameters.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
+                                                data.parameterEntity.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
                             }
                         }
                         break;
@@ -80,14 +80,14 @@ public class ActionService {
                             if (vals.length == 3) {
                                 data = removeItems(data, vals);
                             }
-                            data.parameters.keys.remove(pass);
-                            data.parameters.values.remove(pass);
+                            data.parameterEntity.keys.remove(pass);
+                            data.parameterEntity.values.remove(pass);
                         }
                         break;
                     case "=":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            data.parameters.values.put(vals[0], Integer.valueOf(vals[1]));
+                            data.parameterEntity.values.put(vals[0], Integer.valueOf(vals[1]));
                         }
                         break;
                     case "+":
@@ -95,9 +95,9 @@ public class ActionService {
                             String[] vals = pass.split(":");
                             if (vals[0].contains("relation")) {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
-                                member.relations.set(group, member.relations.get(group) + Integer.parseInt(vals[1]));
+                                userEntity.relations.set(group, userEntity.relations.get(group) + Integer.parseInt(vals[1]));
                             } else
-                                data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) + Integer.valueOf(vals[1]));
+                                data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) + Integer.valueOf(vals[1]));
                         }
                         break;
                     case "-":
@@ -105,47 +105,48 @@ public class ActionService {
                             String[] vals = pass.split(":");
                             if (vals[0].contains("relation")) {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
-                                member.relations.set(group, member.relations.get(group) - Integer.parseInt(vals[1]));
+                                userEntity.relations.set(group, userEntity.relations.get(group) - Integer.parseInt(vals[1]));
                             } else
-                                data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) - Integer.parseInt(vals[1]));
+                                data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) - Integer.parseInt(vals[1]));
                         }
                         break;
                     case "*":
                         for (String pass : map.get(key)) {
                             String[] vals = pass.split(":");
-                            data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) * Integer.parseInt(vals[1]));
+                            data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) * Integer.parseInt(vals[1]));
                         }
                         break;
                     case "money":
                         for (String pass : map.get(key))
-                            member.money(Integer.parseInt(pass));
+                            userEntity.money(Integer.parseInt(pass));
                         break;
                     case "xp":
                         for (String pass : map.get(key))
-                            member.xp(Integer.parseInt(pass));
+                            userEntity.xp(Integer.parseInt(pass));
                         break;
                     case "note":
                         List<String> content = map.get(key);
-                        if (content.size() == 2)
-                            member.addNote(content.get(0), content.get(1));
+                        //TODO with notes service
+                       /* if (content.size() == 2)
+                            userEntity.addNote(content.get(0), content.get(1));
                         else if (content.size() == 1)
-                            member.addNote("Новая заметка", content.get(1));
+                            userEntity.addNote("Новая заметка", content.get(1));*/
                         break;
                     case "achieve":
                         for (String pass : map.get(key))
-                            member.achievements.add(Integer.parseInt(pass));
+                            userEntity.achievements.add(Integer.parseInt(pass));
                         break;
                     case "location":
                         for (String pass : map.get(key))
-                            member.setLocation(pass);
+                            userEntity.setLocation(pass);
                         break;
                     case "reset":
                         if (map.get(key).size() == 0) {
-                            member.setMoney(0);
-                            data.weapons = new ArrayList<>();
-                            data.armors = new ArrayList<>();
-                            data.artifacts = new ArrayList<>();
-                            data.items = new ArrayList<>();
+                            userEntity.setMoney(0);
+                            data.weaponEntities = new ArrayList<>();
+                            data.armorEntities = new ArrayList<>();
+                            data.artifactEntities = new ArrayList<>();
+                            data.itemEntities = new ArrayList<>();
                         } else {
                             for (String pass : map.get(key))
                                 if (isInteger(pass)) {
@@ -157,7 +158,7 @@ public class ActionService {
                                         }
                                 } else if (pass.contains("relation")) {
                                     int group = Integer.parseInt(pass.split("_")[1]);
-                                    member.relations.set(group, 0);
+                                    userEntity.relations.set(group, 0);
                                 }
                         }
                         break;
@@ -195,50 +196,50 @@ public class ActionService {
                         break;
                 }
             }
-            member.setData(data);
-            return member;
+            userEntity.setData(data);
+            return userEntity;
         } catch (Exception e) {
             e.printStackTrace();
-            return member;
+            return userEntity;
         }
     }
 
-    public Status set(Member member, @NotNull int hashCode) {
-        Equipment equipment = member.getData().getEquipment();
-        Data data = member.getData();
-        Optional<Item> itemOptional = data.getItemByHashCode(hashCode);
+    public Status set(UserEntity userEntity, @NotNull int hashCode) {
+        Equipment equipment = userEntity.getData().getEquipment();
+        Data data = userEntity.getData();
+        Optional<ItemEntity> itemOptional = data.getItemByHashCode(hashCode);
         if (itemOptional.isPresent()) {
-            Item item = itemOptional.get();
-            if (item instanceof Weapon) {
-                Weapon old;
+            ItemEntity itemEntity = itemOptional.get();
+            if (itemEntity instanceof WeaponEntity) {
+                WeaponEntity old;
 
-                if (item.getType() == 0)
+                if (itemEntity.getType() == 0)
                     old = equipment.getFirstWeapon();
                 else
                     old = equipment.getSecondWeapon();
 
 
-                member.setData(
+                userEntity.setData(
                         addItems(data, old));
-                member.setData(
-                        deleteItem(data, item));
+                userEntity.setData(
+                        deleteItem(data, itemEntity));
 
-                if (item.getType() == 0)
-                    equipment.setFirstWeapon((Weapon) item);
+                if (itemEntity.getType() == 0)
+                    equipment.setFirstWeapon((WeaponEntity) itemEntity);
                 else
-                    equipment.setSecondWeapon((Weapon) item);
+                    equipment.setSecondWeapon((WeaponEntity) itemEntity);
 
                 data.setEquipment(equipment);
                 return new Status(true, "Success.");
-            } else if (item instanceof Armor) {
-                Armor old = equipment.getArmor();
+            } else if (itemEntity instanceof ArmorEntity) {
+                ArmorEntity old = equipment.getArmor();
 
-                member.setData(
+                userEntity.setData(
                         addItems(data, old));
-                member.setData(
-                        deleteItem(data, item));
+                userEntity.setData(
+                        deleteItem(data, itemEntity));
 
-                equipment.setArmor((Armor) item);
+                equipment.setArmor((ArmorEntity) itemEntity);
                 data.setEquipment(equipment);
                 return new Status(true, "Success.");
             } else return new Status(false, "Can not set this item.");
@@ -246,53 +247,53 @@ public class ActionService {
             return new Status(false, "You don't have this item.");
     }
 
-    public Status sell(Member member, int hashCode) {
-        Data data = member.getData();
-        Optional<Item> itemOptional = data.getItemByHashCode(hashCode);
+    public Status sell(UserEntity userEntity, int hashCode) {
+        Data data = userEntity.getData();
+        Optional<ItemEntity> itemOptional = data.getItemByHashCode(hashCode);
         if (itemOptional.isPresent()) {
-            Item item = itemOptional.get();
+            ItemEntity itemEntity = itemOptional.get();
             boolean removed = false;
 
-            switch (item.getType()) {
+            switch (itemEntity.getType()) {
                 case 0:
                 case 1:
-                    for (int i = 0; i < data.weapons.size(); i++) {
-                        if (data.weapons.get(i).equals(item)) {
-                            member.setMoney(member.getMoney() + data.weapons.get(i).priceToSell());
-                            data.weapons.remove(i);
+                    for (int i = 0; i < data.weaponEntities.size(); i++) {
+                        if (data.weaponEntities.get(i).equals(itemEntity)) {
+                            userEntity.setMoney(userEntity.getMoney() + data.weaponEntities.get(i).priceToSell());
+                            data.weaponEntities.remove(i);
                             removed = true;
                             break;
                         }
                     }
                 case 2:
-                    for (int i = 0; i < data.items.size(); i++) {
-                        if (data.items.get(i).equals(item)) {
-                            member.setMoney(member.getMoney() + data.items.get(i).priceToSell());
-                            data.items.remove(i);
+                    for (int i = 0; i < data.itemEntities.size(); i++) {
+                        if (data.itemEntities.get(i).equals(itemEntity)) {
+                            userEntity.setMoney(userEntity.getMoney() + data.itemEntities.get(i).priceToSell());
+                            data.itemEntities.remove(i);
                             removed = true;
                             break;
                         }
                     }
                 case 3:
-                    for (int i = 0; i < data.artifacts.size(); i++) {
-                        if (data.artifacts.get(i).equals(item)) {
-                            member.setMoney(member.getMoney() + data.artifacts.get(i).priceToSell());
-                            data.artifacts.remove(i);
+                    for (int i = 0; i < data.artifactEntities.size(); i++) {
+                        if (data.artifactEntities.get(i).equals(itemEntity)) {
+                            userEntity.setMoney(userEntity.getMoney() + data.artifactEntities.get(i).priceToSell());
+                            data.artifactEntities.remove(i);
                             removed = true;
                             break;
                         }
                     }
                 case 4:
-                    for (int i = 0; i < data.armors.size(); i++) {
-                        if (data.armors.get(i).equals(item)) {
-                            member.setMoney(member.getMoney() + data.armors.get(i).priceToSell());
-                            data.armors.remove(i);
+                    for (int i = 0; i < data.armorEntities.size(); i++) {
+                        if (data.armorEntities.get(i).equals(itemEntity)) {
+                            userEntity.setMoney(userEntity.getMoney() + data.armorEntities.get(i).priceToSell());
+                            data.armorEntities.remove(i);
                             removed = true;
                             break;
                         }
                     }
             }
-            member.setData(data);
+            userEntity.setData(data);
             if (removed)
                 return new Status(true, "Предмет продан.");
             else
@@ -309,13 +310,13 @@ public class ActionService {
         } else return false;
     }*/
 
-    public Status buy(Member member, int itemHash, int sellerId) {
+    public Status buy(UserEntity userEntity, int itemHash, int sellerId) {
         SellerDto seller = sellersService.getSellerDto(sellerId);
-        Optional<Item> optionalItem = seller.getItemByHashCode(itemHash);
+        Optional<ItemEntity> optionalItem = seller.getItemByHashCode(itemHash);
         if (optionalItem.isPresent()) {
-            Item item = optionalItem.get();
-            if (member.buy(item.sellerPrice())) {
-                member.setData(addItems(member.getData(), item));
+            ItemEntity itemEntity = optionalItem.get();
+            if (userEntity.buy(itemEntity.sellerPrice())) {
+                userEntity.setData(addItems(userEntity.getData(), itemEntity));
                 return new Status(true, "Покупка прошла успешно.");
             } else
                 return new Status(false, "Недостаточно средств на счете.");
@@ -324,9 +325,9 @@ public class ActionService {
             return new Status(false, "У продавца отсутствует товар.");
     }
 
-    public void addItem(Member member, int type, int id, int quantity) {
-        Data data = member.getData();
-        member.setData(addItems(data, new String[]{String.valueOf(type), String.valueOf(id), String.valueOf(quantity)}));
+    public void addItem(UserEntity userEntity, int type, int id, int quantity) {
+        Data data = userEntity.getData();
+        userEntity.setData(addItems(data, new String[]{String.valueOf(type), String.valueOf(id), String.valueOf(quantity)}));
     }
 
     private Data addItems(Data data, String[] values) {
@@ -336,12 +337,12 @@ public class ActionService {
                 int id = Integer.parseInt(values[1]);
                 int quantity = Integer.parseInt(values[2]);
                 //log("try to add item, type: " + type + ", cid: " + id);
-                Item item = types.getItem(type, id);
-                item.setQuantity(quantity);
+                ItemEntity itemEntity = types.getItem(type, id);
+                itemEntity.setQuantity(quantity);
                 if (quantity<=0){
                     return removeItems(data, values);
                 }else
-                    return addItems(data, item);
+                    return addItems(data, itemEntity);
 
             }
         } catch (Exception e) {
@@ -350,18 +351,18 @@ public class ActionService {
         return data;
     }
 
-    private boolean isCorrect(Item item, int type, int id) {
-        if (item != null)
-            if (item.getType() == type && item.getId() == id)
+    private boolean isCorrect(ItemEntity itemEntity, int type, int id) {
+        if (itemEntity != null)
+            if (itemEntity.getType() == type && itemEntity.getId() == id)
                 return true;
 
         return false;
     }
 
-    private List<? extends Item> removeItemsFromList(List<? extends Item> items, int type, int id, int quantity ) {
-        Iterator<? extends Item> i = items.iterator();
+    private List<? extends ItemEntity> removeItemsFromList(List<? extends ItemEntity> items, int type, int id, int quantity ) {
+        Iterator<? extends ItemEntity> i = items.iterator();
         while (i.hasNext()) {
-            Item w = i.next();
+            ItemEntity w = i.next();
             if (isCorrect(w, type, id))
                 if (w.getQuantity() >= quantity)
                     i.remove();
@@ -391,10 +392,10 @@ public class ActionService {
                     data.getEquipment().setArmor(null);
                 }
 
-                data.weapons = (List<Weapon>) removeItemsFromList(data.weapons, type, id, quantity);
-                data.armors = (List<Armor>) removeItemsFromList(data.armors, type, id, quantity);
-                data.items = (List<Item>) removeItemsFromList(data.items, type, id, quantity);
-                data.artifacts = (List<Artifact>) removeItemsFromList(data.artifacts, type, id, quantity);
+                data.weaponEntities = (List<WeaponEntity>) removeItemsFromList(data.weaponEntities, type, id, quantity);
+                data.armorEntities = (List<ArmorEntity>) removeItemsFromList(data.armorEntities, type, id, quantity);
+                data.itemEntities = (List<ItemEntity>) removeItemsFromList(data.itemEntities, type, id, quantity);
+                data.artifactEntities = (List<ArtifactEntity>) removeItemsFromList(data.artifactEntities, type, id, quantity);
                 //TODO MORE
 
                 return data;
@@ -405,34 +406,34 @@ public class ActionService {
         return data;
     }
 
-    private Data addItems(Data data, Item item) {
-        if (item != null) {
-            if (item instanceof Weapon)
-                return itemsManager.addWeapon(data, (Weapon) item, 1);
-            else if (item instanceof Armor)
-                return itemsManager.addArmor(data, (Armor) item, 1);
-            else if (item instanceof Artifact)
-                return itemsManager.addArtifact(data, (Artifact) item);
+    private Data addItems(Data data, ItemEntity itemEntity) {
+        if (itemEntity != null) {
+            if (itemEntity instanceof WeaponEntity)
+                return itemsManager.addWeapon(data, (WeaponEntity) itemEntity, 1);
+            else if (itemEntity instanceof ArmorEntity)
+                return itemsManager.addArmor(data, (ArmorEntity) itemEntity, 1);
+            else if (itemEntity instanceof ArtifactEntity)
+                return itemsManager.addArtifact(data, (ArtifactEntity) itemEntity);
             else
-                return itemsManager.addItem(data, item);
+                return itemsManager.addItem(data, itemEntity);
         } else {
             //log("item null");
             return data;
         }
     }
 
-    private Data deleteItem(Data data, Item item) {
-        if (item instanceof Weapon) {
-            data.weapons.remove(item);
+    private Data deleteItem(Data data, ItemEntity itemEntity) {
+        if (itemEntity instanceof WeaponEntity) {
+            data.weaponEntities.remove(itemEntity);
             return data;
-        } else if (item instanceof Armor) {
-            data.armors.remove(item);
+        } else if (itemEntity instanceof ArmorEntity) {
+            data.armorEntities.remove(itemEntity);
             return data;
-        } else if (item instanceof Artifact) {
-            data.artifacts.remove(item);
+        } else if (itemEntity instanceof ArtifactEntity) {
+            data.artifactEntities.remove(itemEntity);
             return data;
         } else
-            data.items.remove(item);
+            data.itemEntities.remove(itemEntity);
         return data;
     }
 

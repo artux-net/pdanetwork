@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.member.reset;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.service.email.EmailService;
@@ -25,13 +25,13 @@ public class ResetServiceImpl implements ResetService {
 
   @Override
   public Status sendLetter(String email) {
-    Member member = memberService.getMemberByEmail(email);
+    UserEntity userEntity = memberService.getMemberByEmail(email);
 
-    if (!requests.containsValue(member.getEmail())) {
-      String token = Security.encrypt(member.getPassword() + member.getLogin());
+    if (!requests.containsValue(userEntity.getEmail())) {
+      String token = Security.encrypt(userEntity.getPassword() + userEntity.getLogin());
       try {
-          emailService.askForPassword(member, token);
-          addCurrent(token, member);
+          emailService.askForPassword(userEntity, token);
+          addCurrent(token, userEntity);
           return new Status(true, "Мы отправили письмо с паролем на Вашу почту");
       } catch (Exception e) {
         return new Status(false, e.getMessage());
@@ -41,15 +41,15 @@ public class ResetServiceImpl implements ResetService {
     }
   }
 
-  private void addCurrent(String token, Member user) {
+  private void addCurrent(String token, UserEntity user) {
     requests.put(token, user.getEmail());
     new Timer(30 * 60 * 1000, e -> requests.remove(token)).start();
   }
 
   @Override
   public Status changePassword(String token, String password) {
-    Member member = memberService.getMemberByEmail(requests.get(token));
-    RegisterUser registerUser = memberMapper.regUser(member);
+    UserEntity userEntity = memberService.getMemberByEmail(requests.get(token));
+    RegisterUser registerUser = memberMapper.regUser(userEntity);
     registerUser.setPassword(password);
     return memberService.editMember(registerUser);
   }

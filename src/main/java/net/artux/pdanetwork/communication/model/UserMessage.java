@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.communication.model;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 
 import java.time.Instant;
@@ -24,35 +24,35 @@ public class UserMessage {
         groupId = 0;
     }
 
-    public UserMessage(int cid, Member member, String message) {
+    public UserMessage(int cid, UserEntity userEntity, String message) {
         this.cid = cid;
-        senderLogin = member.getLogin();
+        senderLogin = userEntity.getLogin();
         this.message = message.trim();
 
         time = Instant.now().toEpochMilli();
-        groupId = member.getGroup();
-        avatarId = member.getAvatar();
-        pdaId = member.getPdaId();
+        groupId = userEntity.getGroup();
+        avatarId = userEntity.getAvatar();
+        pdaId = userEntity.getPdaId();
     }
 
-    public UserMessage(Member member, String message) {
-        senderLogin = member.getLogin();
+    public UserMessage(UserEntity userEntity, String message) {
+        senderLogin = userEntity.getLogin();
         this.message = message.trim();
 
         time = Instant.now().toEpochMilli();
-        groupId = member.getGroup();
-        avatarId = member.getAvatar();
-        pdaId = member.getPdaId();
+        groupId = userEntity.getGroup();
+        avatarId = userEntity.getAvatar();
+        pdaId = userEntity.getPdaId();
     }
 
-    public UserMessage(Member member, DBMessage message) {
-        senderLogin = member.getLogin();
+    public UserMessage(UserEntity userEntity, DBMessage message) {
+        senderLogin = userEntity.getLogin();
         this.message = message.message;
 
         time = message.time;
-        groupId = member.getGroup();
-        avatarId = member.getAvatar();
-        pdaId = member.getPdaId();
+        groupId = userEntity.getGroup();
+        avatarId = userEntity.getAvatar();
+        pdaId = userEntity.getPdaId();
     }
 
     public static UserMessage getSystemMessage(String loc, String message){

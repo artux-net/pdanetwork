@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.service.member;
 
-import net.artux.pdanetwork.models.Member;
+import net.artux.pdanetwork.models.UserEntity;
 import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.QueryPage;
@@ -17,15 +17,15 @@ public interface MemberService {
   Status registerUser(RegisterUser registerUser);
   Status handleConfirmation(String token);
   MemberDto resetData();
-  Member getMember();
+  UserEntity getMember();
   MemberDto getMemberDto();
-  Member getMember(String base64);
-  Member getMember(ObjectId objectId);
-  Member getMemberByPdaId(Integer id);
-  Member getMemberByEmail(String email);
+  UserEntity getMember(String base64);
+  UserEntity getMember(ObjectId objectId);
+  UserEntity getMemberByPdaId(Integer id);
+  UserEntity getMemberByEmail(String email);
   Status editMember(RegisterUser user);
-  Member saveMember(Member member);
+  UserEntity saveMember(UserEntity userEntity);
   ResponsePage<UserInfo> getRating(QueryPage queryPage);
-  Member doActions(HashMap<String, List<String>> actions);
+  UserEntity doActions(HashMap<String, List<String>> actions);
 
 }
