@@ -1,3 +1,6 @@
+**FROM openjdk:16-alpine3.13**
+**FROM arm64v8/openjdk:16**
+
 # PDA Network
 ##Setup server
 На сервере необходим развернутый докер с доступом по сети к его демону.

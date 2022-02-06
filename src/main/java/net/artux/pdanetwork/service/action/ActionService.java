@@ -31,175 +31,175 @@ public class ActionService {
 
     public Member doUserActions(HashMap<String, List<String>> map, Member member) {
         try {
-                Data data = member.getData();
-                for (String key : map.keySet()) {
-                    switch (key) {
-                        case "add":
-                            for (String value : map.get(key)) {
-                                String[] values = value.split(":");
-                                if (values.length == 3) {
-                                    data = addItems(data, values);
-                                } else if (values.length == 2) {
-                                    //add_value
-                                    if (!data.parameters.values.containsKey(value.split(":")[0])) {
-                                        data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
-                                    }
-                                } else {
-                                    //add_param
-                                    if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
-                                }
-                            }
-                            break;
-                        case "add_param":
-                            for (String value : map.get(key)) {
-                                if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
-                            }
-                            break;
-                        case "add_value":
-                            for (String value : map.get(key)) {
+            Data data = member.getData();
+            for (String key : map.keySet()) {
+                switch (key) {
+                    case "add":
+                        for (String value : map.get(key)) {
+                            String[] values = value.split(":");
+                            if (values.length == 3) {
+                                data = addItems(data, values);
+                            } else if (values.length == 2) {
+                                //add_value
                                 if (!data.parameters.values.containsKey(value.split(":")[0])) {
                                     data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
-                                } else {
-                                    data.parameters.
-                                            values.put(value.split(":")[0],
-                                            data.parameters.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
                                 }
-                            }
-                            break;
-                        case "add_items":
-                            for (String value : map.get(key)) {
-                                String[] values = value.split(":");
-                                if (values.length == 3) {
-                                    data = addItems(data, values);
-                                }
-                            }
-                            break;
-                        case "remove":
-                            for (String pass : map.get(key)) {
-                                if (isInteger(pass)) {
-                                    int id = Integer.parseInt(pass);
-                                    data.weapons.removeIf(weapon -> weapon.getId() == id);
-                                }
-                                data.parameters.keys.remove(pass);
-                                data.parameters.values.remove(pass);
-                            }
-                            break;
-                        case "=":
-                            for (String pass : map.get(key)) {
-                                String[] vals = pass.split(":");
-                                data.parameters.values.put(vals[0], Integer.valueOf(vals[1]));
-                            }
-                            break;
-                        case "+":
-                            for (String pass : map.get(key)) {
-                                String[] vals = pass.split(":");
-                                if (vals[0].contains("relation")) {
-                                    int group = Integer.parseInt(vals[0].split("_")[1]);
-                                    member.relations.set(group, member.relations.get(group) + Integer.parseInt(vals[1]));
-                                } else
-                                    data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) + Integer.valueOf(vals[1]));
-                            }
-                            break;
-                        case "-":
-                            for (String pass : Objects.requireNonNull(map.get(key))) {
-                                String[] vals = pass.split(":");
-                                if (vals[0].contains("relation")) {
-                                    int group = Integer.parseInt(vals[0].split("_")[1]);
-                                    member.relations.set(group, member.relations.get(group) - Integer.parseInt(vals[1]));
-                                } else
-                                    data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) - Integer.parseInt(vals[1]));
-                            }
-                            break;
-                        case "*":
-                            for (String pass : map.get(key)) {
-                                String[] vals = pass.split(":");
-                                data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) * Integer.parseInt(vals[1]));
-                            }
-                            break;
-                        case "money":
-                            for (String pass : map.get(key))
-                                member.money(Integer.parseInt(pass));
-                            break;
-                        case "xp":
-                            for (String pass : map.get(key))
-                                member.xp(Integer.parseInt(pass));
-                            break;
-                        case "note":
-                            List<String> content = map.get(key);
-                            if (content.size()==2)
-                                member.addNote(content.get(0), content.get(1));
-                            else if(content.size()==1)
-                                member.addNote("Новая заметка", content.get(1));
-                            break;
-                        case "achieve":
-                            for (String pass : map.get(key))
-                                member.achievements.add(Integer.parseInt(pass));
-                            break;
-                        case "location":
-                            for (String pass : map.get(key))
-                                member.setLocation(pass);
-                            break;
-                        case "reset":
-                            if (map.get(key).size() == 0) {
-                                member.setMoney(0);
-                                data.weapons = new ArrayList<>();
-                                data.armors = new ArrayList<>();
-                                data.artifacts = new ArrayList<>();
-                                data.items = new ArrayList<>();
                             } else {
-                                for (String pass : map.get(key))
-                                    if (isInteger(pass)) {
-                                        int storyId = Integer.parseInt(pass);
-                                        for (Story story : data.stories)
-                                            if (story.storyId == storyId) {
-                                                story.lastChapter = 1;
-                                                story.lastStage = 0;
-                                            }
-                                    } else if (pass.contains("relation")) {
-                                        int group = Integer.parseInt(pass.split("_")[1]);
-                                        member.relations.set(group, 0);
-                                    }
+                                //add_param
+                                if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
                             }
-                            break;
-                        case "reset_current":
-                            data.getTemp().remove("currentStory");
-                            break;
-                        case "set":
-                            for (String pass : map.get(key)) {
-                                String[] vals = pass.split(":");
-                                if (vals.length == 4) {
-                                    if (vals[0].equals("story")) {
-                                        boolean found = false;
-                                        for (int i = 0; i < data.stories.size(); i++) {
-                                            Story story = data.stories.get(i);
-                                            if (story.storyId == Integer.parseInt(vals[1])) {
-                                                found = true;
-                                                story.lastChapter = Integer.parseInt(vals[2]);
-                                                story.lastStage = Integer.parseInt(vals[3]);
-                                                data.stories.set(i, story);
-                                            }
+                        }
+                        break;
+                    case "add_param":
+                        for (String value : map.get(key)) {
+                            if (!data.parameters.keys.contains(value)) data.parameters.keys.add(value);
+                        }
+                        break;
+                    case "add_value":
+                        for (String value : map.get(key)) {
+                            if (!data.parameters.values.containsKey(value.split(":")[0])) {
+                                data.parameters.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
+                            } else {
+                                data.parameters.
+                                        values.put(value.split(":")[0],
+                                                data.parameters.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
+                            }
+                        }
+                        break;
+                    case "add_items":
+                        for (String value : map.get(key)) {
+                            String[] values = value.split(":");
+                            if (values.length == 3) {
+                                data = addItems(data, values);
+                            }
+                        }
+                        break;
+                    case "remove":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            if (vals.length == 3) {
+                                data = removeItems(data, vals);
+                            }
+                            data.parameters.keys.remove(pass);
+                            data.parameters.values.remove(pass);
+                        }
+                        break;
+                    case "=":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            data.parameters.values.put(vals[0], Integer.valueOf(vals[1]));
+                        }
+                        break;
+                    case "+":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            if (vals[0].contains("relation")) {
+                                int group = Integer.parseInt(vals[0].split("_")[1]);
+                                member.relations.set(group, member.relations.get(group) + Integer.parseInt(vals[1]));
+                            } else
+                                data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) + Integer.valueOf(vals[1]));
+                        }
+                        break;
+                    case "-":
+                        for (String pass : Objects.requireNonNull(map.get(key))) {
+                            String[] vals = pass.split(":");
+                            if (vals[0].contains("relation")) {
+                                int group = Integer.parseInt(vals[0].split("_")[1]);
+                                member.relations.set(group, member.relations.get(group) - Integer.parseInt(vals[1]));
+                            } else
+                                data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) - Integer.parseInt(vals[1]));
+                        }
+                        break;
+                    case "*":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            data.parameters.values.put(vals[0], data.parameters.values.get(vals[0]) * Integer.parseInt(vals[1]));
+                        }
+                        break;
+                    case "money":
+                        for (String pass : map.get(key))
+                            member.money(Integer.parseInt(pass));
+                        break;
+                    case "xp":
+                        for (String pass : map.get(key))
+                            member.xp(Integer.parseInt(pass));
+                        break;
+                    case "note":
+                        List<String> content = map.get(key);
+                        if (content.size() == 2)
+                            member.addNote(content.get(0), content.get(1));
+                        else if (content.size() == 1)
+                            member.addNote("Новая заметка", content.get(1));
+                        break;
+                    case "achieve":
+                        for (String pass : map.get(key))
+                            member.achievements.add(Integer.parseInt(pass));
+                        break;
+                    case "location":
+                        for (String pass : map.get(key))
+                            member.setLocation(pass);
+                        break;
+                    case "reset":
+                        if (map.get(key).size() == 0) {
+                            member.setMoney(0);
+                            data.weapons = new ArrayList<>();
+                            data.armors = new ArrayList<>();
+                            data.artifacts = new ArrayList<>();
+                            data.items = new ArrayList<>();
+                        } else {
+                            for (String pass : map.get(key))
+                                if (isInteger(pass)) {
+                                    int storyId = Integer.parseInt(pass);
+                                    for (Story story : data.stories)
+                                        if (story.storyId == storyId) {
+                                            story.lastChapter = 1;
+                                            story.lastStage = 0;
                                         }
-                                        if (!found) {
-                                            int story = Integer.parseInt(vals[1]);
-                                            int chapter = Integer.parseInt(vals[2]);
-                                            int stage = Integer.parseInt(vals[3]);
-                                            data.stories.add(new Story(story, chapter, stage));
+                                } else if (pass.contains("relation")) {
+                                    int group = Integer.parseInt(pass.split("_")[1]);
+                                    member.relations.set(group, 0);
+                                }
+                        }
+                        break;
+                    case "reset_current":
+                        data.getTemp().remove("currentStory");
+                        break;
+                    case "set":
+                        for (String pass : map.get(key)) {
+                            String[] vals = pass.split(":");
+                            if (vals.length == 4) {
+                                if (vals[0].equals("story")) {
+                                    boolean found = false;
+                                    for (int i = 0; i < data.stories.size(); i++) {
+                                        Story story = data.stories.get(i);
+                                        if (story.storyId == Integer.parseInt(vals[1])) {
+                                            found = true;
+                                            story.lastChapter = Integer.parseInt(vals[2]);
+                                            story.lastStage = Integer.parseInt(vals[3]);
+                                            data.stories.set(i, story);
                                         }
-                                        data.getTemp().put("currentStory", vals[1]);
                                     }
+                                    if (!found) {
+                                        int story = Integer.parseInt(vals[1]);
+                                        int chapter = Integer.parseInt(vals[2]);
+                                        int stage = Integer.parseInt(vals[3]);
+                                        data.stories.add(new Story(story, chapter, stage));
+                                    }
+                                    data.getTemp().put("currentStory", vals[1]);
                                 }
                             }
-                            break;
-                        default:
-                            System.out.println("UserManager, unsupported operation: " + key + ", value: " + map.get(key));
-                            break;
-                    }
+                        }
+                        break;
+                    default:
+                        System.out.println("UserManager, unsupported operation: " + key + ", value: " + map.get(key));
+                        break;
                 }
-                member.setData(data);
-                return member;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+            }
+            member.setData(data);
+            return member;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return member;
         }
     }
 
@@ -230,7 +230,7 @@ public class ActionService {
 
                 data.setEquipment(equipment);
                 return new Status(true, "Success.");
-            }else if (item instanceof Armor){
+            } else if (item instanceof Armor) {
                 Armor old = equipment.getArmor();
 
                 member.setData(
@@ -241,7 +241,7 @@ public class ActionService {
                 equipment.setArmor((Armor) item);
                 data.setEquipment(equipment);
                 return new Status(true, "Success.");
-            }else return new Status(false, "Can not set this item.");
+            } else return new Status(false, "Can not set this item.");
         } else
             return new Status(false, "You don't have this item.");
     }
@@ -338,7 +338,66 @@ public class ActionService {
                 //log("try to add item, type: " + type + ", cid: " + id);
                 Item item = types.getItem(type, id);
                 item.setQuantity(quantity);
-                return addItems(data, item);
+                if (quantity<=0){
+                    return removeItems(data, values);
+                }else
+                    return addItems(data, item);
+
+            }
+        } catch (Exception e) {
+            error("Item err", e);
+        }
+        return data;
+    }
+
+    private boolean isCorrect(Item item, int type, int id) {
+        if (item != null)
+            if (item.getType() == type && item.getId() == id)
+                return true;
+
+        return false;
+    }
+
+    private List<? extends Item> removeItemsFromList(List<? extends Item> items, int type, int id, int quantity ) {
+        Iterator<? extends Item> i = items.iterator();
+        while (i.hasNext()) {
+            Item w = i.next();
+            if (isCorrect(w, type, id))
+                if (w.getQuantity() >= quantity)
+                    i.remove();
+                else
+                    w.setQuantity(w.getQuantity() - quantity);
+        }
+        return items;
+    }
+
+    private Data removeItems(Data data, String[] values) {
+        try {
+            if (values.length == 3) {
+                int type = Integer.parseInt(values[0]);
+                int id = Integer.parseInt(values[1]);
+                int quantity = Integer.parseInt(values[2]);
+                //log("try to add item, type: " + type + ", cid: " + id);
+
+                if (isCorrect(data.getEquipment().getFirstWeapon(), type, id)){
+                    data.getEquipment().setFirstWeapon(null);
+                }
+
+                if (isCorrect(data.getEquipment().getSecondWeapon(), type, id)){
+                    data.getEquipment().setSecondWeapon(null);
+                }
+
+                if (isCorrect(data.getEquipment().getArmor(), type, id)){
+                    data.getEquipment().setArmor(null);
+                }
+
+                data.weapons = (List<Weapon>) removeItemsFromList(data.weapons, type, id, quantity);
+                data.armors = (List<Armor>) removeItemsFromList(data.armors, type, id, quantity);
+                data.items = (List<Item>) removeItemsFromList(data.items, type, id, quantity);
+                data.artifacts = (List<Artifact>) removeItemsFromList(data.artifacts, type, id, quantity);
+                //TODO MORE
+
+                return data;
             }
         } catch (Exception e) {
             error("Item err", e);

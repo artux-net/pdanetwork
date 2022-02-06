@@ -91,6 +91,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public MemberDto resetData() {
     Member member = getMember();
+    member.setMoney(500);
     member.setData(new Data());
     memberRepository.save(member);
     return memberMapper.memberDto(member);

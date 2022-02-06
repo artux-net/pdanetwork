@@ -102,7 +102,17 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>javax.validation</groupId>
@@ -160,6 +170,7 @@
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
 

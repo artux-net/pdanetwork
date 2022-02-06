@@ -22,8 +22,6 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-
-
     private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth()).build();
     }
