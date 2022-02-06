@@ -36,10 +36,7 @@ public class ItemEntity extends BaseEntity {
     }
 
     public int sellerPrice() {
-        if (quantity > 0)
-            return quantity * price;
-        else
-            return price;
+        return quantity > 0 ? quantity * price : price;
     }
 
     public int priceToSell() {
