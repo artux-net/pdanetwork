@@ -1,10 +1,16 @@
 package net.artux.pdanetwork.service.friends;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.FriendRelation;
+import net.artux.pdanetwork.models.user.FriendRelationEntity;
+import net.artux.pdanetwork.models.user.FriendRequestsEntity;
+import net.artux.pdanetwork.models.user.FriendsEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.FriendModel;
 import net.artux.pdanetwork.models.MemberMapper;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.repository.user.FriendRequestsRepository;
+import net.artux.pdanetwork.repository.user.FriendsRepository;
 import net.artux.pdanetwork.service.member.MemberService;
 import net.artux.pdanetwork.service.files.AchievementsService;
 import org.bson.types.ObjectId;
@@ -13,93 +19,104 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
 public class FriendServiceIml implements FriendService {
 
-  private final MemberService memberService;
-  private final MemberMapper memberMapper;
-  private final AchievementsService achievementsService;
+    private final MemberService memberService;
+    private final MemberMapper memberMapper;
+    private final FriendsRepository friendsRepository;
+    private final FriendRequestsRepository friendsRequestRepository;
 
-  private List<FriendModel> getModels(List<ObjectId> ids){
-    List<FriendModel> friendModels = new ArrayList<>();
-    for (ObjectId id : ids) {
-      friendModels.add(memberMapper.friendModel(memberService.getMember(id)));
+    UserEntity getAnother(long pdaId, FriendsEntity relationEntity) {
+        if (relationEntity.getUser1().getPdaId() == pdaId) {
+            return relationEntity.getUser2();
+        } else
+            return relationEntity.getUser1();
     }
-    return friendModels;
-  }
 
-  @Override
-  public List<FriendModel> getFriends(Integer pdaId) {
-    return getModels(memberService.getMemberByPdaId(pdaId).getFriends());
-  }
+    @Override
+    public List<FriendModel> getFriends(Integer pdaId) {
+        var relationEntities = friendsRepository.getAllByUser1_UidOrUser2_Uid(memberService.getMemberByPdaId(pdaId).getUid());
 
-  @Override
-  public List<FriendModel> getSubs() {
-    return getModels(memberService.getMember().getSubs());
-  }
+        List<FriendModel> friendModels = new ArrayList<>();
+        for (FriendsEntity entity : relationEntities) {
+            friendModels.add(memberMapper.friendModel(getAnother(pdaId, entity)));
+        }
 
-  @Override
-  public List<FriendModel> getSubs(Integer pdaId) {
-    return getModels(memberService.getMemberByPdaId(pdaId).getSubs());
-  }
+        return friendModels;
+    }
 
-  @Override
-  public List<FriendModel> getFriends() {
-    return getFriends(memberService.getMember().getPdaId());
-  }
+    @Override
+    public List<FriendModel> getSubs() {
+        return getSubs(memberService.getMember().getPdaId());
+    }
 
-  @Override
-  public List<FriendModel> getFriendRequests() {
-    return getModels(memberService.getMember().getRequests());
-  }
+    @Override
+    public List<FriendModel> getSubs(Integer pdaId) {
+        var subsRequests = friendsRequestRepository
+                .getAllByUser2_Uid(memberService.getMemberByPdaId(pdaId).getUid());
 
-  @Override
-  @Transactional // TODO everywhere
-  public Status addFriend(Integer pdaId) {
-    UserEntity user = memberService.getMember();
-    UserEntity another = memberService.getMemberByPdaId(pdaId);
+        List<FriendModel> friendModels = new ArrayList<>();
+        for (FriendRequestsEntity entity : subsRequests) {
+            friendModels.add(memberMapper.friendModel(entity.getUser1()));
+        }
 
-    Status status;
+        return friendModels;
+    }
 
-    if (!another.get_id().equals(user.get_id())) {
-      if (another.subs.contains(user.get_id())) {
-        //отношения есть, юзер удаляется из подписчиков
-        another.subs.remove(user.get_id());
-        user.requests.remove(another.get_id());
+    @Override
+    public List<FriendModel> getFriends() {
+        return getFriends(memberService.getMember().getPdaId());
+    }
 
-        status = new Status(true, "Запрос отменен");
-      } else if (another.friends.contains(user.get_id())) {
-        //отношения есть, юзер удаляется из друзей
-        another.requests.add(user.get_id());
-        user.subs.add(another.get_id());
+    @Override
+    public List<FriendModel> getFriendRequests() {
+        var subsRequests = friendsRequestRepository
+                .getAllByUser1_Uid(memberService.getMember().getUid());
 
+        List<FriendModel> friendModels = new ArrayList<>();
+        for (FriendRequestsEntity entity : subsRequests) {
+            friendModels.add(memberMapper.friendModel(entity.getUser2()));
+        }
 
-        another.friends.remove(user.get_id());
-        user.friends.remove(another.get_id());
+        return friendModels;
+    }
 
-        status = new Status(true, "Удален из друзей");
-      } else if (another.requests.contains(user.get_id())) {
-        //отношения есть, юзер добавляет в друзья
-        another.requests.remove(user.get_id());
-        user.subs.remove(another.get_id());
+    @Override
+    @Transactional // TODO everywhere
+    public Status addFriend(Integer pdaId) {
+        UserEntity user = memberService.getMember();
+        UserEntity another = memberService.getMemberByPdaId(pdaId);
 
-        another.friends.add(user.get_id());
-        user.friends.add(another.get_id());
+        if (!user.getUid().equals(another.getUid())) {
+            var friends1 = friendsRepository.getByUser1AndUser2(user, another);
+            var friends2 = friendsRepository.getByUser1AndUser2(another, user);
+            if (friends1.isPresent() || friends2.isPresent()) {
+                var friends = friends1.isPresent() ? friends1 : friends2;
 
-        status = new Status(true, "Друг добавлен");
-      } else {
-        //отношений нет, юзер добавляется в друзья
-        another.subs.add(user.get_id());
-        user.requests.add(another.get_id());
-
-        status = new Status(true, "Запрос дружбы оформлен");
-      }
-      memberService.saveMember(user);
-      memberService.saveMember(another);
-      return status;
-    }else return new Status(false, "Нельзя дружить с собой");
-  }
+                friendsRepository.delete(friends.get());
+                friendsRequestRepository.save(new FriendRequestsEntity(another, user));
+                return new Status(true, "Удален из контактов");
+            } else {
+                var request = friendsRequestRepository.getByUser1AndUser2(user, another);
+                if (request.isPresent()) {
+                    friendsRequestRepository.delete(request.get());
+                    return new Status(true, "Запрос отменен");
+                }
+                request = friendsRequestRepository.getByUser1AndUser2(another, user);
+                if (request.isPresent()) {
+                    friendsRequestRepository.delete(request.get());
+                    friendsRepository.save(new FriendsEntity(user, another));
+                    return new Status(true, "Контакт добавлен");
+                }
+                friendsRequestRepository.save(new FriendRequestsEntity(user, another));
+                return new Status(true, "Запрос оформлен");
+            }
+        } else return new Status(false, "Ошибка");
+    }
 
 }

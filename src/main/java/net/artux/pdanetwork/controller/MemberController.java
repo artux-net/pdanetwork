@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.QueryPage;

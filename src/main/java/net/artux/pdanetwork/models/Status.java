@@ -4,12 +4,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class Status {
 
     private boolean success;
     private int code;
     private String description;
+
+    public Status(){
+        code = 200;
+    }
 
     public Status(boolean success, String description) {
         this.success = success;

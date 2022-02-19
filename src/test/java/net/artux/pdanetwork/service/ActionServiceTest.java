@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.service;
 
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.service.action.ActionService;
 import org.junit.Test;

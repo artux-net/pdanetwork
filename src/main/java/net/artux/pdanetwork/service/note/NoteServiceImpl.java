@@ -1,10 +1,10 @@
 package net.artux.pdanetwork.service.note;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.models.profile.NoteEntity;
-import net.artux.pdanetwork.repository.MemberRepository;
+import net.artux.pdanetwork.repository.user.UsersRepository;
 import net.artux.pdanetwork.service.member.MemberService;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class NoteServiceImpl implements NoteService {
 
   private final MemberService memberService;
-  private final MemberRepository memberRepository;
+  private final UsersRepository usersRepository;
 
   @Override
   public List<NoteEntity> getNotes() {

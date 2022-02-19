@@ -3,7 +3,7 @@ package net.artux.pdanetwork.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.service.member.MemberService;
 import net.artux.pdanetwork.service.util.Utils;

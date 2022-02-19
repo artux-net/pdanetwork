@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import javax.swing.filechooser.FileSystemView;
 
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import org.apache.commons.fileupload.ParameterParser;
 import org.zeroturnaround.zip.ZipUtil;
 

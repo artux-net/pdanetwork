@@ -1,6 +1,10 @@
 package net.artux.pdanetwork.models;
 
 import lombok.Data;
+import net.artux.pdanetwork.models.user.FriendRelation;
+import net.artux.pdanetwork.models.user.Group;
+import net.artux.pdanetwork.models.user.Reason;
+import net.artux.pdanetwork.models.user.UserEntity;
 
 import java.util.List;
 
@@ -10,14 +14,14 @@ public class Profile {
     private String login;
     private String name;
     private String role;
-    private int blocked;
-    private int group;
+    private Reason blocked;
+    private Group group;
     private String avatar;
     private int pdaId;
     private int xp;
     private String location;
     private Long registration;
-    private int friendStatus;
+    private FriendRelation friendRelation;
     /*
     0 - is not friend
     1 - friend
@@ -36,38 +40,38 @@ public class Profile {
     public Profile(UserEntity userEntity) {
         this.login = userEntity.getLogin();
         this.name = userEntity.getName();
-        this.role = userEntity.getRole();
-        this.blocked = userEntity.getBlocked();
+        this.role = userEntity.getRole().toString();
+        //this.blocked = userEntity.get;
         this.group = userEntity.getGroup();
         this.avatar = userEntity.getAvatar();
         this.pdaId = userEntity.getPdaId();
         this.xp = userEntity.getXp();
         this.location = userEntity.getLocation();
         this.registration = userEntity.getRegistration();
-        this.friends = userEntity.getSubs().size();
+        /*this.friends = userEntity.getSubs().size();
         this.subs = userEntity.getRequests().size();
-        this.relations = userEntity.getRelations();
+        this.relations = userEntity.getRelations();*/
     }
 
     public Profile(UserEntity userEntity, UserEntity by) {
         this.login = userEntity.getLogin();
         this.name = userEntity.getName();
-        this.role = userEntity.getRole();
-        this.blocked = userEntity.getBlocked();
+        //this.role = userEntity.getRole();
+        //this.blocked = ;
         this.group = userEntity.getGroup();
         this.avatar = userEntity.getAvatar();
         this.pdaId = userEntity.getPdaId();
         this.xp = userEntity.getXp();
         this.location = userEntity.getLocation();
         this.registration = userEntity.getRegistration();
-        this.friends = userEntity.getSubs().size();
+        /*this.friends = userEntity.getSubs().size();
         this.subs = userEntity.getRequests().size();
         this.relations = userEntity.getRelations();
 
-        friendStatus = getFriendStatus(userEntity, by);
+        friendStatus = getFriendStatus(userEntity, by);*/
     }
 
-    public static int getFriendStatus(UserEntity userEntity, UserEntity by) {
+    /*public static int getFriendStatus(UserEntity userEntity, UserEntity by) {
         if (userEntity.getRequests() != null)
             if (userEntity.getSubs().contains(by.get_id())) {
                 return 3;
@@ -79,5 +83,5 @@ public class Profile {
                 return  0;
             }
         else return 0;
-    }
+    }*/
 }

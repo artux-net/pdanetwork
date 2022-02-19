@@ -2,6 +2,7 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.AchievementEntity;
 import net.artux.pdanetwork.models.Profile;
 import net.artux.pdanetwork.models.profile.Achievement;
 import net.artux.pdanetwork.service.profile.ProfileService;
@@ -28,12 +29,12 @@ public class ProfileController {
   }
 
   @GetMapping("/achievements")
-  public List<Achievement> getAchievements(){
+  public List<AchievementEntity> getAchievements(){
     return profileService.getAchievements();
   }
 
   @GetMapping("/achievements/{id}")
-  public List<Achievement> getAchievements(@PathVariable("id") Integer id){
+  public List<AchievementEntity> getAchievements(@PathVariable("id") Integer id){
     return profileService.getAchievements(id);
   }
 }

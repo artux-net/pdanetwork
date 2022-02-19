@@ -10,13 +10,12 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import net.artux.pdanetwork.models.UserEntity;
-import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.UserInfo;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.service.util.ValuesService;
-import net.artux.pdanetwork.utills.Security;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
@@ -88,21 +87,11 @@ public class MongoUsers {
     }
 
     public boolean isBlocked(String token){
-        UserEntity result = getMember(token);
-
-        if(result!=null) {
-            return result.getBlocked() > 0;
-        } else return false;
+         return false;
     }
 
     public boolean setBlocked(int pdaId, int blocked){
-        UserEntity result = getMember(pdaId);
-
-        if(result!=null) {
-            result.setBlocked(blocked);
-            updateMember(result);
-            return true;
-        } else return false;
+        return false;
     }
     public UserEntity getById(int pdaId) {
         return getMember(pdaId);
@@ -248,7 +237,7 @@ public class MongoUsers {
     private Status checkPassword(UserEntity element, String password, boolean resetToken) {
         if (element.getPassword().equals(String.valueOf(password.hashCode()))) {
             if (resetToken) {
-                element.setToken(Security.encrypt(element.getLogin() + ":" + password));
+                //element.setToken(Security.encrypt(element.getLogin() + ":" + password));
                 updateMember(element);
             }
             return new Status();
@@ -274,54 +263,31 @@ public class MongoUsers {
     }*/
 
     public boolean addFriend(String token, Integer id) {
-        UserEntity user = getMember(token);
-        if (user.requests.contains(id)) {
-            user.requests.remove(id);
-            if (!user.subs.contains(id)) {
-                //user.subs.add(id);
 
-                updateMember(user);
-            }
-            return true;
-        }else
             return false;
     }
 
     public boolean removeFriend(String token, Integer id) {
-        UserEntity user = getMember(token);
-        if (user.subs.contains(id)) {
-            user.subs.remove(id);
-            updateMember(user);
 
-            UserEntity oldFriend = getMember(id);
-            if (oldFriend.subs.contains(user.getPdaId())) {
-                //user.requests.add(id);
-                updateMember(user);
-            } else {
-                oldFriend.requests.remove(user.getPdaId());
-                updateMember(oldFriend);
-            }
-            return true;
-        } else
             return false;
     }
 
     public void addDialog(int pdaId, int conversation) {
-        UserEntity user = getMember(pdaId);
+        /*UserEntity user = getMember(pdaId);
 
         if (user != null) {
             user.dialogs.add(conversation);
             updateMember(user);
-        }
+        }*/
     }
 
     public void updateDialog(int pdaId, Integer conversation) {
-        UserEntity user = getMember(pdaId);
+        /*UserEntity user = getMember(pdaId);
         if (user != null) {
             user.dialogs.remove(conversation);
             user.dialogs.add(0, conversation);
             updateMember(user);
-        }
+        }*/
     }
 
     public UserEntity getMember(int pdaId) {
@@ -352,7 +318,7 @@ public class MongoUsers {
     }
 
     public UpdateResult updateMember(@NotNull UserEntity userEntity) {
-        userEntity.setLastModified(Instant.now().toEpochMilli());
+        //userEntity.setLastModified(Instant.now().toEpochMilli());
         return table.replaceOne(eq("pdaId", userEntity.getPdaId()), userEntity);
     }
 

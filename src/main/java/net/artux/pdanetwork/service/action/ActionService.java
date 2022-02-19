@@ -1,7 +1,8 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.profile.ParameterEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.SellerDto;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.profile.Data;
@@ -11,6 +12,7 @@ import net.artux.pdanetwork.models.profile.items.ArmorEntity;
 import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
 import net.artux.pdanetwork.models.profile.items.ItemEntity;
 import net.artux.pdanetwork.models.profile.items.WeaponEntity;
+import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
@@ -28,18 +30,22 @@ public class ActionService {
     private final ItemsManager itemsManager;
     private final Types types;
     private final SellersService sellersService;
+    private final ParametersRepository parametersRepository;
 
     public UserEntity doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
+        List<ParameterEntity> parameterEntity = parametersRepository.getByUserId(userEntity.getUid());
+
         try {
             Data data = userEntity.getData();
-            for (String key : map.keySet()) {
-                switch (key) {
+            for (String command : map.keySet()) {
+                List<String> params = map.get(command);
+                switch (command) {
                     case "add":
-                        for (String value : map.get(key)) {
-                            String[] values = value.split(":");
-                            if (values.length == 3) {
-                                data = addItems(data, values);
-                            } else if (values.length == 2) {
+                        for (String value : params) {
+                            String[] param = value.split(":");
+                            if (param.length == 3) {
+                                data = addItems(data, param);
+                            } else if (param.length == 2) {
                                 //add_value
                                 if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
                                     data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
@@ -51,12 +57,12 @@ public class ActionService {
                         }
                         break;
                     case "add_param":
-                        for (String value : map.get(key)) {
+                        for (String value : params) {
                             if (!data.parameterEntity.keys.contains(value)) data.parameterEntity.keys.add(value);
                         }
                         break;
                     case "add_value":
-                        for (String value : map.get(key)) {
+                        for (String value : params) {
                             if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
                                 data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
                             } else {
@@ -67,7 +73,7 @@ public class ActionService {
                         }
                         break;
                     case "add_items":
-                        for (String value : map.get(key)) {
+                        for (String value : params) {
                             String[] values = value.split(":");
                             if (values.length == 3) {
                                 data = addItems(data, values);
@@ -75,7 +81,7 @@ public class ActionService {
                         }
                         break;
                     case "remove":
-                        for (String pass : map.get(key)) {
+                        for (String pass : params) {
                             String[] vals = pass.split(":");
                             if (vals.length == 3) {
                                 data = removeItems(data, vals);
@@ -85,13 +91,13 @@ public class ActionService {
                         }
                         break;
                     case "=":
-                        for (String pass : map.get(key)) {
+                        for (String pass : params) {
                             String[] vals = pass.split(":");
                             data.parameterEntity.values.put(vals[0], Integer.valueOf(vals[1]));
                         }
                         break;
                     case "+":
-                        for (String pass : map.get(key)) {
+                        for (String pass : params) {
                             String[] vals = pass.split(":");
                             if (vals[0].contains("relation")) {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
@@ -101,7 +107,7 @@ public class ActionService {
                         }
                         break;
                     case "-":
-                        for (String pass : Objects.requireNonNull(map.get(key))) {
+                        for (String pass : Objects.requireNonNull(map.get(command))) {
                             String[] vals = pass.split(":");
                             if (vals[0].contains("relation")) {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
@@ -111,21 +117,21 @@ public class ActionService {
                         }
                         break;
                     case "*":
-                        for (String pass : map.get(key)) {
+                        for (String pass : params) {
                             String[] vals = pass.split(":");
                             data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) * Integer.parseInt(vals[1]));
                         }
                         break;
                     case "money":
-                        for (String pass : map.get(key))
+                        for (String pass : params)
                             userEntity.money(Integer.parseInt(pass));
                         break;
                     case "xp":
-                        for (String pass : map.get(key))
+                        for (String pass : params)
                             userEntity.xp(Integer.parseInt(pass));
                         break;
                     case "note":
-                        List<String> content = map.get(key);
+                        List<String> content =params;
                         //TODO with notes service
                        /* if (content.size() == 2)
                             userEntity.addNote(content.get(0), content.get(1));
@@ -133,22 +139,22 @@ public class ActionService {
                             userEntity.addNote("Новая заметка", content.get(1));*/
                         break;
                     case "achieve":
-                        for (String pass : map.get(key))
+                        for (String pass : params)
                             userEntity.achievements.add(Integer.parseInt(pass));
                         break;
                     case "location":
-                        for (String pass : map.get(key))
+                        for (String pass : params)
                             userEntity.setLocation(pass);
                         break;
                     case "reset":
-                        if (map.get(key).size() == 0) {
+                        if (map.get(command).size() == 0) {
                             userEntity.setMoney(0);
                             data.weaponEntities = new ArrayList<>();
                             data.armorEntities = new ArrayList<>();
                             data.artifactEntities = new ArrayList<>();
                             data.itemEntities = new ArrayList<>();
                         } else {
-                            for (String pass : map.get(key))
+                            for (String pass : params)
                                 if (isInteger(pass)) {
                                     int storyId = Integer.parseInt(pass);
                                     for (Story story : data.stories)
@@ -166,7 +172,7 @@ public class ActionService {
                         data.getTemp().remove("currentStory");
                         break;
                     case "set":
-                        for (String pass : map.get(key)) {
+                        for (String pass :params) {
                             String[] vals = pass.split(":");
                             if (vals.length == 4) {
                                 if (vals[0].equals("story")) {
@@ -192,7 +198,7 @@ public class ActionService {
                         }
                         break;
                     default:
-                        System.out.println("UserManager, unsupported operation: " + key + ", value: " + map.get(key));
+                        System.out.println("UserManager, unsupported operation: " + command + ", value: " +params);
                         break;
                 }
             }

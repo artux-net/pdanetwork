@@ -1,7 +1,8 @@
 package net.artux.pdanetwork.communication.model;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.Group;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.communication.utilities.model.DBMessage;
 
 import java.time.Instant;
@@ -13,7 +14,7 @@ public class UserMessage {
     public String senderLogin;
     public String message;
     public long time;
-    public int groupId;
+    public Group groupId;
     public String avatarId;
     public int pdaId;
 
@@ -21,7 +22,7 @@ public class UserMessage {
         senderLogin = "System";
         avatarId = "30";
         pdaId = 0;
-        groupId = 0;
+        groupId = Group.LONERS;
     }
 
     public UserMessage(int cid, UserEntity userEntity, String message) {

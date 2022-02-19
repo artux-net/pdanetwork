@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.Group;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.communication.model.UserMessage;
 import net.artux.pdanetwork.service.member.MemberService;
@@ -13,18 +14,18 @@ import java.util.HashMap;
 @Service
 public class GroupsHandler extends SocketHandler {
 
-  private HashMap <Integer, LimitedArrayList<UserMessage>> lastMessages = initLastMessages();
+  private HashMap <Group, LimitedArrayList<UserMessage>> lastMessages = initLastMessages();
   private static final int limit = 150;
 
-  private HashMap<Integer, LimitedArrayList<UserMessage>> initLastMessages() {
-    HashMap<Integer, LimitedArrayList<UserMessage>> lastMessages = new HashMap<>();
+  private HashMap<Group, LimitedArrayList<UserMessage>> initLastMessages() {
+    HashMap<Group, LimitedArrayList<UserMessage>> lastMessages = new HashMap<>();
 
-    lastMessages.put(1, new LimitedArrayList<>(limit));
-    lastMessages.put(2, new LimitedArrayList<>(limit));
-    lastMessages.put(3, new LimitedArrayList<>(limit));
-    lastMessages.put(4, new LimitedArrayList<>(limit));
-    lastMessages.put(5, new LimitedArrayList<>(limit));
-    lastMessages.put(6, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.LONERS, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.BANDITS, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.DUTY, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.CLEAR_SKY, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.LIBERTY, new LimitedArrayList<>(limit));
+    lastMessages.put(Group.MILITARY, new LimitedArrayList<>(limit));
 
     return lastMessages;
   }
@@ -38,8 +39,8 @@ public class GroupsHandler extends SocketHandler {
     super.afterConnectionEstablished(userSession);
 
     UserEntity userEntity = getMember(userSession);
-    int group = userEntity.getGroup();
-    if (group != 0) {
+    Group group = userEntity.getGroup();
+    if (group != Group.LONERS) {
         sendObject(userSession, lastMessages.get(group));
     } else {
       sendSystemMessage(userSession, "Ваш PDA не подключен ни к одной из групп");
@@ -48,7 +49,7 @@ public class GroupsHandler extends SocketHandler {
 
   @Override
   public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
-    int group = getMember(userSession).getGroup();
+    Group group = getMember(userSession).getGroup();
     UserMessage userMessage = getMessage(userSession, webSocketMessage);
     lastMessages.get(group).add(userMessage);
 

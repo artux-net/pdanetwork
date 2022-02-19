@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.service.member;
 
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.QueryPage;
@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public interface MemberService {
 
@@ -20,7 +21,7 @@ public interface MemberService {
   UserEntity getMember();
   MemberDto getMemberDto();
   UserEntity getMember(String base64);
-  UserEntity getMember(ObjectId objectId);
+  UserEntity getMember(UUID objectId);
   UserEntity getMemberByPdaId(Integer id);
   UserEntity getMemberByEmail(String email);
   Status editMember(RegisterUser user);

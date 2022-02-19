@@ -27,12 +27,14 @@ public class ChatHandler extends SocketHandler {
   public void afterConnectionEstablished(WebSocketSession userSession){
     super.afterConnectionEstablished(userSession);
 
-    if (getMember(userSession).getBlocked() < 1) {
-      accept(userSession);
-      sendObject(userSession, lastMessages);
+    accept(userSession);
+    sendObject(userSession, lastMessages);
+    //TODO block
+    /*if (getMember(userSession).getBlocked() < 1) {
+
     } else {
       reject(userSession, "Вы были заблокированы за нарушение правил.");
-    }
+    }*/
   }
 
   @Override

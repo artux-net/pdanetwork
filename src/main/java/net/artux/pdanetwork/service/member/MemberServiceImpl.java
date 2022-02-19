@@ -3,12 +3,12 @@ package net.artux.pdanetwork.service.member;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.MemberDto;
 import net.artux.pdanetwork.service.action.ActionService;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.controller.UserValidator;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.models.profile.Data;
-import net.artux.pdanetwork.repository.MemberRepository;
+import net.artux.pdanetwork.repository.user.UsersRepository;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;
@@ -29,7 +29,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-  private final MemberRepository memberRepository;
+  private final UsersRepository usersRepository;
 
   private final ActionService actionService;
   private final EmailService emailService;
@@ -73,11 +73,11 @@ public class MemberServiceImpl implements MemberService {
 
   public Status handleConfirmation(String token){
     if (registerUserMap.containsKey(token)) {
-      Optional<UserEntity> member = memberRepository.findTopByOrderByPdaIdDesc();
+      Optional<UserEntity> member = usersRepository.findTopByOrderByPdaIdDesc();
       int pdaId = 1;
       if (member.isPresent())
         pdaId = member.get().getPdaId() + 1;
-      memberRepository.insert(new UserEntity(registerUserMap.get(token), pdaId, passwordEncoder));
+      usersRepository.save(new UserEntity(registerUserMap.get(token), pdaId, passwordEncoder));
       try {
         emailService.sendRegisterLetter(registerUserMap.get(token), pdaId);
         registerUserMap.remove(token);
@@ -92,14 +92,14 @@ public class MemberServiceImpl implements MemberService {
   public MemberDto resetData() {
     UserEntity userEntity = getMember();
     userEntity.setMoney(500);
-    userEntity.setData(new Data());
-    memberRepository.save(userEntity);
+    //userEntity.setData(new Data());
+    usersRepository.save(userEntity);
     return memberMapper.memberDto(userEntity);
   }
 
   @Override
   public UserEntity getMember() {
-    return memberRepository.getMemberByLogin(SecurityContextHolder.getContext()
+    return usersRepository.getMemberByLogin(SecurityContextHolder.getContext()
             .getAuthentication()
             .getName())
             .orElseThrow(()->new UsernameNotFoundException("Пользователя не существует"));
@@ -118,7 +118,7 @@ public class MemberServiceImpl implements MemberService {
     base64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
     String login = base64.split(":")[0];
     String password = base64.split(":")[1];
-    Optional<UserEntity> optionalMember = memberRepository.getMemberByLogin(login);
+    Optional<UserEntity> optionalMember = usersRepository.getMemberByLogin(login);
     if (optionalMember.isPresent()
             && passwordEncoder.matches(password, optionalMember.get().getPassword()))
       return optionalMember.get();
@@ -126,18 +126,18 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public UserEntity getMember(ObjectId objectId) {
-    return memberRepository.getMemberBy_id(objectId).orElseThrow(()->new RuntimeException("Пользователя не существует"));
+  public UserEntity getMember(UUID objectId) {
+    return usersRepository.findById(objectId).orElseThrow(()->new RuntimeException("Пользователя не существует"));
   }
 
   @Override
   public UserEntity getMemberByPdaId(Integer id) {
-    return memberRepository.getMemberByPdaId(id).orElseThrow(()->new RuntimeException("Пользователя не существует"));
+    return usersRepository.getMemberByPdaId(id).orElseThrow(()->new RuntimeException("Пользователя не существует"));
   }
 
   @Override
   public UserEntity getMemberByEmail(String email) {
-    return memberRepository.getMemberByEmail(email).orElseThrow(()->new RuntimeException("Пользователя не существует"));
+    return usersRepository.getMemberByEmail(email).orElseThrow(()->new RuntimeException("Пользователя не существует"));
   }
 
 
@@ -154,7 +154,7 @@ public class MemberServiceImpl implements MemberService {
       //old.setEmail(user.getEmail());
       userEntity.setAvatar(user.getAvatar());
       userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-      memberRepository.save(userEntity);
+      usersRepository.save(userEntity);
       status.setDescription("Данные изменены");
     }
 
@@ -163,18 +163,18 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public UserEntity saveMember(UserEntity userEntity) {
-    return memberRepository.save(userEntity);
+    return usersRepository.save(userEntity);
   }
 
   @Override
   public ResponsePage<UserInfo> getRating(QueryPage queryPage) {
-    Page<UserEntity> memberPage = memberRepository.findAll(
+    Page<UserEntity> memberPage = usersRepository.findAll(
             sortService.getSortInfo(UserInfo.class, queryPage, "xp"));
     return pageService.mapDataPageToResponsePage(memberPage, memberMapper.info(memberPage.getContent()));
   }
 
   @Override
   public UserEntity doActions(HashMap<String, List<String>> actions) {
-    return memberRepository.save(actionService.doUserActions(actions, getMember()));
+    return usersRepository.save(actionService.doUserActions(actions, getMember()));
   }
 }

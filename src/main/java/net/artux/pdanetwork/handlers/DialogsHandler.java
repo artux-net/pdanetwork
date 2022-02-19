@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.handlers;
 
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.communication.model.*;
 import net.artux.pdanetwork.communication.utilities.MongoMessages;
 import net.artux.pdanetwork.models.Profile;

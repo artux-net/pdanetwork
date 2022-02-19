@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.models;
 
+import net.artux.pdanetwork.models.user.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -21,7 +22,7 @@ public interface MemberMapper {
 
     default Profile profile(UserEntity userEntity, UserEntity by){
         Profile profile = profile(userEntity);
-        profile.setFriendStatus(Profile.getFriendStatus(userEntity, by));
+        //profile.setFriendStatus(Profile.getFriendStatus(userEntity, by));
         return profile;
     }
 

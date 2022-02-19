@@ -1,6 +1,8 @@
-package net.artux.pdanetwork.models;
+package net.artux.pdanetwork.models.user;
 
 import lombok.NoArgsConstructor;
+import net.artux.pdanetwork.models.BaseEntity;
+import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.NoteEntity;
 import net.artux.pdanetwork.utills.Security;
@@ -21,20 +23,18 @@ import java.util.List;
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
+    private int pdaId;
     private String login;
     private String password;
     private String email;
     private String name;
     private String nickname;
     private String avatar;
-    private String token;
-    private int pdaId;
-    private String role;
-    private int blocked;
-    private int group;
+    private String location;
+    private Role role;
+    private Group group;
     private int xp;
     private int money;
-    private String location;
 
     //public Integer[] relations;
 
@@ -50,7 +50,6 @@ public class UserEntity extends BaseEntity {
 
 
     public List<Integer> achievements = new ArrayList<>();*/
-    private Long lastModified;
     private Long registration;
     private Long lastLoginAt;
 
@@ -61,25 +60,24 @@ public class UserEntity extends BaseEntity {
         name = registerUser.getName();
         nickname = registerUser.getNickname();
         avatar = registerUser.getAvatar();
-        token = Security.encrypt(login + ":" + password);
         pdaId = id;
-        role = "user";
-        blocked = group = xp = 0;
+        role = Role.USER;
+        group = Group.LONERS;
+        xp = 0;
         location = "Ч-4";
         money = 500;
-        lastModified = lastLoginAt = registration =Instant.now().toEpochMilli();
+        lastLoginAt = registration = Instant.now().toEpochMilli();
 
-        data = new Data();
+        /*data = new Data();
         dialogs = new ArrayList<>();
         subs = friends = requests = new ArrayList<>();
         relations = new ArrayList<>();
         for (int i = 0; i < 9; i++)
-            relations.add(0);
+            relations.add(0);*/
     }
 
     public void hashPassword(String password) {
         this.password = String.valueOf(password.hashCode());
-        token = Security.encrypt(login + ":" + password);
     }
 
     /*public NoteEntity addNote(String title, String content) {

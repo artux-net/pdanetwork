@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.models.profile.Data;
 import net.artux.pdanetwork.models.profile.NoteEntity;
+import net.artux.pdanetwork.models.user.Group;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -30,7 +31,7 @@ public class MemberDto {
     private int pdaId;
     private String role;
     private int blocked;
-    private int group;
+    private Group group;
     private int xp;
     private int money;
     private String location;

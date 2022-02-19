@@ -2,6 +2,7 @@ package net.artux.pdanetwork.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 
 @Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass

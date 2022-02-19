@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
-import net.artux.pdanetwork.repository.MemberRepository;
+import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.repository.user.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -19,13 +19,13 @@ import java.util.List;
 public class MongoUserDetailService implements UserDetailsService {
 
   @Autowired
-  private final MemberRepository memberRepository;
+  private final UsersRepository usersRepository;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    UserEntity userEntity = memberRepository.getMemberByLogin(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    UserEntity userEntity = usersRepository.getMemberByLogin(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-    List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole()));
+    List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().toString()));
 
     return new User(userEntity.getLogin(), userEntity.getPassword(), authorities);
   }

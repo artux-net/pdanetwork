@@ -2,7 +2,7 @@ package net.artux.pdanetwork.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.handlers.ChatHandler;
 import net.artux.pdanetwork.models.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;

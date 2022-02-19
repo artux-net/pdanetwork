@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.email;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.apache.commons.io.IOUtils;

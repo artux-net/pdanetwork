@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.items;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.UserEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.service.member.MemberService;
