@@ -19,4 +19,13 @@ public class ParameterEntity extends BaseEntity {
     public String key;
     public Integer value;
 
+    public ParameterEntity(UUID userId, String key, Integer value) {
+        this.userId = userId;
+        this.key = key;
+        this.value = value;
+    }
+
+    public ParameterEntity() {
+
+    }
 }

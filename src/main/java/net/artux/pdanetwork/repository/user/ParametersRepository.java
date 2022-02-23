@@ -15,5 +15,8 @@ import java.util.UUID;
 public interface ParametersRepository extends JpaRepository<ParameterEntity, UUID> {
 
     List<ParameterEntity> getByUserId(UUID userId);
+    Optional<ParameterEntity> getParameterEntityByUserIdAndAndKey(UUID uuid, String key);
+    boolean existsParameterEntityByUserIdEqualsAndKeyEquals(UUID userId, String key);
+
 
 }

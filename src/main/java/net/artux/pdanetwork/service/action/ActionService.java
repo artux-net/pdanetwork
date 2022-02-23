@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.service.action;
 
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.profile.ParameterEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
@@ -16,10 +17,13 @@ import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.service.ItemsManager;
 import net.artux.pdanetwork.service.files.SellersService;
 import net.artux.pdanetwork.service.files.Types;
+import net.artux.pdanetwork.service.items.ItemsService;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static net.artux.pdanetwork.utills.ServletContext.error;
 
@@ -29,12 +33,15 @@ public class ActionService {
 
     private final ItemsManager itemsManager;
     private final Types types;
+    private final ItemsService itemsService;
     private final SellersService sellersService;
     private final ParametersRepository parametersRepository;
 
     public UserEntity doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
         List<ParameterEntity> parameterEntity = parametersRepository.getByUserId(userEntity.getUid());
+        UUID id = userEntity.getUid();
 
+        Map<String, Integer> data = parameterEntity.stream().collect(Collectors.toMap(ParameterEntity::getKey, ParameterEntity::getValue));
         try {
             Data data = userEntity.getData();
             for (String command : map.keySet()) {
@@ -47,29 +54,23 @@ public class ActionService {
                                 data = addItems(data, param);
                             } else if (param.length == 2) {
                                 //add_value
-                                if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
-                                    data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
-                                }
+                                String[] values = value.split(":");
+                                addValue(id, values[0], Integer.parseInt(value.split(":")[1]));
                             } else {
                                 //add_param
-                                if (!data.parameterEntity.keys.contains(value)) data.parameterEntity.keys.add(value);
+                                addKey(id, value);
                             }
                         }
                         break;
                     case "add_param":
                         for (String value : params) {
-                            if (!data.parameterEntity.keys.contains(value)) data.parameterEntity.keys.add(value);
+                            addKey(id, value);
                         }
                         break;
                     case "add_value":
                         for (String value : params) {
-                            if (!data.parameterEntity.values.containsKey(value.split(":")[0])) {
-                                data.parameterEntity.values.put(value.split(":")[0], Integer.parseInt(value.split(":")[1]));
-                            } else {
-                                data.parameterEntity.
-                                        values.put(value.split(":")[0],
-                                                data.parameterEntity.values.get(value.split(":")[0]) + Integer.parseInt(value.split(":")[1]));
-                            }
+                            String[] values = value.split(":");
+                            addValue(id, values[0], Integer.valueOf(values[1]));
                         }
                         break;
                     case "add_items":
@@ -86,14 +87,14 @@ public class ActionService {
                             if (vals.length == 3) {
                                 data = removeItems(data, vals);
                             }
-                            data.parameterEntity.keys.remove(pass);
-                            data.parameterEntity.values.remove(pass);
+                            data.remove(pass);
+                            data.remove(pass);
                         }
                         break;
                     case "=":
                         for (String pass : params) {
-                            String[] vals = pass.split(":");
-                            data.parameterEntity.values.put(vals[0], Integer.valueOf(vals[1]));
+                            String[] values = pass.split(":");
+                            setValue(id, values[0], Integer.valueOf(values[1]));
                         }
                         break;
                     case "+":
@@ -103,7 +104,7 @@ public class ActionService {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
                                 userEntity.relations.set(group, userEntity.relations.get(group) + Integer.parseInt(vals[1]));
                             } else
-                                data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) + Integer.valueOf(vals[1]));
+                                data.put(vals[0], data.get(vals[0]) + Integer.parseInt(vals[1]));
                         }
                         break;
                     case "-":
@@ -113,13 +114,13 @@ public class ActionService {
                                 int group = Integer.parseInt(vals[0].split("_")[1]);
                                 userEntity.relations.set(group, userEntity.relations.get(group) - Integer.parseInt(vals[1]));
                             } else
-                                data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) - Integer.parseInt(vals[1]));
+                                addValue(id, vals[0], -Integer.parseInt(vals[1]));
                         }
                         break;
                     case "*":
                         for (String pass : params) {
-                            String[] vals = pass.split(":");
-                            data.parameterEntity.values.put(vals[0], data.parameterEntity.values.get(vals[0]) * Integer.parseInt(vals[1]));
+                            String[] values = pass.split(":");
+                            multiplyValue(id, values[0], Integer.parseInt(values[1]));
                         }
                         break;
                     case "money":
@@ -140,7 +141,7 @@ public class ActionService {
                         break;
                     case "achieve":
                         for (String pass : params)
-                            userEntity.achievements.add(Integer.parseInt(pass));
+                            //userEntity.achievements.add(Integer.parseInt(pass));
                         break;
                     case "location":
                         for (String pass : params)
@@ -208,6 +209,47 @@ public class ActionService {
             e.printStackTrace();
             return userEntity;
         }
+    }
+
+    public void multiplyValue(UUID userId, String key, Integer integer){
+        var s = parametersRepository.getParameterEntityByUserIdAndAndKey(userId, key);
+        ParameterEntity entity;
+        if (s.isPresent()) {
+            entity = s.get();
+            entity.value *= integer;
+        } else {
+            entity = new ParameterEntity(userId, key, integer);
+        }
+        parametersRepository.save(entity);
+    }
+
+    public void setValue(UUID userId, String key, Integer integer){
+        var s = parametersRepository.getParameterEntityByUserIdAndAndKey(userId, key);
+        ParameterEntity entity;
+        if (s.isPresent()) {
+            entity = s.get();
+            entity.value = integer;
+        } else {
+            entity = new ParameterEntity(userId, key, integer);
+        }
+        parametersRepository.save(entity);
+    }
+
+    public void addValue(UUID userId, String key, Integer integer){
+        var s = parametersRepository.getParameterEntityByUserIdAndAndKey(userId, key);
+        ParameterEntity entity;
+        if (s.isPresent()) {
+            entity = s.get();
+            entity.value += integer;
+        } else {
+            entity = new ParameterEntity(userId, key, integer);
+        }
+        parametersRepository.save(entity);
+    }
+
+    public void addKey(UUID userId, String key){
+        if (!parametersRepository.existsParameterEntityByUserIdEqualsAndKeyEquals(userId, key))
+            parametersRepository.save(new ParameterEntity(userId, key, 0));
     }
 
     public Status set(UserEntity userEntity, @NotNull int hashCode) {
@@ -349,7 +391,6 @@ public class ActionService {
                     return removeItems(data, values);
                 }else
                     return addItems(data, itemEntity);
-
             }
         } catch (Exception e) {
             error("Item err", e);
@@ -441,10 +482,6 @@ public class ActionService {
         } else
             data.itemEntities.remove(itemEntity);
         return data;
-    }
-
-    public SellersService getSellersService() {
-        return sellersService;
     }
 
     public static boolean isInteger(String str) {

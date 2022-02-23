@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ItemsManager {
 
-    public Data  addWeapon(Data data, WeaponEntity weaponEntity, int quantity) {
+    public Data addWeapon(Data data, WeaponEntity weaponEntity, int quantity) {
         weaponEntity.setQuantity(quantity);
         for (int i = 0; i < quantity; i++) {
             data.weaponEntities.add(weaponEntity);
