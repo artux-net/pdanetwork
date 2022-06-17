@@ -4,8 +4,13 @@ package net.artux.pdanetwork.models.profile.items;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 @Data
-public class ArmorEntity extends ItemEntity {
+@Entity
+@Table(name = "armor")
+public class ArmorEntity extends WearableEntity {
 
     private float thermal_pr;
     private float electric_pr;
@@ -14,8 +19,6 @@ public class ArmorEntity extends ItemEntity {
     private float psy_pr;
     private float damage_pr;
     private float condition;
-
-    private boolean isEquipped;
 
     @Override
     public boolean equals(Object o) {
@@ -30,11 +33,6 @@ public class ArmorEntity extends ItemEntity {
                 Float.compare(armorEntity.psy_pr, psy_pr) == 0 &&
                 Float.compare(armorEntity.damage_pr, damage_pr) == 0 &&
                 Float.compare(armorEntity.condition, condition) == 0;
-    }
-
-    @Override
-    public int priceToSell() {
-        return (int) (super.priceToSell() * condition / 100);
     }
 
     @Override

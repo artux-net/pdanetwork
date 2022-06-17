@@ -1,22 +1,22 @@
 package net.artux.pdanetwork.models;
 
 import lombok.NoArgsConstructor;
+import net.artux.pdanetwork.models.achievement.AchievementEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @lombok.Data
 @NoArgsConstructor
-//@RequiredArgsConstructor
 @Entity
-@Table(name = "achievement")
+@Table(name = "achievement_user")
 public class UserAchievementEntity extends BaseEntity {
 
-    @OneToOne
+    @ManyToOne
     private UserEntity user;
-    @OneToOne
+    @ManyToOne
     private AchievementEntity achievement;
 
 }

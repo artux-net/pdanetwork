@@ -1,36 +1,7 @@
 package net.artux.pdanetwork.communication.utilities;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Indexes;
-import net.artux.pdanetwork.communication.model.Conversation;
-import net.artux.pdanetwork.communication.model.ConversationRequest;
-import net.artux.pdanetwork.communication.model.UserMessage;
-import net.artux.pdanetwork.communication.utilities.model.DBMessage;
-import net.artux.pdanetwork.service.mongo.MongoUsers;
-import net.artux.pdanetwork.service.util.ValuesService;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.set;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
-@Service
 public class MongoMessages {
+/*
 
     private final MongoClient mongoClient;
     private final MongoDatabase db;
@@ -184,5 +155,6 @@ public class MongoMessages {
         return conversations.find(query).first();
     }
 
+*/
 
 }

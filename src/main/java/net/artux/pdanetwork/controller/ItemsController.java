@@ -5,25 +5,25 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.SellerDto;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.service.items.ItemsService;
-import net.artux.pdanetwork.service.files.SellersService;
+import net.artux.pdanetwork.service.items.SellerService;
+import net.artux.pdanetwork.service.files.SellerManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Профиль - Предметы")
+@Api(tags = "Предметы")
 @RequestMapping("/items")
 public class ItemsController {
 
-  private final SellersService sellersService;
-  private final ItemsService itemsService;
+  private final SellerManager sellerManager;
+  private final SellerService sellerService;
 
-  @ApiOperation(value = "Продавец")
+  @ApiOperation(value = "Получить продавца")
   @GetMapping("/{id}")
   public SellerDto getSeller(@PathVariable Integer id){
-    return sellersService.getSellerDto(id);
+    return sellerManager.getSellerDto(id);
   }
 
   @ApiOperation(value = "Операция с предметом")
@@ -31,11 +31,11 @@ public class ItemsController {
   public Status actionWithItem(@PathVariable String action, @QueryParam("seller") Integer seller, @QueryParam("hash") int hash){
     switch (action) {
       case "buy":
-        return itemsService.buy(seller, hash);
+        return sellerService.buy(seller, hash);
       case "sell":
-        return itemsService.sell(hash);
+        return sellerService.sell(hash);
       case "set":
-        return itemsService.set(hash);
+        return sellerService.set(hash);
       default:
         return new Status(false, "Action wrong");
     }
@@ -43,8 +43,8 @@ public class ItemsController {
 
   @ApiOperation(value = "Добавить предмет (только для админа)")
   @PostMapping("/add")
-  public Status addItem(@QueryParam("pdaId") Integer pdaId, @QueryParam("type") int type, @QueryParam("id") int id, @QueryParam("quantity") int quantity){
-    return itemsService.add(pdaId, type, id, quantity);
+  public Status addItem(@QueryParam("pdaId") Long pdaId, @QueryParam("type") int type, @QueryParam("id") int id, @QueryParam("quantity") int quantity){
+    return sellerService.add(pdaId, type, id, quantity);
   }
 
 }

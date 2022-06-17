@@ -1,42 +1,7 @@
 package net.artux.pdanetwork.service.mongo;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
-import com.mongodb.client.model.Indexes;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.result.UpdateResult;
-import net.artux.pdanetwork.models.Profile;
-import net.artux.pdanetwork.models.RegisterUser;
-import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.UserInfo;
-import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.util.ValuesService;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
-import org.bson.conversions.Bson;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.combine;
-import static com.mongodb.client.model.Updates.set;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
-
-@Service
 public class MongoUsers {
+/*
 
     private final MongoClient mongoClient;
     private final MongoCollection<UserEntity> table;
@@ -251,16 +216,20 @@ public class MongoUsers {
         UserEntity user = getMember(token);
         UserEntity newFriend = getMember(id);
 
-        /*user.subs.add(newFriend.getPdaId());
+        */
+/*user.subs.add(newFriend.getPdaId());
         updateMember(user);
 
-        newFriend.requests.add(user.getPdaId());*/
+        newFriend.requests.add(user.getPdaId());*//*
+
         updateMember(newFriend);
     }
 
-    /*public List<Integer> getFriendRequests(int pdaId) {
+    */
+/*public List<Integer> getFriendRequests(int pdaId) {
         return getMember(pdaId).requests;
-    }*/
+    }*//*
+
 
     public boolean addFriend(String token, Integer id) {
 
@@ -273,21 +242,25 @@ public class MongoUsers {
     }
 
     public void addDialog(int pdaId, int conversation) {
-        /*UserEntity user = getMember(pdaId);
+        */
+/*UserEntity user = getMember(pdaId);
 
         if (user != null) {
             user.dialogs.add(conversation);
             updateMember(user);
-        }*/
+        }*//*
+
     }
 
     public void updateDialog(int pdaId, Integer conversation) {
-        /*UserEntity user = getMember(pdaId);
+        */
+/*UserEntity user = getMember(pdaId);
         if (user != null) {
             user.dialogs.remove(conversation);
             user.dialogs.add(0, conversation);
             updateMember(user);
-        }*/
+        }*//*
+
     }
 
     public UserEntity getMember(int pdaId) {
@@ -330,5 +303,6 @@ public class MongoUsers {
         updates.add(set("lastModified", Instant.now().toEpochMilli()));
         return table.updateOne (eq("token", token), combine(updates), new UpdateOptions().upsert(true).bypassDocumentValidation(true));
     }
+*/
 
 }

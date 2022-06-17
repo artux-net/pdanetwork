@@ -1,22 +1,6 @@
+<p th:text="${'Последнее чтение файлов: ' + readTime}"></p>
+<form name="addArticle" method="post"
+      th:action="@{/utility/reset}">
+    <button type="submit">Прочитать конфигурационные файлы заново</button>
+</form>
 
-<!DOCTYPE html>
-
-<html>
-<head th:insert="head"/>
-<body>
-<div class="container">
-    <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
-    <div th:insert="sidebar"/>
-    <div class="content">
-
-        <p th:text="${'Последнее чтение файлов: ' + readTime}"></p>
-        <form name="addArticle" method="post"
-              th:action="@{/utility/reset}">
-            <button type="submit">Прочитать конфигурационные файлы заново</button>
-        </form>
-
-    </div>
-    <div class="footer">${footer_version}</div>
-</div>
-</body>
-</html>

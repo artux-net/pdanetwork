@@ -1,14 +1,10 @@
 package net.artux.pdanetwork.repository;
 
-import net.artux.pdanetwork.models.feed.Article;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import net.artux.pdanetwork.models.feed.ArticleEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public interface ArticleRepository extends MongoRepository<Article, ObjectId> {
+public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
 
-  Optional<Article> findById(String id);
 }

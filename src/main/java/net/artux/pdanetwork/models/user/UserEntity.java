@@ -1,95 +1,85 @@
 package net.artux.pdanetwork.models.user;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.artux.pdanetwork.models.BaseEntity;
 import net.artux.pdanetwork.models.RegisterUser;
-import net.artux.pdanetwork.models.profile.Data;
-import net.artux.pdanetwork.models.profile.NoteEntity;
-import net.artux.pdanetwork.utills.Security;
+import net.artux.pdanetwork.models.UserAchievementEntity;
+import net.artux.pdanetwork.models.gang.Gang;
+import net.artux.pdanetwork.models.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.note.NoteEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@lombok.Data
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
+@Table(name = "pda_user")
 public class UserEntity extends BaseEntity {
 
-    private int pdaId;
+    private UUID uid;
     private String login;
     private String password;
     private String email;
     private String name;
     private String nickname;
     private String avatar;
-    private String location;
-    private Role role;
-    private Group group;
+    @Enumerated(EnumType.STRING)
+    private Gang gang;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private GangRelationEntity gangRelation;
     private int xp;
     private int money;
 
-    //public Integer[] relations;
-
-
     @OneToMany(fetch = FetchType.LAZY)
-    public List<NoteEntity> noteEntities;
+    @JoinColumn(name = "author_id")
+    public List<NoteEntity> notes;
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<UserAchievementEntity> achievements;
 
-    //private Data data; - ok
-    /*public List<Integer> dialogs = new ArrayList<>();
-    public List<ObjectId> subs = new ArrayList<>();
-    public List<ObjectId> friends = new ArrayList<>();
-    public List<ObjectId> requests = new ArrayList<>();
-
-
-    public List<Integer> achievements = new ArrayList<>();*/
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private Long registration;
     private Long lastLoginAt;
 
-    public UserEntity(RegisterUser registerUser, int id, PasswordEncoder passwordEncoder) {
+    public UserEntity(RegisterUser registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
+        uid = UUID.randomUUID();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
         name = registerUser.getName();
         nickname = registerUser.getNickname();
         avatar = registerUser.getAvatar();
-        pdaId = id;
         role = Role.USER;
-        group = Group.LONERS;
+        gang = Gang.LONERS;
+        gangRelation = new GangRelationEntity(this);
         xp = 0;
-        location = "Ч-4";
         money = 500;
         lastLoginAt = registration = Instant.now().toEpochMilli();
+    }
 
-        /*data = new Data();
-        dialogs = new ArrayList<>();
-        subs = friends = requests = new ArrayList<>();
-        relations = new ArrayList<>();
-        for (int i = 0; i < 9; i++)
-            relations.add(0);*/
+    public long getPdaId() {
+        return id;
     }
 
     public void hashPassword(String password) {
-        this.password = String.valueOf(password.hashCode());
+        this.password = String.valueOf(password.hashCode()); //TODO hashing
     }
-
-    /*public NoteEntity addNote(String title, String content) {
-        NoteEntity noteEntity;
-        if (noteEntities.size() != 0)
-            noteEntity = new NoteEntity(noteEntities.get(noteEntities.size() - 1).cid + 1,
-                    title, content);
-        else
-            noteEntity = new NoteEntity(title, content);
-        noteEntities.add(noteEntity);
-        return noteEntity;
-    }*/
 
     public void money(int money) {
         this.money += money;

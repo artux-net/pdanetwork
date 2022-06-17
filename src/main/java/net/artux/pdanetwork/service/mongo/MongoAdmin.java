@@ -1,29 +1,10 @@
 package net.artux.pdanetwork.service.mongo;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.util.ValuesService;
-import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 @Service
 public class MongoAdmin {
-
+/*
     private final MongoClient mongoClient;
     private final MongoCollection<UserEntity> table;
 
@@ -78,6 +59,6 @@ public class MongoAdmin {
 
         table.find(Filters.regex("login", q)).forEach(users::add);
         return users;
-    }
+    }*/
 
 }

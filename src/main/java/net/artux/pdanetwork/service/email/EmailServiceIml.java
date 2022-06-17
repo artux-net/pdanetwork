@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.email;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.RegisterUser;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -63,7 +63,7 @@ public class EmailServiceIml implements EmailService {
 
   }
 
-  public void sendRegisterLetter(RegisterUser user, int pdaId){
+  public void sendRegisterLetter(RegisterUser user, Long pdaId){
     sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
             .replace("${login}", user.getLogin())
             .replace("${pass}" , user.getPassword())

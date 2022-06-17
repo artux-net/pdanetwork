@@ -6,16 +6,16 @@ import java.util.List;
 
 public class Stats {
 
-    private List<Achievement> achievements = new ArrayList<>();
+    private List<AchievementDTO> achievements = new ArrayList<>();
 
     public Stats() {
     }
 
-    public List<Achievement> getAchievements() {
+    public List<AchievementDTO> getAchievements() {
         return achievements;
     }
 
-    public void setAchievements(List<Achievement> achievements) {
+    public void setAchievements(List<AchievementDTO> achievements) {
         this.achievements = achievements;
     }
 

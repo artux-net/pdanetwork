@@ -5,7 +5,7 @@ import net.artux.pdanetwork.models.profile.items.ArmorEntity;
 import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
 import net.artux.pdanetwork.models.profile.items.ItemEntity;
 import net.artux.pdanetwork.models.profile.items.WeaponEntity;
-import net.artux.pdanetwork.service.files.Types;
+import net.artux.pdanetwork.service.files.ItemProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +23,26 @@ public class SellerDto {
     private List<ArtifactEntity> artifactEntities = new ArrayList<>();
     private List<ItemEntity> itemEntities = new ArrayList<>();
 
-    public SellerDto(Seller seller, Types types){
+    public SellerDto(Seller seller, ItemProvider itemProvider){
         id = seller.getId();
         name = seller.getName();
         avatar = seller.getAvatar();
         seller.getItems().forEach((integer, integers) -> {
             switch (integer){
                 case 0:
-                    pistols = (List<WeaponEntity>) types.getItems(integer, integers);
+                    pistols = (List<WeaponEntity>) itemProvider.getItems(integer, integers);
                     break;
                 case 1:
-                    rifles = (List<WeaponEntity>) types.getItems(integer, integers);
+                    rifles = (List<WeaponEntity>) itemProvider.getItems(integer, integers);
                     break;
                 case 2:
-                    itemEntities = (List<ItemEntity>) types.getItems(integer, integers);
+                    itemEntities = (List<ItemEntity>) itemProvider.getItems(integer, integers);
                     break;
                 case 3:
-                    artifactEntities = (List<ArtifactEntity>) types.getItems(integer, integers);
+                    artifactEntities = (List<ArtifactEntity>) itemProvider.getItems(integer, integers);
                     break;
                 case 4:
-                    armorEntities = (List<ArmorEntity>) types.getItems(integer, integers);
+                    armorEntities = (List<ArmorEntity>) itemProvider.getItems(integer, integers);
                     break;
             }
         });

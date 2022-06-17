@@ -1,0 +1,20 @@
+<form name="addArticle" method="post" action="#" th:action="@{/utility/articles}" th:object="${article}">
+    <input type="text" th:field="*{title}" th:value="${article.title}" placeholder="Название"/>
+    <input type="text" th:field="*{image}" th:value="${article.image}" placeholder="Ссылка на картинку"/>
+    <input type="text" th:field="*{description}" th:value="${article.description}" placeholder="Описание"/>
+    <textarea name="content" th:field="*{content}" th:value="${article.content}" id="editor"></textarea>
+    <input type="hidden" th:field="*{id}" th:value="${id}"/>
+    <button type="submit">Добавить/изменить статью</button>
+</form>
+
+<script type="text/javascript">
+    var editor = new Jodit('#editor', {
+        uploader: {
+            url: 'https://api.artux.net/pda/files'
+        },
+        "language": "en",
+        "theme": "dark",
+        "disablePlugins": "about"
+    });
+</script>
+</div>

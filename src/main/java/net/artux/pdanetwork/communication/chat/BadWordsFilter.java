@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.communication.chat;
 
-import net.artux.pdanetwork.communication.model.UserMessage;
+import net.artux.pdanetwork.models.communication.MessageEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,8 +11,8 @@ public class BadWordsFilter {
 
     private static final List<String> badWords = Arrays.asList(badWord.split(", "));
 
-    public static boolean contains(UserMessage message) {
-        return contains(message.message);
+    public static boolean contains(MessageEntity message) {
+        return contains(message.getContent());
     }
 
     public static boolean contains(String message) {

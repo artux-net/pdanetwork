@@ -190,7 +190,7 @@ PDA Network with API for application "Сталкерский ПДА"
 "@xp"
 "@login"
 "@location"
-"@group"
+"@gang"
 "@pdaId"
 
 Загрузив самую первую стадию, приложение будет ждать выбора ответа

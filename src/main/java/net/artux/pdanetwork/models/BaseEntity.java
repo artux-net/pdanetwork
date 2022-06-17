@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.util.UUID;
 
 
 @Data
@@ -20,6 +19,6 @@ public class BaseEntity {
 
     @Id
     @GeneratedValue
-    protected UUID uid;
+    protected Long id;
 
 }

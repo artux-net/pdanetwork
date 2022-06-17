@@ -2,8 +2,10 @@ package net.artux.pdanetwork.models.profile;
 
 import lombok.Data;
 import net.artux.pdanetwork.models.BaseEntity;
+import net.artux.pdanetwork.models.user.UserEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,15 +14,16 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "parameter", schema = "artuxpda")
+@Table(name = "parameter")
 public class ParameterEntity extends BaseEntity {
 
-    public UUID userId;
+    @ManyToOne
+    public UserEntity user;
     public String key;
     public Integer value;
 
-    public ParameterEntity(UUID userId, String key, Integer value) {
-        this.userId = userId;
+    public ParameterEntity(UserEntity user, String key, Integer value) {
+        this.user = user;
         this.key = key;
         this.value = value;
     }

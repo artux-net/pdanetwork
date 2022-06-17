@@ -1,24 +1,39 @@
 package net.artux.pdanetwork.repository.user;
 
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.bytebuddy.agent.builder.AgentBuilder;
-import org.bson.types.ObjectId;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
-public interface UsersRepository extends JpaRepository<UserEntity, UUID> {
+public interface UsersRepository extends JpaRepository<UserEntity, Long> {
 
-    Optional<UserEntity> getUserEntityByUid(ObjectId objectId);
-    Optional<UserEntity> getMemberByPdaId(int pdaId);
+    Optional<UserEntity> getByUid(UUID uuid);
+
     Optional<UserEntity> getMemberByLogin(String login);
+
     Optional<UserEntity> getMemberByEmail(String email);
-    Optional<UserEntity> findTopByOrderByPdaIdDesc();
-    List<UserEntity> findAllByUidIn(List<UUID> list);
+
+    List<UserEntity> findAllByIdIn(List<Long> list);
+
+    @Query(value = "select * from pda_user pu join " +
+            "(select r.user1_id, r.user2_id from relationship r where r.id not in (select r1.id from relationship r1  " +
+            "join relationship r2 on r1.user1_id = r2.user2_id and r1.user2_id = r2.user1_id)) " +
+            "ur on ur.user2_id = pu.id where ur.user1_id = ?1", nativeQuery = true)
+    List<UserEntity> getRequestsById(Long id);
+
+    @Query(value = "select * from pda_user pu join " +
+            "(select r.user1_id, r.user2_id from relationship r where r.id not in (select r1.id from relationship r1 " +
+            "join relationship r2 on r1.user1_id = r2.user2_id and r1.user2_id = r2.user1_id)) " +
+            "ur on ur.user1_id = pu.id where ur.user2_id = ?1", nativeQuery = true)
+    List<UserEntity> getSubsById(Long id);
+
+    @Query(value = "select * from pda_user pu join (select r.user2_id  from relationship r " +
+            "join relationship r1 on r.user1_id = r1.user2_id and r.user2_id = r1.user1_id where r.user1_id = ?1) r " +
+            "on r.user2_id = pu.id", nativeQuery = true)
+    List<UserEntity> getFriendsById(Long id);
 
 
 }

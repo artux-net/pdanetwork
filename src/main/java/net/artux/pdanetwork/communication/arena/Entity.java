@@ -11,7 +11,7 @@ public class Entity implements Serializable {
 
     final static double MOVEMENT = 5;
 
-    public final int id;
+    public final long id;
     private final String name;
     public double health = 100;
     public final Vector2 position;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.QueryParam;
 
 @Controller
-@Api(tags = "Регистрация")
+@Api(tags = "Аутентификация")
 @RequiredArgsConstructor
 @RequestMapping("/register")
 public class RegisterController {

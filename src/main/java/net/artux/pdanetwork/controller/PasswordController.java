@@ -7,10 +7,11 @@ import net.artux.pdanetwork.service.member.reset.ResetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
 @RequiredArgsConstructor
-@Api(tags = "Смена пароля")
+@ApiIgnore
 @RequestMapping("/reset/password")
 public class PasswordController {
 

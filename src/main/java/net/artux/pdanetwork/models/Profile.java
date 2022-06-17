@@ -1,25 +1,24 @@
 package net.artux.pdanetwork.models;
 
 import lombok.Data;
+import net.artux.pdanetwork.models.gang.Gang;
+import net.artux.pdanetwork.models.gang.GangRelationDto;
 import net.artux.pdanetwork.models.user.FriendRelation;
-import net.artux.pdanetwork.models.user.Group;
 import net.artux.pdanetwork.models.user.Reason;
+import net.artux.pdanetwork.models.user.Role;
 import net.artux.pdanetwork.models.user.UserEntity;
-
-import java.util.List;
 
 @Data
 public class Profile {
 
     private String login;
     private String name;
-    private String role;
+    private Role role;
     private Reason blocked;
-    private Group group;
+    private Gang gang;
     private String avatar;
-    private int pdaId;
+    private long pdaId;
     private int xp;
-    private String location;
     private Long registration;
     private FriendRelation friendRelation;
     /*
@@ -30,7 +29,7 @@ public class Profile {
      */
     private int friends;
     private int subs;
-    private List<Integer> relations;
+    private GangRelationDto relations;
 
     private int achievements;
 
@@ -40,13 +39,13 @@ public class Profile {
     public Profile(UserEntity userEntity) {
         this.login = userEntity.getLogin();
         this.name = userEntity.getName();
-        this.role = userEntity.getRole().toString();
+        this.role = userEntity.getRole();
         //this.blocked = userEntity.get;
-        this.group = userEntity.getGroup();
+        this.gang = userEntity.getGang();
         this.avatar = userEntity.getAvatar();
         this.pdaId = userEntity.getPdaId();
         this.xp = userEntity.getXp();
-        this.location = userEntity.getLocation();
+        // this.location = userEntity.getLocation();
         this.registration = userEntity.getRegistration();
         /*this.friends = userEntity.getSubs().size();
         this.subs = userEntity.getRequests().size();
@@ -58,11 +57,11 @@ public class Profile {
         this.name = userEntity.getName();
         //this.role = userEntity.getRole();
         //this.blocked = ;
-        this.group = userEntity.getGroup();
+        // this.gang = userEntity.getGang();
         this.avatar = userEntity.getAvatar();
         this.pdaId = userEntity.getPdaId();
         this.xp = userEntity.getXp();
-        this.location = userEntity.getLocation();
+        //this.location = userEntity.getLocation();
         this.registration = userEntity.getRegistration();
         /*this.friends = userEntity.getSubs().size();
         this.subs = userEntity.getRequests().size();

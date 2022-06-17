@@ -1,156 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Админ панель - Сталкерский ПДА | Artux</title>
-    <link href="../css/style.css" rel="stylesheet">
+<script type="text/javascript" th:inline="javascript">
+    var stompClient = null;
 
-    <script type="text/javascript" th:inline="javascript">
-
-        /*<![CDATA[*/
-
-        var url = /*[[${url}]]*/ 'wss://api.artux.net/pda/chat/';
-
-        var socket;
-
-        function connect() {
-            socket = new WebSocket(url);
-
-            socket.onopen = function () {
-                console.log('session opened.');
-                var window = document.getElementById("messages");
-                window.innerHTML = '';
-            };
-
-            socket.onclose = function (event) {
-                setTimeout(function () {
-                    console.log('reconnect.');
-                    connect();
-                }, 1000);
-            };
-
-            socket.onmessage = function (event) {
-                addRow(event.data);
-            };
-
-            socket.onerror = function (error) {
-                alert("Ошибка " + error.message);
-                socket.close();
-            };
-
-            function addRow(data) {
-                var message = JSON.parse(data);
-                if ("time" in message) {
-                    addMessage(message);
-                } else {
-                    document.getElementById('messages').innerHTML = '';
-                    for (var i = 0; i < message.length; i++) {
-                        addMessage(message[i]);
-                    }
-                }
-
-                var window = document.getElementById("messages");
-                window.scrollTop = window.scrollHeight;
-                if (window.childElementCount > 50) {
-                    window.removeChild(window.firstChild);
-                }
-            }
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) {
+            $("#conversation").show();
+        } else {
+            $("#conversation").hide();
         }
+        $("#greetings").html("");
+    }
 
-        function post(path, params, method='post') {
+    function connect() {
+        var socket = new SockJS('/pdanetwork/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            setConnected(true);
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/chat', function (greeting) {
+                addMessage(JSON.parse(greeting.body));
+            });
+        });
+    }
 
-            const form = document.createElement('form');
-            form.method = method;
-            form.action = path;
-
-            for (const key in params) {
-                if (params.hasOwnProperty(key)) {
-                    const hiddenField = document.createElement('input');
-                    hiddenField.type = 'hidden';
-                    hiddenField.name = key;
-                    hiddenField.value = params[key];
-
-                    form.appendChild(hiddenField);
-                }
-            }
-
-            document.body.appendChild(form);
-            form.submit();
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
         }
+        setConnected(false);
+        console.log("Disconnected");
+    }
 
-        function addMessage(message) {
-            var spn = document.createElement('span');
-            spn.innerHTML =
-                "            <tbody>\n" +
-                "            <tr>\n" +
-                "                <td>" + message.senderLogin + " PDAID #" + message.pdaId + "</td>\n" +
-                "            </tr>\n" +
-                "            <tr>\n" +
-                "                <td>\n" +
-                "                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%\">\n" +
-                "                        <tbody>\n" +
-                "                        <tr>\n" +
-                "                            <td>" + message.message + "</td>\n" +
-                "                            <p><td>" + new Date(message.time).toString() + "</td></p>\n" +
-                "                        </tr>\n" +
-                "                        </tbody>\n" +
-                "                    </table>\n" +
-                "                    <p align=\"center\">" +
-                "" + "<input type=\"submit\" value=\"Удалить\" onclick=\"post('/pda/chat/delete/"+ message.time +"',{});\">" +
-                "" + "<input type=\"submit\" value=\"Бан на час\" onclick=\"post('/pda/chat/ban/" + message.pdaId + "',{});\">" +
-                "                </td>\n" +
-                "            </tr>\n" +
-                "            </tbody>\n" +
-                "        <hr>";
-            document.getElementById('messages').appendChild(spn);
-        }
+    function sendMessage() {
+        stompClient.send("/pdanetwork/chat", {}, $("#input_text").val());
+    }
 
-        connect();
+    $(function () {
+        $("form").on('submit', function (e) {
+            e.preventDefault();
+        });
+        $("#connect").click(function () {
+            connect();
+        });
+        $("#disconnect").click(function () {
+            disconnect();
+        });
+        $("#send").click(function () {
+            sendMessage();
+        });
+    });
 
-        function sendMessage() {
-            socket.send(document.getElementById("input_text").value);
-        }
+    function addMessage(message) {
+        var spn = document.createElement('span');
+        spn.innerHTML =
+            "            <tbody>\n" +
+            "            <tr>\n" +
+            "                <td>" + message.login + " PDAID #" + message.pdaId + "</td>\n" +
+            "            </tr>\n" +
+            "            <tr>\n" +
+            "                <td>\n" +
+            "                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%\">\n" +
+            "                        <tbody>\n" +
+            "                        <tr>\n" +
+            "                            <td>" + message.content + "</td> <br>\n" +
+            "                            <p><td>" + new Date(message.timestamp).toString() + "</td></p>\n" +
+            "                        </tr>\n" +
+            "                        </tbody>\n" +
+            "                    </table>\n" +
+            "                    <p align=\"center\">" +
+            "" + "<input type=\"submit\" value=\"Удалить\" onclick=\"post('/pda/chat/delete/" + message.timestamp + "',{});\">" +
+            "" + "<input type=\"submit\" value=\"Бан на час\" onclick=\"post('/pda/chat/ban/" + message.pdaId + "',{});\">" +
+            "                </td>\n" +
+            "            </tr>\n" +
+            "            </tbody>\n" +
+            "        <hr>";
+        document.getElementById('messages').appendChild(spn);
+    }
+</script>
 
-        function helpChat() {
-            alert("\n" +
-                "`0` - Одиночки\n" +
-                "\n" +
-                "`1` - Бандиты\n" +
-                "\n" +
-                "`2` - Военные\n" +
-                "\n" +
-                "`3` - Свобода\n" +
-                "\n" +
-                "`4` - Долг\n" +
-                "\n" +
-                "`5` - Монолит\n" +
-                "\n" +
-                "`6` - Наёмники");
-        }
-        /*]]>*/
-    </script>
-</head>
-<body>
-<div class="container">
-    <div class="header"><img src="https://artux.net/favicon.ico" style="height: 50px"></div>
-    <div th:insert="sidebar"/>
-    <div class="content">
-        <h2>Чат</h2>
-
-        <div style="height: 400px; overflow: auto;">
-
-            <table id="messages" border="0" cellpadding="1" cellspacing="1" style="width: 100%">
-
-            </table>
-        </div>
-        <p>Сообщение<Br>
-            <textarea name="comment" cols="40" rows="3" id="input_text"></textarea></p>
-        <p><input type="submit" value="Отправить" onclick="sendMessage()">
-            <input type="reset" value="Очистить">
-            <input type="reset" value="Переподключиться" onclick="connect()">
-        </p>
-    </div>
-
-    <div class="footer">${footer_version}</div>
+<h2>Чат</h2>
+<div>
+    <button id="connect" onclick="connect();">Connect</button>
+    <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button>
 </div>
-</body>
-</html>
+<div style="height: 400px; overflow: auto;">
+
+    <table id="messages" border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+
+    </table>
+</div>
+<p>Сообщение<Br>
+    <textarea name="comment" cols="40" rows="3" id="input_text"></textarea></p>
+<p><input type="submit" value="Отправить" onclick="sendMessage()">
+    <input type="reset" value="Очистить">
+</p>

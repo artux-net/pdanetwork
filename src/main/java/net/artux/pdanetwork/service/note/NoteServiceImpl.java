@@ -1,64 +1,58 @@
 package net.artux.pdanetwork.service.note;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.note.NoteDto;
+import net.artux.pdanetwork.models.note.NoteMapper;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.*;
-import net.artux.pdanetwork.models.profile.NoteEntity;
-import net.artux.pdanetwork.repository.user.UsersRepository;
+import net.artux.pdanetwork.models.note.NoteEntity;
+import net.artux.pdanetwork.repository.user.NoteRepository;
 import net.artux.pdanetwork.service.member.MemberService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
 
-  private final MemberService memberService;
-  private final UsersRepository usersRepository;
+    private final MemberService memberService;
+    private final NoteRepository noteRepository;
+    private final NoteMapper noteMapper;
 
-  @Override
-  public List<NoteEntity> getNotes() {
-    UserEntity userEntity = memberService.getMember();
-    return userEntity.getNoteEntities();
-  }
+    @Override
+    public List<NoteDto> getNotes() {
+        return noteMapper.list(noteRepository.findAllByAuthor(memberService.getMember()));
+    }
 
-  @Override
-  public NoteEntity createNote(String title) {
-    //TODO notes repo
-    /*UserEntity userEntity = memberService.getMember();
-    NoteEntity noteEntity = userEntity.addNote(title, "");
-    memberRepository.save(userEntity);*/
-    return new NoteEntity();
-  }
+    @Override
+    public NoteDto createNote(String title) {
+        return createNote(title, "");
+    }
 
-  @Override
-  public NoteEntity editNote(NoteEntity noteEntity) {
-    UserEntity userEntity = memberService.getMember();
-    //TODO edit with notes repo
+    @Override
+    public NoteDto createNote(String title, String content) {
+        UserEntity userEntity = memberService.getMember();
+        NoteEntity noteEntity = new NoteEntity(title, content);
+        noteEntity.setAuthor(userEntity);
+        return noteMapper.to(noteRepository.save(noteEntity));
+    }
 
-    /*note.setTime(Instant.now().toEpochMilli());
-    for (int i = 0; i < userEntity.notes.size(); i++)
-      if (userEntity.notes.get(i).cid == note.cid) {
-        userEntity.notes.set(i, note);
-        memberRepository.save(userEntity);
-        return note;
-      }
-    note = userEntity.addNote(note.title, note.content);
-    memberRepository.save(userEntity);*/
-    return noteEntity;
-  }
+    @Override
+    public NoteDto editNote(NoteDto note) {
+        NoteEntity noteEntity = noteRepository.findByAuthorAndId(memberService.getMember(), note.getId()).orElseThrow();
+        noteEntity.setTime(Instant.now().toEpochMilli());
+        noteEntity.setContent(note.getContent());
+        noteEntity.setTitle(note.getTitle());
 
-  @Override
-  public Status deleteNote(Integer id) {
-    //TODO too
-    /*UserEntity userEntity = memberService.getMember();
-    for (int i = 0; i < userEntity.notes.size(); i++)
-      if (userEntity.notes.get(i).cid == id) {
-        userEntity.notes.remove(i);
-        memberRepository.save(userEntity);
-        return new Status(true, "ok");
-      }*/
-    throw new RuntimeException("damn boy");
-  }
+        return noteMapper.to(noteRepository.save(noteEntity));
+    }
+
+    @Override
+    public Status deleteNote(Long id) {
+        NoteEntity noteEntity = noteRepository.findByAuthorAndId(memberService.getMember(), id).orElseThrow();
+        noteRepository.deleteById(noteEntity.getId());
+        return new Status();
+    }
 }

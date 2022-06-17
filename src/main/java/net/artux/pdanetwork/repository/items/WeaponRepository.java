@@ -1,14 +1,10 @@
 package net.artux.pdanetwork.repository.items;
 
-import net.artux.pdanetwork.models.profile.items.ItemEntity;
 import net.artux.pdanetwork.models.profile.items.WeaponEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import net.artux.pdanetwork.models.user.UserEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
-public interface WeaponRepository extends JpaRepository<WeaponEntity, UUID> {
-
+public interface WeaponRepository extends BaseItemRepository<WeaponEntity> {
 
 }
