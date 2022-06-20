@@ -1,12 +1,11 @@
 package net.artux.pdanetwork.communication.arena;
 
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.user.Profile;
 
 import javax.websocket.Session;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 public class State implements Serializable {

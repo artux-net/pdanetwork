@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.models.BaseEntity;
-import net.artux.pdanetwork.models.RegisterUser;
-import net.artux.pdanetwork.models.UserAchievementEntity;
+import net.artux.pdanetwork.models.achievement.UserAchievementEntity;
 import net.artux.pdanetwork.models.gang.Gang;
 import net.artux.pdanetwork.models.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteEntity;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
+import net.artux.pdanetwork.models.user.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.CascadeType;
@@ -57,7 +58,7 @@ public class UserEntity extends BaseEntity {
     private Long registration;
     private Long lastLoginAt;
 
-    public UserEntity(RegisterUser registerUser, PasswordEncoder passwordEncoder) {
+    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
         uid = UUID.randomUUID();
         password = passwordEncoder.encode(registerUser.getPassword());

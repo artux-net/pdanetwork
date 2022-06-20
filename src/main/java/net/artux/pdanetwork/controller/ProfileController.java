@@ -3,11 +3,11 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
-import net.artux.pdanetwork.models.UserInfo;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
+import net.artux.pdanetwork.models.user.dto.UserInfoDto;
 import net.artux.pdanetwork.models.achievement.AchievementEntity;
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +44,7 @@ public class ProfileController {
 
   @ApiOperation(value = "Рейтинг пользователей")
   @GetMapping("/rating")
-  public ResponsePage<UserInfo> getRating(@Valid QueryPage queryPage){
+  public ResponsePage<UserInfoDto> getRating(@Valid QueryPage queryPage){
     return profileService.getRating(queryPage);
   }
 }

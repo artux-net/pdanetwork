@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.service.email;
 
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.models.RegisterUser;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 
 public interface EmailService {
 
   void askForPassword(UserEntity user, String token);
-  void sendRegisterLetter(RegisterUser user, Long pdaId);
-  void sendConfirmLetter(RegisterUser user, String token);
+  void sendRegisterLetter(RegisterUserDto user, Long pdaId);
+  void sendConfirmLetter(RegisterUserDto user, String token);
 
 }

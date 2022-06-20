@@ -3,14 +3,11 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.FriendModel;
+import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.service.friends.FriendService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.ws.rs.QueryParam;
 import java.util.List;
 
 @RestController

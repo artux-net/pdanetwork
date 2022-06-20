@@ -9,7 +9,7 @@ import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.WeaponRepository;
 import net.artux.pdanetwork.service.files.SellerManager;
 import net.artux.pdanetwork.service.files.ItemProvider;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SellerServiceIml implements SellerService {
 
-    private final MemberService memberService;
+    private final UserService userService;
     private final SellerManager sellerManager;
     //private final ActionService actionService; TODO
 
@@ -29,8 +29,8 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     public Status add(Long pdaId, int type, int id, int quantity) {
-        if (memberService.getMember().getRole().equals("ADMIN")) {
-            UserEntity userEntity = memberService.getMemberByPdaId(pdaId);
+        if (userService.getMember().getRole().equals("ADMIN")) {
+            UserEntity userEntity = userService.getMemberByPdaId(pdaId);
             //actionService.addItem(userEntity, type, id, quantity);
             //memberService.saveMember(userEntity);
             return new Status(true, "Ok");
@@ -39,7 +39,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     public Status buy(Integer sellerId, int hashCode) {
-        UserEntity userEntity = memberService.getMember();
+        UserEntity userEntity = userService.getMember();
         //Status status = actionService.buy(userEntity, hashCode, sellerId);
         //memberService.saveMember(userEntity);
         return new Status();
@@ -47,7 +47,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     public Status sell(int hashCode) {
-        UserEntity userEntity = memberService.getMember();
+        UserEntity userEntity = userService.getMember();
         //Status status = actionService.sell(userEntity, hashCode);
         //memberService.saveMember(userEntity);
         return new Status();
@@ -55,7 +55,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     public Status set(int hashCode) {
-        UserEntity userEntity = memberService.getMember();
+        UserEntity userEntity = userService.getMember();
         //Status status = actionService.set(userEntity, hashCode);
         //memberService.saveMember(userEntity);
         return new Status();

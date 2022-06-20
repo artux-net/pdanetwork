@@ -3,7 +3,7 @@ package net.artux.pdanetwork.communication.handlers;
 import net.artux.pdanetwork.communication.chat.BadWordsFilter;
 import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.models.communication.MessageEntity;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -19,8 +19,8 @@ public class ChatHandler extends SocketHandler {
 
   private static boolean updateMessages = false;
 
-  public ChatHandler(MemberService memberService) {
-    super(memberService);
+  public ChatHandler(UserService userService) {
+    super(userService);
   }
 
   @Override

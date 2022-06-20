@@ -1,10 +1,11 @@
 package net.artux.pdanetwork.communication.handlers;
 
+import net.artux.pdanetwork.models.communication.ConversationEntity;
 import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.communication.model.*;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
@@ -21,8 +22,8 @@ public class DialogsHandler extends SocketHandler {
   //private final MongoMessages mongoMessages;
   private final ProfileService profileService;
 
-  public DialogsHandler(MemberService memberService, ProfileService profileService) {
-    super(memberService);
+  public DialogsHandler(UserService userService, ProfileService profileService) {
+    super(userService);
     //this.mongoMessages = mongoMessages;
     this.profileService = profileService;
   }
@@ -62,8 +63,8 @@ public class DialogsHandler extends SocketHandler {
     return 0;
   }
 
-  public void sendUpdates(Conversation conversation, MessageEntity messageEntity){
-    for (UserEntity userEntity : conversation.getMembers()) {
+  public void sendUpdates(ConversationEntity conversationEntity, MessageEntity messageEntity){
+    for (UserEntity userEntity : conversationEntity.getMembers()) {
       long pdaId = userEntity.getId();
       if (sessions.containsKey(pdaId)){
         sendObject(sessions.get(pdaId), messageEntity);

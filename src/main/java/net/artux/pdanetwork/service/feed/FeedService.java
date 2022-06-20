@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.feed;
 
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.feed.ArticleEntity;
 
 public interface FeedService {

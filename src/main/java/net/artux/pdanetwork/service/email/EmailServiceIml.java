@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.email;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.RegisterUser;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.apache.commons.io.IOUtils;
@@ -63,14 +63,14 @@ public class EmailServiceIml implements EmailService {
 
   }
 
-  public void sendRegisterLetter(RegisterUser user, Long pdaId){
+  public void sendRegisterLetter(RegisterUserDto user, Long pdaId){
     sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
             .replace("${login}", user.getLogin())
             .replace("${pass}" , user.getPassword())
             .replace("${pdaId}" , String.valueOf(pdaId)));
   }
 
-  public void sendConfirmLetter(RegisterUser user, String token) {
+  public void sendConfirmLetter(RegisterUserDto user, String token) {
     sendSimpleMessage(user.getEmail(), "Подтвердите регистацию", mailTemplateCon
             .replace("${link}" ,  valuesService.getAddress() + "/register?token=" + token));
   }

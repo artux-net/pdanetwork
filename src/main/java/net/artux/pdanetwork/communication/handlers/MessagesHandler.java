@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.communication.handlers;
 
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -8,8 +8,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 @Service
 public class MessagesHandler extends SocketHandler {
-  public MessagesHandler(MemberService memberService) {
-    super(memberService);
+  public MessagesHandler(UserService userService) {
+    super(userService);
   }
 
   @Override

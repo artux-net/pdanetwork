@@ -1,11 +1,12 @@
 package net.artux.pdanetwork.service.member.reset;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.models.RegisterUser;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.service.email.EmailService;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import net.artux.pdanetwork.utills.Security;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,16 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class ResetServiceImpl implements ResetService {
 
-  private final MemberService memberService;
+  private final UserService userService;
   private final EmailService emailService;
 
-  private final MemberMapper memberMapper;
+  private final UserMapper userMapper;
 
   private final HashMap<String, String> requests = new HashMap<>();
 
   @Override
   public Status sendLetter(String email) {
-    UserEntity userEntity = memberService.getMemberByEmail(email);
+    UserEntity userEntity = userService.getMemberByEmail(email);
 
     if (!requests.containsValue(userEntity.getEmail())) {
       String token = Security.encrypt(userEntity.getPassword() + userEntity.getLogin());
@@ -48,10 +49,10 @@ public class ResetServiceImpl implements ResetService {
 
   @Override
   public Status changePassword(String token, String password) {
-    UserEntity userEntity = memberService.getMemberByEmail(requests.get(token));
-    RegisterUser registerUser = memberMapper.regUser(userEntity);
+    UserEntity userEntity = userService.getMemberByEmail(requests.get(token));
+    RegisterUserDto registerUser = userMapper.regUser(userEntity);
     registerUser.setPassword(password);
-    return memberService.editMember(registerUser);
+    return userService.editMember(registerUser);
   }
 
 }

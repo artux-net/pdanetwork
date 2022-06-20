@@ -1,8 +1,6 @@
 package net.artux.pdanetwork.controller;
 
-import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.service.member.MemberService;
 import net.artux.pdanetwork.service.member.reset.ResetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

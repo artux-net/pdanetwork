@@ -20,12 +20,12 @@
 	<table border="0" cellpadding="1" cellspacing="1" style="width: 100%; font-size:12px;">
 		<tbody>
 		<tr>
-			<td colspan="2"><b th:text="${itemEntity.title}"></b></td>
+			<td colspan="2"><b th:text="${item.title}"></b></td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
-			<td style="width: 85px;"><img alt="" height="84" th:src="'/base/itemEntities/icons/' + ${itemEntity.icon}" width="84"></td>
-			<td style="width: 62px;"><img alt="" height="158" th:src="'/base/itemEntities/icons/' + ${itemEntity.icon}" width="60"></td>
+			<td style="width: 85px;"><img alt="" height="84" th:src="${iconBaseUrl} +'/base/items/icons/' + ${item.icon}" width="84"></td>
+			<td style="width: 62px;"><img alt="" height="158" th:src="${iconBaseUrl} +'/base/items/icons/' + ${item.icon}" width="60"></td>
 			<td colspan="1" rowspan="2" style="vertical-align: top;">
 				<p th:text="${enc.desc}"></p>
 				<p><i><cite th:text="${enc.content}"></cite></i></p>
@@ -43,19 +43,19 @@
 					<tbody>
 					<tr>
 						<td><b>Ожог:</b></td>
-						<td th:text="${itemEntity.thermal_pr}"></td>
+						<td th:text="${item.thermal_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Электрошок:</b></td>
-						<td th:text="${itemEntity.electric_pr}"></td>
+						<td th:text="${item.electric_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Удар:</b></td>
-						<td th:text="${itemEntity.damage_pr}"></td>
+						<td th:text="${item.damage_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Вес:</b></td>
-						<td th:text="${itemEntity.weight} +' кг'"></td>
+						<td th:text="${item.weight} +' кг'"></td>
 					</tr>
 					</tbody>
 				</table>
@@ -65,19 +65,19 @@
 					<tbody>
 					<tr>
 						<td><b>Пси:</b></td>
-						<td th:text="${itemEntity.psy_pr}"></td>
+						<td th:text="${item.psy_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Хим. Ожог:</b></td>
-						<td th:text="${itemEntity.chemical_pr}"></td>
+						<td th:text="${item.chemical_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Радиация:</b></td>
-						<td th:text="${itemEntity.radio_pr}"></td>
+						<td th:text="${item.radio_pr}"></td>
 					</tr>
 					<tr>
 						<td><b>Цена:</b></td>
-						<td th:text="${itemEntity.price} + ' Ракушек'"></td>
+						<td th:text="${item.price} + ' RU'"></td>
 					</tr>
 					</tbody>
 				</table>

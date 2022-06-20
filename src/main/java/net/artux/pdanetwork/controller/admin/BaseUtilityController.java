@@ -2,7 +2,7 @@ package net.artux.pdanetwork.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +22,7 @@ import java.util.Date;
 public abstract class BaseUtilityController {
 
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     private final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm a");
 
@@ -83,7 +83,7 @@ public abstract class BaseUtilityController {
 
     @ModelAttribute("user")
     public UserEntity getUser() {
-        return memberService.getMember();
+        return userService.getMember();
     }
 
     @ModelAttribute("chatAddress")

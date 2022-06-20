@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import net.artux.pdanetwork.service.util.Utils;
 import org.springframework.web.socket.*;
 
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public abstract class SocketHandler implements WebSocketHandler {
 
-  private final MemberService memberService;
+  private final UserService userService;
   private static final List<WebSocketSession> sessionList = new ArrayList<>();
   private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
@@ -66,7 +66,7 @@ public abstract class SocketHandler implements WebSocketHandler {
     if (userSession.getAttributes().containsKey(USER))
       return (UserEntity) userSession.getAttributes().get(USER);
     String base64 = userSession.getHandshakeHeaders().getFirst("authorization");
-    UserEntity userEntity = memberService.getMember(base64);
+    UserEntity userEntity = userService.getMember(base64);
     if (userEntity == null) {
       reject(userSession, "Авторизация не пройдена");
       throw new RuntimeException("Авторизация не пройдена");

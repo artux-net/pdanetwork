@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.RegisterUser;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.repository.user.UsersRepository;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class UserValidator {
     private static final String NAME_VALIDATION_REGEX = "^[A-Za-z\u0400-\u052F']*$";
     private static final String PASSWORD_VALIDATION_REGEX = "^[A-Za-z\\d!@#$%^&*()_+№\";:?><\\[\\]{}]*$";
 
-    public Status checkUser(RegisterUser user) {
+    public Status checkUser(RegisterUserDto user) {
         return Stream.of(checkLogin(user.getLogin()),
                         checkName(user.getName()),
                         checkNickname(user.getNickname()),

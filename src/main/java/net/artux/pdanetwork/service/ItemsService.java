@@ -12,7 +12,7 @@ import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.MedicineRepository;
 import net.artux.pdanetwork.repository.items.WeaponRepository;
 import net.artux.pdanetwork.service.files.ItemProvider;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -25,7 +25,7 @@ public class ItemsService {
 
     private final ItemProvider itemProvider;
 
-    private final MemberService memberService;
+    private final UserService userService;
 
     private final WeaponRepository weaponRepository;
     private final ArmorRepository armorRepository;
@@ -57,7 +57,7 @@ public class ItemsService {
 
     public <T extends ItemEntity> void deleteItem(int type, int baseId, int quantity) {
         BaseItemRepository<T> repository = getRepository(ItemType.getByTypeId(type));
-        Optional<T> optional = repository.findByOwnerAndBaseId(memberService.getMember(), baseId);
+        Optional<T> optional = repository.findByOwnerAndBaseId(userService.getMember(), baseId);
         if (optional.isPresent()) {
             T t = optional.get();
             t.setQuantity(t.getQuantity() - quantity);
@@ -69,7 +69,7 @@ public class ItemsService {
     }
 
     public void resetAll() {
-        UserEntity owner = memberService.getMember();
+        UserEntity owner = userService.getMember();
         armorRepository.deleteByOwner(owner);
         weaponRepository.deleteByOwner(owner);
         itemRepository.deleteByOwner(owner);
@@ -81,7 +81,7 @@ public class ItemsService {
     public <T extends ItemEntity> void addAsNotCountable(T item, int quantity) {
         BaseItemRepository<T> repository = getRepository(item.getType());
         item.setQuantity(1);
-        item.setOwner(memberService.getMember());
+        item.setOwner(userService.getMember());
         List<T> items = new LinkedList<>();
         for (int i = 0; i < quantity; i++) {
             items.add(item);
@@ -91,13 +91,13 @@ public class ItemsService {
 
     public <T extends ItemEntity> void addAsCountable(T itemEntity) {
         BaseItemRepository<T> repository = getRepository(itemEntity.getType());
-        Optional<T> optionalItem = repository.findByOwnerAndBaseId(memberService.getMember(), itemEntity.getBaseId());
+        Optional<T> optionalItem = repository.findByOwnerAndBaseId(userService.getMember(), itemEntity.getBaseId());
         if (optionalItem.isPresent()) {
             T item = optionalItem.get();
             item.setQuantity(item.getQuantity() + itemEntity.getQuantity());
             repository.save(item);
         } else {
-            itemEntity.setOwner(memberService.getMember());
+            itemEntity.setOwner(userService.getMember());
             repository.save(itemEntity);
         }
     }
@@ -118,5 +118,9 @@ public class ItemsService {
             default:
                 return (BaseItemRepository<T>) itemRepository;
         }
+    }
+
+    public <T extends ItemEntity> List<T> getAllByUserAndType(UserEntity user, ItemType type) {
+        return (List<T>) getRepository(type).findAllByOwnerAndType(user, type);
     }
 }

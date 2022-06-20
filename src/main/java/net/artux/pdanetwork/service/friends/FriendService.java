@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.service.friends;
 
-import net.artux.pdanetwork.models.FriendModel;
+import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.Status;
 
 import java.util.List;

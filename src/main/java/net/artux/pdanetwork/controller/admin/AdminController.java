@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.controller.admin;
 
 import net.artux.pdanetwork.communication.handlers.ChatHandler;
-import net.artux.pdanetwork.models.QueryPage;
+import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.files.ItemProvider;
 import net.artux.pdanetwork.service.files.SellerManager;
 import net.artux.pdanetwork.service.profile.ProfileService;

@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.communication.model;
 
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.user.Profile;
+import net.artux.pdanetwork.models.communication.ConversationEntity;
 
 public class DialogResponse {
 
@@ -10,7 +11,7 @@ public class DialogResponse {
     private final String lastMessage;*/
     private final String avatar;
 
-    public DialogResponse(Conversation conversation, Profile profile) {
+    public DialogResponse(ConversationEntity conversationEntity, Profile profile) {
         if(profile==null){
             this.title = "Deleted account";
             this.avatar = "0";
@@ -25,7 +26,7 @@ public class DialogResponse {
 
     }
 
-    public DialogResponse(Conversation conversation) {
+    public DialogResponse(ConversationEntity conversationEntity) {
         /*this.title = conversation.title;
         this.type = 0;
         this.lastMessage = conversation.lastMessage;

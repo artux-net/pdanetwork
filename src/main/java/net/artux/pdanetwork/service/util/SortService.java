@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.util;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.SortedBy;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.SortedBy;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

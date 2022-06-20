@@ -1,16 +1,14 @@
 package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.feed.ArticleEntity;
 import net.artux.pdanetwork.repository.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

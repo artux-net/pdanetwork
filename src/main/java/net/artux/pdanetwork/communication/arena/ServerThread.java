@@ -2,7 +2,7 @@ package net.artux.pdanetwork.communication.arena;
 
 import com.google.gson.Gson;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.user.Profile;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Session;

@@ -1,15 +1,15 @@
 package net.artux.pdanetwork.service.profile;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.QueryPage;
-import net.artux.pdanetwork.models.ResponsePage;
-import net.artux.pdanetwork.models.UserInfo;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
+import net.artux.pdanetwork.models.user.dto.UserInfoDto;
 import net.artux.pdanetwork.models.achievement.AchievementEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.models.MemberMapper;
-import net.artux.pdanetwork.models.Profile;
+import net.artux.pdanetwork.models.user.UserMapper;
+import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.repository.user.UsersRepository;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import net.artux.pdanetwork.service.files.AchievementsService;
 import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;
@@ -23,8 +23,8 @@ import java.util.List;
 public class ProfileServiceIml implements ProfileService {
 
   private final UsersRepository usersRepository;
-  private final MemberService memberService;
-  private final MemberMapper memberMapper;
+  private final UserService userService;
+  private final UserMapper userMapper;
   private final AchievementsService achievementsService;
   private final SortService sortService;
   private final PageService pageService;
@@ -32,29 +32,29 @@ public class ProfileServiceIml implements ProfileService {
 
   @Override
   public Profile getProfile(Long pdaId) {
-    return memberMapper.profile(memberService.getMemberByPdaId(pdaId), memberService.getMember());
+    return userMapper.profile(userService.getMemberByPdaId(pdaId), userService.getMember());
   }
 
   @Override
   public Profile getProfile() {
-    return memberMapper.profile(memberService.getMember());
+    return userMapper.profile(userService.getMember());
   }
 
   @Override
   public List<AchievementEntity> getAchievements(Long pdaId) {
-    UserEntity userEntity = memberService.getMemberByPdaId(pdaId);
+    UserEntity userEntity = userService.getMemberByPdaId(pdaId);
     return achievementsService.getForUser(userEntity);
   }
 
   @Override
   public List<AchievementEntity> getAchievements() {
-    return getAchievements(memberService.getMember().getPdaId());
+    return getAchievements(userService.getMember().getPdaId());
   }
 
   @Override
-  public ResponsePage<UserInfo> getRating(QueryPage queryPage) {
+  public ResponsePage<UserInfoDto> getRating(QueryPage queryPage) {
     Page<UserEntity> memberPage = usersRepository.findAll(
-            sortService.getSortInfo(UserInfo.class, queryPage, "xp"));
-    return pageService.mapDataPageToResponsePage(memberPage, memberMapper.info(memberPage.getContent()));
+            sortService.getSortInfo(UserInfoDto.class, queryPage, "xp"));
+    return pageService.mapDataPageToResponsePage(memberPage, userMapper.info(memberPage.getContent()));
   }
 }

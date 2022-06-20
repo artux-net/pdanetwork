@@ -1,8 +1,10 @@
 package net.artux.pdanetwork.service;
 
+import com.google.gson.Gson;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.models.profile.Data;
+import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.service.action.ActionService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +17,34 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ActionServiceTest {
+    private String login = "maxxx";
 
+    @Autowired
     private ActionService actionService;
+    @Autowired
+    private UserService userService;
+    private Gson gson = new Gson();
 
     @Test
-    public void actionsLoads() throws Exception{
+    public void actionsLoads() {
         assertThat(actionService).isNotNull();
     }
 
     @Test
-    public void correctWorks() throws Exception{
-        String[] params ={"param1", "param"};
+    public void correctWorks() {
+        String[] params = {"param1", "param"};
 
-        //TODO
-
-        /*UserEntity userEntity = new UserEntity();
-        userEntity.setData(new Data());
+        UserEntity userEntity = userService.getMemberByLogin(login);
 
         HashMap<String, List<String>> actions = new HashMap<>();
         actions.put("add", Arrays.asList(params));
 
-        UserEntity changed = actionService.doUserActions(actions, userEntity);
+        StoryData s = actionService.doUserActions(actions, userEntity);
 
-        assert(changed.getData().parameters.keys.containsAll(Arrays.asList(params)));*/
+        assertThat(gson.toJson(s)).asString().contains("param1");
     }
 
 }

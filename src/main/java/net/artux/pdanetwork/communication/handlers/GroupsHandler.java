@@ -5,7 +5,7 @@ import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.gang.Gang;
 import net.artux.pdanetwork.models.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -31,8 +31,8 @@ public class GroupsHandler extends SocketHandler {
         return lastMessages;
     }
 
-    public GroupsHandler(MemberService memberService) {
-        super(memberService);
+    public GroupsHandler(UserService userService) {
+        super(userService);
     }
 
     @Override

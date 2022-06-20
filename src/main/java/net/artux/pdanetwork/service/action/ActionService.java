@@ -3,9 +3,10 @@ package net.artux.pdanetwork.service.action;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.gang.Gang;
 import net.artux.pdanetwork.models.gang.GangRelationEntity;
-import net.artux.pdanetwork.models.profile.ParameterEntity;
-import net.artux.pdanetwork.models.profile.story.StoryEntity;
+import net.artux.pdanetwork.models.profile.story.ParameterEntity;
+import net.artux.pdanetwork.models.profile.story.StoryStateEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.GangRelationsRepository;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
@@ -17,10 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,7 @@ public class ActionService {
 
     private final Logger logger;
 
+    private final StateService stateService;
     private final ItemsService itemsService;
     private final SellerService sellerService;
     private final NoteService noteService;
@@ -36,12 +36,9 @@ public class ActionService {
     private final StoryRepository storyRepository;
     private final GangRelationsRepository gangRelationsRepository;
 
-    public UserEntity doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
-        List<ParameterEntity> parameterEntity = parametersRepository.getByUserId(userEntity.getUid());
-        Map<String, Integer> data = parameterEntity.stream().collect(Collectors.toMap(ParameterEntity::getKey, ParameterEntity::getValue));
-
-        try {
-            for (String command : map.keySet()) {
+    public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
+        for (String command : map.keySet()) {
+            try {
                 List<String> params = map.get(command);
                 switch (command) {
                     case "add":
@@ -94,8 +91,7 @@ public class ActionService {
                                 int quantity = Integer.parseInt(values[2]);
                                 itemsService.deleteItem(type, baseId, quantity);
                             }
-                            data.remove(pass);
-                            data.remove(pass);
+                            parametersRepository.deleteAllByUserAndKey(userEntity, pass);
                         }
                         break;
                     case "=":
@@ -114,7 +110,7 @@ public class ActionService {
                                 gangRelation.addRelation(Gang.getById(group), Integer.parseInt(vals[1]));
                                 gangRelationsRepository.save(gangRelation);
                             } else
-                                data.put(vals[0], data.get(vals[0]) + Integer.parseInt(vals[1]));
+                                addValue(userEntity, vals[0], Integer.parseInt(vals[1]));
                         }
                         break;
                     case "-":
@@ -161,12 +157,12 @@ public class ActionService {
                             for (String pass : params)
                                 if (pass.matches("-?\\d+")) {
                                     int storyId = Integer.parseInt(pass);
-                                    Optional<StoryEntity> storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, storyId);
+                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, storyId);
                                     if (storyOptional.isPresent()) {
-                                        StoryEntity storyEntity = storyOptional.get();
-                                        storyEntity.setChapterId(1);
-                                        storyEntity.setStageId(0);
-                                        storyRepository.save(storyEntity);
+                                        StoryStateEntity storyStateEntity = storyOptional.get();
+                                        storyStateEntity.setChapterId(1);
+                                        storyStateEntity.setStageId(0);
+                                        storyRepository.save(storyStateEntity);
                                     }
                                 } else if (pass.contains("relation")) {
                                     int group = Integer.parseInt(pass.split("_")[1]);
@@ -177,11 +173,11 @@ public class ActionService {
                         }
                         break;
                     case "reset_current":
-                        Optional<StoryEntity> storyOptional = storyRepository.findByPlayerAndCurrentIsTrue(userEntity);
+                        Optional<StoryStateEntity> storyOptional = storyRepository.findByPlayerAndCurrentIsTrue(userEntity);
                         if (storyOptional.isPresent()) {
-                            StoryEntity storyEntity = storyOptional.get();
-                            storyEntity.setCurrent(false);
-                            storyRepository.save(storyEntity);
+                            StoryStateEntity storyStateEntity = storyOptional.get();
+                            storyStateEntity.setCurrent(false);
+                            storyRepository.save(storyStateEntity);
                         }
                         break;
                     case "set":
@@ -193,18 +189,18 @@ public class ActionService {
                                     int chapter = Integer.parseInt(vals[2]);
                                     int stage = Integer.parseInt(vals[3]);
 
-                                    StoryEntity storyEntity;
+                                    StoryStateEntity storyStateEntity;
                                     storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, story);
                                     if (storyOptional.isPresent()) {
-                                        storyEntity = storyOptional.get();
+                                        storyStateEntity = storyOptional.get();
                                     } else {
-                                        storyEntity = new StoryEntity();
-                                        storyEntity.setStoryId(story);
+                                        storyStateEntity = new StoryStateEntity();
+                                        storyStateEntity.setStoryId(story);
                                     }
-                                    storyEntity.setChapterId(chapter);
-                                    storyEntity.setStageId(stage);
-                                    storyEntity.setCurrent(true);
-                                    storyRepository.save(storyEntity);
+                                    storyStateEntity.setChapterId(chapter);
+                                    storyStateEntity.setStageId(stage);
+                                    storyStateEntity.setCurrent(true);
+                                    storyRepository.save(storyStateEntity);
                                 }
                             }
                         }
@@ -213,12 +209,12 @@ public class ActionService {
                         logger.error("Unsupported operation: " + command + ", value: " + params);
                         break;
                 }
+            } catch (Exception e) {
+                logger.error("ActionService", e);
             }
-            return userEntity;
-        } catch (Exception e) {
-            logger.error("ActionService", e);
-            return userEntity;
         }
+        return stateService.getStoryData(userEntity);
+
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {

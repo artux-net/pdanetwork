@@ -2,8 +2,8 @@ package net.artux.pdanetwork.service.files;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.artux.pdanetwork.models.Seller;
-import net.artux.pdanetwork.models.SellerDto;
+import net.artux.pdanetwork.models.story.seller.Seller;
+import net.artux.pdanetwork.models.story.seller.SellerDto;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Service;
 

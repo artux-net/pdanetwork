@@ -5,7 +5,7 @@ import net.artux.pdanetwork.communication.model.LimitedArrayList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.communication.MessageMapper;
-import net.artux.pdanetwork.service.member.MemberService;
+import net.artux.pdanetwork.service.member.UserService;
 import org.slf4j.Logger;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -19,14 +19,14 @@ import java.util.List;
 public class SocketController {
 
     private final Logger logger;
-    private final MemberService memberService;
+    private final UserService userService;
     private final MessageMapper messageMapper;
     private LimitedArrayList<MessageEntity> messageEntities = new LimitedArrayList<>(150);
 
     @MessageMapping("/echo")
     @SendToUser("/topic/echo")
     String echo(String message) {
-        logger.info("Echo from " + memberService.getMember().getLogin());
+        logger.info("Echo from " + userService.getMember().getLogin());
         return message;
     }
 
@@ -39,8 +39,8 @@ public class SocketController {
     @MessageMapping("/chat")
     @SendTo("/topic/chat")
     MessageDTO message(String message) {
-        logger.info("Message from " + memberService.getMember().getLogin());
-        MessageEntity messageEntity = new MessageEntity(memberService.getMember(), message);
+        logger.info("Message from " + userService.getMember().getLogin());
+        MessageEntity messageEntity = new MessageEntity(userService.getMember(), message);
         messageEntities.add(messageEntity);
         return messageMapper.dto(messageEntity);
     }

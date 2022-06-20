@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.profile.items.ItemEntity;
 import net.artux.pdanetwork.models.profile.items.WeaponEntity;
 import net.artux.pdanetwork.service.files.ItemProvider;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import springfox.documentation.annotations.ApiIgnore;
@@ -18,6 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class EncController {
 
     private final ItemProvider itemProvider;
+    private final ValuesService valuesService;
 
     @GetMapping
     public String getMainPage(Model model) {
@@ -51,4 +54,8 @@ public class EncController {
     }
 
 
+    @ModelAttribute("iconBaseUrl")
+    private String baseIconUrl(){
+        return valuesService.getConfigUrl();
+    }
 }
