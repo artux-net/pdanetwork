@@ -3,7 +3,7 @@ package net.artux.pdanetwork.service.feed;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.models.feed.ArticleEntity;
+import net.artux.pdanetwork.models.chat.ArticleEntity;
 import net.artux.pdanetwork.repository.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
 import net.artux.pdanetwork.service.util.SortService;

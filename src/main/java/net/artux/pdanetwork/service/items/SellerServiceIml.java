@@ -2,7 +2,7 @@ package net.artux.pdanetwork.service.items;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.profile.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.repository.items.ArmorRepository;
 import net.artux.pdanetwork.repository.items.ItemRepository;

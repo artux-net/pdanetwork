@@ -1,19 +1,21 @@
 package net.artux.pdanetwork.configuration;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.communication.handlers.ChatHandler;
-import net.artux.pdanetwork.communication.handlers.GroupsHandler;
-import net.artux.pdanetwork.communication.handlers.MessagesHandler;
+import net.artux.pdanetwork.configuration.handlers.ChatHandler;
+import net.artux.pdanetwork.configuration.handlers.DialogsHandler;
+import net.artux.pdanetwork.configuration.handlers.GroupsHandler;
+import net.artux.pdanetwork.configuration.handlers.MessagesHandler;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.*;
 
-/*@Configuration
-@EnableWebSocket*/
+@Configuration
+@EnableWebSocket
 @RequiredArgsConstructor
 public class OldWebSocketConfig implements WebSocketConfigurer {
 
   private final ChatHandler chatHandler;
   private final MessagesHandler messagesHandler;
-  //private final DialogsHandler dialogsHandler;
+  private final DialogsHandler dialogsHandler;
   private final GroupsHandler groupsHandler;
 
   @Override
@@ -21,7 +23,7 @@ public class OldWebSocketConfig implements WebSocketConfigurer {
     webSocketHandlerRegistry
             .addHandler(chatHandler, "/chat")
             .addHandler(messagesHandler, "/dialog")
-            //.addHandler(dialogsHandler, "/dialogs")
+            .addHandler(dialogsHandler, "/dialogs")
             .addHandler(groupsHandler, "/groups")
             .setAllowedOriginPatterns("*");
   }

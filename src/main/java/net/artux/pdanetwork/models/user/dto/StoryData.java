@@ -1,11 +1,14 @@
 package net.artux.pdanetwork.models.user.dto;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.profile.items.dto.*;
-import net.artux.pdanetwork.models.profile.story.ParameterEntity;
-import net.artux.pdanetwork.models.profile.story.StoryStateEntity;
-import net.artux.pdanetwork.models.profile.story.dto.ParameterDto;
-import net.artux.pdanetwork.models.profile.story.dto.StoryStateDto;
+import net.artux.pdanetwork.models.items.ArmorDto;
+import net.artux.pdanetwork.models.items.ArtifactDto;
+import net.artux.pdanetwork.models.items.DetectorDto;
+import net.artux.pdanetwork.models.items.ItemDto;
+import net.artux.pdanetwork.models.items.MedicineDto;
+import net.artux.pdanetwork.models.items.WeaponDto;
+import net.artux.pdanetwork.models.story.ParameterDto;
+import net.artux.pdanetwork.models.story.StoryStateDto;
 
 import java.util.List;
 

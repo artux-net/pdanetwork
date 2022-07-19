@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST)
                 .permitAll()
-                .antMatchers(ADMIN_LIST).hasAnyAuthority("ADMIN")
+                //.antMatchers(ADMIN_LIST).hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().disable()

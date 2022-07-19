@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.user;
 
 import net.artux.pdanetwork.models.gang.GangRelationDto;
-import net.artux.pdanetwork.models.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.achievement.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.dto.UserInfoDto;

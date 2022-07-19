@@ -1,10 +1,10 @@
 package net.artux.pdanetwork.models.story.seller;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.profile.items.ArmorEntity;
-import net.artux.pdanetwork.models.profile.items.ArtifactEntity;
-import net.artux.pdanetwork.models.profile.items.ItemEntity;
-import net.artux.pdanetwork.models.profile.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
 import net.artux.pdanetwork.service.files.ItemProvider;
 
 import java.util.ArrayList;

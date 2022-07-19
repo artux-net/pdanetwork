@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.models.feed.ArticleEntity;
+import net.artux.pdanetwork.models.chat.ArticleEntity;
 import net.artux.pdanetwork.service.feed.FeedService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

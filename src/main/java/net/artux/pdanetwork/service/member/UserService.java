@@ -13,8 +13,6 @@ public interface UserService {
 
     Status handleConfirmation(String token);
 
-    UserDto resetData();
-
     UserEntity getMember();
 
     UserDto getMemberDto();

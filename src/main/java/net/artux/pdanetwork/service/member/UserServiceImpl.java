@@ -2,12 +2,13 @@ package net.artux.pdanetwork.service.member;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.controller.UserValidator;
+import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
-import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.dto.UserDto;
-import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.repository.user.UsersRepository;
+import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.util.Utils;
 import net.artux.pdanetwork.utills.Security;
@@ -37,7 +38,6 @@ public class UserServiceImpl implements UserService {
     private final Logger logger;
 
     private static final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
-
 
     public static Map<String, RegisterUserDto> getRegisterUserMap() {
         return registerUserMap;
@@ -84,15 +84,6 @@ public class UserServiceImpl implements UserService {
                 return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
             }
         } else return new Status(false, "Ссылка устарела или не существует");
-    }
-
-    @Override
-    public UserDto resetData() {
-        UserEntity userEntity = getMember();
-        userEntity.setMoney(500);
-        //userEntity.setData(new Data());
-        usersRepository.save(userEntity);
-        return userMapper.memberDto(userEntity);
     }
 
     @Override

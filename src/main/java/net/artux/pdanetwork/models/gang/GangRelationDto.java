@@ -3,14 +3,7 @@ package net.artux.pdanetwork.models.gang;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.models.BaseEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import net.artux.pdanetwork.models.achievement.GangRelationEntity;
 
 @RequiredArgsConstructor
 @Setter

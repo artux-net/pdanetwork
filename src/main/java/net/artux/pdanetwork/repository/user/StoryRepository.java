@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.repository.user;
 
-import net.artux.pdanetwork.models.profile.story.StoryStateEntity;
+import net.artux.pdanetwork.entity.StoryStateEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,10 @@ import java.util.Optional;
 public interface StoryRepository extends JpaRepository<StoryStateEntity, Long> {
 
     Optional<StoryStateEntity> findByPlayerAndCurrentIsTrue(UserEntity userEntity);
+
     List<StoryStateEntity> findAllByPlayer(UserEntity userEntity);
+
     Optional<StoryStateEntity> findByPlayerAndStoryId(UserEntity userEntity, int storyId);
 
+    void deleteAllByPlayer(UserEntity userEntity);
 }

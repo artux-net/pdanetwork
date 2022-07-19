@@ -5,8 +5,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.service.action.ActionService;
+import net.artux.pdanetwork.service.action.StateService;
 import net.artux.pdanetwork.service.member.UserService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +23,7 @@ import java.util.List;
 public class CommandController {
 
     private final ActionService actionService;
+    private final StateService stateService;
     private final UserService userService;
 
     @ApiOperation(value = "Выполнение")
@@ -30,7 +36,7 @@ public class CommandController {
     @ApiOperation(value = "Информация о прохождении")
     @GetMapping
     public StoryData getActualData() {
-        return null;
+        return stateService.getStoryData(userService.getMember());
     }
 
 }

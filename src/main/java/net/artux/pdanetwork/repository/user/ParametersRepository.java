@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.repository.user;
 
-import net.artux.pdanetwork.models.profile.story.ParameterEntity;
+import net.artux.pdanetwork.entity.ParameterEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -12,8 +12,12 @@ import java.util.Optional;
 public interface ParametersRepository extends JpaRepository<ParameterEntity, Long> {
 
     List<ParameterEntity> findAllByUser(UserEntity userEntity);
+
     Optional<ParameterEntity> getParameterEntityByUserAndKey(UserEntity entity, String key);
+
     void deleteAllByUserAndKey(UserEntity entity, String key);
+
+    void deleteAllByUser(UserEntity entity);
 
     boolean existsParameterEntityByUserAndKeyEquals(UserEntity userEntity, String key);
 

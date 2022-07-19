@@ -1,9 +1,9 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.profile.items.ItemMapper;
-import net.artux.pdanetwork.models.profile.items.ItemType;
-import net.artux.pdanetwork.models.profile.story.StoryMapper;
+import net.artux.pdanetwork.entity.items.ItemMapper;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.ParametersRepository;

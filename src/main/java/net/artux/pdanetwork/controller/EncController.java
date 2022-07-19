@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.profile.items.ItemEntity;
-import net.artux.pdanetwork.models.profile.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
 import net.artux.pdanetwork.service.files.ItemProvider;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Controller;

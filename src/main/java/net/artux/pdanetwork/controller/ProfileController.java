@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.dto.UserInfoDto;
-import net.artux.pdanetwork.models.achievement.AchievementEntity;
+import net.artux.pdanetwork.entity.AchievementEntity;
 import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springframework.web.bind.annotation.*;

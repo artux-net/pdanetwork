@@ -2,7 +2,7 @@ package net.artux.pdanetwork.service.feed;
 
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.models.feed.ArticleEntity;
+import net.artux.pdanetwork.models.chat.ArticleEntity;
 
 public interface FeedService {
 

@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.profile.items.ItemEntity;
-import net.artux.pdanetwork.models.profile.items.ItemType;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.repository.items.ArmorRepository;
 import net.artux.pdanetwork.repository.items.ArtifactRepository;
@@ -68,8 +68,7 @@ public class ItemsService {
         }
     }
 
-    public void resetAll() {
-        UserEntity owner = userService.getMember();
+    public void resetAll(UserEntity owner) {
         armorRepository.deleteByOwner(owner);
         weaponRepository.deleteByOwner(owner);
         itemRepository.deleteByOwner(owner);

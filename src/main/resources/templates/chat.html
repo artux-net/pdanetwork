@@ -13,15 +13,28 @@
     }
 
     function connect() {
-        var socket = new SockJS('/pdanetwork/chat');
+        const socket = new SockJS('/pdanetwork/chat');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             setConnected(true);
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/chat', function (greeting) {
-                addMessage(JSON.parse(greeting.body));
+            stompClient.subscribe('/app/topic/catch', function (message) {
+                addMessage(JSON.parse(message.body));
             });
+            stompClient.subscribe('/topic/messages', function (messages) {
+                messages = JSON.parse(messages.body);
+                console.log("messages " + messages.length)
+                for (let i = 0; i < messages.length; i++){
+                    console.log(i);
+                    addMessage(messages[i]);
+                }
+            });
+            stompClient.send("/app/send", {}, 'test message');
         });
+    }
+
+    function clear(){
+
     }
 
     function disconnect() {
@@ -33,7 +46,7 @@
     }
 
     function sendMessage() {
-        stompClient.send("/pdanetwork/chat", {}, $("#input_text").val());
+        stompClient.send("/app/send", {}, $("#input_text").val());
     }
 
     $(function () {

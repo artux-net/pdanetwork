@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service.files;
 
-import net.artux.pdanetwork.models.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.models.achievement.AchievementEntity;
+import net.artux.pdanetwork.entity.UserAchievementEntity;
+import net.artux.pdanetwork.entity.AchievementEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.repository.achievements.AchievementsRepository;
 import net.artux.pdanetwork.repository.achievements.UserAchievementsRepository;
