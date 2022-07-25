@@ -29,24 +29,8 @@ public class ValuesService {
   @Value("${spring.mail.username}")
   private String email;
 
-  @Value("${spring.data.mongodb.host}")
-  private String mongoHost;
-  @Value("${spring.data.mongodb.port}")
-  private String mongoPort;
-  @Value("${spring.data.mongodb.username:#{null}}")
-  private String mongoUsername;
-  @Value("${spring.data.mongodb.password:#{null}}")
-  private String mongoPassword;
-
   public String getAddress(){
     return getProtocol() + "://" + getHost() + getContextPath();
-  }
-
-  public String getMongoUri(){
-    if (!Utils.isEmpty(getMongoUsername()) && !Utils.isEmpty(getMongoPassword()))
-      return "mongodb://" + getMongoUsername() + ":" + getMongoPassword() + "@" + getMongoHost() + ":" + getMongoPort();
-    else return "mongodb://" + getMongoHost() + ":" + getMongoPort();
-
   }
 
 }

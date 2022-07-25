@@ -1,16 +1,17 @@
-package net.artux.pdanetwork.models.communication;
+package net.artux.pdanetwork.entity.conversation;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.artux.pdanetwork.entity.MessageEntity;
 import net.artux.pdanetwork.models.BaseEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -20,16 +21,22 @@ import java.util.List;
 public class ConversationEntity extends BaseEntity {
 
     private String title;
+    private String icon;
     @ManyToMany
     private List<MessageEntity> messages;
     @ManyToMany
-    private List<UserEntity> members;
-    @ManyToOne
+    private Set<UserEntity> members = new HashSet<>();
+    @OneToOne
     private MessageEntity lastMessage;
+    @OneToOne
+    private UserEntity owner;
+    private Instant time;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
-    public ConversationEntity(String title, List<UserEntity> userEntities) {
-        this.title = title;
-        this.members = userEntities;
+    public enum Type {
+        GROUP,
+        PRIVATE
     }
 
 }

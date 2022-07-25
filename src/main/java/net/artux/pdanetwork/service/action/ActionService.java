@@ -1,17 +1,16 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.gang.Gang;
-import net.artux.pdanetwork.models.achievement.GangRelationEntity;
 import net.artux.pdanetwork.entity.ParameterEntity;
 import net.artux.pdanetwork.entity.StoryStateEntity;
+import net.artux.pdanetwork.models.achievement.GangRelationEntity;
+import net.artux.pdanetwork.models.gang.Gang;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.GangRelationsRepository;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
-import net.artux.pdanetwork.service.ItemsService;
-import net.artux.pdanetwork.service.items.SellerService;
+import net.artux.pdanetwork.service.CommonItemsRepository;
 import net.artux.pdanetwork.service.note.NoteService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,7 @@ public class ActionService {
     private final Logger logger;
 
     private final StateService stateService;
-    private final ItemsService itemsService;
-    private final SellerService sellerService;
+    private final CommonItemsRepository itemsService;
     private final NoteService noteService;
 
     private final ParametersRepository parametersRepository;
@@ -49,7 +47,7 @@ public class ActionService {
                                 int type = Integer.parseInt(param[0]);
                                 int baseId = Integer.parseInt(param[1]);
                                 int quantity = Integer.parseInt(param[2]);
-                                itemsService.addItem(type, baseId, quantity);
+                                itemsService.addItem(userEntity, type, baseId, quantity);
                             } else if (param.length == 2) {
                                 //add_value
                                 String[] values = value.split(":");
@@ -78,7 +76,7 @@ public class ActionService {
                                 int type = Integer.parseInt(values[0]);
                                 int baseId = Integer.parseInt(values[1]);
                                 int quantity = Integer.parseInt(values[2]);
-                                itemsService.addItem(type, baseId, quantity);
+                                itemsService.addItem(userEntity, type, baseId, quantity);
                             }
                         }
                         break;
@@ -89,7 +87,7 @@ public class ActionService {
                                 int type = Integer.parseInt(values[0]);
                                 int baseId = Integer.parseInt(values[1]);
                                 int quantity = Integer.parseInt(values[2]);
-                                itemsService.deleteItem(type, baseId, quantity);
+                                itemsService.deleteItem(userEntity, type, baseId, quantity);
                             }
                             parametersRepository.deleteAllByUserAndKey(userEntity, pass);
                         }
@@ -102,27 +100,27 @@ public class ActionService {
                         break;
                     case "+":
                         for (String pass : params) {
-                            String[] vals = pass.split(":");
-                            if (vals[0].contains("relation")) {
+                            String[] values = pass.split(":");
+                            if (values[0].contains("relation")) {
                                 //"+":["relation_1:5"]
-                                int group = Integer.parseInt(vals[0].split("_")[1]);
+                                int group = Integer.parseInt(values[0].split("_")[1]);
                                 GangRelationEntity gangRelation = gangRelationsRepository.findByUser(userEntity).orElseThrow();
-                                gangRelation.addRelation(Gang.getById(group), Integer.parseInt(vals[1]));
+                                gangRelation.addRelation(Gang.getById(group), Integer.parseInt(values[1]));
                                 gangRelationsRepository.save(gangRelation);
                             } else
-                                addValue(userEntity, vals[0], Integer.parseInt(vals[1]));
+                                addValue(userEntity, values[0], Integer.parseInt(values[1]));
                         }
                         break;
                     case "-":
                         for (String pass : Objects.requireNonNull(map.get(command))) {
-                            String[] vals = pass.split(":");
-                            if (vals[0].contains("relation")) {
-                                int group = Integer.parseInt(vals[0].split("_")[1]);
+                            String[] values = pass.split(":");
+                            if (values[0].contains("relation")) {
+                                int group = Integer.parseInt(values[0].split("_")[1]);
                                 GangRelationEntity gangRelation = gangRelationsRepository.findByUser(userEntity).orElseThrow();
-                                gangRelation.addRelation(Gang.getById(group), -Integer.parseInt(vals[1]));
+                                gangRelation.addRelation(Gang.getById(group), -Integer.parseInt(values[1]));
                                 gangRelationsRepository.save(gangRelation);
                             } else
-                                addValue(userEntity, vals[0], -Integer.parseInt(vals[1]));
+                                addValue(userEntity, values[0], -Integer.parseInt(values[1]));
                         }
                         break;
                     case "*":
@@ -146,9 +144,9 @@ public class ActionService {
                             noteService.createNote("Новая заметка", params.get(0));
                         break;
                     case "achieve":
-                        for (String pass : params)
-                            //userEntity.achievements.add(Integer.parseInt(pass));
-                            break;
+                        //TODO
+                        //userEntity.achievements.add(Integer.parseInt(pass));
+                        break;
                     case "reset":
                         if (map.get(command).size() == 0) {
                             userEntity.setMoney(0);
@@ -182,12 +180,12 @@ public class ActionService {
                         break;
                     case "set":
                         for (String pass : params) {
-                            String[] vals = pass.split(":");
-                            if (vals.length == 4) {
-                                if (vals[0].equals("story")) {
-                                    int story = Integer.parseInt(vals[1]);
-                                    int chapter = Integer.parseInt(vals[2]);
-                                    int stage = Integer.parseInt(vals[3]);
+                            String[] values = pass.split(":");
+                            if (values.length == 4) {
+                                if (values[0].equals("story")) {
+                                    int story = Integer.parseInt(values[1]);
+                                    int chapter = Integer.parseInt(values[2]);
+                                    int stage = Integer.parseInt(values[3]);
 
                                     StoryStateEntity storyStateEntity;
                                     storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, story);

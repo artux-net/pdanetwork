@@ -6,7 +6,7 @@ import net.artux.pdanetwork.models.chat.ArticleEntity;
 
 public interface FeedService {
 
-  ArticleEntity getArticle(String id);
+  ArticleEntity getArticle(Long id);
   void addArticle(ArticleEntity article);
   void deleteArticle(String id);
   ResponsePage<ArticleEntity> getPageArticles(QueryPage page);

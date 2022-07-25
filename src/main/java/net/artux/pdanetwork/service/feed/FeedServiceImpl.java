@@ -1,12 +1,11 @@
 package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.chat.ArticleEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.models.chat.ArticleEntity;
 import net.artux.pdanetwork.repository.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
-import net.artux.pdanetwork.service.util.SortService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +14,11 @@ import org.springframework.stereotype.Service;
 public class FeedServiceImpl implements FeedService {
 
     private final ArticleRepository articleRepository;
-    private final SortService sortService;
     private final PageService pageService;
 
     @Override
-    public ArticleEntity getArticle(String id) {//TODO
-        return articleRepository.findById(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("Can not find article"));
+    public ArticleEntity getArticle(Long id) {
+        return articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Can not find article"));
     }
 
     @Override
@@ -35,7 +33,7 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public ResponsePage<ArticleEntity> getPageArticles(QueryPage queryPage) {
-        Page<ArticleEntity> page = articleRepository.findAll(sortService.getSortInfo(ArticleEntity.class, queryPage, "published"));
+        Page<ArticleEntity> page = articleRepository.findAll(pageService.getPageable(queryPage));
         return pageService.mapDataPageToResponsePage(page, page.getContent());
     }
 

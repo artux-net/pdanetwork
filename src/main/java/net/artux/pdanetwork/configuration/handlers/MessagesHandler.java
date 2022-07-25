@@ -1,142 +1,125 @@
 package net.artux.pdanetwork.configuration.handlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.artux.pdanetwork.entity.conversation.ConversationEntity;
+import net.artux.pdanetwork.models.communication.MessageDTO;
+import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.service.communication.ConversationService;
+import net.artux.pdanetwork.service.communication.MessagingService;
 import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.utills.ServletHelper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import java.util.*;
 
 
 @Service
 public class MessagesHandler extends SocketHandler {
-  public MessagesHandler(UserService userService) {
-    super(userService);
-  }
 
-  @Override
-  public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
+    private final String CONVERSATION_ATTR = "conv";
+    private final String FIRST_ATTR = "first";
+    private final String ADDRESS_ATTR = "to";
 
-  }
-/*
-  private final HashMap<Integer, List<WebSocketSession>> conversations = new HashMap<>();
+    private final HashMap<ConversationEntity, Set<WebSocketSession>> conversations = new HashMap<>();
 
-  private final MongoMessages mongoMessages;
-  private final MongoUsers mongoUsers;
-  private final DialogsHandler dialogsHandler;
+    private final ConversationService conversationService;
+    private final MessagingService messagingService;
+    private final DialogsHandler dialogsHandler;
 
-  public MessagesHandler(MongoUsers mongoUsers, MemberService memberService, MongoMessages mongoMessages, DialogsHandler dialogsHandler) {
-    super(memberService);
-    this.mongoUsers = mongoUsers;
-    this.mongoMessages = mongoMessages;
-    this.dialogsHandler = dialogsHandler;
-  }
+    public MessagesHandler(UserService userService, ObjectMapper objectMapper, ConversationService conversationService, MessagingService messagingService, DialogsHandler dialogsHandler) {
+        super(userService, objectMapper);
+        this.conversationService = conversationService;
+        this.messagingService = messagingService;
+        this.dialogsHandler = dialogsHandler;
+    }
 
-  @Override
-  public void afterConnectionEstablished(WebSocketSession userSession) {
-    super.afterConnectionEstablished(userSession);
-    Map<String, String> params = ServletHelper.splitQuery(userSession.getUri().getRawQuery());
+    @Override
+    public void afterConnectionEstablished(WebSocketSession userSession) {
+        super.afterConnectionEstablished(userSession);
+        Map<String, String> params = ServletHelper.splitQuery(userSession.getUri().getRawQuery());
 
-    UserEntity userEntity = getMember(userSession);
-    int pdaId = userEntity.getPdaId();
-    //ServletContext.log("Opened session(" + userSession.getId() + ") for pda: " + pdaId + ", query: " + userSession.getQueryString());
+        UserEntity user = getMember(userSession);
 
-    if (params.containsKey("to")) {
-        // private message
-        int id = Integer.parseInt(params.get("to"));
-        int conversationId = mongoMessages.getDialogID(pdaId, id);
-        if (conversationId != 0) {
-          addToConversation(conversationId, userSession);
+        if (params.containsKey(ADDRESS_ATTR)) {
+            // only private messaging
+            int pda2 = Integer.parseInt(params.get(ADDRESS_ATTR));
+            ConversationEntity conversation = conversationService.getPrivateConversation(user.getPdaId(), pda2);
+            if (conversation != null) {
+                addToConversation(conversation, userSession);
+            } else {
+                //conversation does not exist
+                userSession.getAttributes().put(FIRST_ATTR, true);
+                userSession.getAttributes().put(ADDRESS_ATTR, pda2);
+            }
+        } else if (params.containsKey(CONVERSATION_ATTR)) {
+            // group or private messaging
+            long conversationId = Long.parseLong(params.get(CONVERSATION_ATTR));
+            ConversationEntity conversation = conversationService.getPrivateConversation(conversationId, user.getPdaId());
+            if (conversation != null) {
+                addToConversation(conversation, userSession);
+            } else {
+                reject(userSession, "Неправильный запрос");
+            }
         } else {
-          //conv does not exist
-          userSession.getAttributes().put("first", true);
-          userSession.getAttributes().put("pda", pdaId);
-          userSession.getAttributes().put("to", id);
+            reject(userSession, "Неправильный запрос");
         }
-      } else if (params.containsKey("c")) {
-        // group message
-        int conversationId = Integer.parseInt(params.get("c"));
-        if (mongoMessages.hasConversation(conversationId)
-                && mongoMessages.conversationHas(conversationId, pdaId)) {
-          addToConversation(conversationId, userSession);
+    }
+
+    @Override
+    public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
+        createConversationIfNotExists(userSession);
+        ConversationEntity conversation = (ConversationEntity) userSession.getAttributes().get(CONVERSATION_ATTR);
+        MessageDTO userMessage = messagingService.saveToConversation(webSocketMessage.getPayload().toString(), conversation);//save message
+
+        for (WebSocketSession session : conversations.get(conversation)) {
+            sendObject(session, userMessage);
+        }
+        dialogsHandler.sendUpdates(conversation, userMessage);// send notif
+    }
+
+    private void addToConversation(ConversationEntity conversationEntity, WebSocketSession session) {
+        if (!conversations.containsKey(conversationEntity)) {
+            Set<WebSocketSession> sessions = new HashSet<>();
+            sessions.add(session);
+            accept(session);
+            conversations.put(conversationEntity, sessions);
         } else {
-          reject(userSession, "Неправильный запрос");
-          //ServletContext.log("Can not connect pdaId " + pdaId + " to conversation " + conversationId);
-          Conversation conversation = mongoMessages.getConversation(conversationId);
-          if (conversation != null) {
-            //ServletContext.log(Arrays.toString(conversation.allMembers().toArray()) + " does not have this id");
-          }
-            //else ServletContext.log("This conversation does not exist");
-
-
+            conversations.get(conversationEntity)
+                    .add(session);
         }
-      } else {
-        reject(userSession, "Неправильный запрос");
-        //ServletContext.log("Session does not have query");
-      }
-  }
+        session.getAttributes().put(CONVERSATION_ATTR, conversationEntity);
 
-  @Override
-  public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
-    updateDialog(userSession);
-    int conversation = (int) userSession.getAttributes().get("conversation");
-    UserMessage userMessage = new UserMessage(conversation, (UserEntity) userSession.getAttributes().get("user"), webSocketMessage.getPayload().toString());
-
-    for (WebSocketSession session : conversations.get(conversation)) {
-      sendObject(session,userMessage);
+        List<MessageDTO> messages = messagingService.getLastMessages(conversationEntity, PageRequest.of(0, 20))
+                .toList();
+        sendObject(session, messages);
     }
 
-    mongoMessages.addMessageToConversation(conversation, userMessage);
-    dialogsHandler.sendUpdates(mongoMessages.getConversation(conversation), userMessage);
-  }
 
-  private void addToConversation(int conversationId, WebSocketSession session){
-    if (!conversations.containsKey(conversationId)) {
-      List<WebSocketSession> sessions = new ArrayList<>();
-      sessions.add(session);
-      accept(session);
-      conversations.put(conversationId, sessions);
-    } else {
-      conversations.get(conversationId)
-              .add(session);
+    @Override
+    public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
+        if (webSocketSession.getAttributes().get(CONVERSATION_ATTR) != null) {
+            ConversationEntity conversation = (ConversationEntity) webSocketSession.getAttributes().get(CONVERSATION_ATTR);
+
+            conversations.get(conversation).remove(webSocketSession);
+            if (conversations.get(conversation).size() == 0)
+                conversations.remove(conversation);
+        }
+        super.afterConnectionClosed(webSocketSession, closeStatus);
     }
-    session.getAttributes().put("conversation", conversationId);
 
-    List<UserMessage> messages = mongoMessages.getLastMessages(conversationId, 30, 0);
-    sendObject(session, messages);
-  }
+    private void createConversationIfNotExists(WebSocketSession userSession) {
+        ConversationEntity conversation;
+        if (userSession.getAttributes().get(FIRST_ATTR) != null) {
+            //create new conversation
+            int id = (int) userSession.getAttributes().get(ADDRESS_ATTR);
 
-
-  @Override
-  public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
-    super.afterConnectionClosed(webSocketSession, closeStatus);
-    if (webSocketSession.getAttributes().get("conversation") != null) {
-      int conversation = (int) webSocketSession.getAttributes().get("conversation");
-
-      conversations.get(conversation).remove(webSocketSession);
-      if (conversations.get(conversation).size() == 0)
-        conversations.remove(conversation);
+            conversation = conversationService.createPrivateConversation(getMember(userSession).getPdaId(), id);
+            addToConversation(conversation, userSession);
+        }
     }
-    //ServletContext.log("Closed session: " + userSession.getId());
-  }
-
-  private void updateDialog(WebSocketSession userSession){
-    Conversation conversation;
-    if (userSession.getAttributes().get("first") != null &&
-            (Boolean) userSession.getAttributes().get("first")) {
-      //add new conv
-      int pdaId = (int) userSession.getAttributes().get("pda");
-      int id = (int) userSession.getAttributes().get("to");
-
-      conversation = mongoMessages.newConversation(pdaId, id);
-      addToConversation(conversation.getCid(), userSession);
-    } else {
-      //up conv
-      conversation = mongoMessages
-              .getConversation((int) userSession.getAttributes().get("conversation"));
-
-    }
-    for (int ids : conversation.allMembers()) {
-      mongoUsers.updateDialog(ids, conversation.cid);
-    }
-  }*/
 
 }

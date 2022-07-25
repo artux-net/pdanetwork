@@ -3,6 +3,7 @@ package net.artux.pdanetwork.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.user.CommandBlock;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.action.StateService;
@@ -28,8 +29,8 @@ public class CommandController {
 
     @ApiOperation(value = "Выполнение")
     @PutMapping("/do")
-    public StoryData doActions(@RequestBody HashMap<String, List<String>> actions) {
-        return actionService.doUserActions(actions, userService.getMember());
+    public StoryData doActions(@RequestBody CommandBlock block) {
+        return actionService.doUserActions(block.getActions(), userService.getMember());
         //TODO do on server
     }
 

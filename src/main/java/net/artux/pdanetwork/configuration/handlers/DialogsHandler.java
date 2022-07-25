@@ -1,103 +1,65 @@
 package net.artux.pdanetwork.configuration.handlers;
 
-import net.artux.pdanetwork.models.chat.DialogResponse;
-import net.artux.pdanetwork.models.communication.ConversationEntity;
-import net.artux.pdanetwork.models.communication.MessageEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.conversation.ConversationEntity;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.communication.ConversationDTO;
+import net.artux.pdanetwork.models.communication.MessageDTO;
+import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.service.communication.ConversationService;
 import net.artux.pdanetwork.service.member.UserService;
 import net.artux.pdanetwork.service.profile.ProfileService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
 public class DialogsHandler extends SocketHandler {
 
-  private static HashMap<Long, WebSocketSession> sessions = new HashMap<>();
-  //private final MongoMessages mongoMessages;
-  private final ProfileService profileService;
+    private final HashMap<Long, WebSocketSession> sessions = new HashMap<>();
+    private final ConversationService conversationService;
 
-  public DialogsHandler(UserService userService, ProfileService profileService) {
-    super(userService);
-    //this.mongoMessages = mongoMessages;
-    this.profileService = profileService;
-  }
-
-  @Override
-  public void afterConnectionEstablished(WebSocketSession userSession){
-    super.afterConnectionEstablished(userSession);
-    UserEntity userEntity = getMember(userSession);
-    sessions.put(userEntity.getPdaId(), userSession);
-    sendObject(userSession, getDialogs(userEntity));
-  }
-
-  private List<DialogResponse> getDialogs(UserEntity userEntity){
-    List<DialogResponse> response = new ArrayList<>();
-    long pda = userEntity.getPdaId();
-    //TODO
-    /*for (int id : userEntity.getDialogs()) {
-      Conversation conversation = mongoMessages.getConversation(id);
-
-      if (conversation.allMembers().size() <= 2) {
-        int anotherId = getAnotherId(conversation.allMembers(), pda);
-        Profile profile = profileService.getProfile(anotherId);
-        response.add(new DialogResponse(conversation, profile));
-      } else {
-        response.add(new DialogResponse(conversation));
-      }
-    }*/
-    return response;
-  }
-
-  private int getAnotherId(List<Integer> ids, int pda){
-    for (int i : ids){
-      if(i!=pda){
-        return i;
-      }
-    }
-    return 0;
-  }
-
-  public void sendUpdates(ConversationEntity conversationEntity, MessageEntity messageEntity){
-    for (UserEntity userEntity : conversationEntity.getMembers()) {
-      long pdaId = userEntity.getId();
-      if (sessions.containsKey(pdaId)){
-        sendObject(sessions.get(pdaId), messageEntity);
-      }
+    public DialogsHandler(UserService userService, ObjectMapper objectMapper, ConversationService conversationService) {
+        super(userService, objectMapper);
+        this.conversationService = conversationService;
     }
 
-  }
+    @Override
+    public void afterConnectionEstablished(WebSocketSession userSession) {
+        super.afterConnectionEstablished(userSession);
+        UserEntity userEntity = getMember(userSession);
+        sessions.put(userEntity.getPdaId(), userSession);
+        sendObject(userSession, getDialogs(userEntity));
+    }
+
+    private List<ConversationDTO> getDialogs(UserEntity userEntity) {
+        Slice<ConversationDTO> response = conversationService.getConversations(PageRequest.of(0, 20));
+        return response.toList();
+    }
+
+    public void sendUpdates(ConversationEntity conversationEntity, MessageDTO messageDTO) {
+        for (UserEntity userEntity : conversationEntity.getMembers()) {
+            long pdaId = userEntity.getId();
+            if (sessions.containsKey(pdaId)) {
+                sendObject(sessions.get(pdaId), messageDTO);
+            }
+        }
+    }
 
 
-  @Override
-  public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage){
-    UserEntity userEntity = getMember(userSession);
-    //update conversation with new title, members, owners
-    //TODO
-   /* ConversationRequest request = get(ConversationRequest.class, webSocketMessage);
-    if (request.cid == 0){
-      if (userEntity.subs.containsAll(request.members))
-        mongoMessages.newConversation(userEntity.getPdaId(), request);
-      else
-        sendError(userSession, "Участники должны находится у вас в друзьях");
-    }else{
-      if (mongoMessages.getConversation(request.cid).owners.contains(userEntity.getPdaId()))
-        if (userEntity.subs.containsAll(request.members))
-          mongoMessages.updateConversation(request);
-        else
-          sendError(userSession, "Участники должны находится у вас в друзьях");
-      else
-        sendError(userSession, "Вы не владелец беседы");
-    }*/
-  }
+    @Override
+    public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
 
-  public void sendError(WebSocketSession session, String message){
-    sendObject(session, new Status(false, message));
-  }
+    }
+
+    public void sendError(WebSocketSession session, String message) {
+        sendObject(session, new Status(false, message));
+    }
 
 }

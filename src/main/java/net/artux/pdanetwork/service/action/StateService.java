@@ -8,14 +8,14 @@ import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
-import net.artux.pdanetwork.service.ItemsService;
+import net.artux.pdanetwork.service.CommonItemsRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class StateService {
 
-    private final ItemsService itemsService;
+    private final CommonItemsRepository itemsService;
     private final ParametersRepository parametersRepository;
     private final StoryRepository storyRepository;
     private final ItemMapper itemMapper;
@@ -26,13 +26,13 @@ public class StateService {
         storyData.setParameters(storyMapper.params(parametersRepository.findAllByUser(userEntity)));
         storyData.setStoryStates(storyMapper.states(storyRepository.findAllByPlayer(userEntity)));
 
-        storyData.setArmors(itemMapper.armors(itemsService.getAllByUserAndType(userEntity, ItemType.ARMOR)));
-        storyData.setArtifacts(itemMapper.artifacts(itemsService.getAllByUserAndType(userEntity, ItemType.ARTIFACT)));
-        storyData.setDetectors(itemMapper.detectors(itemsService.getAllByUserAndType(userEntity, ItemType.DETECTOR)));
-        storyData.setMedicines(itemMapper.medicines(itemsService.getAllByUserAndType(userEntity, ItemType.MEDICINE)));
-        storyData.setWeapons(itemMapper.weapons(itemsService.getAllByUserAndType(userEntity, ItemType.PISTOL)));
-        storyData.getWeapons().addAll(itemMapper.weapons(itemsService.getAllByUserAndType(userEntity, ItemType.RIFLE)));
-        storyData.setItems(itemMapper.items(itemsService.getAllByUserAndType(userEntity, ItemType.ITEM)));
+        storyData.setArmors(itemMapper.armors(itemsService.findAllByUserAndType(userEntity, ItemType.ARMOR)));
+        storyData.setArtifacts(itemMapper.artifacts(itemsService.findAllByUserAndType(userEntity, ItemType.ARTIFACT)));
+        storyData.setDetectors(itemMapper.detectors(itemsService.findAllByUserAndType(userEntity, ItemType.DETECTOR)));
+        storyData.setMedicines(itemMapper.medicines(itemsService.findAllByUserAndType(userEntity, ItemType.MEDICINE)));
+        storyData.setWeapons(itemMapper.weapons(itemsService.findAllByUserAndType(userEntity, ItemType.PISTOL)));
+        storyData.getWeapons().addAll(itemMapper.weapons(itemsService.findAllByUserAndType(userEntity, ItemType.RIFLE)));
+        storyData.setItems(itemMapper.items(itemsService.findAllByUserAndType(userEntity, ItemType.ITEM)));
         return storyData;
     }
 

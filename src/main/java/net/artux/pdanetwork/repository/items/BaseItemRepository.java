@@ -12,6 +12,7 @@ import java.util.Optional;
 @NoRepositoryBean
 public interface BaseItemRepository<T extends ItemEntity> extends JpaRepository<T, Long> {
 
+    Optional<T> findByOwnerAndId(UserEntity userEntity, long id);
     Optional<T> findByOwnerAndBaseId(UserEntity userEntity, int baseId);
 
     List<T> findAllByOwnerAndType(UserEntity userEntity, ItemType type);

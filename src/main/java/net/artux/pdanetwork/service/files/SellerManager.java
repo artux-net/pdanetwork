@@ -1,36 +1,36 @@
 package net.artux.pdanetwork.service.files;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.story.seller.Seller;
 import net.artux.pdanetwork.models.story.seller.SellerDto;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class SellerManager implements FileService{
+public class SellerManager implements FileService {
 
     private static List<Seller> sellers;
     private static List<SellerDto> sellerDtos;
     private final ValuesService valuesService;
     private final ItemProvider itemProvider;
+    private final ObjectMapper mapper;
 
-    public SellerManager(ValuesService valuesService, ItemProvider itemProvider) {
+    public SellerManager(ValuesService valuesService, ItemProvider itemProvider, ObjectMapper mapper) {
         this.valuesService = valuesService;
         this.itemProvider = itemProvider;
+        this.mapper = mapper;
         reset();
     }
 
-    private List<Seller> readSellers(){
+    private List<Seller> readSellers() {
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/sellers.json");
-            Type itemsListType = TypeToken.getParameterized(ArrayList.class, Seller.class).getType();
-            return new Gson().fromJson(commonFile, itemsListType);
+            return Arrays.asList(mapper.readValue(commonFile, Seller[].class));
         } catch (IOException e) {
             //ServletContext.error("Sellers error", e);
         }
@@ -61,9 +61,10 @@ public class SellerManager implements FileService{
         sellers = new ArrayList<>();
         sellerDtos = new ArrayList<>();
         sellers = readSellers();
-        if (sellers!=null)
-            for(Seller seller : getSellers()){
-                sellerDtos.add(new SellerDto(seller, itemProvider));
+        if (sellers != null)
+            for (Seller seller : getSellers()) {
+                //todo
+                //sellerDtos.add(new SellerDto(seller, itemProvider));
             }
     }
 }

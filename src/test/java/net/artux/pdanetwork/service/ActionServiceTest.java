@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.service;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.service.action.ActionService;
@@ -26,7 +27,8 @@ public class ActionServiceTest {
     private ActionService actionService;
     @Autowired
     private UserService userService;
-    private Gson gson = new Gson();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void actionsLoads() {
@@ -34,7 +36,7 @@ public class ActionServiceTest {
     }
 
     @Test
-    public void correctWorks() {
+    public void correctWorks() throws JsonProcessingException {
         String[] params = {"param1", "param"};
 
         UserEntity userEntity = userService.getMemberByLogin(login);
@@ -44,7 +46,7 @@ public class ActionServiceTest {
 
         StoryData s = actionService.doUserActions(actions, userEntity);
 
-        assertThat(gson.toJson(s)).asString().contains("param1");
+        assertThat(objectMapper.writeValueAsString(s).contains("param1"));
     }
 
 }

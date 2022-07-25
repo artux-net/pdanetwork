@@ -7,7 +7,7 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.RelationshipEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.repository.user.RelationshipRepository;
-import net.artux.pdanetwork.repository.user.UsersRepository;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +22,11 @@ public class FriendServiceIml implements FriendService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final RelationshipRepository relationshipRepository;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<FriendModel> getFriends(Long pdaId) {
-        return userMapper.friendList(usersRepository.getFriendsById(pdaId));
+        return userMapper.friendList(userRepository.getFriendsById(pdaId));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FriendServiceIml implements FriendService {
 
     @Override
     public List<FriendModel> getSubs(Long pdaId) {
-        return userMapper.friendList(usersRepository.getSubsById(pdaId));
+        return userMapper.friendList(userRepository.getSubsById(pdaId));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FriendServiceIml implements FriendService {
 
     @Override
     public List<FriendModel> getFriendRequests() {
-        return userMapper.friendList(usersRepository.getRequestsById(userService.getMember().getPdaId()));
+        return userMapper.friendList(userRepository.getRequestsById(userService.getMember().getPdaId()));
     }
 
     @Override

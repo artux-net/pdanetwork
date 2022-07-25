@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.chat;
 
 import net.artux.pdanetwork.models.user.Profile;
-import net.artux.pdanetwork.models.communication.ConversationEntity;
+import net.artux.pdanetwork.entity.conversation.ConversationEntity;
 
 public class DialogResponse {
 

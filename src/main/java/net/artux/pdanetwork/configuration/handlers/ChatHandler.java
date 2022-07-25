@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.configuration.handlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.chat.LimitedArrayList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.member.UserService;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,9 @@ public class ChatHandler extends SocketHandler {
   private static final HashMap<Long, String> banMap = new HashMap<>();
 
   private static boolean updateMessages = false;
-  private final MessageMapper messageMapper;
 
-  public ChatHandler(UserService userService, MessageMapper messageMapper) {
-    super(userService);
-    this.messageMapper = messageMapper;
+  public ChatHandler(UserService userService, ObjectMapper objectMapper) {
+    super(userService, objectMapper);
   }
 
   @Override

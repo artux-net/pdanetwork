@@ -33,7 +33,7 @@ public class FeedController {
     }
 
     @GetMapping("/{id}")
-    public String getArticlePage(Model model, @PathVariable String id) {
+    public String getArticlePage(Model model, @PathVariable Long id) {
         ArticleEntity article = feedService.getArticle(id);
         model.addAttribute("title", article.getTitle());
         model.addAttribute("content", article.getContent());

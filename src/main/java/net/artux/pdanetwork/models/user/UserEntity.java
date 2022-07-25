@@ -78,10 +78,6 @@ public class UserEntity extends BaseEntity {
         return id;
     }
 
-    public void hashPassword(String password) {
-        this.password = String.valueOf(password.hashCode()); //TODO hashing
-    }
-
     public void money(int money) {
         this.money += money;
         if (this.money < 0)

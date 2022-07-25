@@ -3,13 +3,13 @@ package net.artux.pdanetwork.repository.user;
 import net.artux.pdanetwork.models.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
-public interface UsersRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> getByUid(UUID uuid);
 
@@ -17,7 +17,7 @@ public interface UsersRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> getMemberByEmail(String email);
 
-    List<UserEntity> findAllByIdIn(List<Long> list);
+    Set<UserEntity> findAllByIdIn(List<Long> list);
 
     @Query(value = "select * from pda_user pu join " +
             "(select r.user1_id, r.user2_id from relationship r where r.id not in (select r1.id from relationship r1  " +

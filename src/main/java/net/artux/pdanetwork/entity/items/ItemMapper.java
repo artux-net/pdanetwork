@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") // TODO helpers
+@Mapper(componentModel = "spring")
 public interface ItemMapper {
 
     ItemDto item(ItemEntity itemEntity);

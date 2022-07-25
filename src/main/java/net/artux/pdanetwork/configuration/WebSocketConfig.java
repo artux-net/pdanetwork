@@ -1,48 +1,33 @@
 package net.artux.pdanetwork.configuration;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.service.util.ValuesService;
+import net.artux.pdanetwork.configuration.handlers.ChatHandler;
+import net.artux.pdanetwork.configuration.handlers.DialogsHandler;
+import net.artux.pdanetwork.configuration.handlers.GroupsHandler;
+import net.artux.pdanetwork.configuration.handlers.MessagesHandler;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.ChannelRegistration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Configuration
 @EnableWebSocket
-@EnableWebSocketMessageBroker
 @RequiredArgsConstructor
-public class WebSocketConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final ValuesService valuesService;
-
-    @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic");
-//        config.enableStompBrokerRelay("/topic", "/queue", "/exchange"); // Uncomment for external message broker (ActiveMQ, RabbitMQ)
-        registry.setApplicationDestinationPrefixes(valuesService.getContextPath()); // prefix in client queries
-    }
+    private final ChatHandler chatHandler;
+    private final MessagesHandler messagesHandler;
+    private final DialogsHandler dialogsHandler;
+    private final GroupsHandler groupsHandler;
 
     @Override
-    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
-        messages
-                .anyMessage().authenticated();
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+        webSocketHandlerRegistry
+                .addHandler(chatHandler, "/chat")
+                .addHandler(messagesHandler, "/dialog")
+                .addHandler(dialogsHandler, "/dialogs")
+                .addHandler(groupsHandler, "/groups")
+                .setAllowedOriginPatterns("*");
     }
 
-    @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/echo", "/messages", "/chat").withSockJS();
-    }
-
-    @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
 }

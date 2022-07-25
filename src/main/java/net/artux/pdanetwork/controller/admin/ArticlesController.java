@@ -57,7 +57,7 @@ public class ArticlesController extends BaseUtilityController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getArticle(Model model, @PathVariable String id) {
+    public String getArticle(Model model, @PathVariable Long id) {
         model.addAttribute("article", feedService.getArticle(id));
         return pageWithContent("articles/creation", model);
     }

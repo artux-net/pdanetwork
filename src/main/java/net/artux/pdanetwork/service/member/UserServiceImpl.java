@@ -7,10 +7,8 @@ import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
-import net.artux.pdanetwork.repository.user.UsersRepository;
-import net.artux.pdanetwork.service.action.ActionService;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
-import net.artux.pdanetwork.service.util.Utils;
 import net.artux.pdanetwork.utills.Security;
 import org.slf4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
@@ -73,7 +71,7 @@ public class UserServiceImpl implements UserService {
 
     public Status handleConfirmation(String token) {
         if (registerUserMap.containsKey(token)) {
-            UserEntity member = usersRepository.save(new UserEntity(registerUserMap.get(token), passwordEncoder));
+            UserEntity member = userRepository.save(new UserEntity(registerUserMap.get(token), passwordEncoder));
             long pdaId = member.getId();
             logger.info("User" + member.getLogin() + " registered.");
             try {
@@ -88,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getMember() {
-        return usersRepository.getMemberByLogin(SecurityContextHolder.getContext()
+        return userRepository.getMemberByLogin(SecurityContextHolder.getContext()
                         .getAuthentication()
                         .getName())
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователя не существует"));
@@ -101,13 +99,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getMember(String base64) {
-        if (Utils.isEmpty(base64))
+        if (base64.isBlank())
             return null;
         base64 = base64.replaceFirst("Basic ", "");
         base64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
         String login = base64.split(":")[0];
         String password = base64.split(":")[1];
-        Optional<UserEntity> optionalMember = usersRepository.getMemberByLogin(login);
+        Optional<UserEntity> optionalMember = userRepository.getMemberByLogin(login);
         if (optionalMember.isPresent()
                 && passwordEncoder.matches(password, optionalMember.get().getPassword()))
             return optionalMember.get();
@@ -116,22 +114,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getMember(UUID objectId) {
-        return usersRepository.getByUid(objectId).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+        return userRepository.getByUid(objectId).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
     @Override
     public UserEntity getMemberByPdaId(Long id) {
-        return usersRepository.findById(id).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
     @Override
     public UserEntity getMemberByEmail(String email) {
-        return usersRepository.getMemberByEmail(email).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+        return userRepository.getMemberByEmail(email).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
     @Override
     public UserEntity getMemberByLogin(String login) {
-        return usersRepository.getMemberByLogin(login).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+        return userRepository.getMemberByLogin(login).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
 
@@ -147,7 +145,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setEmail(user.getEmail());
             userEntity.setAvatar(user.getAvatar());
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-            usersRepository.save(userEntity);
+            userRepository.save(userEntity);
             status.setDescription("Данные изменены");
         }
 

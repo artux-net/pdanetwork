@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.configuration.handlers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.chat.LimitedArrayList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.models.communication.MessageEntity;
 import net.artux.pdanetwork.models.gang.Gang;
 import net.artux.pdanetwork.models.achievement.GangRelationEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
@@ -32,8 +32,8 @@ public class GroupsHandler extends SocketHandler {
         return lastMessages;
     }
 
-    public GroupsHandler(UserService userService) {
-        super(userService);
+    public GroupsHandler(UserService userService, ObjectMapper mapper) {
+        super(userService, mapper);
     }
 
     @Override

@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.repository.user.UsersRepository;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UserValidator {
 
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
     private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z0-9-_.]+$";
@@ -46,7 +46,7 @@ public class UserValidator {
         if (login.length() < 4 || login.length() > 16) {
             return new Status(false, "Логин должен содержать не менее 4 и не более 16 символов.");
         }
-        if (usersRepository.getMemberByLogin(login).isPresent()) {
+        if (userRepository.getMemberByLogin(login).isPresent()) {
             return new Status(false, "Пользователь с таким логином уже существует.");
         }
         return new Status(true);
@@ -104,7 +104,7 @@ public class UserValidator {
         if (!email.matches(EMAIL_VALIDATION_REGEX)) {
             return new Status(false, "Почта не существует.");
         }
-        if (usersRepository.getMemberByEmail(email).isPresent()) {
+        if (userRepository.getMemberByEmail(email).isPresent()) {
             return new Status(false, "Пользователь с таким e-mail уже существует.");
         }
         return new Status(true);

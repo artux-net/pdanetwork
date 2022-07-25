@@ -6,7 +6,7 @@ import net.artux.pdanetwork.models.user.UserEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.StoryData;
-import net.artux.pdanetwork.repository.user.UsersRepository;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.action.StateService;
 import net.artux.pdanetwork.service.email.EmailService;
@@ -25,7 +25,7 @@ public class ResetServiceImpl implements ResetService {
     private final ActionService actionService;
     private final EmailService emailService;
     private final StateService stateService;
-    private final UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
     private final UserMapper userMapper;
 
@@ -67,7 +67,7 @@ public class ResetServiceImpl implements ResetService {
         UserEntity userEntity = userService.getMember();
         userEntity.setMoney(500);
         actionService.resetAllData(userEntity);
-        usersRepository.save(userEntity);
+        userRepository.save(userEntity);
         return stateService.getStoryData(userEntity);
     }
 

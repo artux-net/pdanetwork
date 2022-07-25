@@ -1,7 +1,8 @@
-package net.artux.pdanetwork.models.communication;
+package net.artux.pdanetwork.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.artux.pdanetwork.entity.conversation.ConversationEntity;
 import net.artux.pdanetwork.models.BaseEntity;
 import net.artux.pdanetwork.models.user.UserEntity;
 
@@ -19,7 +20,9 @@ public class MessageEntity extends BaseEntity {
     @ManyToOne
     private UserEntity author;
     private String content;
-    private long timestamp;
+    private Instant timestamp;
+    @ManyToOne
+    private ConversationEntity conversation;
 
     public MessageEntity() {
     }
@@ -27,14 +30,14 @@ public class MessageEntity extends BaseEntity {
     public MessageEntity(UserEntity userEntity, String content) {
         this.author = userEntity;
         this.content = content.trim();
-        timestamp = Instant.now().toEpochMilli();
+        timestamp = Instant.now();
     }
 
     public static MessageEntity getSystemMessage(String loc, String message) {
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.content = message;
 
-        messageEntity.timestamp = Instant.now().toEpochMilli();
+        messageEntity.timestamp = Instant.now();
         return messageEntity;
         //TODO: different locales
     }

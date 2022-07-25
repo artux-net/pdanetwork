@@ -1,7 +1,6 @@
 package net.artux.pdanetwork.service.files;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import net.artux.pdanetwork.entity.items.EncItemEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
@@ -10,8 +9,8 @@ import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,10 +31,12 @@ public class ItemProvider implements FileService {
         4 - armors
          */
 
-    static Gson gson = new Gson();
+    private final ObjectMapper objectMapper;
 
-    public ItemProvider(ValuesService valuesService) {
+    public ItemProvider(ValuesService valuesService, ObjectMapper objectMapper) {
         this.valuesService = valuesService;
+        this.objectMapper = objectMapper;
+
         reset();
     }
 
@@ -51,11 +52,9 @@ public class ItemProvider implements FileService {
     }
 
     private List<ItemEncType> initTypes() {
-        Class c = ItemEncType.class;
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/info.json");
-            Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
-            return gson.fromJson(commonFile, itemsListType);
+            return Arrays.asList(objectMapper.readValue(commonFile, ItemEncType[].class));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,8 +66,7 @@ public class ItemProvider implements FileService {
         Class<? extends ItemEntity> c = ItemType.getByTypeId(type).getTypeClass();
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
-            Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
-            return gson.fromJson(commonFile, itemsListType);
+            return Arrays.asList(objectMapper.readValue(commonFile, objectMapper.getTypeFactory().constructCollectionType(List.class, c)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,11 +74,9 @@ public class ItemProvider implements FileService {
     }
 
     private List<EncItemEntity> getEncType(int type) {
-        Class c = EncItemEntity.class;
         try {
             String commonFile = readFile(valuesService.getConfigUrl() + "base/items/types/" + type + ".json");
-            Type itemsListType = TypeToken.getParameterized(ArrayList.class, c).getType();
-            return gson.fromJson(commonFile, itemsListType);
+            return Arrays.asList(objectMapper.readValue(commonFile, EncItemEntity[].class));
         } catch (IOException e) {
             e.printStackTrace();
         }
