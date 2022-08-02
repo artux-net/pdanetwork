@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.repository.user;
 
-import net.artux.pdanetwork.models.achievement.GangRelationEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

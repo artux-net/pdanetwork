@@ -4,5 +4,5 @@ import net.artux.pdanetwork.entity.items.DetectorEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface DetectorRepository extends BaseItemRepository<DetectorEntity> {
+public interface DetectorRepository extends WearableItemRepository<DetectorEntity> {
 }

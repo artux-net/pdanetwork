@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.user;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.Gang;
 
 @Data
 public class FriendModel {

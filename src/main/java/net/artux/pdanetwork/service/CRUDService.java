@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.service;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.BaseEntity;
+import net.artux.pdanetwork.entity.BaseEntity;
 import org.springframework.data.repository.CrudRepository;
 
 @RequiredArgsConstructor

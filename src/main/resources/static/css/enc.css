@@ -1,0 +1,40 @@
+body {
+    font-family: "Museo Sans Cyrl", sans-serif;
+    color: #fff;
+    font-size: 12px;
+    line-height: 24px;
+    font-weight: 300;
+    min-height: 100%;
+    position: relative;
+    background: #1a1b1d;
+    overflow-y: scroll;
+}
+
+.content-table {
+    width: 100%;
+    font-size: 12px;
+}
+
+.description {
+    width: 100%;
+}
+
+a {
+    color: #d8d8da;
+}
+
+td {
+    font-size: 12px;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    flex: 50%;
+}
+
+.column-title {
+    text-align: center;
+}

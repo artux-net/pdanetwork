@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "medicine")
+@Table(name = "user_medicine")
 public class MedicineEntity extends ItemEntity {
 
     private float stamina;

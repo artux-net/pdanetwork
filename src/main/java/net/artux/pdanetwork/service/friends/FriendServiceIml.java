@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.user.RelationshipEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.RelationshipEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.repository.user.RelationshipRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,10 +1,9 @@
 package net.artux.pdanetwork.models.note;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.artux.pdanetwork.models.BaseEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.BaseEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;

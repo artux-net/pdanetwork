@@ -1,9 +1,9 @@
 package net.artux.pdanetwork.service.communication;
 
-import net.artux.pdanetwork.entity.conversation.ConversationEntity;
+import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 

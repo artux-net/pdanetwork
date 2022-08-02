@@ -1,10 +1,10 @@
 package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.chat.ArticleEntity;
+import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.repository.ArticleRepository;
+import net.artux.pdanetwork.repository.feed.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

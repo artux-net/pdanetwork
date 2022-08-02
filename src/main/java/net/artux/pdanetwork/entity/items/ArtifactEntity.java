@@ -9,10 +9,9 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "artifact")
+@Table(name = "user_artifact")
 public class ArtifactEntity extends WearableEntity {
 
-    private int anomalyId;
     private int health;
     private int radio;
     private int damage;

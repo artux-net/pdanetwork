@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;

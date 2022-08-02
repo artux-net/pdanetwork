@@ -1,7 +1,8 @@
 package net.artux.pdanetwork.models.user;
 
-import net.artux.pdanetwork.models.gang.GangRelationDto;
-import net.artux.pdanetwork.models.achievement.GangRelationEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
+import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.dto.UserInfoDto;
@@ -10,7 +11,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") // TODO helpers
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     UserInfoDto info(UserEntity userEntity);

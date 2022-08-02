@@ -1,0 +1,110 @@
+[
+  {
+    "radio": "5",
+    "damage": "2",
+    "baseId": 47
+  },
+  {
+    "id": "1",
+    "radio": "5",
+    "damage": "3",
+    "baseId": 48
+  },
+  {
+    "id": "2",
+    "radio": "5",
+    "damage": "5",
+    "baseId": 49
+  },
+  {
+    "id": "3",
+    "radio": "-10",
+    "endurance": "-18",
+    "baseId": 50
+  },
+  {
+    "radio": "-20",
+    "endurance": "-18",
+    "baseId": 51
+  },
+  {
+    "radio": "-30",
+    "endurance": "-18",
+    "baseId": 52
+  },
+  {
+    "bleeding": "-133",
+    "thermal": "10",
+    "chemical": "10",
+    "baseId": 53
+  },
+  {
+    "bleeding": "-267",
+    "thermal": "10",
+    "chemical": "10",
+    "baseId": 54
+  },
+  {
+    "bleeding": "-400",
+    "thermal": "10",
+    "chemical": "10",
+    "baseId": 55
+  },
+  {
+    "endurance": "36",
+    "electric": "-10",
+    "baseId": 56
+  },
+  {
+    "endurance": "73",
+    "electric": "-10",
+    "baseId": 57
+  },
+  {
+    "endurance": "109",
+    "electric": "-10",
+    "baseId": 58
+  },
+  {
+    "damage": "5",
+    "baseId": 59
+  },
+  {
+    "chemical": "30",
+    "baseId": 60
+  },
+  {
+    "damage": "5",
+    "baseId": 61
+  },
+  {
+    "radio": "5",
+    "damage": "2",
+    "baseId": 62
+  },
+  {
+    "radio": "5",
+    "damage": "3",
+    "baseId": 63
+  },
+  {
+    "radio": "5",
+    "damage": "5",
+    "baseId": 64
+  },
+  {
+    "health": "200",
+    "damage": "20",
+    "baseId": 65
+  },
+  {
+    "health": "400",
+    "damage": "20",
+    "baseId": 66
+  },
+  {
+    "health": "600",
+    "damage": "-20",
+    "baseId": 67
+  }
+]

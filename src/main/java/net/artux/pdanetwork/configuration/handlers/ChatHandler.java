@@ -1,10 +1,9 @@
 package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.artux.pdanetwork.models.chat.LimitedArrayList;
+import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.models.communication.MessageMapper;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 @Service
 public class ChatHandler extends SocketHandler {
 
-  private static final LimitedArrayList<MessageDTO> lastMessages = new LimitedArrayList<>(150);
+  private static final LimitedLinkedList<MessageDTO> lastMessages = new LimitedLinkedList<>(150);
   private static final HashMap<Long, String> banMap = new HashMap<>();
 
   private static boolean updateMessages = false;

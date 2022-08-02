@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.artux.pdanetwork.entity.conversation.ConversationEntity;
+import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.service.communication.ConversationService;
 import net.artux.pdanetwork.service.communication.MessagingService;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.ServletHelper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

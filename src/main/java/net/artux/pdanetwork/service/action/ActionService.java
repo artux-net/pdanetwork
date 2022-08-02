@@ -1,16 +1,16 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.ParameterEntity;
-import net.artux.pdanetwork.entity.StoryStateEntity;
-import net.artux.pdanetwork.models.achievement.GangRelationEntity;
-import net.artux.pdanetwork.models.gang.Gang;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.ParameterEntity;
+import net.artux.pdanetwork.entity.user.StoryStateEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
+import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.repository.user.GangRelationsRepository;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
-import net.artux.pdanetwork.service.CommonItemsRepository;
+import net.artux.pdanetwork.service.items.CommonItemsRepository;
 import net.artux.pdanetwork.service.note.NoteService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -43,15 +43,13 @@ public class ActionService {
                     case "add":
                         for (String value : params) {
                             String[] param = value.split(":");
-                            if (param.length == 3) {
-                                int type = Integer.parseInt(param[0]);
-                                int baseId = Integer.parseInt(param[1]);
-                                int quantity = Integer.parseInt(param[2]);
-                                itemsService.addItem(userEntity, type, baseId, quantity);
+                            if (param[0].matches("[0-9]+[\\\\.]?[0-9]*")) {
+                                long baseId = Long.parseLong(param[0]);
+                                int quantity = Integer.parseInt(param[1]);
+                                itemsService.addItem(userEntity, baseId, quantity);
                             } else if (param.length == 2) {
                                 //add_value
-                                String[] values = value.split(":");
-                                addValue(userEntity, values[0], Integer.parseInt(value.split(":")[1]));
+                                addValue(userEntity, param[0], Integer.parseInt(param[1]));
                             } else {
                                 //add_param
                                 addKey(userEntity, value);
@@ -72,11 +70,10 @@ public class ActionService {
                     case "add_items":
                         for (String value : params) {
                             String[] values = value.split(":");
-                            if (values.length == 3) {
-                                int type = Integer.parseInt(values[0]);
-                                int baseId = Integer.parseInt(values[1]);
-                                int quantity = Integer.parseInt(values[2]);
-                                itemsService.addItem(userEntity, type, baseId, quantity);
+                            if (values.length == 2) {
+                                long baseId = Long.parseLong(values[0]);
+                                int quantity = Integer.parseInt(values[1]);
+                                itemsService.addItem(userEntity, baseId, quantity);
                             }
                         }
                         break;

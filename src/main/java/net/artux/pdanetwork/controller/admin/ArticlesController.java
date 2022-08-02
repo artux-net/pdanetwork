@@ -2,10 +2,9 @@ package net.artux.pdanetwork.controller.admin;
 
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
 import net.artux.pdanetwork.models.page.QueryPage;
-import net.artux.pdanetwork.models.chat.ArticleEntity;
+import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.service.feed.FeedService;
-import net.artux.pdanetwork.service.files.ItemProvider;
-import net.artux.pdanetwork.service.files.SellerManager;
+import net.artux.pdanetwork.service.items.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,16 +24,14 @@ public class ArticlesController extends BaseUtilityController {
 
     private final FeedService feedService;
     private final ChatHandler chatHandler;
-    private final ItemProvider itemProvider;
-    private final SellerManager sellerManager;
+    private final ItemService itemService;
     private static Date readTime = new Date();
 
-    public ArticlesController(FeedService feedService, ChatHandler chatHandler, ItemProvider itemProvider, SellerManager sellerManager) {
+    public ArticlesController(FeedService feedService, ChatHandler chatHandler, ItemService itemService) {
         super("Лента");
         this.feedService = feedService;
         this.chatHandler = chatHandler;
-        this.itemProvider = itemProvider;
-        this.sellerManager = sellerManager;
+        this.itemService = itemService;
     }
 
     @Override

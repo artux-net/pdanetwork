@@ -1,14 +1,14 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ItemMapper;
+import net.artux.pdanetwork.models.items.ItemMapper;
 import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.models.story.StoryMapper;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
-import net.artux.pdanetwork.service.CommonItemsRepository;
+import net.artux.pdanetwork.service.items.CommonItemsRepository;
 import org.springframework.stereotype.Service;
 
 @Service

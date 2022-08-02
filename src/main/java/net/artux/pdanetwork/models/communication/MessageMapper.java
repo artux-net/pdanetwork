@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.models.communication;
 
-import net.artux.pdanetwork.entity.MessageEntity;
+import net.artux.pdanetwork.entity.communication.MessageEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

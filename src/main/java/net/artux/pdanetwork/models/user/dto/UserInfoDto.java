@@ -2,7 +2,7 @@ package net.artux.pdanetwork.models.user.dto;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.Gang;
 
 @Data
 @RequiredArgsConstructor

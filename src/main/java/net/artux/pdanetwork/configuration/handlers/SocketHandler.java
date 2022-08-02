@@ -3,10 +3,10 @@ package net.artux.pdanetwork.configuration.handlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.MessageEntity;
+import net.artux.pdanetwork.entity.communication.MessageEntity;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.models.user.UserEntity;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.web.socket.*;
 
 import java.io.IOException;

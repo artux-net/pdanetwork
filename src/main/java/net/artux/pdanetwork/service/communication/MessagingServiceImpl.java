@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.service.communication;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.MessageEntity;
-import net.artux.pdanetwork.entity.conversation.ConversationEntity;
+import net.artux.pdanetwork.entity.communication.MessageEntity;
+import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
-import net.artux.pdanetwork.repository.items.MessageRepository;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.repository.comminication.MessageRepository;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;

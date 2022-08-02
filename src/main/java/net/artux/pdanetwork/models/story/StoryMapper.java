@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.story;
 
-import net.artux.pdanetwork.entity.ParameterEntity;
-import net.artux.pdanetwork.entity.StoryStateEntity;
+import net.artux.pdanetwork.entity.user.ParameterEntity;
+import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import org.mapstruct.Mapper;
 
 import java.util.List;

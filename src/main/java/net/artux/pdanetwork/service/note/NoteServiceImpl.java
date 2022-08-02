@@ -3,11 +3,11 @@ package net.artux.pdanetwork.service.note;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.note.NoteDto;
 import net.artux.pdanetwork.models.note.NoteMapper;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.*;
 import net.artux.pdanetwork.models.note.NoteEntity;
 import net.artux.pdanetwork.repository.user.NoteRepository;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

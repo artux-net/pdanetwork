@@ -1,16 +1,16 @@
 package net.artux.pdanetwork.service.profile;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.AchievementEntity;
+import net.artux.pdanetwork.entity.achievement.AchievementEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.Profile;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.UserInfoDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
-import net.artux.pdanetwork.service.files.AchievementsService;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.achievement.AchievementsService;
+import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;

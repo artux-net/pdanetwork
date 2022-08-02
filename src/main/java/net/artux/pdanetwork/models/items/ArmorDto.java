@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class ArmorDto extends WearableDto{
 
-    private float thermal_pr;
-    private float electric_pr;
-    private float chemical_pr;
-    private float radio_pr;
-    private float psy_pr;
-    private float damage_pr;
+    private float thermalProtection;
+    private float electricProtection;
+    private float chemicalProtection;
+    private float radioProtection;
+    private float psyProtection;
+    private float damageProtection;
     private float condition;
 
 }

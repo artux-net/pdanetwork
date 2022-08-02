@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.models.user;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.gang.Gang;
-import net.artux.pdanetwork.models.gang.GangRelationDto;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 import net.artux.pdanetwork.models.user.enums.FriendRelation;
 import net.artux.pdanetwork.models.user.enums.Reason;
 import net.artux.pdanetwork.models.user.enums.Role;
-import net.artux.pdanetwork.models.user.UserEntity;
 
 @Data
 public class Profile {

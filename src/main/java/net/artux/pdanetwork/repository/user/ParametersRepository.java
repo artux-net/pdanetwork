@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.repository.user;
 
-import net.artux.pdanetwork.entity.ParameterEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.ParameterEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 

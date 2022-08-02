@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.models.communication;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.gang.Gang;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.entity.user.UserEntity;
 
 import java.time.Instant;
 

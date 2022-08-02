@@ -5,7 +5,6 @@ import lombok.Data;
 @Data
 public class ArtifactDto extends WearableDto{
 
-    private int anomalyId;
     private int health;
     private int radio;
     private int damage;

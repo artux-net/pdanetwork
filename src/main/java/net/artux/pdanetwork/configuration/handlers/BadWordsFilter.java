@@ -1,6 +1,6 @@
 package net.artux.pdanetwork.configuration.handlers;
 
-import net.artux.pdanetwork.entity.MessageEntity;
+import net.artux.pdanetwork.entity.communication.MessageEntity;
 
 import java.util.Arrays;
 import java.util.List;

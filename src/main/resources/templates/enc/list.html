@@ -1,32 +1,22 @@
-<html>
+<html lang="RU">
 <head>
     <meta charset="utf-8">
-    <style type="text/css">body {
-        font-family: "Museo Sans Cyrl", sans-serif;
-        color: #fff;
-        font-size: 12px;
-        line-height: 24px;
-        font-weight: 300;
-        min-height: 100%;
-        position: relative;
-        background: #1a1b1d;
-        overflow-y: scroll;
-    }
-    </style>
+    <link th:href="@{/css/enc.css}" rel="stylesheet"/>
+    <title>Список</title>
 </head>
-<body link="#d8d8da" vlink="#d8d8da" alink="#d8d8da">
+<body>
 <th:block th:each="i : ${items}">
-    <table border="0" cellpadding="5" cellspacing="1" style="width:100%;">
+    <table>
         <tbody>
         <tr>
             <td style="text-align: center;">
-                <b><a th:href="@{'/enc/' + ${type} + '/' + ${i.id}}" th:text="${i.title}"/></b></td>
+                <b><a th:href="@{'/enc/item/' + ${i.id}}" th:text="${i.title}"></a></b></td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td style="width: 120px; text-align: center;"><a th:href="@{'/enc/' + ${type} +'/' + ${i.id}}">
-                <img alt="" width="120px" th:src="${iconBaseUrl} +'/base/items/icons/' + ${i.icon}"/></a></td>
-            <td style="vertical-align: top;"><span style="font-size:12px;" th:text="${i.desc}"/></td>
+            <td style="width: 120px; text-align: center;"><a th:href="@{'/enc/item/' + ${i.id}}">
+                <img th:src="@{'/base/items/icons/' + ${i.icon}}"/></a></td>
+            <td th:text="${i.description}"></td>
         </tr>
         </tbody>
     </table>

@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "detector")
+@Table(name = "user_detector")
 public class DetectorEntity extends WearableEntity {
 
     private DetectorType detectorType;

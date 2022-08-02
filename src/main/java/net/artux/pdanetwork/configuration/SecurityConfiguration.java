@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.configuration;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.service.UserDetailService;
+import net.artux.pdanetwork.service.user.UserDetailService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             "/swagger-ui",
             "/webjars/**",
-            "/swagger-ui/**", "/register", "/static/**", "/reset", "/reset/**", "/feed/**", "/enc/", "/enc/**", "/enc/**/**"
+            "/swagger-ui/**",
+            "/register",
+            "/static/**",
+            "/reset", "/reset/**",
+            "/feed/**",
+            "/enc/**", "/css/**", "/base/**"
     };
 
     @Override

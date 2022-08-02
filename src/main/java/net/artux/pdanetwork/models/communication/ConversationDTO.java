@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.communication;
 
 import lombok.Data;
-import net.artux.pdanetwork.entity.conversation.ConversationEntity;
+import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 
 import java.util.List;

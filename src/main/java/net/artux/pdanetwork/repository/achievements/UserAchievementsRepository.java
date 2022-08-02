@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.repository.achievements;
 
-import net.artux.pdanetwork.entity.UserAchievementEntity;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 

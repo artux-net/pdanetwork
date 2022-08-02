@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Setter
 @Getter
 @Entity
-@Table(name = "weapon")
+@Table(name = "user_weapon")
 public class WeaponEntity extends WearableEntity {
 
     private float precision;
@@ -17,6 +17,6 @@ public class WeaponEntity extends WearableEntity {
     private float damage;
     private float condition;
     private int bulletQuantity;
-    private int bulletId;
+    private int bulletBaseId;
 
 }

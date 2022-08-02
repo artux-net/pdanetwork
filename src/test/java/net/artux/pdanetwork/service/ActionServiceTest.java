@@ -2,10 +2,10 @@ package net.artux.pdanetwork.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.artux.pdanetwork.models.user.UserEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.service.action.ActionService;
-import net.artux.pdanetwork.service.member.UserService;
+import net.artux.pdanetwork.service.user.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

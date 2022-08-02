@@ -2,13 +2,12 @@ package net.artux.pdanetwork.service;
 
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
-import net.artux.pdanetwork.service.member.UserService;
-import net.artux.pdanetwork.service.member.UserServiceImpl;
+import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.service.user.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;

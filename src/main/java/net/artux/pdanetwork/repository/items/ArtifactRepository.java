@@ -4,6 +4,6 @@ import net.artux.pdanetwork.entity.items.ArtifactEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface ArtifactRepository extends BaseItemRepository<ArtifactEntity> {
+public interface ArtifactRepository extends WearableItemRepository<ArtifactEntity> {
 
 }

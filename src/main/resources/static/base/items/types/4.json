@@ -1,0 +1,152 @@
+[
+  {
+    "thermalProtection": "0",
+    "electricProtection": "0",
+    "chemicalProtection": "0",
+    "radioProtection": "0",
+    "psyProtection": "0",
+    "damageProtection": "0",
+    "condition": "100",
+    "baseId": 68
+  },
+  {
+    "thermalProtection": "10",
+    "electricProtection": "10",
+    "chemicalProtection": "10",
+    "radioProtection": "0",
+    "psyProtection": "0",
+    "damageProtection": "10",
+    "condition": "100",
+    "baseId": 69
+  },
+  {
+    "thermalProtection": "10",
+    "electricProtection": "10",
+    "chemicalProtection": "10",
+    "radioProtection": "0",
+    "psyProtection": "0",
+    "damageProtection": "15",
+    "condition": "100",
+    "baseId": 70
+  },
+  {
+    "thermalProtection": "50",
+    "electricProtection": "50",
+    "chemicalProtection": "50",
+    "radioProtection": "50",
+    "psyProtection": "0",
+    "damageProtection": "30",
+    "condition": "100",
+    "baseId": 71
+  },
+  {
+    "thermalProtection": "30",
+    "electricProtection": "30",
+    "chemicalProtection": "20",
+    "radioProtection": "30",
+    "psyProtection": "0",
+    "damageProtection": "20",
+    "condition": "100",
+    "baseId": 72
+  },
+  {
+    "thermalProtection": "50",
+    "electricProtection": "60",
+    "chemicalProtection": "50",
+    "radioProtection": "50",
+    "psyProtection": "0",
+    "damageProtection": "40",
+    "condition": "100",
+    "baseId": 73
+  },
+  {
+    "thermalProtection": "50",
+    "electricProtection": "50",
+    "chemicalProtection": "50",
+    "radioProtection": "50",
+    "psyProtection": "0",
+    "damageProtection": "40",
+    "condition": "100",
+    "baseId": 74
+  },
+  {
+    "thermalProtection": "80",
+    "electricProtection": "90",
+    "chemicalProtection": "70",
+    "radioProtection": "90",
+    "psyProtection": "50",
+    "damageProtection": "40",
+    "condition": "100",
+    "baseId": 75
+  },
+  {
+    "thermalProtection": "30",
+    "electricProtection": "50",
+    "chemicalProtection": "50",
+    "radioProtection": "50",
+    "psyProtection": "0",
+    "damageProtection": "30",
+    "condition": "100",
+    "baseId": 76
+  },
+  {
+    "thermalProtection": "30",
+    "electricProtection": "30",
+    "chemicalProtection": "30",
+    "radioProtection": "30",
+    "psyProtection": "0",
+    "damageProtection": "45",
+    "condition": "100",
+    "baseId": 77
+  },
+  {
+    "thermalProtection": "60",
+    "electricProtection": "70",
+    "chemicalProtection": "50",
+    "radioProtection": "70",
+    "psyProtection": "25",
+    "damageProtection": "55",
+    "condition": "100",
+    "baseId": 78
+  },
+  {
+    "thermalProtection": "90",
+    "electricProtection": "90",
+    "chemicalProtection": "90",
+    "radioProtection": "90",
+    "psyProtection": "80",
+    "damageProtection": "20",
+    "condition": "100",
+    "baseId": 79
+  },
+  {
+    "thermalProtection": "90",
+    "electricProtection": "90",
+    "chemicalProtection": "90",
+    "radioProtection": "90",
+    "psyProtection": "80",
+    "damageProtection": "40",
+    "condition": "100",
+    "baseId": 80
+  },
+  {
+    "thermalProtection": "80",
+    "electricProtection": "90",
+    "chemicalProtection": "70",
+    "radioProtection": "90",
+    "psyProtection": "80",
+    "damageProtection": "40",
+    "condition": "100",
+    "baseId": 81
+  },
+  {
+    "thermalProtection": "50",
+    "electricProtection": "50",
+    "chemicalProtection": "50",
+    "radioProtection": "30",
+    "psyProtection": "80",
+    "damageProtection": "90",
+    "condition": "100",
+    "baseId": 82
+  }
+]

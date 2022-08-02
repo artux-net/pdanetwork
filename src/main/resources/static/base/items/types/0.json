@@ -1,0 +1,82 @@
+[
+  {
+    "precision": "3.5",
+    "speed": "4.5",
+    "damage": "2.5",
+    "condition": "100",
+    "bulletBaseId": "26",
+    "baseId": 0
+  },
+  {
+    "precision": "4.5",
+    "speed": "5",
+    "damage": "2.5",
+    "condition": "100",
+    "bulletBaseId": 26,
+    "baseId": 1
+  },
+  {
+    "precision": "5",
+    "speed": "5",
+    "damage": "2.5",
+    "condition": "100",
+    "bulletBaseId": 26,
+    "baseId": 2
+  },
+  {
+    "precision": "5",
+    "speed": "5.5",
+    "damage": "2.5",
+    "condition": "100",
+    "bulletBaseId": 28,
+    "baseId": 3
+  },
+  {
+    "precision": "3.5",
+    "speed": "5",
+    "damage": "3.5",
+    "condition": "100",
+    "bulletBaseId": 30,
+    "baseId": 4
+  },
+  {
+    "precision": "5",
+    "speed": "5.5",
+    "damage": "6",
+    "condition": "100",
+    "bulletBaseId": 30,
+    "baseId": 5
+  },
+  {
+    "precision": 1.5,
+    "speed": "4.5",
+    "damage": "8",
+    "condition": "100",
+    "bulletBaseId": 30,
+    "baseId": 6
+  },
+  {
+    "precision": "6",
+    "speed": "4.5",
+    "damage": "5.5",
+    "condition": "100",
+    "bulletBaseId": 30,
+    "baseId": 7
+  },
+  {
+    "precision": "4",
+    "speed": "4.5",
+    "damage": "9",
+    "condition": "100",
+    "bulletBaseId": 28,
+    "baseId": 8
+  },
+  {
+    "precision": "3.5",
+    "speed": "4.5",
+    "damage": "14",
+    "condition": "100",
+    "bulletBaseId": 28,
+    "baseId": 9
+  }
+]

@@ -1,88 +1,45 @@
 package net.artux.pdanetwork.entity.items;
 
 public enum ItemType {
-    ARMOR {
-        @Override
-        public int getTypeId() {
-            return 4;
-        }
+    ARMOR("Одежда", 4, ArmorEntity.class),
+    PISTOL("Пистолеты", 0, WeaponEntity.class),
+    RIFLE("Винтовки", 1, WeaponEntity.class),
+    MEDICINE("Лекарства", 6, MedicineEntity.class),
+    ARTIFACT("Артефакты", 3, ArtifactEntity.class),
+    DETECTOR("Детекторы", 5, DetectorEntity.class),
+    ITEM("Предметы", 2, ItemEntity.class);
 
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return ArmorEntity.class;
-        }
-    },
-    PISTOL {
-        @Override
-        public int getTypeId() {
-            return 0;
-        }
+    private final String title;
+    private final int id;
+    private final Class<? extends ItemEntity> typeClass;
 
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return WeaponEntity.class;
-        }
-    },
-    RIFLE {
-        @Override
-        public int getTypeId() {
-            return 1;
-        }
+    ItemType(String title, int id, Class<? extends ItemEntity> typeClass) {
+        this.title = title;
+        this.id = id;
+        this.typeClass = typeClass;
+    }
 
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return WeaponEntity.class;
-        }
-    },
-    MEDICINE {
-        @Override
-        public int getTypeId() {
-            return 6;
-        }
+    public String getTitle() {
+        return title;
+    }
 
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return MedicineEntity.class;
-        }
-    },
-    ARTIFACT {
-        @Override
-        public int getTypeId() {
-            return 3;
-        }
-
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return ArtifactEntity.class;
-        }
-    },
-    DETECTOR {
-        @Override
-        public int getTypeId() {
-            return 5;
-        }
-
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return DetectorEntity.class;
-        }
-    },
-    ITEM {
-        @Override
-        public int getTypeId() {
-            return 2;
-        }
-
-        @Override
-        public Class<? extends ItemEntity> getTypeClass() {
-            return ItemEntity.class;
-        }
-    };
-
-    public abstract int getTypeId();
+    public int getTypeId() {
+        return id;
+    }
 
     public Class<? extends ItemEntity> getTypeClass() {
-        return ItemEntity.class;
+        return typeClass;
+    }
+
+    public boolean isWearable() {
+        return getTypeClass().isAssignableFrom(WearableEntity.class);
+    }
+
+    public boolean isCountable() {
+        return switch (this) {
+            case ITEM, MEDICINE, ARTIFACT -> true;
+            default -> false;
+        };
     }
 
     public static ItemType getByTypeId(int typeId) {

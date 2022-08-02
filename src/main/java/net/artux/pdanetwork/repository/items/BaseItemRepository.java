@@ -1,22 +1,15 @@
 package net.artux.pdanetwork.repository.items;
 
-import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.BaseItemEntity;
 import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.models.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
-@NoRepositoryBean
-public interface BaseItemRepository<T extends ItemEntity> extends JpaRepository<T, Long> {
+@Component
+public interface BaseItemRepository extends JpaRepository<BaseItemEntity, Long> {
 
-    Optional<T> findByOwnerAndId(UserEntity userEntity, long id);
-    Optional<T> findByOwnerAndBaseId(UserEntity userEntity, int baseId);
-
-    List<T> findAllByOwnerAndType(UserEntity userEntity, ItemType type);
-
-    void deleteByOwner(UserEntity entity);
+    List<BaseItemEntity> findAllByType(ItemType type);
 
 }

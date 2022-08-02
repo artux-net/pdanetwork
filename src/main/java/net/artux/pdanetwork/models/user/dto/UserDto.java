@@ -3,8 +3,8 @@ package net.artux.pdanetwork.models.user.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.models.gang.GangRelationDto;
-import net.artux.pdanetwork.models.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
+import net.artux.pdanetwork.models.user.gang.Gang;
 
 import java.util.UUID;
 

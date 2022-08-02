@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/enc.css}" rel="stylesheet" type="text/css"/>
+    <title th:text="${base.title}"></title>
+</head>
+<body>
+
+<table class="content-table">
+    <tbody>
+    <tr>
+        <b th:text="${base.title}"></b>
+    </tr>
+    <tr>
+        <td>
+            <img th:src="@{'/base/items/icons/' + ${base.icon}} ">
+        </td>
+        <td class="description">
+            <p th:text="${base.description}"></p>
+            <p><i><cite th:text="${base.content}"></cite></i></p>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div class="row">
+    <b>Свойства</b>
+</div>
+<div class="row">
+    <div class="column">
+        <b>Цена:</b>
+        <span th:text="${item.price} + ' RU'"></span>
+        <br>
+        <b>Вес:</b>
+        <span th:text="${item.weight} +' кг'"></span>
+    </div>
+    <div class="column" th:if="${base.type.name() == 'ARMOR'}">
+        <b>Ожог:</b>
+        <span th:text="${item.thermalProtection}"></span>
+        <br>
+        <b>Электрошок:</b>
+        <span th:text="${item.electricProtection}"></span>
+        <br>
+        <b>Удар:</b>
+        <span th:text="${item.damageProtection}"></span>
+        <br>
+        <b>Пси:</b>
+        <span th:text="${item.psyProtection}"></span>
+        <br>
+        <b>Хим. Ожог:</b>
+        <span th:text="${item.chemicalProtection}"></span>
+        <br>
+        <b>Радиация:</b>
+        <span th:text="${item.radioProtection}"></span>
+    </div>
+    <div class="column" th:if="${base.type.name() == 'RIFLE' || base.type.name() == 'PISTOL'}">
+        <b>Точность:</b>
+        <span th:text="${item.precision}"></span>
+        <br>
+        <b>Скорострельность:</b>
+        <span th:text="${item.speed}"></span>
+        <br>
+        <b>Урон:</b>
+        <span th:text="${item.damage}"></span>
+        <br>
+        <b>Патрон в магазине:</b>
+        <span th:text="${item.bulletQuantity}"></span>
+        <br>
+    </div>
+</div>
+<div class="row">
+    <div class="column" th:if="${base.dignities != null && base.dignities.size() > 0}">
+        <p class="column-title">Достоинства</p>
+        <th:block th:each="i : ${base.dignities}">
+            <span th:text="${i}"></span>
+            <br>
+        </th:block>
+    </div>
+    <div class="column" th:if="${base.disadvantages != null && base.disadvantages.size() > 0}">
+        <p class="column-title">Недостатки</p>
+        <th:block th:each="i : ${base.disadvantages}">
+            <span th:text="${i}"></span>
+            <br>
+        </th:block>
+    </div>
+</div>
+
+</body>
+</html>
+
+

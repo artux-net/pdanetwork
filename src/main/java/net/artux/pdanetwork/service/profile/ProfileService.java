@@ -4,7 +4,7 @@ import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.dto.UserInfoDto;
-import net.artux.pdanetwork.entity.AchievementEntity;
+import net.artux.pdanetwork.entity.achievement.AchievementEntity;
 
 import java.util.List;
 

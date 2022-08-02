@@ -2,8 +2,7 @@ package net.artux.pdanetwork.controller.admin;
 
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
 import net.artux.pdanetwork.models.page.QueryPage;
-import net.artux.pdanetwork.service.files.ItemProvider;
-import net.artux.pdanetwork.service.files.SellerManager;
+import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +22,13 @@ public class AdminController extends BaseUtilityController {
 
     private final ChatHandler chatHandler;
     private final ProfileService profileService;
-    private final ItemProvider itemProvider;
-    private final SellerManager sellerManager;
+    private final ItemService itemService;
     private static Date readTime = new Date();
 
-    public AdminController(ChatHandler chatHandler, ProfileService profileService, ItemProvider itemProvider, SellerManager sellerManager) {
+    public AdminController(ChatHandler chatHandler, ProfileService profileService, ItemService itemService) {
         super("Админ панель");
         this.chatHandler = chatHandler;
-        this.itemProvider = itemProvider;
-        this.sellerManager = sellerManager;
+        this.itemService = itemService;
         this.profileService = profileService;
     }
 
@@ -39,15 +36,6 @@ public class AdminController extends BaseUtilityController {
     protected Object getHome(Model model) {
         model.addAttribute("rating", profileService.getRating(new QueryPage()));
         return pageWithContent("admin", model);
-    }
-
-    @PostMapping("/reset")
-    public String reset(Model model) {
-        readTime = new Date();
-        itemProvider.reset();
-        sellerManager.reset();
-
-        return getSettings(model);
     }
 
     @GetMapping("/settings")
