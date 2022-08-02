@@ -12,22 +12,16 @@ on:
 jobs:
           
   build:
-
     runs-on: ubuntu-latest
- # Docker Hub image that `container-job` executes in
-    container: node:10.18-jessie
+    container: postgres
 
-    # Service containers to run with `container-job`
     services:
-      # Label used to access the service container
       postgres:
-        # Docker Hub image
         image: postgres
-        # Provide the password for postgres
         env:
+          POSTGRES_DB: postgres
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: admin
-        # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
