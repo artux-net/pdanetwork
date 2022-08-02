@@ -33,7 +33,7 @@ jobs:
         java-version: '16'
         distribution: 'temurin'
         cache: maven
-        architecture: arm64v8
+        architecture: arm64
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
