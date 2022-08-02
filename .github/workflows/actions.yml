@@ -10,10 +10,11 @@ on:
     branches: [ "master" ]
 
 jobs:
-  container-job:
-    # Containers must run in Linux based operating systems
+          
+  build:
+
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
+ # Docker Hub image that `container-job` executes in
     container: node:10.18-jessie
 
     # Service containers to run with `container-job`
@@ -32,10 +33,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
-  build:
-
-    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
