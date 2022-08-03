@@ -39,6 +39,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: target/*.jar
+    - run: |
+        ls
     
   push:
     needs: build
@@ -50,6 +52,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
     - uses: actions/checkout@v3
+    - run: |
+        ls
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
