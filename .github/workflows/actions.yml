@@ -35,6 +35,7 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
       with:
@@ -50,4 +51,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
          push: true
-         tags: user/pdanetwork:latest
+         tags: ${{ secrets.DOCKERHUB_USERNAME }}/pdanetwork:latest
