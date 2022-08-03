@@ -61,10 +61,10 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: target
+        path: target
 
-    - name: Display structure of downloaded files
-      run: ls -R
+    - name: Move to target folder
+      run: mv target/artifact/pdanetwork.jar target
       
     - name: Build and push
       uses: docker/build-push-action@v3
