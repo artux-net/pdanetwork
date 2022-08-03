@@ -13,5 +13,4 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            sudo docker-compose -f docker-compose.yml -p prod pull
-            sudo docker-compose -f docker-compose.yml -p prod up -d
+            whoami
