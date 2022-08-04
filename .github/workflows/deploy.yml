@@ -3,9 +3,10 @@ on: workflow_dispatch
 
 jobs:
   deploy:
-    name: 'Build & Publish'
+    name: 'Deploy to server'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: "Run deploy on server"
         uses: appleboy/ssh-action@master
         with:
@@ -13,6 +14,8 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            whoami
-            cd /
-            ls
+            docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
+            scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
+            docker-compose pull
+            docker-compose up -d
+            
