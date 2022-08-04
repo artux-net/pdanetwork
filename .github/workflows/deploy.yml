@@ -10,7 +10,7 @@ jobs:
       - name: List files in the repository
         run: |
           ls
-          sudo scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/app/
+          sudo scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}:/home/ubuntu/
       - name: "Run deploy on server"
         uses: appleboy/ssh-action@master
         with:
