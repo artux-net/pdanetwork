@@ -15,7 +15,7 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             sudo docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
-            scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
+            sudo scp docker-compose.yml ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }}
             sudo docker-compose pull
             sudo docker-compose up -d
             
