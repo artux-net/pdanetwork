@@ -1,84 +1,26 @@
-version: '2'
+version: '3'
 
 services:
   db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
+    image: postgres
+    container_name: pdanetwork_db
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
-
-  mongo:
-    image: mongo
-    container_name: mongo
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: TKK8VL5r95UVx2XB
-      MONGO_INITDB_ROOT_PASSWORD: Sdc45t3ch7MDSD93
+      - POSTGRES_USER=pdanetwork
+      - POSTGRES_PASSWORD=pass
     ports:
-      - "27017:27017"
+      - "9999:5432"
 
-  mongo-express:
-      image: mongo-express
-      container_name: mongo-express
-      restart: unless-stopped
-      depends_on:
-        - mongo
-      ports:
-        - "15709:8081"
-      environment:
-        ME_CONFIG_BASICAUTH_USERNAME: P4sTup7nzUzmp64y
-        ME_CONFIG_BASICAUTH_PASSWORD: Xcy6ADcfdztHmxbm
-        ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-        ME_CONFIG_MONGODB_ADMINUSERNAME: root
-        ME_CONFIG_MONGODB_ADMINPASSWORD: example
-        ME_CONFIG_MONGODB_URL: mongodb://TKK8VL5r95UVx2XB:Sdc45t3ch7MDSD93@mongo:27017/
-        ME_CONFIG_OPTIONS_EDITORTHEME: base16-dark
-
-  app:
-    image: 'pdanetwork'
-    container_name: pdanetwork
+  back:
+    image: prygunov/pdanetwork:latest
+    container_name: pdanetwork_back
     restart: unless-stopped
     depends_on:
       - db
-      - mongo
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
-      - SPRING_DATASOURCE_USERNAME=compose-postgres
-      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
+      - SPRING_DATASOURCE_USERNAME=pdanetwork
+      - SPRING_DATASOURCE_PASSWORD=pass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_DATA_MONGODB_HOST=mongo
-      - SPRING_DATA_MONGODB_PORT=27017
-      - SPRING_DATA_MONGODB_USERNAME=TKK8VL5r95UVx2XB
-      - SPRING_DATA_MONGODB_PASSWORD=Sdc45t3ch7MDSD93
-      - SPRING_DATA_MONGODB_AUTHENTICATION-DATABASE=admin
     ports:
-       - "8080:8080"
-    build:
-      context: /
-
-  swag:
-    depends_on:
-      - app
-      - mongo-express
-    image: lscr.io/linuxserver/swag
-    container_name: swag
-    cap_add:
-      - NET_ADMIN
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Moscow
-      - URL=app.artux.net
-      - VALIDATION=http
-      - SUBDOMAINS=www, #optional
-      - DNSPLUGIN=cloudflare #optional
-      - ONLY_SUBDOMAINS=false #optional
-
-    volumes:
-      - /apps/config:/config
-    ports:
-      - "443:443"
-      - "80:80"
-    restart: unless-stopped
+      - "8888:8080"

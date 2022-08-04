@@ -31,7 +31,7 @@ public class BaseItemService {
     private List<BaseItemEntity> readAll() {
         try {
             Resource resource = new ClassPathResource("static/base/items/" + "base.json");
-            return Arrays.stream(objectMapper.readValue(resource.getFile(), BaseItemEntity[].class)).toList();
+            return Arrays.stream(objectMapper.readValue(resource.getInputStream(), BaseItemEntity[].class)).toList();
         } catch (IOException e) {
             e.printStackTrace();
         }

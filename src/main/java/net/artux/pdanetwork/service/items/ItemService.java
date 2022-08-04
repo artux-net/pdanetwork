@@ -39,7 +39,7 @@ public class ItemService {
     private <T extends ItemEntity> List<T> readType(ItemType type) throws IOException {
         Resource resource = new ClassPathResource("static/base/items/types/" + type.getTypeId() + ".json");
         List<T> list = new LinkedList<>();
-        JsonNode node = objectMapper.readTree(resource.getFile());
+        JsonNode node = objectMapper.readTree(resource.getInputStream());
 
         if (node.isArray()) {
             for (int i = 0; i < node.size(); i++) {

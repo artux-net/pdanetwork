@@ -50,7 +50,7 @@ public class SellerServiceIml implements SellerService {
     private List<SellerEntity> readSellers() throws IOException {
         Resource resource = new ClassPathResource("static/base/sellers/info.json");
 
-        Seller[] arr = mapper.readValue(resource.getFile(), Seller[].class);
+        Seller[] arr = mapper.readValue(resource.getInputStream(), Seller[].class);
         return Arrays.stream(arr)
                 .map(sellerMapper::entity)
                 .collect(Collectors.toList());
