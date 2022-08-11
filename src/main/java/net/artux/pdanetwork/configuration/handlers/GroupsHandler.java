@@ -1,11 +1,12 @@
 package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
+import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.models.user.gang.Gang;
-import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
@@ -32,8 +33,8 @@ public class GroupsHandler extends SocketHandler {
         return lastMessages;
     }
 
-    public GroupsHandler(UserService userService, ObjectMapper mapper) {
-        super(userService, mapper);
+    public GroupsHandler(UserService userService, ObjectMapper mapper, MessageMapper messageMapper) {
+        super(userService, mapper, messageMapper);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class GroupsHandler extends SocketHandler {
     @Override
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
         Gang gang = getMember(userSession).getGang();
-        MessageDTO messageEntity = getMessage(userSession, webSocketMessage);
+        MessageDTO messageEntity = messageMapper.dto(getMessage(userSession, webSocketMessage));
         lastMessages.get(gang).add(messageEntity);
 
         for (WebSocketSession session : getSessions())

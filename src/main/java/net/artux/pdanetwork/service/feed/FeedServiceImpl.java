@@ -8,8 +8,12 @@ import net.artux.pdanetwork.repository.feed.ArticleRepository;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FeedServiceImpl implements FeedService {
 
@@ -17,7 +21,7 @@ public class FeedServiceImpl implements FeedService {
     private final PageService pageService;
 
     @Override
-    public ArticleEntity getArticle(Long id) {
+    public ArticleEntity getArticle(UUID id) {
         return articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Can not find article"));
     }
 
@@ -27,8 +31,8 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public void deleteArticle(String id) {
-        articleRepository.deleteById(Long.valueOf(id));
+    public void deleteArticle(UUID id) {
+        articleRepository.deleteById(id);
     }
 
     @Override

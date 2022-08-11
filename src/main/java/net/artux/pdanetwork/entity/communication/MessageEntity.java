@@ -13,7 +13,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "message")
+@Table(name = "user_message")
 public class MessageEntity extends BaseEntity {
 
     @ManyToOne

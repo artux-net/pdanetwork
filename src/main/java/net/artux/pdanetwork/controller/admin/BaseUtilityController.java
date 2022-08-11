@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@ApiIgnore
 @RequiredArgsConstructor
 public abstract class BaseUtilityController {
 
@@ -83,7 +81,7 @@ public abstract class BaseUtilityController {
 
     @ModelAttribute("user")
     public UserEntity getUser() {
-        return userService.getMember();
+        return userService.getUserById();
     }
 
     @ModelAttribute("chatAddress")

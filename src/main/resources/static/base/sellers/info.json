@@ -1,6 +1,6 @@
 [
   {
-    "id": 2,
+    "id": 1,
     "name": "Сидорович",
     "icon": "story/prologue/screen/chapter_2_21.jpg",
     "image": "story/prologue/screen/chapter_2_21.jpg",
@@ -15,11 +15,12 @@
       "10:1",
       "11:1",
       "12:1",
-      "13:1"
+      "13:1",
+      "69:2"
     ]
   },
   {
-    "id": 3,
+    "id": 2,
     "name": "Бармен",
     "icon": "story/prologue/screen/barmen.jpg",
     "image": "story/prologue/screen/barmen.jpg",
@@ -34,7 +35,8 @@
       "10:1",
       "11:1",
       "12:1",
-      "13:1"
+      "13:1",
+      "73:2"
     ]
   }
 ]

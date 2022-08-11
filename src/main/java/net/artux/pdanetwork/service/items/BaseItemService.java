@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class BaseItemService {
 
@@ -38,6 +39,7 @@ public class BaseItemService {
         return Collections.emptyList();
     }
 
+    @Transactional
     public BaseItemEntity getBaseItem(long baseId) {
         return repository.findById(baseId).orElseThrow();
     }

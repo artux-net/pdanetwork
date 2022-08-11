@@ -9,7 +9,7 @@
     "price": "280",
     "icon": "pmm.gif",
     "weight": "0.7",
-    "dignities": [
+    "advantages": [
       "Распространённый калибр.",
       "Высокая надёжность.",
       "Малый вес.",
@@ -37,7 +37,7 @@
     "price": "300",
     "icon": "pb1s.gif",
     "weight": "1",
-    "dignities": [
+    "advantages": [
       "Дешевизна.",
       "Компактность и небольшой вес.",
       "Интегрированный глушитель.",
@@ -61,7 +61,7 @@
     "price": "350",
     "icon": "fora.gif",
     "weight": "0.83",
-    "dignities": [
+    "advantages": [
       "Хорошая убойность.",
       "Распространённый калибр.",
       "Низкая цена.",
@@ -82,7 +82,7 @@
     "price": "800",
     "icon": "volker.gif",
     "weight": "0.69",
-    "dignities": [
+    "advantages": [
       "Небольшая масса.",
       "Высокая надёжность.",
       "Неплохая убойность.",
@@ -108,7 +108,7 @@
     "price": "1100",
     "icon": "kora919.gif",
     "weight": "1.1",
-    "dignities": [
+    "advantages": [
       "Высокая надёжность.",
       "Приемлемая убойная мощь.",
       "Отличная точность."
@@ -127,7 +127,7 @@
     "price": "1500",
     "icon": "udp-compact.gif",
     "weight": "0.72",
-    "dignities": [
+    "advantages": [
       "Высокая надёжность.",
       "Хороший урон и пробиваемость.",
       "Хорошая точность.",
@@ -154,7 +154,7 @@
     "price": "2500",
     "icon": "desert-e.gif",
     "weight": "1.7",
-    "dignities": [
+    "advantages": [
       "Обладает самым высоким уроном среди пистолетов.",
       "Высокая точность.",
       "Большая, относительно для пистолета, дальнобойность.",
@@ -174,7 +174,7 @@
     "price": "1200",
     "icon": "sip-m200.gif",
     "weight": "0.72",
-    "dignities": [
+    "advantages": [
       "Высокая надёжность.",
       "Хороший урон.",
       "Высокая точность.",
@@ -199,7 +199,7 @@
     "price": "900",
     "icon": "marta.gif",
     "weight": "1",
-    "dignities": [
+    "advantages": [
       "Неплохой урон.",
       "Вместительный магазин.",
       "Возможность установки автоматического режима стрельбы.",
@@ -222,7 +222,7 @@
     "price": "500",
     "icon": "hpss1m.gif",
     "weight": "0.88",
-    "dignities": [
+    "advantages": [
       "Малый вес.",
       "Вместительный магазин.",
       "Неплохой урон.",
@@ -248,7 +248,7 @@
     "price": "1100",
     "icon": "mp5.gif",
     "weight": "2.5",
-    "dignities": [
+    "advantages": [
       "Распространённый калибр.",
       "Высокая скорострельность (несомненный плюс на близких дистанциях).",
       "Высокая кучность стрельбы.",
@@ -277,7 +277,7 @@
     "price": "1000",
     "icon": "akm-74-2u.gif",
     "weight": "2.7",
-    "dignities": [
+    "advantages": [
       "Вместительный магазин.",
       "Компактность",
       "Распространённый калибр.",
@@ -304,7 +304,7 @@
     "price": "2000",
     "icon": "akm-74.gif",
     "weight": "3.3",
-    "dignities": [
+    "advantages": [
       "Средняя убойность.",
       "Возможность установки прицела.",
       "Возможность установки подствольного гранатомета.",
@@ -332,7 +332,7 @@
     "price": "2500",
     "icon": "obokan.gif",
     "weight": "3.9",
-    "dignities": [
+    "advantages": [
       "Точность и небольшая для штурмовой винтовки отдача.",
       "Сбалансированная автоматика.",
       "Высокая надёжность.",
@@ -359,7 +359,7 @@
     "price": "4000",
     "icon": "il86.gif",
     "weight": "5",
-    "dignities": [
+    "advantages": [
       "Неплохая точность при первом выстреле.",
       "Интегрированный оптический прицел.",
       "Средняя убойность.",
@@ -385,7 +385,7 @@
     "price": "9000",
     "icon": "vla.gif",
     "weight": "2.5",
-    "dignities": [
+    "advantages": [
       "Высокая убойная мощность.",
       "Высокая точность.",
       "Более ёмкий магазин (по сравнению с «Винтарь-ВС»).",
@@ -408,7 +408,7 @@
     "price": "10000",
     "icon": "groza.gif",
     "weight": "3.2",
-    "dignities": [
+    "advantages": [
       "Компактность и сравнительно небольшая масса оружия.",
       "Небольшая отдача.",
       "Высокая надёжность.",
@@ -431,7 +431,7 @@
     "price": "6500",
     "icon": "sig5k.gif",
     "weight": "4",
-    "dignities": [
+    "advantages": [
       "Высокая надёжность.",
       "Высокая точность.",
       "Высокая убойность.",
@@ -454,7 +454,7 @@
     "price": "5000",
     "icon": "trs301.gif",
     "weight": "2.7",
-    "dignities": [
+    "advantages": [
       "Довольно высокая точность и слабая отдача.",
       "Небольшой вес.",
       "Высокая скорострельность.",
@@ -479,7 +479,7 @@
     "price": "18000",
     "icon": "gp37.gif",
     "weight": "3.6",
-    "dignities": [
+    "advantages": [
       "Высокая точность.",
       "Интегрированный удобный прицел.",
       "Большие возможности модернизации.",
@@ -507,7 +507,7 @@
     "price": "17000",
     "icon": "ft200m.gif",
     "weight": "4.6",
-    "dignities": [
+    "advantages": [
       "Интегрированные подствольный гранатомёт и прицел.",
       "Эффективный прицел с большими возможностями для модернизации.",
       "Тепловизор заменяет эффект ПНВ.",
@@ -531,7 +531,7 @@
     "price": "400",
     "icon": "obrez.gif",
     "weight": "1.9",
-    "dignities": [
+    "advantages": [
       "Большая распространённость у низкоранговых персонажей.",
       "Компактность.",
       "Высокая убойность.",
@@ -558,7 +558,7 @@
     "price": "1000",
     "icon": "tost34.gif",
     "weight": "3.3",
-    "dignities": [
+    "advantages": [
       "Большой урон.",
       "Высокая точность (по сравнению с обрезом и с остальными дробовиками).",
       "Небольшая отдача.",
@@ -584,7 +584,7 @@
     "price": "2150",
     "icon": "cheyzer13.gif",
     "weight": "3",
-    "dignities": [
+    "advantages": [
       "Значительная убойность.",
       "Небольшой вес.",
       "Надёжность.",
@@ -605,7 +605,7 @@
     "price": "2000",
     "icon": "spas14.gif",
     "weight": "4.4",
-    "dignities": [
+    "advantages": [
       "Высокая убойная мощность.",
       "Неплохая кучность стрельбы дробью.",
       "Распространённые боеприпасы.",
@@ -629,7 +629,7 @@
     "price": "12000",
     "icon": "vintar.gif",
     "weight": "3.2",
-    "dignities": [
+    "advantages": [
       "Высокая убойность.",
       "Высокая точность.",
       "Небольшой вес.",
@@ -653,7 +653,7 @@
     "price": "10000",
     "icon": "svu-mk2.gif",
     "weight": "4.9",
-    "dignities": [
+    "advantages": [
       "Высокая убойная мощь.",
       "Больший темп стрельбы (по сравнению с СВДм-2).",
       "Значительная точность.",
@@ -680,7 +680,7 @@
     "price": "15000",
     "icon": "svd-m2.gif",
     "weight": "4.9",
-    "dignities": [
+    "advantages": [
       "Большая дальность стрельбы.",
       "Высокая точность.",
       "Высокая убойная мощность.",
@@ -704,7 +704,7 @@
     "price": "200000",
     "icon": "gauss.gif",
     "weight": "4.4",
-    "dignities": [
+    "advantages": [
       "Самое убойное стрелковое оружие.",
       "Высочайшая точность.",
       "Значительная дальнобойность.",
@@ -723,9 +723,9 @@
     "price": "7",
     "icon": "9x18.gif",
     "weight": "0.01",
-    "dignities": null,
+    "advantages": null,
     "id": 29,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х18 мм",
     "content": null,
     "description": null
@@ -735,9 +735,9 @@
     "price": "8",
     "icon": "9x18P.gif",
     "weight": "0.02",
-    "dignities": null,
+    "advantages": null,
     "id": 30,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х18 мм +P+",
     "content": null,
     "description": null
@@ -747,9 +747,9 @@
     "price": "10",
     "icon": "9x19zmo.gif",
     "weight": "0.02",
-    "dignities": null,
+    "advantages": null,
     "id": 31,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х19 мм ЦМО",
     "content": null,
     "description": null
@@ -759,9 +759,9 @@
     "price": "12",
     "icon": "9x19pbp.gif",
     "weight": "0.02",
-    "dignities": null,
+    "advantages": null,
     "id": 32,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х19 мм РВР",
     "content": null,
     "description": null
@@ -771,9 +771,9 @@
     "price": "20",
     "icon": "45ACP.gif",
     "weight": "0.015",
-    "dignities": null,
+    "advantages": null,
     "id": 33,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": ".45 АСР",
     "content": null,
     "description": null
@@ -783,9 +783,9 @@
     "price": "21",
     "icon": "45hidro.gif",
     "weight": "0.018",
-    "dignities": null,
+    "advantages": null,
     "id": 34,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": ".45 АСР Гидрошок",
     "content": null,
     "description": null
@@ -795,9 +795,9 @@
     "price": "5",
     "icon": "12x70drob.gif",
     "weight": "0.028",
-    "dignities": null,
+    "advantages": null,
     "id": 35,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "12х70 мм дробь",
     "content": null,
     "description": null
@@ -807,9 +807,9 @@
     "price": "6",
     "icon": "12x76jekan.gif",
     "weight": "0.03",
-    "dignities": null,
+    "advantages": null,
     "id": 36,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "12х76 мм Жекан",
     "content": null,
     "description": null
@@ -819,9 +819,9 @@
     "price": "10",
     "icon": "12x76drot.gif",
     "weight": "0.03",
-    "dignities": null,
+    "advantages": null,
     "id": 37,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "12х76 мм Дротик",
     "content": null,
     "description": null
@@ -831,9 +831,9 @@
     "price": "12",
     "icon": "5-45x39.gif",
     "weight": "0.032",
-    "dignities": null,
+    "advantages": null,
     "id": 38,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "5.45х39 мм",
     "content": null,
     "description": null
@@ -843,9 +843,9 @@
     "price": "13",
     "icon": "5-45x39AP.gif",
     "weight": "0.032",
-    "dignities": null,
+    "advantages": null,
     "id": 39,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "5.45х39 мм АР",
     "content": null,
     "description": null
@@ -855,9 +855,9 @@
     "price": "13",
     "icon": "5-56x45.gif",
     "weight": "0.033",
-    "dignities": null,
+    "advantages": null,
     "id": 40,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "5.56х45 мм",
     "content": null,
     "description": null
@@ -867,9 +867,9 @@
     "price": "14",
     "icon": "5-56x45AP.gif",
     "weight": "0.033",
-    "dignities": null,
+    "advantages": null,
     "id": 41,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "5.56х45 мм АР",
     "content": null,
     "description": null
@@ -879,9 +879,9 @@
     "price": "15",
     "icon": "9x39-SP-6.gif",
     "weight": "0.07",
-    "dignities": null,
+    "advantages": null,
     "id": 42,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х39 СП-6",
     "content": null,
     "description": null
@@ -891,9 +891,9 @@
     "price": "17",
     "icon": "9x39-SP-5.gif",
     "weight": "0.05",
-    "dignities": null,
+    "advantages": null,
     "id": 43,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "9х39 СП-5",
     "content": null,
     "description": null
@@ -903,9 +903,9 @@
     "price": "31",
     "icon": "7-62x54PP.gif",
     "weight": "0.023",
-    "dignities": null,
+    "advantages": null,
     "id": 44,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "7.62х54 мм АР",
     "content": null,
     "description": null
@@ -915,9 +915,9 @@
     "price": "33",
     "icon": "7-7-62x54-7H14.gif",
     "weight": "0.01",
-    "dignities": null,
+    "advantages": null,
     "id": 45,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "7.62х54 мм 7Н14",
     "content": null,
     "description": null
@@ -927,9 +927,9 @@
     "price": "400",
     "icon": "accumulator.gif",
     "weight": "0.04",
-    "dignities": null,
+    "advantages": null,
     "id": 46,
-    "type": "ITEM",
+    "type": "BULLET",
     "title": "2мм гаусс-патроны",
     "content": null,
     "description": null
@@ -939,7 +939,7 @@
     "price": "1000",
     "icon": "vivert.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 47,
     "type": "ARTIFACT",
     "title": "Выверт",
@@ -951,7 +951,7 @@
     "price": "2500",
     "icon": "gravy.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 48,
     "type": "ARTIFACT",
     "title": "Грави",
@@ -963,7 +963,7 @@
     "price": "5000",
     "icon": "goldfish.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 49,
     "type": "ARTIFACT",
     "title": "Золотая рыбка",
@@ -975,7 +975,7 @@
     "price": "1000",
     "icon": "dot.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 50,
     "type": "ARTIFACT",
     "title": "Капля",
@@ -987,7 +987,7 @@
     "price": "2500",
     "icon": "fireball.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 51,
     "type": "ARTIFACT",
     "title": "Огненный шар",
@@ -999,7 +999,7 @@
     "price": "5000",
     "icon": "crystall.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 52,
     "type": "ARTIFACT",
     "title": "Кристалл",
@@ -1011,7 +1011,7 @@
     "price": "1000",
     "icon": "slime.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 53,
     "type": "ARTIFACT",
     "title": "Слизь",
@@ -1023,7 +1023,7 @@
     "price": "2500",
     "icon": "slimer.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 54,
     "type": "ARTIFACT",
     "title": "Слизняк",
@@ -1035,7 +1035,7 @@
     "price": "5000",
     "icon": "sluda.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 55,
     "type": "ARTIFACT",
     "title": "Слюда",
@@ -1047,7 +1047,7 @@
     "price": "1000",
     "icon": "bengalfire.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 56,
     "type": "ARTIFACT",
     "title": "Бенгальский огонь",
@@ -1059,7 +1059,7 @@
     "price": "2500",
     "icon": "flash.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 57,
     "type": "ARTIFACT",
     "title": "Вспышка",
@@ -1071,7 +1071,7 @@
     "price": "5000",
     "icon": "moonlight.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 58,
     "type": "ARTIFACT",
     "title": "Лунный свет",
@@ -1083,7 +1083,7 @@
     "price": "5000",
     "icon": "mambusi.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 59,
     "type": "ARTIFACT",
     "title": "Мамины бусы",
@@ -1095,7 +1095,7 @@
     "price": "5000",
     "icon": "plenka.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 60,
     "type": "ARTIFACT",
     "title": "Плёнка",
@@ -1107,7 +1107,7 @@
     "price": "5000",
     "icon": "kolobok.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 61,
     "type": "ARTIFACT",
     "title": "Колобок",
@@ -1119,7 +1119,7 @@
     "price": "1000",
     "icon": "medusa.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 62,
     "type": "ARTIFACT",
     "title": "Медуза",
@@ -1131,7 +1131,7 @@
     "price": "2500",
     "icon": "stoneflower.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 63,
     "type": "ARTIFACT",
     "title": "Каменный цветок",
@@ -1143,7 +1143,7 @@
     "price": "5000",
     "icon": "nightstar.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 64,
     "type": "ARTIFACT",
     "title": "Ночная звезда",
@@ -1155,7 +1155,7 @@
     "price": "1000",
     "icon": "stoneblood.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 65,
     "type": "ARTIFACT",
     "title": "Кровь камня",
@@ -1167,7 +1167,7 @@
     "price": "2500",
     "icon": "meat.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 66,
     "type": "ARTIFACT",
     "title": "Ломоть мяса",
@@ -1179,7 +1179,7 @@
     "price": "5000",
     "icon": "soul.gif",
     "weight": "0.5",
-    "dignities": null,
+    "advantages": null,
     "id": 67,
     "type": "ARTIFACT",
     "title": "Душа",
@@ -1191,7 +1191,7 @@
     "price": "0",
     "icon": "sviter.gif",
     "weight": "0",
-    "dignities": null,
+    "advantages": null,
     "id": 68,
     "type": "ARMOR",
     "title": "Свитер",
@@ -1203,7 +1203,7 @@
     "price": "1000",
     "icon": "novice.gif",
     "weight": "3",
-    "dignities": null,
+    "advantages": null,
     "id": 69,
     "type": "ARMOR",
     "title": "Куртка новичка",
@@ -1215,7 +1215,7 @@
     "price": "3000",
     "icon": "bandit.gif",
     "weight": "3",
-    "dignities": null,
+    "advantages": null,
     "id": 70,
     "type": "ARMOR",
     "title": "Бандитская куртка",
@@ -1227,7 +1227,7 @@
     "price": "15000",
     "icon": "kombez-stalker.gif",
     "weight": "5",
-    "dignities": null,
+    "advantages": null,
     "id": 71,
     "type": "ARMOR",
     "title": "Комбинезон сталкера",
@@ -1239,7 +1239,7 @@
     "price": "6000",
     "icon": "mercenar.gif",
     "weight": "5",
-    "dignities": null,
+    "advantages": null,
     "id": 72,
     "type": "ARMOR",
     "title": "Комбинезон наёмника",
@@ -1251,7 +1251,7 @@
     "price": "30000",
     "icon": "monolith.gif",
     "weight": "5",
-    "dignities": null,
+    "advantages": null,
     "id": 73,
     "type": "ARMOR",
     "title": "Комбинезон монолитовца",
@@ -1263,7 +1263,7 @@
     "price": "14000",
     "icon": "ps3-9d.gif",
     "weight": "5",
-    "dignities": null,
+    "advantages": null,
     "id": 74,
     "type": "ARMOR",
     "title": "ПС3-9Д Броня Долга",
@@ -1275,7 +1275,7 @@
     "price": "25000",
     "icon": "ps3-9md.gif",
     "weight": "9",
-    "dignities": null,
+    "advantages": null,
     "id": 75,
     "type": "ARMOR",
     "title": "ПС3-9Мд",
@@ -1287,7 +1287,7 @@
     "price": "10000",
     "icon": "veter.gif",
     "weight": "5",
-    "dignities": null,
+    "advantages": null,
     "id": 76,
     "type": "ARMOR",
     "title": "Комбинезон Ветер Свободы",
@@ -1299,7 +1299,7 @@
     "price": "12000",
     "icon": "berill.gif",
     "weight": "7",
-    "dignities": null,
+    "advantages": null,
     "id": 77,
     "type": "ARMOR",
     "title": "Бронекостюм Берилл 5М",
@@ -1311,7 +1311,7 @@
     "price": "40000",
     "icon": "arm.gif",
     "weight": "12",
-    "dignities": null,
+    "advantages": null,
     "id": 78,
     "type": "ARMOR",
     "title": "Армейский бронекостюм",
@@ -1323,7 +1323,7 @@
     "price": "15000",
     "icon": "ecolog.gif",
     "weight": "4",
-    "dignities": null,
+    "advantages": null,
     "id": 79,
     "type": "ARMOR",
     "title": "Комбинезон СПП-99 Эколог",
@@ -1335,7 +1335,7 @@
     "price": "24000",
     "icon": "99m.gif",
     "weight": "7",
-    "dignities": null,
+    "advantages": null,
     "id": 80,
     "type": "ARMOR",
     "title": "Комбинезон СПП-99М",
@@ -1347,7 +1347,7 @@
     "price": "30000",
     "icon": "seva.gif",
     "weight": "9",
-    "dignities": null,
+    "advantages": null,
     "id": 81,
     "type": "ARMOR",
     "title": "Комбинезон Сева",
@@ -1359,7 +1359,7 @@
     "price": "50000",
     "icon": "exo.gif",
     "weight": "40",
-    "dignities": null,
+    "advantages": null,
     "id": 82,
     "type": "ARMOR",
     "title": "Экзоскелет",

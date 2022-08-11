@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.user.reset;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.StoryData;
@@ -33,8 +33,8 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     public Status sendLetter(String email) {
-        UserEntity userEntity = userService.getMemberByEmail(email);
-
+        UserEntity userEntity = userService.getUserByEmail(email);
+        //TODO
         if (!requests.containsValue(userEntity.getEmail())) {
             String token = Security.encrypt(userEntity.getPassword() + userEntity.getLogin());
             try {
@@ -56,19 +56,19 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     public Status changePassword(String token, String password) {
-        UserEntity userEntity = userService.getMemberByEmail(requests.get(token));
+        UserEntity userEntity = userService.getUserByEmail(requests.get(token));
         RegisterUserDto registerUser = userMapper.regUser(userEntity);
         registerUser.setPassword(password);
-        return userService.editMember(registerUser);
+        return userService.editUser(registerUser);
     }
 
     @Override
     public StoryData resetData() {
-        UserEntity userEntity = userService.getMember();
+        UserEntity userEntity = userService.getUserById();
         userEntity.setMoney(500);
         actionService.resetAllData(userEntity);
         userRepository.save(userEntity);
-        return stateService.getStoryData(userEntity);
+        return stateService.getStoryData();
     }
 
 }

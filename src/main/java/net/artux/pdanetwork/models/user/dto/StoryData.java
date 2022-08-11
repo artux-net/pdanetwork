@@ -1,12 +1,7 @@
 package net.artux.pdanetwork.models.user.dto;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.items.ArmorDto;
-import net.artux.pdanetwork.models.items.ArtifactDto;
-import net.artux.pdanetwork.models.items.DetectorDto;
-import net.artux.pdanetwork.models.items.ItemDto;
-import net.artux.pdanetwork.models.items.MedicineDto;
-import net.artux.pdanetwork.models.items.WeaponDto;
+import net.artux.pdanetwork.models.items.*;
 import net.artux.pdanetwork.models.story.ParameterDto;
 import net.artux.pdanetwork.models.story.StoryStateDto;
 
@@ -23,6 +18,6 @@ public class StoryData {
     private List<DetectorDto> detectors;
     private List<MedicineDto> medicines;
     private List<WeaponDto> weapons;
-    private List<ItemDto> items;
+    private List<ItemDto> bullets;
 
 }

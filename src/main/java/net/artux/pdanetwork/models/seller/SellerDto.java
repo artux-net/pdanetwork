@@ -11,14 +11,14 @@ import java.util.List;
 @Data
 public class SellerDto {
 
-    private int id;
+    private long id;
     private String name;
     private String icon;
     private String image;
     private List<ArmorDto> armors;
     private List<WeaponDto> weapons;
     private List<ArtifactDto> artifacts;
-    private List<ItemDto> items;
+    private List<ItemDto> bullets;
     private float buyCoefficient;
     private float sellCoefficient;
 

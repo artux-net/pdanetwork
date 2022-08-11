@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public interface ParametersRepository extends JpaRepository<ParameterEntity, Long> {
+public interface ParametersRepository extends JpaRepository<ParameterEntity, UUID> {
 
     List<ParameterEntity> findAllByUser(UserEntity userEntity);
 

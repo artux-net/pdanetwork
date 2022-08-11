@@ -2,12 +2,12 @@ package net.artux.pdanetwork.service.profile;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.achievement.AchievementEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.Profile;
-import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
-import net.artux.pdanetwork.models.user.dto.UserInfoDto;
+import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.achievement.AchievementsService;
 import net.artux.pdanetwork.service.user.UserService;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -29,28 +30,28 @@ public class ProfileServiceIml implements ProfileService {
 
 
     @Override
-    public Profile getProfile(Long pdaId) {
-        return userMapper.profile(userService.getMemberByPdaId(pdaId), userService.getMember());
+    public Profile getProfile(UUID pdaId) {
+        return userMapper.profile(userService.getUserById(pdaId), userService.getUserById());
     }
 
     @Override
     public Profile getProfile() {
-        return userMapper.profile(userService.getMember());
+        return userMapper.profile(userService.getUserById());
     }
 
     @Override
-    public List<AchievementEntity> getAchievements(Long pdaId) {
-        UserEntity userEntity = userService.getMemberByPdaId(pdaId);
+    public List<AchievementEntity> getAchievements(UUID pdaId) {
+        UserEntity userEntity = userService.getUserById(pdaId);
         return achievementsService.getForUser(userEntity);
     }
 
     @Override
     public List<AchievementEntity> getAchievements() {
-        return getAchievements(userService.getMember().getPdaId());
+        return getAchievements(userService.getCurrentId());
     }
 
     @Override
-    public ResponsePage<UserInfoDto> getRating(QueryPage queryPage) {
+    public ResponsePage<SimpleUserDto> getRating(QueryPage queryPage) {
         Page<UserEntity> memberPage = userRepository.findAll(
                 pageService.getPageable(queryPage));
         return pageService.mapDataPageToResponsePage(memberPage, userMapper.info(memberPage.getContent()));

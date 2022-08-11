@@ -1,27 +1,29 @@
 package net.artux.pdanetwork.service.communication;
 
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
-import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+
+import java.util.UUID;
 
 public interface ConversationService {
 
     ConversationDTO createConversation(ConversationCreateDTO createDTO);
 
-    ConversationDTO editConversation(Long id, ConversationCreateDTO createDTO);
+    ConversationDTO editConversation(UUID id, ConversationCreateDTO createDTO);
 
-    ConversationDTO getConversation(Long id);
+    ConversationDTO getConversation(UUID id);
 
     Slice<ConversationDTO> getConversations(Pageable queryPage);
 
-    boolean deleteConversation(Long id);
+    boolean deleteConversation(UUID id);
 
-    ConversationEntity getPrivateConversation(Long pda1, long pda2);
+    ConversationEntity getPrivateConversation(UUID pda1, UUID pda2);
 
-    ConversationEntity getConversationByIdForUser(Long id, UserEntity user);
+    ConversationEntity getConversationByIdForUser(UUID id, UserEntity user);
 
-    ConversationEntity createPrivateConversation(long pdaId, long id);
+    ConversationEntity createPrivateConversation(UUID pdaId, UUID id);
 }

@@ -1,6 +1,7 @@
-package net.artux.pdanetwork.models.note;
+package net.artux.pdanetwork.entity.note;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
@@ -13,57 +14,30 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "note")
+@Table(name = "user_note")
+@NoArgsConstructor
 public class NoteEntity extends BaseEntity {
 
     private String title;
     private String content;
-    private long time;
+    private Instant time;
     @ManyToOne
     private UserEntity author;
 
-    public NoteEntity() {
-    }
-
     public NoteEntity(String title) {
         this.title = title;
-        time = Instant.now().toEpochMilli();
+        time = Instant.now();
     }
 
     public NoteEntity(String title, String content) {
         this.title = title;
         this.content = content;
-        time = Instant.now().toEpochMilli();
+        time = Instant.now();
     }
-
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
 
     public void setContent(String content) {
         this.content = content;
+        time = Instant.now();
     }
 
-    public void editContent(String content) {
-        this.content = content;
-        time = Instant.now().toEpochMilli();
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
 }

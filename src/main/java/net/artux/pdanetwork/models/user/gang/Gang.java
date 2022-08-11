@@ -1,33 +1,36 @@
 package net.artux.pdanetwork.models.user.gang;
 
 public enum Gang {
-    LONERS,
-    BANDITS,
-    MILITARY,
-    LIBERTY,
-    DUTY,
-    MONOLITH,
-    MERCENARIES,
-    SCIENTISTS,
-    CLEAR_SKY;
+    LONERS("Одиночки", 0),
+    BANDITS("Бандиты", 1),
+    MILITARY("Военные", 2),
+    LIBERTY("Свобода", 3),
+    DUTY("Долг", 4),
+    MONOLITH("Монолит", 5),
+    MERCENARIES("Наемники", 6),
+    SCIENTISTS("Ученые", 7),
+    CLEAR_SKY("Чистое небо", 8);
+
+    private final String name;
+    private final int id;
+
+    Gang(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public static Gang getById(int id) {
-        if (id == 0)
-            return Gang.LONERS;
-        if (id == 1)
-            return Gang.BANDITS;
-        if (id == 2)
-            return Gang.MILITARY;
-        if (id == 3)
-            return Gang.LIBERTY;
-        if (id == 4)
-            return Gang.DUTY;
-        if (id == 5)
-            return Gang.MONOLITH;
-        if (id == 6)
-            return Gang.MERCENARIES;
-        if (id == 7)
-            return Gang.SCIENTISTS;
-        return Gang.CLEAR_SKY;
+        for (Gang gang : Gang.values())
+            if (gang.id == id)
+                return gang;
+        return null;
     }
 }

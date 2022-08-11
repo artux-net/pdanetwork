@@ -7,7 +7,7 @@ public enum ItemType {
     MEDICINE("Лекарства", 6, MedicineEntity.class),
     ARTIFACT("Артефакты", 3, ArtifactEntity.class),
     DETECTOR("Детекторы", 5, DetectorEntity.class),
-    ITEM("Предметы", 2, ItemEntity.class);
+    BULLET("Боеприпасы", 2, BulletEntity.class);
 
     private final String title;
     private final int id;
@@ -37,7 +37,7 @@ public enum ItemType {
 
     public boolean isCountable() {
         return switch (this) {
-            case ITEM, MEDICINE, ARTIFACT -> true;
+            case BULLET, MEDICINE, ARTIFACT -> true;
             default -> false;
         };
     }
@@ -47,6 +47,6 @@ public enum ItemType {
             if (type.getTypeId() == typeId)
                 return type;
         }
-        return ItemType.ITEM;
+        return ItemType.BULLET;
     }
 }

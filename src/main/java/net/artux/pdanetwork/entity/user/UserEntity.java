@@ -5,62 +5,83 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
-import net.artux.pdanetwork.models.note.NoteEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
+import net.artux.pdanetwork.models.user.gang.Gang;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "pda_user")
+@Table(name = "pda_user") //todo entityGraph for eager
 public class UserEntity extends BaseEntity {
 
-    private UUID uid;
+    @Column(unique = true)
     private String login;
     private String password;
+    @Column(unique = true)
     private String email;
     private String name;
     private String nickname;
     private String avatar;
+
     @Enumerated(EnumType.STRING)
     private Gang gang;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private GangRelationEntity gangRelation;
     private int xp;
     private int money;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Instant registration;
+    private Instant lastLoginAt;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     public List<NoteEntity> notes;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private List<UserAchievementEntity> achievements;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    private Long registration;
-    private Long lastLoginAt;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<StoryStateEntity> storyStates = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<ParameterEntity> parameters = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<BulletEntity> bullets = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<ArmorEntity> armors = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<WeaponEntity> weapons = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<MedicineEntity> medicines = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<ArtifactEntity> artifacts = new HashSet<>();
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    private Set<DetectorEntity> detectors = new HashSet<>();
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
-        uid = UUID.randomUUID();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
         name = registerUser.getName();
@@ -71,11 +92,11 @@ public class UserEntity extends BaseEntity {
         gangRelation = new GangRelationEntity(this);
         xp = 0;
         money = 500;
-        lastLoginAt = registration = Instant.now().toEpochMilli();
+        lastLoginAt = registration = Instant.now();
     }
 
     public long getPdaId() {
-        return id;
+        return Math.abs(id.getMostSignificantBits()) % 100000;
     }
 
     public void money(int money) {

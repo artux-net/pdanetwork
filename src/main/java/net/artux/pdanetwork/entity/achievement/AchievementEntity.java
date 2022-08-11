@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Setter
-@Table(name = "user_achievement")
+@Table(name = "achievement")
 public class AchievementEntity extends BaseEntity {
 
     private String title;

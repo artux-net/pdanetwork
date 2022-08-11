@@ -3,8 +3,8 @@ package net.artux.pdanetwork.entity.user.gang;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.BaseEntity;
-import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.user.gang.Gang;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @RequiredArgsConstructor
 @Entity
 @Getter
-@Table(name = "gang_relation")
+@Table(name = "user_gang_relation")
 public class GangRelationEntity extends BaseEntity {
 
     @OneToOne

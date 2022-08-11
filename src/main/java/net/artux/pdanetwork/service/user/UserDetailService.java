@@ -2,10 +2,10 @@ package net.artux.pdanetwork.service.user;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +29,7 @@ public class UserDetailService implements UserDetailsService {
             UserEntity userEntity = userOptional.get();
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().toString()));
 
-            return new User(userEntity.getLogin(), userEntity.getPassword(), authorities);
+            return new SecurityUser(userEntity.getLogin(), userEntity.getPassword(), authorities, userEntity.getId());
         } else {
             logger.error("User with login '" + username + "' not found.");
             throw new UsernameNotFoundException("User not found");

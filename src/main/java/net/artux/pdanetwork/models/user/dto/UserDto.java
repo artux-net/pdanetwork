@@ -3,9 +3,10 @@ package net.artux.pdanetwork.models.user.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserDto {
 
-    private UUID uid;
+    private UUID id;
     private String login;
     private String email;
     private String name;
@@ -24,8 +25,8 @@ public class UserDto {
     private Gang gang;
     private int xp;
     private int money;
-    public GangRelationDto relations;
-    private Long registration;
-    private Long lastLoginAt;
+    private GangRelationDto relations;
+    private Instant registration;
+    private Instant lastLoginAt;
 
 }

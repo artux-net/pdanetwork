@@ -1,11 +1,11 @@
 package net.artux.pdanetwork.models.user;
 
 import net.artux.pdanetwork.entity.user.UserEntity;
-import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
+import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
-import net.artux.pdanetwork.models.user.dto.UserInfoDto;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,28 +14,30 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserInfoDto info(UserEntity userEntity);
+    @Mapping(target = "achievements", expression = "java(user.getAchievements().size())")
+    SimpleUserDto info(UserEntity user);
 
-    List<UserInfoDto> info(List<UserEntity> userEntity);
+    List<SimpleUserDto> info(List<UserEntity> users);
 
-    RegisterUserDto regUser(UserEntity userEntity);
+    RegisterUserDto regUser(UserEntity user);
 
-    FriendModel friendModel(UserEntity userEntity);
+    FriendModel friendModel(UserEntity user);
 
     List<FriendModel> friendList(List<UserEntity> list);
 
-    @Mapping(target = "relations", expression = "java(mapRelation(userEntity.getGangRelation()))")
-    UserDto memberDto(UserEntity userEntity);
+    @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
+    UserDto dto(UserEntity user);
 
+    @Mapping(target = "friendRelation", ignore = true)
+    @Mapping(target = "blocked", ignore = true)
     @Mapping(target = "friends", ignore = true)
     @Mapping(target = "subs", ignore = true)
-    @Mapping(target = "achievements", ignore = true) // TODO
+    @Mapping(target = "achievements", expression = "java(user.getAchievements().size())")
+    @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
+    Profile profile(UserEntity user);
 
-    @Mapping(target = "relations", expression = "java(mapRelation(userEntity.getGangRelation()))")
-    Profile profile(UserEntity userEntity);
-
-    default Profile profile(UserEntity userEntity, UserEntity by) {
-        Profile profile = profile(userEntity);
+    default Profile profile(UserEntity user, UserEntity by) {
+        Profile profile = profile(user);
         //profile.setFriendStatus(Profile.getFriendStatus(userEntity, by));
         return profile;
     }

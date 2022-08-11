@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "conversation")
+@Table(name = "user_conversation")
 public class ConversationEntity extends BaseEntity {
 
     private String title;

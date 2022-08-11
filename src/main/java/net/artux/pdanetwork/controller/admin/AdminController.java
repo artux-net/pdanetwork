@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.controller.admin;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.items.ItemService;
@@ -10,13 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import springfox.documentation.annotations.ApiIgnore;
 
-import javax.ws.rs.QueryParam;
 import java.util.Date;
 
 @Controller
-@ApiIgnore
+@Tag(name = "Панель администратора")
 @RequestMapping("/utility")
 public class AdminController extends BaseUtilityController {
 
@@ -50,7 +49,7 @@ public class AdminController extends BaseUtilityController {
     }
 
     @PostMapping("/chat/ban/{id}")
-    public String banUser(Model model, @PathVariable("id") Long pdaId, @QueryParam("comment") String reason) {
+    public String banUser(Model model, @PathVariable("id") Long pdaId, String reason) {
         chatHandler.addToBanList(pdaId, reason);
         return getChatPage(model);
     }

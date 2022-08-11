@@ -23,19 +23,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WHITE_LIST = {
-            "/v2/api-docs",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
+            "/v3/api-docs/*",
             "/swagger-ui/**",
-            "/swagger-ui",
+            "/actuator/**",
             "/webjars/**",
-            "/swagger-ui/**",
-            "/register",
-            "/static/**",
+            "/user/register",
             "/reset", "/reset/**",
             "/feed/**",
-            "/enc/**", "/css/**", "/base/**"
+            "/enc/**",
+            "/css/**",
+            "/base/**",
+            "/images/**"
     };
 
     @Override

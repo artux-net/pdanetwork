@@ -1,56 +1,57 @@
 package net.artux.pdanetwork.controller.user;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.service.friends.FriendService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Профиль - Друзья")
-@RequestMapping("/profile/friends")
+@Tag(name = "Друзья")
+@RequestMapping("/friends")
 public class FriendsController {
 
     private final FriendService friendService;
 
-    @ApiOperation(value = "Получить друзей по pdaId")
+    @Operation(summary = "Получить друзей по pdaId")
     @GetMapping("/{id}")
-    public List<FriendModel> getFriends(@PathVariable("id") Long id) {
+    public List<FriendModel> getFriends(@PathVariable("id") UUID id) {
         return friendService.getFriends(id);
     }
 
-    @ApiOperation(value = "Получить друзей")
+    @Operation(summary = "Получить друзей")
     @GetMapping
     public List<FriendModel> getFriends() {
         return friendService.getFriends();
     }
 
-    @ApiOperation(value = "Получить запросы дружбы")
+    @Operation(summary = "Получить запросы дружбы")
     @GetMapping("/requests")
     public List<FriendModel> getFriendsRequests() {
         return friendService.getFriendRequests();
     }
 
-    @ApiOperation(value = "Получить подписчиков")
+    @Operation(summary = "Получить подписчиков")
     @GetMapping("/subs")
     public List<FriendModel> getSubs() {
         return friendService.getSubs();
     }
 
-    @ApiOperation(value = "Получить подписчиков по pdaId")
+    @Operation(summary = "Получить подписчиков по pdaId")
     @GetMapping("/subs/{id}")
-    public List<FriendModel> getSubs(@PathVariable("id") Long id) {
+    public List<FriendModel> getSubs(@PathVariable("id") UUID id) {
         return friendService.getSubs(id);
     }
 
-    @ApiOperation(value = "Запросить/добавить/удалить друга")
+    @Operation(summary = "Запросить/добавить/удалить друга")
     @PostMapping
-    public Status addFriend(@RequestParam("pdaId") long pdaId) {
+    public Status addFriend(@RequestParam("pdaId") UUID pdaId) {
         return friendService.addFriend(pdaId);
     }
 }

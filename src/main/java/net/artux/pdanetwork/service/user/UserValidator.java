@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.user;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -104,7 +104,7 @@ public class UserValidator {
         if (!email.matches(EMAIL_VALIDATION_REGEX)) {
             return new Status(false, "Почта не существует.");
         }
-        if (userRepository.getMemberByEmail(email).isPresent()) {
+        if (userRepository.findMemberByEmail(email).isPresent()) {
             return new Status(false, "Пользователь с таким e-mail уже существует.");
         }
         return new Status(true);

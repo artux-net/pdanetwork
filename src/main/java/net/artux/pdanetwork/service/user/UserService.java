@@ -1,9 +1,9 @@
 package net.artux.pdanetwork.service.user;
 
-import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
-import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
+import net.artux.pdanetwork.models.user.dto.UserDto;
 
 import java.util.UUID;
 
@@ -13,19 +13,18 @@ public interface UserService {
 
     Status handleConfirmation(String token);
 
-    UserEntity getMember();
+    UserEntity getUserById();
 
-    UserDto getMemberDto();
+    UserDto getUserDto();
 
-    UserEntity getMember(String base64);
+    UserEntity getUserById(UUID objectId);
 
-    UserEntity getMember(UUID objectId);
+    UUID getCurrentId();
 
-    UserEntity getMemberByPdaId(Long id);
+    UserEntity getUserByEmail(String email);
 
-    UserEntity getMemberByEmail(String email);
-    UserEntity getMemberByLogin(String login);
+    UserEntity getUserByLogin(String login);
 
-    Status editMember(RegisterUserDto user);
+    Status editUser(RegisterUserDto user);
 
 }

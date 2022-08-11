@@ -9,18 +9,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public interface ConversationRepository extends JpaRepository<ConversationEntity, Long> {
+public interface ConversationRepository extends JpaRepository<ConversationEntity, UUID> {
 
     @Query(value = "select c from ConversationEntity c where ?2 in c.members and " +
             " c.type = ?1")
-    Optional<ConversationEntity> findByMembersContainsAndType(ConversationEntity.Type type, long... pda1);
+    Optional<ConversationEntity> findByMembersContainsAndType(ConversationEntity.Type type, UUID... pda1);
 
     @Query(value = "select c from ConversationEntity c where ?1 in c.members")
-    Slice<ConversationEntity> findByMembersContains(Pageable pageable, long... pda1);
+    Slice<ConversationEntity> findByMembersContains(Pageable pageable, UUID... pda1);
 
-    Optional<ConversationEntity> findByIdAndMembersContains(long id, UserEntity entity);
+    Optional<ConversationEntity> findByIdAndMembersContains(UUID id, UserEntity entity);
 
-    Optional<ConversationEntity> findByIdAndOwner(long id, UserEntity entity);
+    Optional<ConversationEntity> findByIdAndOwner(UUID id, UserEntity entity);
 }

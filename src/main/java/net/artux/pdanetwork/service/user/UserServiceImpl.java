@@ -1,8 +1,9 @@
 package net.artux.pdanetwork.service.user;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
@@ -11,20 +12,19 @@ import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.utills.Security;
 import org.slf4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
+import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -33,11 +33,20 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final Logger logger;
+    private final Map<String, RegisterUserDto> registerUserMap;
+    private final Timer timer = new Timer();
 
-    private static final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
-
-    public static Map<String, RegisterUserDto> getRegisterUserMap() {
-        return registerUserMap;
+    @PostConstruct
+    private void registerTestUsers() {
+        String email = "mail@mail.ru";
+        if (userRepository.findMemberByEmail(email).isEmpty())
+            saveUser(RegisterUserDto.builder()
+                    .email(email)
+                    .login("login")
+                    .name("name")
+                    .password("12345678")
+                    .nickname("nickname")
+                    .avatar("1").build());
     }
 
     @Override
@@ -65,17 +74,22 @@ public class UserServiceImpl implements UserService {
     private void addCurrent(String token, RegisterUserDto user) {
         logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
         registerUserMap.put(token, user);
-        new Timer(30 * 60 * 1000, e -> registerUserMap.remove(token)).start();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                registerUserMap.remove(token);
+            }
+        }, 30 * 60 * 1000);
     }
 
     public Status handleConfirmation(String token) {
         if (registerUserMap.containsKey(token)) {
-            UserEntity member = userRepository.save(new UserEntity(registerUserMap.get(token), passwordEncoder));
-            long pdaId = member.getId();
-            logger.info("User" + member.getLogin() + " registered.");
+            UserEntity member = saveUser(registerUserMap.get(token));
+            long pdaId = member.getPdaId();
+            logger.info("User PDA#" + member.getLogin() + " registered.");
+            registerUserMap.remove(token);
             try {
                 emailService.sendRegisterLetter(registerUserMap.get(token), pdaId);
-                registerUserMap.remove(token);
                 return new Status(true, pdaId + " - Это ваш pdaId, мы вас зарегистрировали, спасибо!");
             } catch (Exception e) {
                 return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
@@ -83,58 +97,45 @@ public class UserServiceImpl implements UserService {
         } else return new Status(false, "Ссылка устарела или не существует");
     }
 
-    @Override
-    public UserEntity getMember() {
-        return userRepository.getMemberByLogin(SecurityContextHolder.getContext()
-                        .getAuthentication()
-                        .getName())
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователя не существует"));
+    private UserEntity saveUser(RegisterUserDto registerUserDto) {
+        return userRepository.save(new UserEntity(registerUserDto, passwordEncoder));
+    }
+
+    public UUID getCurrentId() {
+        return ((SecurityUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getId();
     }
 
     @Override
-    public UserDto getMemberDto() {
-        return userMapper.memberDto(getMember());
+    public UserEntity getUserById() {
+        return userRepository.findById(getCurrentId()).orElseThrow();
     }
 
     @Override
-    public UserEntity getMember(String base64) {
-        if (base64.isBlank())
-            return null;
-        base64 = base64.replaceFirst("Basic ", "");
-        base64 = new String(Base64.getDecoder().decode(base64), StandardCharsets.UTF_8);
-        String login = base64.split(":")[0];
-        String password = base64.split(":")[1];
-        Optional<UserEntity> optionalMember = userRepository.getMemberByLogin(login);
-        if (optionalMember.isPresent()
-                && passwordEncoder.matches(password, optionalMember.get().getPassword()))
-            return optionalMember.get();
-        else return null;
+    public UserDto getUserDto() {
+        return userMapper.dto(getUserById());
     }
 
     @Override
-    public UserEntity getMember(UUID objectId) {
-        return userRepository.getByUid(objectId).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+    public UserEntity getUserById(UUID objectId) {
+        return userRepository.getById(objectId);
     }
 
     @Override
-    public UserEntity getMemberByPdaId(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findMemberByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
     @Override
-    public UserEntity getMemberByEmail(String email) {
-        return userRepository.getMemberByEmail(email).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
-    }
-
-    @Override
-    public UserEntity getMemberByLogin(String login) {
+    public UserEntity getUserByLogin(String login) {
         return userRepository.getMemberByLogin(login).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
 
     @Override
-    public Status editMember(RegisterUserDto user) {
-        UserEntity userEntity = getMember();
+    public Status editUser(RegisterUserDto user) {
+        UserEntity userEntity = getUserById();
         Status status = userValidator.checkUser(user);
         if (status.isSuccess()) {
             userEntity.setName(user.getName());

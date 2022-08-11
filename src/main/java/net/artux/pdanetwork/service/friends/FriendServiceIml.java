@@ -1,11 +1,11 @@
 package net.artux.pdanetwork.service.friends;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.entity.user.relationship.RelationshipEntity;
+import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.user.UserMapper;
-import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.entity.user.RelationshipEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.repository.user.RelationshipRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class FriendServiceIml implements FriendService {
 
@@ -25,35 +27,34 @@ public class FriendServiceIml implements FriendService {
     private final UserRepository userRepository;
 
     @Override
-    public List<FriendModel> getFriends(Long pdaId) {
+    public List<FriendModel> getFriends(UUID pdaId) {
         return userMapper.friendList(userRepository.getFriendsById(pdaId));
     }
 
     @Override
     public List<FriendModel> getSubs() {
-        return getSubs(userService.getMember().getPdaId());
+        return getSubs(userService.getCurrentId());
     }
 
     @Override
-    public List<FriendModel> getSubs(Long pdaId) {
+    public List<FriendModel> getSubs(UUID pdaId) {
         return userMapper.friendList(userRepository.getSubsById(pdaId));
     }
 
     @Override
     public List<FriendModel> getFriends() {
-        return getFriends(userService.getMember().getPdaId());
+        return getFriends(userService.getCurrentId());
     }
 
     @Override
     public List<FriendModel> getFriendRequests() {
-        return userMapper.friendList(userRepository.getRequestsById(userService.getMember().getPdaId()));
+        return userMapper.friendList(userRepository.getRequestsById(userService.getCurrentId()));
     }
 
     @Override
-    @Transactional // TODO everywhere
-    public Status addFriend(Long pdaId) {
-        UserEntity user = userService.getMember();
-        UserEntity another = userService.getMemberByPdaId(pdaId);
+    public Status addFriend(UUID pdaId) {
+        UserEntity user = userService.getUserById();
+        UserEntity another = userRepository.getById(pdaId);
         Optional<RelationshipEntity> relationship = relationshipRepository.getByUser1AndUser2(user, another);
         if (relationship.isPresent()) {
             relationshipRepository.delete(relationship.get());

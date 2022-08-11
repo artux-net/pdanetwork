@@ -11,11 +11,11 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "story_state")
+@Table(name = "user_story_state")
 public class StoryStateEntity extends BaseEntity {
 
     @ManyToOne
-    private UserEntity player;
+    private UserEntity user;
     private int storyId;
     private int chapterId;
     private int stageId;

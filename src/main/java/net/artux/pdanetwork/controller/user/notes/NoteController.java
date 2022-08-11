@@ -1,42 +1,47 @@
 package net.artux.pdanetwork.controller.user.notes;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.note.NoteCreateDto;
 import net.artux.pdanetwork.models.note.NoteDto;
-import net.artux.pdanetwork.models.note.NoteEntity;
 import net.artux.pdanetwork.service.note.NoteService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@Api(tags = "Заметки")
+@Tag(name = "Заметки")
 @RequestMapping("/notes")
 public class NoteController {
 
-  private final NoteService noteService;
+    private final NoteService noteService;
 
-  @GetMapping
-  public List<NoteDto> getNotes(){
-    return noteService.getNotes();
-  }
+    @GetMapping
+    @Operation(summary = "Получить заметки")
+    public List<NoteDto> getNotes() {
+        return noteService.getNotes();
+    }
 
-  @PostMapping
-  public NoteDto createNote(@RequestBody String title){
-    return noteService.createNote(title);
-  }
+    @PostMapping
+    @Operation(summary = "Создать заметку")
+    public NoteDto createNote(@RequestBody NoteCreateDto dto) {
+        return noteService.createNote(dto);
+    }
 
-  @PutMapping
-  public NoteDto editNote(@RequestBody NoteDto noteEntity){
-    return noteService.editNote(noteEntity);
-  }
+    @PutMapping("/{id}")
+    @Operation(summary = "Изменить заметку")
+    public NoteDto editNote(@PathVariable UUID id, @RequestBody NoteCreateDto dto) {
+        return noteService.editNote(id, dto);
+    }
 
-  @DeleteMapping
-  public Status deleteNote(@RequestParam("id") Long id){
-    return noteService.deleteNote(id);
-  }
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить заметку")
+    public Status deleteNote(@PathVariable UUID id) {
+        return noteService.deleteNote(id);
+    }
 
 }

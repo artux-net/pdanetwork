@@ -17,11 +17,11 @@ public class PDANetworkApplication {
     public static void main(String[] args) {
         SpringApplication.run(PDANetworkApplication.class, args);
         log.debug("Starting my application in debug with {} args", args.length);
-        log.info("PDA Network started, swagger: " + "http://localhost:8080/pdanetwork/swagger-ui/", args.length);
     }
 
     @Bean
     public Logger logger() {
         return LoggerFactory.getLogger("application");
     }
+
 }

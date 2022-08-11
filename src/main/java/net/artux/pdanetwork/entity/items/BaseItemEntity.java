@@ -2,6 +2,8 @@ package net.artux.pdanetwork.entity.items;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,8 +26,10 @@ public class BaseItemEntity {
     protected String description;
     @Lob
     protected String content;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
-    protected List<String> dignities;
+    protected List<String> advantages;
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
     protected List<String> disadvantages;
 

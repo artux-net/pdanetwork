@@ -1,23 +1,24 @@
 package net.artux.pdanetwork.service.profile;
 
-import net.artux.pdanetwork.models.user.Profile;
+import net.artux.pdanetwork.entity.achievement.AchievementEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.models.user.dto.UserInfoDto;
-import net.artux.pdanetwork.entity.achievement.AchievementEntity;
+import net.artux.pdanetwork.models.user.Profile;
+import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProfileService {
 
     Profile getProfile();
 
-    Profile getProfile(Long pdaId);
+    Profile getProfile(UUID pdaId);
 
-    ResponsePage<UserInfoDto> getRating(QueryPage queryPage);
+    ResponsePage<SimpleUserDto> getRating(QueryPage queryPage);
 
     List<AchievementEntity> getAchievements();
 
-    List<AchievementEntity> getAchievements(Long pdaId);
+    List<AchievementEntity> getAchievements(UUID pdaId);
 
 }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.items.*;
-import net.artux.pdanetwork.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,8 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "seller")
-public class SellerEntity extends BaseEntity {
+public class SellerEntity {
 
+    @Id
+    private long id;
     private String name;
     private String icon;
     private String image;
@@ -24,10 +25,10 @@ public class SellerEntity extends BaseEntity {
     private float sellCoefficient;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "seller_item",
+    @JoinTable(name = "seller_bullet",
             joinColumns = @JoinColumn(name = "seller_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private Set<ItemEntity> items = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "bullet_id"))
+    private Set<BulletEntity> bullets = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "seller_armor",
@@ -61,49 +62,23 @@ public class SellerEntity extends BaseEntity {
 
     public void addItem(ItemEntity itemEntity) {
         switch (itemEntity.getBase().getType()) {
-            case ITEM:
-                items.add(itemEntity);
-                break;
-            case ARMOR:
-                armors.add((ArmorEntity) itemEntity);
-                break;
-            case PISTOL:
-            case RIFLE:
-                weapons.add((WeaponEntity) itemEntity);
-                break;
-            case ARTIFACT:
-                artifacts.add((ArtifactEntity) itemEntity);
-                break;
-            case DETECTOR:
-                detectors.add((DetectorEntity) itemEntity);
-                break;
-            case MEDICINE:
-                medicines.add((MedicineEntity) itemEntity);
-                break;
+            case BULLET -> bullets.add((BulletEntity) itemEntity);
+            case ARMOR -> armors.add((ArmorEntity) itemEntity);
+            case PISTOL, RIFLE -> weapons.add((WeaponEntity) itemEntity);
+            case ARTIFACT -> artifacts.add((ArtifactEntity) itemEntity);
+            case DETECTOR -> detectors.add((DetectorEntity) itemEntity);
+            case MEDICINE -> medicines.add((MedicineEntity) itemEntity);
         }
     }
 
     public void removeItem(ItemEntity itemEntity) {
         switch (itemEntity.getBase().getType()) {
-            case ITEM:
-                items.remove(itemEntity);
-                break;
-            case ARMOR:
-                armors.remove((ArmorEntity) itemEntity);
-                break;
-            case PISTOL:
-            case RIFLE:
-                weapons.remove((WeaponEntity) itemEntity);
-                break;
-            case ARTIFACT:
-                artifacts.remove((ArtifactEntity) itemEntity);
-                break;
-            case DETECTOR:
-                detectors.remove((DetectorEntity) itemEntity);
-                break;
-            case MEDICINE:
-                medicines.remove((MedicineEntity) itemEntity);
-                break;
+            case BULLET -> bullets.remove((BulletEntity) itemEntity);
+            case ARMOR -> armors.remove((ArmorEntity) itemEntity);
+            case PISTOL, RIFLE -> weapons.remove((WeaponEntity) itemEntity);
+            case ARTIFACT -> artifacts.remove((ArtifactEntity) itemEntity);
+            case DETECTOR -> detectors.remove((DetectorEntity) itemEntity);
+            case MEDICINE -> medicines.remove((MedicineEntity) itemEntity);
         }
     }
 

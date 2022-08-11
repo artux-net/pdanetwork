@@ -2,8 +2,9 @@ package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
-import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.MessageDTO;
+import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.communication.ConversationService;
 import net.artux.pdanetwork.service.communication.MessagingService;
 import net.artux.pdanetwork.service.user.UserService;
@@ -30,8 +31,10 @@ public class MessagesHandler extends SocketHandler {
     private final MessagingService messagingService;
     private final DialogsHandler dialogsHandler;
 
-    public MessagesHandler(UserService userService, ObjectMapper objectMapper, ConversationService conversationService, MessagingService messagingService, DialogsHandler dialogsHandler) {
-        super(userService, objectMapper);
+    public MessagesHandler(UserService userService, ObjectMapper objectMapper,
+                           ConversationService conversationService, MessagingService messagingService,
+                           DialogsHandler dialogsHandler, MessageMapper messageMapper) {
+        super(userService, objectMapper, messageMapper);
         this.conversationService = conversationService;
         this.messagingService = messagingService;
         this.dialogsHandler = dialogsHandler;
@@ -46,8 +49,8 @@ public class MessagesHandler extends SocketHandler {
 
         if (params.containsKey(ADDRESS_ATTR)) {
             // only private messaging
-            int pda2 = Integer.parseInt(params.get(ADDRESS_ATTR));
-            ConversationEntity conversation = conversationService.getPrivateConversation(user.getPdaId(), pda2);
+            UUID pda2 = UUID.fromString(params.get(ADDRESS_ATTR));
+            ConversationEntity conversation = conversationService.getPrivateConversation(user.getId(), pda2);
             if (conversation != null) {
                 addToConversation(conversation, userSession);
             } else {
@@ -57,8 +60,8 @@ public class MessagesHandler extends SocketHandler {
             }
         } else if (params.containsKey(CONVERSATION_ATTR)) {
             // group or private messaging
-            long conversationId = Long.parseLong(params.get(CONVERSATION_ATTR));
-            ConversationEntity conversation = conversationService.getPrivateConversation(conversationId, user.getPdaId());
+            UUID conversationId = UUID.fromString(params.get(CONVERSATION_ATTR));
+            ConversationEntity conversation = conversationService.getPrivateConversation(conversationId, user.getId());
             if (conversation != null) {
                 addToConversation(conversation, userSession);
             } else {
@@ -115,9 +118,9 @@ public class MessagesHandler extends SocketHandler {
         ConversationEntity conversation;
         if (userSession.getAttributes().get(FIRST_ATTR) != null) {
             //create new conversation
-            int id = (int) userSession.getAttributes().get(ADDRESS_ATTR);
+            UUID id = (UUID) userSession.getAttributes().get(ADDRESS_ATTR);
 
-            conversation = conversationService.createPrivateConversation(getMember(userSession).getPdaId(), id);
+            conversation = conversationService.createPrivateConversation(getMember(userSession).getId(), id);
             addToConversation(conversation, userSession);
         }
     }

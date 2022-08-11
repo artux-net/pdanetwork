@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.communication.MessageEntity;
-import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.web.socket.*;
 
@@ -23,6 +23,7 @@ public abstract class SocketHandler implements WebSocketHandler {
     private final UserService userService;
     private static final List<WebSocketSession> sessionList = new ArrayList<>();
     private final ObjectMapper objectMapper;
+    protected final MessageMapper messageMapper;
 
     private static final String USER = "user";
 
@@ -69,7 +70,7 @@ public abstract class SocketHandler implements WebSocketHandler {
             return (UserEntity) userSession.getAttributes().get(USER);
         Principal principal = userSession.getPrincipal();
         if (principal != null) {
-            UserEntity userEntity = userService.getMemberByLogin(userSession.getPrincipal().getName());
+            UserEntity userEntity = userService.getUserByLogin(userSession.getPrincipal().getName());
             userSession.getAttributes().put(USER, userEntity);
             return userEntity;
         } else {
@@ -101,8 +102,8 @@ public abstract class SocketHandler implements WebSocketHandler {
         return null;
     }
 
-    protected MessageDTO getMessage(WebSocketSession userSession, WebSocketMessage<?> message) {
-        return new MessageDTO(getMember(userSession), message.getPayload().toString());
+    protected MessageEntity getMessage(WebSocketSession userSession, WebSocketMessage<?> message) {
+        return new MessageEntity(getMember(userSession), message.getPayload().toString());
     }
 
     @Override

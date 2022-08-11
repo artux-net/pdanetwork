@@ -1,20 +1,20 @@
 package net.artux.pdanetwork.controller.enc;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.items.BaseItemEntity;
 import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.service.items.BaseItemService;
 import net.artux.pdanetwork.service.items.ItemService;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
 @RequestMapping("/enc")
-@ApiIgnore
 @RequiredArgsConstructor
 public class EncController {
 
@@ -35,10 +35,11 @@ public class EncController {
 
     @GetMapping("/item/{id}")
     public String getItemPage(Model model, @PathVariable java.lang.Integer id) {
-
         ItemDto dto = itemService.getItemDto(id);
         model.addAttribute("item", dto);
-        model.addAttribute("base", baseItemService.getBaseItem(id));
+        BaseItemEntity baseItemEntity = baseItemService.getBaseItem(id);
+        Hibernate.initialize(baseItemEntity);
+        model.addAttribute("base", baseItemEntity);
 
         return "enc/item";
     }

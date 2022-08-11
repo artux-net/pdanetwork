@@ -7,15 +7,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public interface StoryRepository extends JpaRepository<StoryStateEntity, Long> {
+public interface StoryRepository extends JpaRepository<StoryStateEntity, UUID> {
 
-    Optional<StoryStateEntity> findByPlayerAndCurrentIsTrue(UserEntity userEntity);
+    Optional<StoryStateEntity> findByUserAndCurrentIsTrue(UserEntity userEntity);
 
-    List<StoryStateEntity> findAllByPlayer(UserEntity userEntity);
+    List<StoryStateEntity> findAllByUser(UserEntity userEntity);
 
-    Optional<StoryStateEntity> findByPlayerAndStoryId(UserEntity userEntity, int storyId);
+    Optional<StoryStateEntity> findByUserAndStoryId(UserEntity userEntity, int storyId);
 
-    void deleteAllByPlayer(UserEntity userEntity);
+    void deleteAllByUser(UserEntity userEntity);
 }

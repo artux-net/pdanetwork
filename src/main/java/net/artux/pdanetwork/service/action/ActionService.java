@@ -5,12 +5,13 @@ import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.note.NoteCreateDto;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.repository.user.GangRelationsRepository;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
-import net.artux.pdanetwork.service.items.CommonItemsRepository;
+import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.note.NoteService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ActionService {
     private final Logger logger;
 
     private final StateService stateService;
-    private final CommonItemsRepository itemsService;
+    private final ItemService itemsService;
     private final NoteService noteService;
 
     private final ParametersRepository parametersRepository;
@@ -80,13 +81,13 @@ public class ActionService {
                     case "remove":
                         for (String pass : params) {
                             String[] values = pass.split(":");
-                            if (values.length == 3) {
-                                int type = Integer.parseInt(values[0]);
-                                int baseId = Integer.parseInt(values[1]);
-                                int quantity = Integer.parseInt(values[2]);
-                                itemsService.deleteItem(userEntity, type, baseId, quantity);
-                            }
-                            parametersRepository.deleteAllByUserAndKey(userEntity, pass);
+                            if (values.length == 2) {
+                                int baseId = Integer.parseInt(values[0]);
+                                int quantity = Integer.parseInt(values[1]);
+                                itemsService.deleteItem(userEntity, baseId, quantity);
+                                //todo remove type
+                            }else
+                                parametersRepository.deleteAllByUserAndKey(userEntity, pass);
                         }
                         break;
                     case "=":
@@ -136,9 +137,9 @@ public class ActionService {
                         break;
                     case "note":
                         if (params.size() == 2)
-                            noteService.createNote(params.get(0), params.get(1));
+                            noteService.createNote(new NoteCreateDto(params.get(0), params.get(1)));
                         else if (params.size() == 1)
-                            noteService.createNote("Новая заметка", params.get(0));
+                            noteService.createNote(new NoteCreateDto("Новая заметка", params.get(0)));
                         break;
                     case "achieve":
                         //TODO
@@ -152,7 +153,7 @@ public class ActionService {
                             for (String pass : params)
                                 if (pass.matches("-?\\d+")) {
                                     int storyId = Integer.parseInt(pass);
-                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, storyId);
+                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndStoryId(userEntity, storyId);
                                     if (storyOptional.isPresent()) {
                                         StoryStateEntity storyStateEntity = storyOptional.get();
                                         storyStateEntity.setChapterId(1);
@@ -168,7 +169,7 @@ public class ActionService {
                         }
                         break;
                     case "reset_current":
-                        Optional<StoryStateEntity> storyOptional = storyRepository.findByPlayerAndCurrentIsTrue(userEntity);
+                        Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndCurrentIsTrue(userEntity);
                         if (storyOptional.isPresent()) {
                             StoryStateEntity storyStateEntity = storyOptional.get();
                             storyStateEntity.setCurrent(false);
@@ -185,13 +186,13 @@ public class ActionService {
                                     int stage = Integer.parseInt(values[3]);
 
                                     StoryStateEntity storyStateEntity;
-                                    storyOptional = storyRepository.findByPlayerAndStoryId(userEntity, story);
+                                    storyOptional = storyRepository.findByUserAndStoryId(userEntity, story);
                                     if (storyOptional.isPresent()) {
                                         storyStateEntity = storyOptional.get();
                                     } else {
                                         storyStateEntity = new StoryStateEntity();
                                         storyStateEntity.setStoryId(story);
-                                        storyStateEntity.setPlayer(userEntity);
+                                        storyStateEntity.setUser(userEntity);
                                     }
                                     storyStateEntity.setChapterId(chapter);
                                     storyStateEntity.setStageId(stage);
@@ -209,7 +210,7 @@ public class ActionService {
                 logger.error("ActionService", e);
             }
         }
-        return stateService.getStoryData(userEntity);
+        return stateService.getStoryData();
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {
@@ -257,6 +258,6 @@ public class ActionService {
     public void resetAllData(UserEntity userEntity) {
         itemsService.resetAll(userEntity);
         parametersRepository.deleteAllByUser(userEntity);
-        storyRepository.deleteAllByPlayer(userEntity);
+        storyRepository.deleteAllByUser(userEntity);
     }
 }

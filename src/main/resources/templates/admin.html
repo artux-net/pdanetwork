@@ -26,7 +26,6 @@
         <td><b>#ПДА</b></td>
         <td><b>Ник</b></td>
         <td><b>Опыт</b></td>
-        <td><b>Денег</b></td>
     </tr>
 
     <th:block th:each="user,iter : ${rating.data}">
@@ -35,7 +34,6 @@
             <td th:text="${user.pdaId}"/>
             <td th:text="${user.login}"/>
             <td th:text="${user.xp}"/>
-            <td th:text="${user.money}"/>
         </tr>
     </th:block>
 

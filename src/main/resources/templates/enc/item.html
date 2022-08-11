@@ -69,9 +69,9 @@
     </div>
 </div>
 <div class="row">
-    <div class="column" th:if="${base.dignities != null && base.dignities.size() > 0}">
+    <div class="column" th:if="${base.advantages != null && base.advantages.size() > 0}">
         <p class="column-title">Достоинства</p>
-        <th:block th:each="i : ${base.dignities}">
+        <th:block th:each="i : ${base.advantages}">
             <span th:text="${i}"></span>
             <br>
         </th:block>

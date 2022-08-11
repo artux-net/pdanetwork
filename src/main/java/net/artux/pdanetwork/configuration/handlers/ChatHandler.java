@@ -3,6 +3,7 @@ package net.artux.pdanetwork.configuration.handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
+import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
@@ -19,8 +20,8 @@ public class ChatHandler extends SocketHandler {
 
   private static boolean updateMessages = false;
 
-  public ChatHandler(UserService userService, ObjectMapper objectMapper) {
-    super(userService, objectMapper);
+  public ChatHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper) {
+    super(userService, objectMapper, messageMapper);
   }
 
   @Override
@@ -39,7 +40,7 @@ public class ChatHandler extends SocketHandler {
 
   @Override
   public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage){
-    MessageDTO message = getMessage(userSession, webSocketMessage);
+    MessageDTO message = messageMapper.dto(getMessage(userSession, webSocketMessage));
     if(BadWordsFilter.contains(message.getContent())) {
       sendSystemMessage(userSession, "Мат в общих чатах запрещен.");
       return;
@@ -65,7 +66,7 @@ public class ChatHandler extends SocketHandler {
   }
 
   public void removeMessage(Long time){
-    lastMessages.removeIf(userMessage -> userMessage.getTimestamp() == time);
+    lastMessages.removeIf(userMessage -> userMessage.getTimestamp().toEpochMilli() == time);
     updateMessages = true;
   }
 

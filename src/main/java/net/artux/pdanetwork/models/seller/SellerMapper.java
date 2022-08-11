@@ -2,11 +2,12 @@ package net.artux.pdanetwork.models.seller;
 
 import net.artux.pdanetwork.entity.items.ItemEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
+import net.artux.pdanetwork.models.items.ItemMapper;
 import net.artux.pdanetwork.service.items.ItemService;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {ItemService.class})
+@Mapper(componentModel = "spring", uses = {ItemMapper.class, ItemService.class})
 public abstract class SellerMapper {
 
     @Autowired

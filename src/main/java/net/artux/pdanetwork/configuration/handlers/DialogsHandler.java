@@ -2,10 +2,11 @@ package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.communication.ConversationService;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.data.domain.PageRequest;
@@ -16,15 +17,17 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DialogsHandler extends SocketHandler {
 
-    private final HashMap<Long, WebSocketSession> sessions = new HashMap<>();
+    private final HashMap<UUID, WebSocketSession> sessions = new HashMap<>();
     private final ConversationService conversationService;
 
-    public DialogsHandler(UserService userService, ObjectMapper objectMapper, ConversationService conversationService) {
-        super(userService, objectMapper);
+    public DialogsHandler(UserService userService, ObjectMapper objectMapper,
+                          ConversationService conversationService, MessageMapper messageMapper) {
+        super(userService, objectMapper, messageMapper);
         this.conversationService = conversationService;
     }
 
@@ -32,7 +35,7 @@ public class DialogsHandler extends SocketHandler {
     public void afterConnectionEstablished(WebSocketSession userSession) {
         super.afterConnectionEstablished(userSession);
         UserEntity userEntity = getMember(userSession);
-        sessions.put(userEntity.getPdaId(), userSession);
+        sessions.put(userEntity.getId(), userSession);
         sendObject(userSession, getDialogs(userEntity));
     }
 
@@ -43,9 +46,9 @@ public class DialogsHandler extends SocketHandler {
 
     public void sendUpdates(ConversationEntity conversationEntity, MessageDTO messageDTO) {
         for (UserEntity userEntity : conversationEntity.getMembers()) {
-            long pdaId = userEntity.getId();
-            if (sessions.containsKey(pdaId)) {
-                sendObject(sessions.get(pdaId), messageDTO);
+            UUID uuid = userEntity.getId();
+            if (sessions.containsKey(uuid)) {
+                sendObject(sessions.get(uuid), messageDTO);
             }
         }
     }

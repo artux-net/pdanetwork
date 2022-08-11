@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "parameter")
+@Table(name = "user_parameter")
 public class ParameterEntity extends BaseEntity {
 
     @ManyToOne

@@ -1,37 +1,28 @@
 package net.artux.pdanetwork.controller.admin;
 
-import net.artux.pdanetwork.configuration.handlers.ChatHandler;
-import net.artux.pdanetwork.models.page.QueryPage;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
+import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;
-import net.artux.pdanetwork.service.items.ItemService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import springfox.documentation.annotations.ApiIgnore;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
-@ApiIgnore
+@Tag(name = "Лента")
 @RequestMapping("/utility/articles")
 public class ArticlesController extends BaseUtilityController {
 
     private final FeedService feedService;
-    private final ChatHandler chatHandler;
-    private final ItemService itemService;
     private static Date readTime = new Date();
 
-    public ArticlesController(FeedService feedService, ChatHandler chatHandler, ItemService itemService) {
+    public ArticlesController(FeedService feedService) {
         super("Лента");
         this.feedService = feedService;
-        this.chatHandler = chatHandler;
-        this.itemService = itemService;
     }
 
     @Override
@@ -54,13 +45,13 @@ public class ArticlesController extends BaseUtilityController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getArticle(Model model, @PathVariable Long id) {
+    public String getArticle(Model model, @PathVariable UUID id) {
         model.addAttribute("article", feedService.getArticle(id));
         return pageWithContent("articles/creation", model);
     }
 
     @GetMapping("/remove/{id}")
-    public Object deleteArticle(Model model, @PathVariable String id) {
+    public Object deleteArticle(Model model, @PathVariable UUID id) {
         feedService.deleteArticle(id);
         return redirect(getPageUrl(), model, null);
     }

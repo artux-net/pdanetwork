@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.communication;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.communication.MessageEntity;
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
+import net.artux.pdanetwork.entity.communication.MessageEntity;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.repository.comminication.MessageRepository;
@@ -10,10 +10,12 @@ import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MessagingServiceImpl implements MessagingService {
 
@@ -24,7 +26,7 @@ public class MessagingServiceImpl implements MessagingService {
     @Override
     public MessageDTO saveToConversation(String content, ConversationEntity conversationEntity) {
         MessageEntity messageEntity = new MessageEntity();
-        messageEntity.setAuthor(userService.getMember());
+        messageEntity.setAuthor(userService.getUserById());
         messageEntity.setContent(content);
         messageEntity.setTimestamp(Instant.now());
         return messageMapper.dto(messageRepository.save(messageEntity));

@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 @Getter
 @Setter
 @MappedSuperclass
-public class WearableEntity extends ItemEntity {
+public abstract class WearableEntity extends ItemEntity {
 
     protected boolean isEquipped;
 
