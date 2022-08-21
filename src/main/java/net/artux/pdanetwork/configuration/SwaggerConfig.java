@@ -5,11 +5,14 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 @SecurityScheme(
@@ -30,10 +33,12 @@ public class SwaggerConfig {
                 .build();
     }
 
-
     @Bean
     public OpenAPI openApi() {
+        Server server = new Server();
+        server.setUrl(valuesService.getAddress());
         return new OpenAPI()
+                .servers(List.of(server))
                 .info(new Info()
                         .title("PDANETWORK")
                         .description("Сервисы REST Api. Для использования необходимо зарегистрироваться," +
