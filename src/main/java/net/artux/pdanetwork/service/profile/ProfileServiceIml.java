@@ -14,11 +14,13 @@ import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class ProfileServiceIml implements ProfileService {
 
@@ -27,7 +29,6 @@ public class ProfileServiceIml implements ProfileService {
     private final UserMapper userMapper;
     private final AchievementsService achievementsService;
     private final PageService pageService;
-
 
     @Override
     public Profile getProfile(UUID pdaId) {

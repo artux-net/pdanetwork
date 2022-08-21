@@ -20,4 +20,6 @@ public class StoryData {
     private List<WeaponDto> weapons;
     private List<ItemDto> bullets;
 
+    private int money;
+
 }
