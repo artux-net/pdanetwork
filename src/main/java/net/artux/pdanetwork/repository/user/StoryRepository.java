@@ -18,7 +18,7 @@ public interface StoryRepository extends JpaRepository<StoryStateEntity, UUID> {
 
     List<StoryStateEntity> findAllByUser(UserEntity userEntity);
 
-    @Query(value = "select s from StoryStateEntity s where s.id = ?1 and s.user.id = ?#{principal.id}")
+    @Query(value = "select s from StoryStateEntity s where s.storyId = ?1 and s.user.id = ?#{principal.id}")
     Optional<StoryStateEntity> findByUserAndStoryId(int storyId);
 
     void deleteAllByUser(UserEntity userEntity);
