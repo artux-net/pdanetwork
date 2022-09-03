@@ -153,7 +153,7 @@ public class ActionService {
                             for (String pass : params)
                                 if (pass.matches("-?\\d+")) {
                                     int storyId = Integer.parseInt(pass);
-                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndStoryId(userEntity, storyId);
+                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndStoryId(storyId);
                                     if (storyOptional.isPresent()) {
                                         StoryStateEntity storyStateEntity = storyOptional.get();
                                         storyStateEntity.setChapterId(1);
@@ -169,7 +169,7 @@ public class ActionService {
                         }
                         break;
                     case "reset_current":
-                        Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndCurrentIsTrue(userEntity);
+                        Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndCurrentIsTrue();
                         if (storyOptional.isPresent()) {
                             StoryStateEntity storyStateEntity = storyOptional.get();
                             storyStateEntity.setCurrent(false);
@@ -186,7 +186,7 @@ public class ActionService {
                                     int stage = Integer.parseInt(values[3]);
 
                                     StoryStateEntity storyStateEntity;
-                                    storyOptional = storyRepository.findByUserAndStoryId(userEntity, story);
+                                    storyOptional = storyRepository.findByUserAndStoryId(story);
                                     if (storyOptional.isPresent()) {
                                         storyStateEntity = storyOptional.get();
                                     } else {
