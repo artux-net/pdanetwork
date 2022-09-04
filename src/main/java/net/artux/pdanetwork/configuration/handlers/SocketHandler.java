@@ -70,7 +70,7 @@ public abstract class SocketHandler implements WebSocketHandler {
             return (UserEntity) userSession.getAttributes().get(USER);
         Principal principal = userSession.getPrincipal();
         if (principal != null) {
-            UserEntity userEntity = userService.getUserByLogin(userSession.getPrincipal().getName());
+            UserEntity userEntity = userService.getUserById();
             userSession.getAttributes().put(USER, userEntity);
             return userEntity;
         } else {

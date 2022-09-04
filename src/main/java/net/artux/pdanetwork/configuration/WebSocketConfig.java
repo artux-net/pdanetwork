@@ -27,7 +27,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
                 .addHandler(messagesHandler, "/dialog")
                 .addHandler(dialogsHandler, "/dialogs")
                 .addHandler(groupsHandler, "/groups")
-                .setAllowedOriginPatterns("*");
+                .setAllowedOriginPatterns("*")
+                .setAllowedOrigins("*");
     }
 
 }
