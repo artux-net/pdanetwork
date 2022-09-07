@@ -5,6 +5,7 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.relationship.RelationshipEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.UserMapper;
+import net.artux.pdanetwork.models.user.UserRelation;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.RelationshipRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
@@ -27,23 +28,11 @@ public class FriendServiceIml implements FriendService {
     private final UserRepository userRepository;
 
     @Override
-    public List<SimpleUserDto> getFriends(UUID pdaId) {
-        return userMapper.info(userRepository.getFriendsById(pdaId));
-    }
-
-    @Override
-    public List<SimpleUserDto> getSubs() {
-        return getSubs(userService.getCurrentId());
-    }
-
-    @Override
-    public List<SimpleUserDto> getSubs(UUID pdaId) {
-        return userMapper.info(userRepository.getSubsById(pdaId));
-    }
-
-    @Override
-    public List<SimpleUserDto> getFriends() {
-        return getFriends(userService.getCurrentId());
+    public List<SimpleUserDto> getRelatedUsers(UUID pdaId, UserRelation relation) {
+        return switch (relation){
+            case SUBSCRIBER -> userMapper.info(userRepository.getSubsById(pdaId));
+            default -> userMapper.info(userRepository.getFriendsById(pdaId));
+        };
     }
 
     @Override
@@ -52,7 +41,7 @@ public class FriendServiceIml implements FriendService {
     }
 
     @Override
-    public Status addFriend(UUID pdaId) {
+    public Status relateUser(UUID pdaId) {
         UserEntity user = userService.getUserById();
         UserEntity another = userRepository.getById(pdaId);
         Optional<RelationshipEntity> relationship = relationshipRepository.getByUser1AndUser2(user, another);
