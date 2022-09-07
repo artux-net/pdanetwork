@@ -1,23 +1,28 @@
 <form name="addArticle" method="get"
-      th:action="@{/utility/articles/}">
+      th:action="@{/utility/articles/create}">
     <button type="submit">Добавить статью</button>
 </form>
 
 <th:block th:each="a : ${articles}">
     <div>
         <hr>
-        <form name="removeArticle" method="get"
-              th:action="@{'/utility/articles/remove/' + ${a.id}}">
-            <button type="submit">Удалить статью</button>
-        </form>
-        <form name="editArticle" method="get"
-              th:action="@{'/utility/articles/' + ${a.id}}">
-            <button type="submit">Изменить статью</button>
-        </form>
-        <form name="showArticle" method="get"
-              th:action="@{'/feed/' + ${a.id}}">
-            <button type="submit">Показать статью</button>
-        </form>
+
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <form name="removeArticle" method="get"
+                  th:action="@{'/utility/articles/remove/' + ${a.id}}">
+                <button type="submit" class="btn btn-danger">Удалить статью</button>
+            </form>
+            <form name="editArticle" method="get"
+                  th:action="@{'/utility/articles/edit/' + ${a.id}}">
+                <button type="submit" class="btn btn-primary">Изменить статью</button>
+            </form>
+            <form name="showArticle" method="get"
+                  th:action="@{'/feed/' + ${a.id}}">
+                <button type="submit" class="btn btn-link">Показать статью</button>
+            </form>
+        </div>
+
+
         <h1 th:text="'Название:' + ${a.title}"/>
         <h1 th:text="'Описание:' + ${a.description}"/>
         <h1 th:text="'Ссылка на картинку:' + ${a.image}"/>
@@ -26,15 +31,4 @@
     </div>
 </th:block>
 
-
-<script type="text/javascript">
-    var editor = new Jodit('#editor', {
-        uploader: {
-            url: 'https://Tag.artux.net/pda/files'
-        },
-        "language": "en",
-        "theme": "dark",
-        "disablePlugins": "about"
-    });
-</script>
 </div>

@@ -2,6 +2,7 @@ package net.artux.pdanetwork.controller.admin;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
+import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,6 @@ import java.util.UUID;
 public class ArticlesController extends BaseUtilityController {
 
     private final FeedService feedService;
-    private static Date readTime = new Date();
 
     public ArticlesController(FeedService feedService) {
         super("Лента");
@@ -27,12 +27,12 @@ public class ArticlesController extends BaseUtilityController {
 
     @Override
     protected Object getHome(Model model) {
-        List<ArticleEntity> articleList = feedService.getPageArticles(new QueryPage()).getData();
+        List<ArticleDto> articleList = feedService.getPageArticles(new QueryPage()).getData();
         model.addAttribute("articles", articleList);
         return pageWithContent("articles/list", model);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/save")
     public Object addArticle(Model model, @ModelAttribute ArticleEntity article) {
         feedService.addArticle(article);
         return redirect(getPageUrl(), model, null);
@@ -41,13 +41,13 @@ public class ArticlesController extends BaseUtilityController {
     @GetMapping("/create")
     public String articleCreation(Model model) {
         model.addAttribute("article", new ArticleEntity());
-        return pageWithContent("articles/creation", model);
+        return pageWithContent("articles/edit", model);
     }
 
     @GetMapping("/edit/{id}")
     public String getArticle(Model model, @PathVariable UUID id) {
         model.addAttribute("article", feedService.getArticle(id));
-        return pageWithContent("articles/creation", model);
+        return pageWithContent("articles/edit", model);
     }
 
     @GetMapping("/remove/{id}")

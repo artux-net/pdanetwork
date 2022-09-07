@@ -21,13 +21,12 @@ public class AdminController extends BaseUtilityController {
 
     private final ChatHandler chatHandler;
     private final ProfileService profileService;
-    private final ItemService itemService;
+
     private static Date readTime = new Date();
 
-    public AdminController(ChatHandler chatHandler, ProfileService profileService, ItemService itemService) {
+    public AdminController(ChatHandler chatHandler, ProfileService profileService) {
         super("Админ панель");
         this.chatHandler = chatHandler;
-        this.itemService = itemService;
         this.profileService = profileService;
     }
 
@@ -40,12 +39,12 @@ public class AdminController extends BaseUtilityController {
     @GetMapping("/settings")
     public String getSettings(Model model) {
         model.addAttribute("readTime", readTime);
-        return pageWithContent("settings", model);
+        return pageWithContent("notReady", model);
     }
 
     @GetMapping("/chat")
     public String getChatPage(Model model) {
-        return pageWithContent("chat", model);
+        return pageWithContent("notReady", model);
     }
 
     @PostMapping("/chat/ban/{id}")
@@ -62,7 +61,7 @@ public class AdminController extends BaseUtilityController {
 
     @GetMapping("/users")
     public String getUsersPage(Model model) {
-        return pageWithContent("users", model);
+        return pageWithContent("notReady", model);
     }
 
 

@@ -2,6 +2,8 @@ package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
+import net.artux.pdanetwork.models.feed.ArticleDto;
+import net.artux.pdanetwork.models.feed.ArticleMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.feed.ArticleRepository;
@@ -19,6 +21,7 @@ public class FeedServiceImpl implements FeedService {
 
     private final ArticleRepository articleRepository;
     private final PageService pageService;
+    private final ArticleMapper articleMapper;
 
     @Override
     public ArticleEntity getArticle(UUID id) {
@@ -36,9 +39,9 @@ public class FeedServiceImpl implements FeedService {
     }
 
     @Override
-    public ResponsePage<ArticleEntity> getPageArticles(QueryPage queryPage) {
+    public ResponsePage<ArticleDto> getPageArticles(QueryPage queryPage) {
         Page<ArticleEntity> page = articleRepository.findAll(pageService.getPageable(queryPage));
-        return pageService.mapDataPageToResponsePage(page, page.getContent());
+        return pageService.mapDataPageToResponsePage(page, articleMapper.dto(page.getContent()));
     }
 
 }

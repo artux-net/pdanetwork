@@ -54,7 +54,7 @@ public abstract class BaseUtilityController {
 
     @ModelAttribute("url")
     protected String getPageUrl() {
-        return getClass().getAnnotation(RequestMapping.class).value()[0] + '/';
+        return context + getClass().getAnnotation(RequestMapping.class).value()[0] + '/';
     }
 
     protected Object defaultPage(Model model) {
