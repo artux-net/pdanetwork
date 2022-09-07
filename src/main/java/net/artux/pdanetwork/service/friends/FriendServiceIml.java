@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.relationship.RelationshipEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.user.FriendModel;
 import net.artux.pdanetwork.models.user.UserMapper;
+import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.RelationshipRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
@@ -27,28 +27,28 @@ public class FriendServiceIml implements FriendService {
     private final UserRepository userRepository;
 
     @Override
-    public List<FriendModel> getFriends(UUID pdaId) {
-        return userMapper.friendList(userRepository.getFriendsById(pdaId));
+    public List<SimpleUserDto> getFriends(UUID pdaId) {
+        return userMapper.info(userRepository.getFriendsById(pdaId));
     }
 
     @Override
-    public List<FriendModel> getSubs() {
+    public List<SimpleUserDto> getSubs() {
         return getSubs(userService.getCurrentId());
     }
 
     @Override
-    public List<FriendModel> getSubs(UUID pdaId) {
-        return userMapper.friendList(userRepository.getSubsById(pdaId));
+    public List<SimpleUserDto> getSubs(UUID pdaId) {
+        return userMapper.info(userRepository.getSubsById(pdaId));
     }
 
     @Override
-    public List<FriendModel> getFriends() {
+    public List<SimpleUserDto> getFriends() {
         return getFriends(userService.getCurrentId());
     }
 
     @Override
-    public List<FriendModel> getFriendRequests() {
-        return userMapper.friendList(userRepository.getRequestsById(userService.getCurrentId()));
+    public List<SimpleUserDto> getFriendRequests() {
+        return userMapper.info(userRepository.getRequestsById(userService.getCurrentId()));
     }
 
     @Override

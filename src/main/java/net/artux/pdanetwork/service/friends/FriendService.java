@@ -1,20 +1,20 @@
 package net.artux.pdanetwork.service.friends;
 
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.user.FriendModel;
+import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface FriendService {
 
-  List<FriendModel> getFriends();
-  List<FriendModel> getFriends(UUID pdaId);
+  List<SimpleUserDto> getFriends();
+  List<SimpleUserDto> getFriends(UUID pdaId);
 
-  List<FriendModel> getFriendRequests();
+  List<SimpleUserDto> getFriendRequests();
 
-  List<FriendModel> getSubs();
-  List<FriendModel> getSubs(UUID pdaId);
+  List<SimpleUserDto> getSubs();
+  List<SimpleUserDto> getSubs(UUID pdaId);
 
   Status addFriend(UUID pdaId);
 

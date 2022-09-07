@@ -21,10 +21,6 @@ public interface UserMapper {
 
     RegisterUserDto regUser(UserEntity user);
 
-    FriendModel friendModel(UserEntity user);
-
-    List<FriendModel> friendList(List<UserEntity> list);
-
     @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
     UserDto dto(UserEntity user);
 
