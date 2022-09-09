@@ -6,9 +6,11 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.CommunicationMapper;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
+import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.repository.comminication.ConversationRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class ConversationServiceImpl implements ConversationService {
     private final ConversationRepository repository;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final PageService pageService;
 
     @Override
     public ConversationDTO createConversation(ConversationCreateDTO createDTO) {
@@ -59,13 +62,17 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public ConversationDTO getConversation(UUID id) {
-        return repository.findByIdAndMembersContains(id, userService.getUserById())
-                .map(mapper::dto).orElseThrow();
+        return repository.findByIdAndMembersContains(id, userService.getUserById()).map(mapper::dto).orElseThrow();
     }
 
     @Override
     public Slice<ConversationDTO> getConversations(Pageable queryPage) {
         return repository.findByMembersContains(queryPage, userService.getCurrentId()).map(mapper::dto);
+    }
+
+    @Override
+    public Slice<ConversationDTO> getConversations(QueryPage queryPage) {
+        return getConversations(pageService.getPageable(queryPage));
     }
 
     @Override
@@ -84,8 +91,7 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public ConversationEntity getPrivateConversation(UUID pda1, UUID pda2) {
-        Optional<ConversationEntity> conversation = repository
-                .findByMembersContainsAndType(ConversationEntity.Type.PRIVATE, pda1, pda2);
+        Optional<ConversationEntity> conversation = repository.findByMembersContainsAndType(ConversationEntity.Type.PRIVATE, pda1, pda2);
         return conversation.orElse(null);
     }
 

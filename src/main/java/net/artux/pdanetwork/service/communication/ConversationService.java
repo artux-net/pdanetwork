@@ -4,6 +4,7 @@ import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
+import net.artux.pdanetwork.models.page.QueryPage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -18,6 +19,8 @@ public interface ConversationService {
     ConversationDTO getConversation(UUID id);
 
     Slice<ConversationDTO> getConversations(Pageable queryPage);
+
+    Slice<ConversationDTO> getConversations(QueryPage queryPage);
 
     boolean deleteConversation(UUID id);
 

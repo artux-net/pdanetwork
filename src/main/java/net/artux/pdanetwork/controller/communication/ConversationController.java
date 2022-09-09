@@ -5,7 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
+import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.communication.ConversationService;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,6 +19,12 @@ import java.util.UUID;
 public class ConversationController {
 
     private final ConversationService conversationService;
+
+    @GetMapping
+    @Operation(summary = "Все беседы с участием пользователя")
+    public Slice<ConversationDTO> getConversations(QueryPage queryPage){
+        return conversationService.getConversations(queryPage);
+    }
 
     @PostMapping("/create")
     @Operation(summary = "Создание беседы")
