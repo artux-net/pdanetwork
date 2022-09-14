@@ -4,12 +4,20 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 @Component
@@ -22,6 +30,14 @@ public class UserValidator {
     private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z0-9-_.]+$";
     private static final String NAME_VALIDATION_REGEX = "^[A-Za-z\u0400-\u052F']*$";
     private static final String PASSWORD_VALIDATION_REGEX = "^[A-Za-z\\d!@#$%^&*()_+№\";:?><\\[\\]{}]*$";
+    private String blockedNicknames;
+    @PostConstruct
+    private void initBlockedNicknames() throws IOException {
+        Resource resource = new ClassPathResource("/config/nicknames.txt");
+        InputStream in = resource.getInputStream();
+        String nicknamesFile = IOUtils.toString(in, StandardCharsets.UTF_8);
+        blockedNicknames = nicknamesFile.toLowerCase(Locale.ROOT);
+    }
 
     public Status checkUser(RegisterUserDto user) {
         return Stream.of(checkLogin(user.getLogin()),
@@ -79,6 +95,8 @@ public class UserValidator {
         if (nickname.length() < 2 || nickname.length() > 16) {
             return new Status(false, "Прозвище должно содержать не менее 2 и не более 16 символов.");
         }
+        if (blockedNicknames.contains(nickname.toLowerCase(Locale.ROOT)))
+            return new Status(false, "Прозвище должно быть уникальным.");
         return new Status(true);
     }
 
