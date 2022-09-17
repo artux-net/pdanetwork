@@ -11,6 +11,7 @@ import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.repository.user.GangRelationsRepository;
 import net.artux.pdanetwork.repository.user.ParametersRepository;
 import net.artux.pdanetwork.repository.user.StoryRepository;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.note.NoteService;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class ActionService {
     private final ParametersRepository parametersRepository;
     private final StoryRepository storyRepository;
     private final GangRelationsRepository gangRelationsRepository;
+    private final UserRepository userRepository;
 
     public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
         for (String command : map.keySet()) {
@@ -87,7 +89,7 @@ public class ActionService {
                                 int quantity = Integer.parseInt(values[1]);
                                 itemsService.deleteItem(userEntity, baseId, quantity);
                                 //todo remove type
-                            }else
+                            } else
                                 parametersRepository.deleteAllByUserAndKey(userEntity, pass);
                         }
                         break;
@@ -211,6 +213,7 @@ public class ActionService {
                 logger.error("ActionService", e);
             }
         }
+        userRepository.save(userEntity);
         return stateService.getStoryData();
     }
 
