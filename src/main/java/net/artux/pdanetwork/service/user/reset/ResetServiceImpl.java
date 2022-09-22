@@ -66,8 +66,9 @@ public class ResetServiceImpl implements ResetService {
     public StoryData resetData() {
         UserEntity userEntity = userService.getUserById();
         userEntity.setMoney(500);
+        userEntity.getGangRelation().resetAll();
+        userEntity = userRepository.save(userEntity);
         actionService.resetAllData(userEntity);
-        userRepository.save(userEntity);
         return stateService.getStoryData();
     }
 

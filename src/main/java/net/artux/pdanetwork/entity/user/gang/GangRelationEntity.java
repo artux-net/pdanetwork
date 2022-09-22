@@ -95,6 +95,17 @@ public class GangRelationEntity extends BaseEntity {
         }
     }
 
+    public void resetAll(){
+        loners = 0;
+        bandits = 0;
+        military = 0;
+        liberty = 0;
+        duty = 0;
+        monolith = 0;
+        mercenaries = 0;
+        scientists = 0;
+        clearSky = 0;
+    }
 
 
 }
