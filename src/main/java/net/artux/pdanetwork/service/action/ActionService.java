@@ -205,6 +205,30 @@ public class ActionService {
                             }
                         }
                         break;
+                    case "state":
+                        for (String pass : params) {
+                            String[] values = pass.split(":");
+                            if (values.length == 3) {
+                                int story = Integer.parseInt(values[0]);
+                                int chapter = Integer.parseInt(values[1]);
+                                int stage = Integer.parseInt(values[2]);
+
+                                StoryStateEntity storyStateEntity;
+                                storyOptional = storyRepository.findByUserAndStoryId(story);
+                                if (storyOptional.isPresent()) {
+                                    storyStateEntity = storyOptional.get();
+                                } else {
+                                    storyStateEntity = new StoryStateEntity();
+                                    storyStateEntity.setStoryId(story);
+                                    storyStateEntity.setUser(userEntity);
+                                }
+                                storyStateEntity.setChapterId(chapter);
+                                storyStateEntity.setStageId(stage);
+                                storyStateEntity.setCurrent(true);
+                                storyRepository.save(storyStateEntity);
+                            }
+                        }
+                        break;
                     default:
                         logger.error("Unsupported operation: " + command + ", value: " + params);
                         break;
