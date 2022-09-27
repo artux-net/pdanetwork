@@ -3,7 +3,7 @@ package net.artux.pdanetwork.controller.quest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.quest.Chapter;
-import net.artux.pdanetwork.models.quest.Map;
+import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.service.quest.QuestService;
@@ -38,7 +38,7 @@ public class QuestController {
     }
 
     @GetMapping("/maps/{storyId}/{mapId}")
-    public Map getMap(@PathVariable("storyId") long storyId, @PathVariable("mapId") long mapId) {
+    public GameMap getMap(@PathVariable("storyId") long storyId, @PathVariable("mapId") long mapId) {
         return questService.getMap(storyId, mapId);
     }
 }
