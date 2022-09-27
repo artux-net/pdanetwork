@@ -28,8 +28,15 @@ public class ValuesService {
     @Value("${server.host}")
     private String host;
 
+    @Value("${files.server.address}")
+    private String filesAddress;
+
     @Value("${spring.mail.username}")
     private String email;
+
+    public String getStoryFilesUrl() {
+        return filesAddress + "stories";
+    }
 
     public String getAddress() {
         return getProtocol() + "://" + getHost() + getContextPath();

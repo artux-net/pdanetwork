@@ -24,7 +24,6 @@ public class WalkthroughController {
     @PutMapping("/actions")
     public StoryData doActions(@RequestBody CommandBlock block) {
         return actionService.doUserActions(block.getActions(), userService.getUserById());
-        //TODO do on server
     }
 
     @Operation(summary = "Информация о прохождении")

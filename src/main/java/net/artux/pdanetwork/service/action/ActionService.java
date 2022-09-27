@@ -14,6 +14,7 @@ import net.artux.pdanetwork.repository.user.StoryRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.note.NoteService;
+import net.artux.pdanetwork.service.quest.QuestService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ public class ActionService {
     private final StateService stateService;
     private final ItemService itemsService;
     private final NoteService noteService;
+    private final QuestService questService;
 
     private final ParametersRepository parametersRepository;
     private final StoryRepository storyRepository;
@@ -40,9 +42,15 @@ public class ActionService {
     private final UserRepository userRepository;
 
     public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
-        for (String command : map.keySet()) {
+        operateActions(map, userEntity);
+        userRepository.save(userEntity);
+        return stateService.getStoryData();
+    }
+
+    private void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity){
+        for (String command : actions.keySet()) {
             try {
-                List<String> params = map.get(command);
+                List<String> params = actions.get(command);
                 switch (command) {
                     case "add":
                         for (String value : params) {
@@ -113,7 +121,7 @@ public class ActionService {
                         }
                         break;
                     case "-":
-                        for (String pass : Objects.requireNonNull(map.get(command))) {
+                        for (String pass : Objects.requireNonNull(actions.get(command))) {
                             String[] values = pass.split(":");
                             if (values[0].contains("relation")) {
                                 int group = Integer.parseInt(values[0].split("_")[1]);
@@ -149,7 +157,7 @@ public class ActionService {
                         //userEntity.achievements.add(Integer.parseInt(pass));
                         break;
                     case "reset":
-                        if (map.get(command).size() == 0) {
+                        if (actions.get(command).size() == 0) {
                             userEntity.setMoney(0);
                             resetAllData(userEntity);
                         } else {
@@ -226,6 +234,8 @@ public class ActionService {
                                 storyStateEntity.setStageId(stage);
                                 storyStateEntity.setCurrent(true);
                                 storyRepository.save(storyStateEntity);
+
+                                operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
                             }
                         }
                         break;
@@ -237,8 +247,6 @@ public class ActionService {
                 logger.error("ActionService", e);
             }
         }
-        userRepository.save(userEntity);
-        return stateService.getStoryData();
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {

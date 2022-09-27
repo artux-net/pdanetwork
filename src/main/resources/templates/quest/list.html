@@ -1,0 +1,18 @@
+<h1>Истории</h1>
+<h2 th:text="'Время обновления: ' + ${readTime}"></h2>
+<a th:href="@{/utility/quest/update}" class="btn btn-primary">Обновить</a>
+
+<th:block th:each="s : ${stories}">
+    <div>
+        <hr>
+        <h3 th:text="'Название:' + ${s.title}"/>
+        <h3 th:text="'Описание:' + ${s.desc}"/>
+        <h3 th:text="'Ссылка на картинку:' + ${s.icon}"/>
+        <h3 th:text="'Количество глав:' + ${s.getChapterList().size()}"/>
+        <h3 th:text="'Количество стадий:' + ${s.stageCount()}"/>
+        <h3 th:text="'Количество карт:' + ${s.getMapList().size()}"/>
+        <h3 th:text="'Количество точек на карте:' + ${s.pointCount()}"/>
+        <hr>
+    </div>
+</th:block>
+
