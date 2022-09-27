@@ -48,6 +48,7 @@ public class ActionService {
     }
 
     private void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity){
+        if(actions!=null)
         for (String command : actions.keySet()) {
             try {
                 List<String> params = actions.get(command);
@@ -96,7 +97,6 @@ public class ActionService {
                                 int baseId = Integer.parseInt(values[0]);
                                 int quantity = Integer.parseInt(values[1]);
                                 itemsService.deleteItem(userEntity, baseId, quantity);
-                                //todo remove type
                             } else
                                 parametersRepository.deleteAllByUserAndKey(userEntity, pass);
                         }
