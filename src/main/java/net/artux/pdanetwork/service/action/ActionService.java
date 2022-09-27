@@ -43,7 +43,6 @@ public class ActionService {
 
     public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
         operateActions(map, userEntity);
-        userRepository.save(userEntity);
         return stateService.getStoryData();
     }
 
@@ -139,12 +138,16 @@ public class ActionService {
                         }
                         break;
                     case "money":
+                        userEntity = userRepository.findById(userEntity.getId()).get();
                         for (String pass : params)
                             userEntity.money(Integer.parseInt(pass));
+                        userRepository.save(userEntity);
                         break;
                     case "xp":
+                        userEntity = userRepository.findById(userEntity.getId()).get();
                         for (String pass : params)
                             userEntity.xp(Integer.parseInt(pass));
+                        userRepository.save(userEntity);
                         break;
                     case "note":
                         if (params.size() == 2)
@@ -158,6 +161,7 @@ public class ActionService {
                         break;
                     case "reset":
                         if (actions.get(command).size() == 0) {
+                            userEntity = userRepository.findById(userEntity.getId()).get();
                             userEntity.setMoney(0);
                             resetAllData(userEntity);
                         } else {
