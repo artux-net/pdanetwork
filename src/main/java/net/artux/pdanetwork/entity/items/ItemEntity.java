@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 
@@ -20,6 +22,7 @@ public abstract class ItemEntity extends BaseEntity {
     protected BaseItemEntity base;
     protected int quantity;
     @ManyToOne
+    @NotFound(action = NotFoundAction.IGNORE)
     protected UserEntity owner;
 
 }
