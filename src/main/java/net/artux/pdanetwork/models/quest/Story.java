@@ -13,21 +13,21 @@ public class Story {
     private String desc;
     private String icon;
     private HashMap<Long, Chapter> chapters;
-    private HashMap<Long, Map> maps;
+    private HashMap<Long, GameMap> maps;
 
     public int stageCount() {
         return getChapterList().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
     }
 
     public int pointCount() {
-        return getMapList().stream().mapToInt(map -> map.getPoints().size()).sum();
+        return getMapList().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
     }
 
     public List<Chapter> getChapterList() {
         return chapters.values().stream().toList();
     }
 
-    public List<Map> getMapList() {
+    public List<GameMap> getMapList() {
         return maps.values().stream().toList();
     }
 }

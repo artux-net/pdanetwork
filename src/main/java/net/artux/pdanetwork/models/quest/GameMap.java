@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Map {
+public class GameMap {
 
     private long id;
     private String title;

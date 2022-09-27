@@ -64,15 +64,15 @@ public class QuestServiceImpl implements QuestService {
                     story.setChapters(chapters);
 
                     //maps
-                    HashMap<Long, Map> maps = new HashMap<>();
+                    HashMap<Long, GameMap> maps = new HashMap<>();
                     File[] mapFiles = objectMapper.readValue(
                             new URL(storyUrl + "/maps"), File[].class);
                     for (var mapFile : mapFiles) {
                         if (mapFile.getType() == File.Type.file) {
-                            Map map =
+                            GameMap gameMap =
                                     objectMapper.readValue(
-                                            new URL(storyUrl + "/maps/" + mapFile.getName()), Map.class);
-                            maps.put(map.getId(), map);
+                                            new URL(storyUrl + "/maps/" + mapFile.getName()), GameMap.class);
+                            maps.put(gameMap.getId(), gameMap);
                         }
                     }
                     story.setMaps(maps);
@@ -107,7 +107,7 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Map getMap(long storyId, long mapId) {
+    public GameMap getMap(long storyId, long mapId) {
         return getStory(storyId).getMaps().get(mapId);
     }
 

@@ -14,7 +14,7 @@ public interface QuestService {
 
     Chapter getChapter(long storyId, long chapterId);
 
-    Map getMap(long storyId, long mapId);
+    GameMap getMap(long storyId, long mapId);
 
     Story getStory(long storyId);
 
