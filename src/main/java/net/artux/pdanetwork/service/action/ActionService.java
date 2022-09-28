@@ -41,13 +41,18 @@ public class ActionService {
     private final GangRelationsRepository gangRelationsRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
+        logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
         return stateService.getStoryData();
     }
 
-    private void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity){
-        if(actions!=null)
+    private void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity) {
+        if (actions == null) {
+            return;
+        }
+
         for (String command : actions.keySet()) {
             try {
                 List<String> params = actions.get(command);
@@ -138,13 +143,13 @@ public class ActionService {
                         }
                         break;
                     case "money":
-                        userEntity = userRepository.findById(userEntity.getId()).get();
+                        userEntity = userRepository.findById(userEntity.getId()).orElseThrow();
                         for (String pass : params)
                             userEntity.money(Integer.parseInt(pass));
                         userRepository.save(userEntity);
                         break;
                     case "xp":
-                        userEntity = userRepository.findById(userEntity.getId()).get();
+                        userEntity = userRepository.findById(userEntity.getId()).orElseThrow();
                         for (String pass : params)
                             userEntity.xp(Integer.parseInt(pass));
                         userRepository.save(userEntity);
@@ -238,7 +243,7 @@ public class ActionService {
                                 storyStateEntity.setStageId(stage);
                                 storyStateEntity.setCurrent(true);
                                 storyRepository.save(storyStateEntity);
-
+                                logger.info("Process actions for {},{},{}", story, chapter, stage);
                                 operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
                             }
                         }

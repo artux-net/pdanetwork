@@ -3,13 +3,29 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.ItemMapper;
-import net.artux.pdanetwork.repository.items.*;
+import net.artux.pdanetwork.repository.items.ArmorRepository;
+import net.artux.pdanetwork.repository.items.ArtifactRepository;
+import net.artux.pdanetwork.repository.items.CommonItemRepository;
+import net.artux.pdanetwork.repository.items.DetectorRepository;
+import net.artux.pdanetwork.repository.items.ItemRepository;
+import net.artux.pdanetwork.repository.items.MedicineRepository;
+import net.artux.pdanetwork.repository.items.WeaponRepository;
+import net.artux.pdanetwork.repository.items.WearableItemRepository;
 import net.artux.pdanetwork.service.user.UserService;
+import org.slf4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,7 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -26,6 +46,7 @@ public class ItemService {
 
     private HashMap<Long, ItemEntity> items = new HashMap<>();
 
+    private final Logger logger;
     private final ObjectMapper objectMapper;
     private final ItemMapper itemMapper;
     private final BaseItemService baseItemService;
@@ -91,6 +112,7 @@ public class ItemService {
     public void addItem(UserEntity user, long baseId, int quantity) {
         ItemEntity itemEntity = getItem(baseId);
         ItemType type = itemEntity.getBase().getType();
+        logger.info("Add item {} for {}", itemEntity.getBase().getTitle(), user.getLogin());
         if (type.isCountable()) {
             itemEntity.setQuantity(quantity);
             addAsCountable(user, itemEntity);

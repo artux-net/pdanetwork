@@ -11,6 +11,8 @@ import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -57,27 +59,35 @@ public class UserEntity extends BaseEntity {
     private List<UserAchievementEntity> achievements;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<StoryStateEntity> storyStates = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ParameterEntity> parameters = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<BulletEntity> bullets = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ArmorEntity> armors = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<WeaponEntity> weapons = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<MedicineEntity> medicines = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<ArtifactEntity> artifacts = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<DetectorEntity> detectors = new HashSet<>();
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {

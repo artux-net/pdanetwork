@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "user_story_state")
 public class StoryStateEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity user;
     private int storyId;
     private int chapterId;

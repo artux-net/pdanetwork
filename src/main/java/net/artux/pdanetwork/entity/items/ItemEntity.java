@@ -7,7 +7,11 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
@@ -21,7 +25,7 @@ public abstract class ItemEntity extends BaseEntity {
     @JoinColumn(nullable = false)
     protected BaseItemEntity base;
     protected int quantity;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
     protected UserEntity owner;
 
