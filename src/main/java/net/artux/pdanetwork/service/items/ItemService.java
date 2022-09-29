@@ -23,7 +23,7 @@ import net.artux.pdanetwork.repository.items.DetectorRepository;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.MedicineRepository;
 import net.artux.pdanetwork.repository.items.WeaponRepository;
-import net.artux.pdanetwork.repository.items.WearableItemRepository;
+import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.slf4j.Logger;
 import org.springframework.core.io.ClassPathResource;
@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Service
 @Transactional
@@ -52,7 +53,7 @@ public class ItemService {
     private final BaseItemService baseItemService;
 
     private final UserService userService;
-
+    private final UserRepository userRepository;
     private final WeaponRepository weaponRepository;
     private final ArmorRepository armorRepository;
     private final ItemRepository itemRepository;
@@ -122,18 +123,19 @@ public class ItemService {
     }
 
     public void deleteItem(UserEntity user, int baseId, int quantity) {
-        Optional<ItemEntity> optional = itemRepository.findByOwnerAndBaseId(user, baseId);
-        if (optional.isPresent()) {
-            ItemEntity t = optional.get();
+        List<ItemEntity> optional = user.getAllItems().stream()
+                .filter(item -> item.getBase().getId() == baseId)
+                .toList();
+        if (optional.size() == 1) {
+            ItemEntity t = optional.get(0);
             t.setQuantity(t.getQuantity() - quantity);
-            if (t.getQuantity() > 0)
-                itemRepository.save(t);
-            else
-                itemRepository.delete(t);
+        } else {
+            user.getItemsByType(getItem(baseId).getBase().getType())
+                    .removeIf((Predicate<ItemEntity>) itemEntity -> itemEntity.getBase().getId() == baseId);
         }
     }
 
-    public <T extends ItemEntity> void deleteItem(UserEntity user, ItemType type, UUID id, int quantity) {
+    /*public <T extends ItemEntity> void deleteItem(UserEntity user, ItemType type, UUID id, int quantity) {
         CommonItemRepository<T> repository = getRepository(type);
         Optional<T> optional = repository.findByOwnerAndId(user, id);
         if (optional.isPresent()) {
@@ -149,34 +151,33 @@ public class ItemService {
             }
         }
     }
+*/
 
-    public void resetAll(UserEntity owner) {
-        armorRepository.deleteByOwner(owner);
-        weaponRepository.deleteByOwner(owner);
-        itemRepository.deleteByOwner(owner);
-        medicineRepository.deleteByOwner(owner);
-        detectorRepository.deleteByOwner(owner);
-        artifactRepository.deleteByOwner(owner);
-    }
-
-    @SuppressWarnings("unchecked")
     public Status setWearable(ItemType type, UUID id) {
         UserEntity user = userService.getUserById();
-        ItemEntity item = findByOwnerAndId(type, id).orElseThrow();
+        ItemEntity item = user.getAllItems()
+                .stream()
+                .filter(itemEntity -> itemEntity.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+
         if (item instanceof WearableEntity && type.isWearable()) {
-            WearableItemRepository<WearableEntity> repository = (WearableItemRepository) getRepository(type);
-            Optional<WearableEntity> optionalItem = repository.findByOwnerAndIsEquippedTrue(user);
+            Optional<WearableEntity> optionalItem = user.getWearableItems()
+                    .stream()
+                    .filter(wearableEntity -> wearableEntity.getId().equals(id) && wearableEntity.isEquipped())
+                    .findFirst();
+
             if (optionalItem.isPresent()) {
                 WearableEntity oldWearable = optionalItem.get();
 
                 oldWearable.setEquipped(false);
-                save(oldWearable);
+                userRepository.save(user);
                 if (item.getId().equals(oldWearable.getId()))
                     return new Status(true, "Предмет снят.");
             }
 
             ((WearableEntity) item).setEquipped(true);
-            itemRepository.save(item);
+            userRepository.save(user);
 
             return new Status(true, "Предмет надет.");
 
@@ -196,17 +197,30 @@ public class ItemService {
     }
 
     private <T extends ItemEntity> void addAsCountable(UserEntity user, T itemEntity) {
-        CommonItemRepository<T> repository = getRepository(itemEntity.getBase().getType());
-        Optional<T> optionalItem = repository.findByOwnerAndBaseId(userService.getUserById(), itemEntity.getBase().getId());
+        Optional<ItemEntity> optionalItem = user.getAllItems()
+                .stream()
+                .filter(item -> item.getBase().getId().equals(itemEntity.getBase().getId()))
+                .findFirst();
         if (optionalItem.isPresent()) {
-            T item = optionalItem.get();
+            ItemEntity item = optionalItem.get();
             item.setQuantity(item.getQuantity() + itemEntity.getQuantity());
-            repository.save(item);
         } else {
-            itemEntity.setOwner(user);
-            repository.save(itemEntity);
+            addAsIs(user, itemEntity);
         }
     }
+
+    private <T extends ItemEntity> void addAsIs(UserEntity user, T itemEntity) {
+        itemEntity.setOwner(user);
+        switch (itemEntity.getBase().getType()) {
+            case BULLET -> user.getBullets().add((BulletEntity) itemEntity);
+            case ARMOR -> user.getArmors().add((ArmorEntity) itemEntity);
+            case PISTOL, RIFLE -> user.getWeapons().add((WeaponEntity) itemEntity);
+            case ARTIFACT -> user.getArtifacts().add((ArtifactEntity) itemEntity);
+            case DETECTOR -> user.getDetectors().add((DetectorEntity) itemEntity);
+            case MEDICINE -> user.getMedicines().add((MedicineEntity) itemEntity);
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private <T extends ItemEntity> CommonItemRepository<T> getRepository(ItemType type) {
@@ -218,18 +232,6 @@ public class ItemService {
             case DETECTOR -> (CommonItemRepository<T>) detectorRepository;
             default -> (CommonItemRepository<T>) itemRepository;
         };
-    }
-
-    public <T extends ItemEntity> Optional<T> findByOwnerAndId(ItemType type, UUID id) {
-        return (Optional<T>) getRepository(type).findByOwnerAndId(userService.getUserById(), id);
-    }
-
-    public <T extends ItemEntity> T save(T t) {
-        return getRepository(t.getBase().getType()).save(t);
-    }
-
-    public <T extends ItemEntity> void delete(T t) {
-        getRepository(t.getBase().getType()).delete(t);
     }
 
 }

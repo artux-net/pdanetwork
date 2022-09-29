@@ -1,28 +1,27 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
-import net.artux.pdanetwork.models.note.NoteCreateDto;
+import net.artux.pdanetwork.models.security.SecurityUser;
+import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.gang.Gang;
-import net.artux.pdanetwork.repository.user.GangRelationsRepository;
-import net.artux.pdanetwork.repository.user.ParametersRepository;
-import net.artux.pdanetwork.repository.user.StoryRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.items.ItemService;
-import net.artux.pdanetwork.service.note.NoteService;
 import net.artux.pdanetwork.service.quest.QuestService;
 import org.slf4j.Logger;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -31,27 +30,24 @@ public class ActionService {
 
     private final Logger logger;
 
-    private final StateService stateService;
     private final ItemService itemsService;
-    private final NoteService noteService;
     private final QuestService questService;
+    private final StoryMapper storyMapper;
 
-    private final ParametersRepository parametersRepository;
-    private final StoryRepository storyRepository;
-    private final GangRelationsRepository gangRelationsRepository;
     private final UserRepository userRepository;
 
-    @Transactional
-    public StoryData doUserActions(HashMap<String, List<String>> map, UserEntity userEntity) {
+    public StoryData doUserActions(HashMap<String, List<String>> map) {
+        UUID id = ((SecurityUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getId();
+        UserEntity userEntity = userRepository.getById(id);
         logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
-        return stateService.getStoryData();
+        return storyMapper.storyData(userRepository.saveAndFlush(userEntity));
     }
 
-    private void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity) {
-        if (actions == null) {
+    protected void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity) {
+        if (actions == null)
             return;
-        }
 
         for (String command : actions.keySet()) {
             try {
@@ -102,7 +98,8 @@ public class ActionService {
                                 int quantity = Integer.parseInt(values[1]);
                                 itemsService.deleteItem(userEntity, baseId, quantity);
                             } else
-                                parametersRepository.deleteAllByUserAndKey(userEntity, pass);
+                                userEntity.getParameters()
+                                        .removeIf(parameterEntity -> parameterEntity.getKey().equals(pass));
                         }
                         break;
                     case "=":
@@ -117,9 +114,8 @@ public class ActionService {
                             if (values[0].contains("relation")) {
                                 //"+":["relation_1:5"]
                                 int group = Integer.parseInt(values[0].split("_")[1]);
-                                GangRelationEntity gangRelation = gangRelationsRepository.findByUser(userEntity).orElseThrow();
+                                GangRelationEntity gangRelation = userEntity.getGangRelation();
                                 gangRelation.addRelation(Gang.getById(group), Integer.parseInt(values[1]));
-                                gangRelationsRepository.save(gangRelation);
                             } else
                                 addValue(userEntity, values[0], Integer.parseInt(values[1]));
                         }
@@ -129,9 +125,8 @@ public class ActionService {
                             String[] values = pass.split(":");
                             if (values[0].contains("relation")) {
                                 int group = Integer.parseInt(values[0].split("_")[1]);
-                                GangRelationEntity gangRelation = gangRelationsRepository.findByUser(userEntity).orElseThrow();
+                                GangRelationEntity gangRelation = userEntity.getGangRelation();
                                 gangRelation.addRelation(Gang.getById(group), -Integer.parseInt(values[1]));
-                                gangRelationsRepository.save(gangRelation);
                             } else
                                 addValue(userEntity, values[0], -Integer.parseInt(values[1]));
                         }
@@ -143,22 +138,18 @@ public class ActionService {
                         }
                         break;
                     case "money":
-                        userEntity = userRepository.findById(userEntity.getId()).orElseThrow();
                         for (String pass : params)
                             userEntity.money(Integer.parseInt(pass));
-                        userRepository.save(userEntity);
                         break;
                     case "xp":
-                        userEntity = userRepository.findById(userEntity.getId()).orElseThrow();
                         for (String pass : params)
                             userEntity.xp(Integer.parseInt(pass));
-                        userRepository.save(userEntity);
                         break;
                     case "note":
                         if (params.size() == 2)
-                            noteService.createNote(new NoteCreateDto(params.get(0), params.get(1)));
+                            userEntity.getNotes().add(new NoteEntity(params.get(0), params.get(1)));
                         else if (params.size() == 1)
-                            noteService.createNote(new NoteCreateDto("Новая заметка", params.get(0)));
+                            userEntity.getNotes().add(new NoteEntity("Новая заметка", params.get(0)));
                         break;
                     case "achieve":
                         //TODO
@@ -166,34 +157,27 @@ public class ActionService {
                         break;
                     case "reset":
                         if (actions.get(command).size() == 0) {
-                            userEntity = userRepository.findById(userEntity.getId()).get();
-                            userEntity.setMoney(0);
-                            resetAllData(userEntity);
+                            userEntity.reset();
                         } else {
                             for (String pass : params)
                                 if (pass.matches("-?\\d+")) {
                                     int storyId = Integer.parseInt(pass);
-                                    Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndStoryId(storyId);
-                                    if (storyOptional.isPresent()) {
-                                        StoryStateEntity storyStateEntity = storyOptional.get();
-                                        storyStateEntity.setChapterId(1);
-                                        storyStateEntity.setStageId(0);
-                                        storyRepository.save(storyStateEntity);
+                                    StoryStateEntity storyOptional = userEntity.getStoryState(storyId);
+                                    if (storyOptional != null) {
+                                        storyOptional.setChapterId(1);
+                                        storyOptional.setStageId(0);
                                     }
                                 } else if (pass.contains("relation")) {
                                     int group = Integer.parseInt(pass.split("_")[1]);
-                                    GangRelationEntity gangRelation = gangRelationsRepository.findByUser(userEntity).orElseThrow();
+                                    GangRelationEntity gangRelation = userEntity.getGangRelation();
                                     gangRelation.setRelation(Gang.getById(group), 0);
-                                    gangRelationsRepository.save(gangRelation);
                                 }
                         }
                         break;
                     case "reset_current":
-                        Optional<StoryStateEntity> storyOptional = storyRepository.findByUserAndCurrentIsTrue();
-                        if (storyOptional.isPresent()) {
-                            StoryStateEntity storyStateEntity = storyOptional.get();
-                            storyStateEntity.setCurrent(false);
-                            storyRepository.save(storyStateEntity);
+                        StoryStateEntity storyOptional = userEntity.getCurrentStoryState();
+                        if (storyOptional != null) {
+                            storyOptional.setCurrent(false);
                         }
                         break;
                     case "set":
@@ -205,19 +189,16 @@ public class ActionService {
                                     int chapter = Integer.parseInt(values[2]);
                                     int stage = Integer.parseInt(values[3]);
 
-                                    StoryStateEntity storyStateEntity;
-                                    storyOptional = storyRepository.findByUserAndStoryId(story);
-                                    if (storyOptional.isPresent()) {
-                                        storyStateEntity = storyOptional.get();
-                                    } else {
+                                    StoryStateEntity storyStateEntity = userEntity.getStoryState(story);
+                                    if (storyStateEntity == null) {
                                         storyStateEntity = new StoryStateEntity();
                                         storyStateEntity.setStoryId(story);
                                         storyStateEntity.setUser(userEntity);
+                                        userEntity.getStoryStates().add(storyStateEntity);
                                     }
                                     storyStateEntity.setChapterId(chapter);
                                     storyStateEntity.setStageId(stage);
                                     storyStateEntity.setCurrent(true);
-                                    storyRepository.save(storyStateEntity);
                                 }
                             }
                         }
@@ -230,19 +211,17 @@ public class ActionService {
                                 int chapter = Integer.parseInt(values[1]);
                                 int stage = Integer.parseInt(values[2]);
 
-                                StoryStateEntity storyStateEntity;
-                                storyOptional = storyRepository.findByUserAndStoryId(story);
-                                if (storyOptional.isPresent()) {
-                                    storyStateEntity = storyOptional.get();
-                                } else {
+                                StoryStateEntity storyStateEntity = userEntity.getStoryState(story);
+                                if (storyStateEntity == null) {
                                     storyStateEntity = new StoryStateEntity();
                                     storyStateEntity.setStoryId(story);
                                     storyStateEntity.setUser(userEntity);
+                                    userEntity.getStoryStates().add(storyStateEntity);
                                 }
                                 storyStateEntity.setChapterId(chapter);
                                 storyStateEntity.setStageId(stage);
                                 storyStateEntity.setCurrent(true);
-                                storyRepository.save(storyStateEntity);
+
                                 logger.info("Process actions for {},{},{}", story, chapter, stage);
                                 operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
                             }
@@ -259,50 +238,59 @@ public class ActionService {
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {
-        var s = parametersRepository.getParameterEntityByUserAndKey(user, key);
+        var s = user.getParameters()
+                .stream()
+                .filter(parameterEntity -> parameterEntity.getKey().equals(key))
+                .findFirst();
+
         ParameterEntity entity;
         if (s.isPresent()) {
             entity = s.get();
             entity.value *= integer;
         } else {
             entity = new ParameterEntity(user, key, integer);
+            user.getParameters().add(entity);
         }
-        parametersRepository.save(entity);
     }
 
     public void setValue(UserEntity user, String key, Integer integer) {
-        var s = parametersRepository.getParameterEntityByUserAndKey(user, key);
+        var s = user.getParameters()
+                .stream()
+                .filter(parameterEntity -> parameterEntity.getKey().equals(key))
+                .findFirst();
         ParameterEntity entity;
         if (s.isPresent()) {
             entity = s.get();
             entity.value = integer;
         } else {
             entity = new ParameterEntity(user, key, integer);
+            user.getParameters().add(entity);
         }
-        parametersRepository.save(entity);
     }
 
     public void addValue(UserEntity user, String key, Integer integer) {
-        var s = parametersRepository.getParameterEntityByUserAndKey(user, key);
+        var s = user.getParameters()
+                .stream()
+                .filter(parameterEntity -> parameterEntity.getKey().equals(key))
+                .findFirst();
         ParameterEntity entity;
         if (s.isPresent()) {
             entity = s.get();
             entity.value += integer;
         } else {
             entity = new ParameterEntity(user, key, integer);
+            user.getParameters().add(entity);
         }
-        parametersRepository.save(entity);
     }
 
     public void addKey(UserEntity user, String key) {
-        if (!parametersRepository.existsParameterEntityByUserAndKeyEquals(user, key))
-            parametersRepository.save(new ParameterEntity(user, key, 0));
+        var s = user.getParameters()
+                .stream()
+                .filter(parameterEntity -> parameterEntity.getKey().equals(key))
+                .findFirst();
+        if (s.isEmpty()) {
+            user.getParameters().add(new ParameterEntity(user, key, 0));
+        }
     }
 
-    @Transactional
-    public void resetAllData(UserEntity userEntity) {
-        itemsService.resetAll(userEntity);
-        parametersRepository.deleteAllByUser(userEntity);
-        storyRepository.deleteAllByUser(userEntity);
-    }
 }

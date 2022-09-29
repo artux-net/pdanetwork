@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,6 +20,7 @@ import java.time.Instant;
 public class NoteEntity extends BaseEntity {
 
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private Instant time;
     @ManyToOne

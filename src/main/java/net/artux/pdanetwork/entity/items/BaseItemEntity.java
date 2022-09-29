@@ -24,11 +24,13 @@ public class BaseItemEntity {
     protected int price;
 
     protected String description;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     protected String content;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
     protected List<String> advantages;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @ElementCollection
     protected List<String> disadvantages;

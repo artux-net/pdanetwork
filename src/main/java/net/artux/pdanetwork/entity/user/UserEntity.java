@@ -5,17 +5,32 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -51,43 +66,35 @@ public class UserEntity extends BaseEntity {
     private Instant registration;
     private Instant lastLoginAt;
 
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NoteEntity> notes;
+
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    public List<NoteEntity> notes;
-    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private List<UserAchievementEntity> achievements;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<StoryStateEntity> storyStates = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ParameterEntity> parameters = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BulletEntity> bullets = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ArmorEntity> armors = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WeaponEntity> weapons = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MedicineEntity> medicines = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ArtifactEntity> artifacts = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DetectorEntity> detectors = new HashSet<>();
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
@@ -127,5 +134,59 @@ public class UserEntity extends BaseEntity {
             return true;
         } else
             return false;
+    }
+
+    public void reset() {
+        money = 500;
+        gangRelation.resetAll();
+        notes.clear();
+        parameters.clear();
+        storyStates.clear();
+        armors.clear();
+        bullets.clear();
+        weapons.clear();
+        medicines.clear();
+        artifacts.clear();
+        detectors.clear();
+    }
+
+    public Set<? extends ItemEntity> getItemsByType(ItemType type) {
+        return switch (type) {
+            case ARMOR -> armors;
+            case RIFLE, PISTOL -> weapons;
+            case MEDICINE -> medicines;
+            case ARTIFACT -> artifacts;
+            case DETECTOR -> detectors;
+            case BULLET -> bullets;
+        };
+    }
+
+
+    public Set<WearableEntity> getWearableItems() {
+        HashSet<WearableEntity> itemEntities = new HashSet<>();
+        itemEntities.addAll(armors);
+        itemEntities.addAll(weapons);
+        itemEntities.addAll(detectors);
+        itemEntities.addAll(artifacts);
+        return itemEntities;
+    }
+
+    public Set<ItemEntity> getAllItems() {
+        HashSet<ItemEntity> itemEntities = new HashSet<>();
+        itemEntities.addAll(armors);
+        itemEntities.addAll(weapons);
+        itemEntities.addAll(bullets);
+        itemEntities.addAll(medicines);
+        itemEntities.addAll(detectors);
+        itemEntities.addAll(artifacts);
+        return itemEntities;
+    }
+
+    public StoryStateEntity getStoryState(int storyId) {
+        return getStoryStates().stream().filter(storyStateEntity -> storyId == storyStateEntity.getStoryId()).findFirst().orElse(null);
+    }
+
+    public StoryStateEntity getCurrentStoryState() {
+        return getStoryStates().stream().filter(StoryStateEntity::isCurrent).findFirst().orElse(null);
     }
 }

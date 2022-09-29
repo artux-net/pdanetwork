@@ -3,16 +3,16 @@ package net.artux.pdanetwork.service.user.reset;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.UserRepository;
-import net.artux.pdanetwork.service.action.ActionService;
-import net.artux.pdanetwork.service.action.StateService;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.Security;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -22,10 +22,9 @@ import java.util.HashMap;
 public class ResetServiceImpl implements ResetService {
 
     private final UserService userService;
-    private final ActionService actionService;
     private final EmailService emailService;
-    private final StateService stateService;
     private final UserRepository userRepository;
+    private final StoryMapper storyMapper;
 
     private final UserMapper userMapper;
 
@@ -63,13 +62,11 @@ public class ResetServiceImpl implements ResetService {
     }
 
     @Override
+    @Transactional
     public StoryData resetData() {
         UserEntity userEntity = userService.getUserById();
-        userEntity.setMoney(500);
-        userEntity.getGangRelation().resetAll();
-        userEntity = userRepository.save(userEntity);
-        actionService.resetAllData(userEntity);
-        return stateService.getStoryData();
+        userEntity.reset();
+        return storyMapper.storyData(userRepository.saveAndFlush(userEntity));
     }
 
 }

@@ -25,8 +25,8 @@ public abstract class ItemEntity extends BaseEntity {
     @JoinColumn(nullable = false)
     protected BaseItemEntity base;
     protected int quantity;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotFound(action = NotFoundAction.IGNORE)
     protected UserEntity owner;
 
 }
