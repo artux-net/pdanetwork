@@ -5,15 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
@@ -21,16 +13,7 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -66,7 +49,7 @@ public class UserEntity extends BaseEntity {
     private Instant registration;
     private Instant lastLoginAt;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author")
     private List<NoteEntity> notes;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -171,7 +154,7 @@ public class UserEntity extends BaseEntity {
         return itemEntities;
     }
 
-    public Set<ItemEntity> getAllItems() {
+    public Set<? extends ItemEntity> getAllItems() {
         HashSet<ItemEntity> itemEntities = new HashSet<>();
         itemEntities.addAll(armors);
         itemEntities.addAll(weapons);

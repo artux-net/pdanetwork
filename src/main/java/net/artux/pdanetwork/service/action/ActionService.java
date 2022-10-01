@@ -1,17 +1,18 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.note.NoteCreateDto;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.items.ItemService;
+import net.artux.pdanetwork.service.note.NoteService;
 import net.artux.pdanetwork.service.quest.QuestService;
 import org.slf4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +33,7 @@ public class ActionService {
 
     private final ItemService itemsService;
     private final QuestService questService;
+    private final NoteService noteService;
     private final StoryMapper storyMapper;
 
     private final UserRepository userRepository;
@@ -42,7 +44,7 @@ public class ActionService {
         UserEntity userEntity = userRepository.getById(id);
         logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
-        return storyMapper.storyData(userRepository.saveAndFlush(userEntity));
+        return storyMapper.storyData(userRepository.save(userEntity));
     }
 
     protected void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity) {
@@ -147,9 +149,9 @@ public class ActionService {
                         break;
                     case "note":
                         if (params.size() == 2)
-                            userEntity.getNotes().add(new NoteEntity(params.get(0), params.get(1)));
+                            noteService.createNote(new NoteCreateDto(params.get(0), params.get(1)));
                         else if (params.size() == 1)
-                            userEntity.getNotes().add(new NoteEntity("Новая заметка", params.get(0)));
+                            noteService.createNote(new NoteCreateDto("Новая заметка", params.get(0)));
                         break;
                     case "achieve":
                         //TODO

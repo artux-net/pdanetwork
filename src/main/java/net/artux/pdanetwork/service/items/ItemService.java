@@ -3,26 +3,12 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.ItemMapper;
-import net.artux.pdanetwork.repository.items.ArmorRepository;
-import net.artux.pdanetwork.repository.items.ArtifactRepository;
-import net.artux.pdanetwork.repository.items.CommonItemRepository;
-import net.artux.pdanetwork.repository.items.DetectorRepository;
-import net.artux.pdanetwork.repository.items.ItemRepository;
-import net.artux.pdanetwork.repository.items.MedicineRepository;
-import net.artux.pdanetwork.repository.items.WeaponRepository;
+import net.artux.pdanetwork.repository.items.*;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.slf4j.Logger;
@@ -33,11 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 @Service
@@ -123,7 +105,7 @@ public class ItemService {
     }
 
     public void deleteItem(UserEntity user, int baseId, int quantity) {
-        List<ItemEntity> optional = user.getAllItems().stream()
+        List<? extends ItemEntity> optional = user.getAllItems().stream()
                 .filter(item -> item.getBase().getId() == baseId)
                 .toList();
         if (optional.size() == 1) {
@@ -161,7 +143,7 @@ public class ItemService {
                 .findFirst()
                 .orElseThrow();
 
-        if (item instanceof WearableEntity && type.isWearable()) {
+        if (type.isWearable()) {
             Optional<WearableEntity> optionalItem = user.getWearableItems()
                     .stream()
                     .filter(wearableEntity -> wearableEntity.getId().equals(id) && wearableEntity.isEquipped())
@@ -197,7 +179,7 @@ public class ItemService {
     }
 
     private <T extends ItemEntity> void addAsCountable(UserEntity user, T itemEntity) {
-        Optional<ItemEntity> optionalItem = user.getAllItems()
+        Optional<? extends ItemEntity> optionalItem = user.getAllItems()
                 .stream()
                 .filter(item -> item.getBase().getId().equals(itemEntity.getBase().getId()))
                 .findFirst();

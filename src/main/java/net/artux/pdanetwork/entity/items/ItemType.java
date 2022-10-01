@@ -32,7 +32,7 @@ public enum ItemType {
     }
 
     public boolean isWearable() {
-        return getTypeClass().isAssignableFrom(WearableEntity.class);
+        return WearableEntity.class.isAssignableFrom(getTypeClass());
     }
 
     public boolean isCountable() {

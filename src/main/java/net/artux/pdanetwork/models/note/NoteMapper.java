@@ -12,6 +12,8 @@ import java.util.List;
 public interface NoteMapper {
 
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "author", source = "author")
     @Mapping(target = "time", expression = "java(Instant.now())")
     NoteEntity entity(NoteCreateDto dto, UserEntity author);
     NoteDto to(NoteEntity noteEntity);

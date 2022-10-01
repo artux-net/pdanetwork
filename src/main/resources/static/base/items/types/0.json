@@ -4,7 +4,7 @@
     "speed": "4.5",
     "damage": "2.5",
     "condition": "100",
-    "bulletBaseId": "26",
+    "bulletBaseId": 29,
     "baseId": 0
   },
   {
@@ -12,7 +12,7 @@
     "speed": "5",
     "damage": "2.5",
     "condition": "100",
-    "bulletBaseId": 26,
+    "bulletBaseId": 29,
     "baseId": 1
   },
   {
@@ -20,7 +20,7 @@
     "speed": "5",
     "damage": "2.5",
     "condition": "100",
-    "bulletBaseId": 26,
+    "bulletBaseId": 29,
     "baseId": 2
   },
   {
@@ -28,7 +28,7 @@
     "speed": "5.5",
     "damage": "2.5",
     "condition": "100",
-    "bulletBaseId": 28,
+    "bulletBaseId": 31,
     "baseId": 3
   },
   {
@@ -36,7 +36,7 @@
     "speed": "5",
     "damage": "3.5",
     "condition": "100",
-    "bulletBaseId": 30,
+    "bulletBaseId": 33,
     "baseId": 4
   },
   {
@@ -44,7 +44,7 @@
     "speed": "5.5",
     "damage": "6",
     "condition": "100",
-    "bulletBaseId": 30,
+    "bulletBaseId": 33,
     "baseId": 5
   },
   {
@@ -52,7 +52,7 @@
     "speed": "4.5",
     "damage": "8",
     "condition": "100",
-    "bulletBaseId": 30,
+    "bulletBaseId": 33,
     "baseId": 6
   },
   {
@@ -60,7 +60,7 @@
     "speed": "4.5",
     "damage": "5.5",
     "condition": "100",
-    "bulletBaseId": 30,
+    "bulletBaseId": 33,
     "baseId": 7
   },
   {
@@ -68,7 +68,7 @@
     "speed": "4.5",
     "damage": "9",
     "condition": "100",
-    "bulletBaseId": 28,
+    "bulletBaseId": 31,
     "baseId": 8
   },
   {
@@ -76,7 +76,7 @@
     "speed": "4.5",
     "damage": "14",
     "condition": "100",
-    "bulletBaseId": 28,
+    "bulletBaseId": 31,
     "baseId": 9
   }
 ]
