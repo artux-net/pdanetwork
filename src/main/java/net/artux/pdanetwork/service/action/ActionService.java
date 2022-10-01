@@ -182,29 +182,6 @@ public class ActionService {
                             storyOptional.setCurrent(false);
                         }
                         break;
-                    case "set":
-                        for (String pass : params) {
-                            String[] values = pass.split(":");
-                            if (values.length == 4) {
-                                if (values[0].equals("story")) {
-                                    int story = Integer.parseInt(values[1]);
-                                    int chapter = Integer.parseInt(values[2]);
-                                    int stage = Integer.parseInt(values[3]);
-
-                                    StoryStateEntity storyStateEntity = userEntity.getStoryState(story);
-                                    if (storyStateEntity == null) {
-                                        storyStateEntity = new StoryStateEntity();
-                                        storyStateEntity.setStoryId(story);
-                                        storyStateEntity.setUser(userEntity);
-                                        userEntity.getStoryStates().add(storyStateEntity);
-                                    }
-                                    storyStateEntity.setChapterId(chapter);
-                                    storyStateEntity.setStageId(stage);
-                                    storyStateEntity.setCurrent(true);
-                                }
-                            }
-                        }
-                        break;
                     case "state":
                         for (String pass : params) {
                             String[] values = pass.split(":");
