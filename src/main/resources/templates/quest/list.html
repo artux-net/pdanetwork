@@ -1,18 +1,32 @@
 <h1>Истории</h1>
-<h2 th:text="'Время обновления: ' + ${readTime}"></h2>
-<a th:href="@{/utility/quest/update}" class="btn btn-primary">Обновить</a>
-
-<th:block th:each="s : ${stories}">
-    <div>
-        <hr>
-        <h3 th:text="'Название:' + ${s.title}"/>
-        <h3 th:text="'Описание:' + ${s.desc}"/>
-        <h3 th:text="'Ссылка на картинку:' + ${s.icon}"/>
-        <h3 th:text="'Количество глав:' + ${s.getChapterList().size()}"/>
-        <h3 th:text="'Количество стадий:' + ${s.stageCount()}"/>
-        <h3 th:text="'Количество карт:' + ${s.getMapList().size()}"/>
-        <h3 th:text="'Количество точек на карте:' + ${s.pointCount()}"/>
-        <hr>
+<div class="container">
+    <div class="row">
+        <h2 th:text="${readTime} + ' минут с последнего обновления'"></h2>
+        <a th:href="@{/utility/quest/update}" class="btn btn-primary">Обновить</a>
     </div>
-</th:block>
+</div>
+<hr>
 
+<div class="container">
+    <div class="row">
+        <th:block th:each="s : ${stories}">
+            <div class="card" style="width: 18rem;">
+                <img th:src="@{${fileServer} + ${s.icon}}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${s.title}">Card title</h5>
+                    <p class="card-text" th:text="${s.desc}">Some quick example text to build on the card title and make
+                        up the bulk of the card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${s.getChapterList().size()} + ' глав'"></li>
+                    <li class="list-group-item" th:text="${s.stageCount()} + ' стадий'"></li>
+                    <li class="list-group-item" th:text="${s.getMapList().size()} +' карт'"></li>
+                    <li class="list-group-item" th:text="${s.pointCount()} +' всего точек на них'"></li>
+                </ul>
+            </div>
+
+        </th:block>
+
+
+    </div>
+</div>

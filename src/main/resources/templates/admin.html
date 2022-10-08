@@ -1,41 +1,28 @@
 <h2>Статистика</h2>
-<table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
+<table class="table">
     <tbody>
     <tr>
         <td><b>Пользователей</b></td>
-        <td th:text="${total_registrations}"/>
+        <td th:text="${totalRegistrations}"></td>
+
         <td><b>Регистраций за сутки</b></td>
-        <td th:text="${registrations}"/>
+        <td th:text="${todayRegistrations}"></td>
     </tr>
     <tr>
         <td><b>Время на сервере</b></td>
-        <td th:text="${server_time}"/>
+        <td th:text="${#temporals.format(serverTime, 'dd-MM-yyyy HH:mm')}"></td>
     </tr>
     <tr>
         <td><b>Онлайн за сутки</b></td>
-        <td th:text="${online}"/>
+        <td th:text="${todayOnline}"></td>
+    </tr>
+    <tr>
+        <td><b>Онлайн сейчас</b></td>
+        <td th:text="${nowOnline}"></td>
     </tr>
     </tbody>
 </table>
 <hr>
 <h2>Топ пользователей</h2>
-<table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
-    <tbody>
-    <tr>
-        <td><b>№</b></td>
-        <td><b>#ПДА</b></td>
-        <td><b>Ник</b></td>
-        <td><b>Опыт</b></td>
-    </tr>
-
-    <th:block th:each="user,iter : ${rating.data}">
-        <tr>
-            <td th:text="${iter.index+1}"/>
-            <td th:text="${user.pdaId}"/>
-            <td th:text="${user.login}"/>
-            <td th:text="${user.xp}"/>
-        </tr>
-    </th:block>
-
-    </tbody>
-</table>
+<th:block th:insert="users/list">
+</th:block>

@@ -38,7 +38,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gang gang;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private GangRelationEntity gangRelation;
     private int xp;
     private int money;
@@ -49,10 +49,10 @@ public class UserEntity extends BaseEntity {
     private Instant registration;
     private Instant lastLoginAt;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<NoteEntity> notes;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private List<UserAchievementEntity> achievements;
 
@@ -144,6 +144,10 @@ public class UserEntity extends BaseEntity {
         };
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> Set<T> getItemsByClass(Class<T> tClass) {
+        return (Set<T>) getItemsByType(ItemType.getByClass(tClass));
+    }
 
     public Set<WearableEntity> getWearableItems() {
         HashSet<WearableEntity> itemEntities = new HashSet<>();

@@ -27,4 +27,6 @@ public interface UserService {
 
     Status editUser(RegisterUserDto user);
 
+    void deleteUserById(UUID id);
+
 }

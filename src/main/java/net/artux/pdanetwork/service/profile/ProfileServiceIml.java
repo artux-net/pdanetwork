@@ -13,6 +13,7 @@ import net.artux.pdanetwork.service.achievement.AchievementsService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,5 +57,10 @@ public class ProfileServiceIml implements ProfileService {
         Page<UserEntity> memberPage = userRepository.findAll(
                 pageService.getPageable(queryPage));
         return pageService.mapDataPageToResponsePage(memberPage, userMapper.info(memberPage.getContent()));
+    }
+
+    @Override
+    public Page<SimpleUserDto> getPage(PageRequest queryPage) {
+        return userRepository.findAll(queryPage).map(userMapper::info);
     }
 }

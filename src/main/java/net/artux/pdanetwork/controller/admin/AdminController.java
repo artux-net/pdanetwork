@@ -2,9 +2,10 @@ package net.artux.pdanetwork.controller.admin;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
-import net.artux.pdanetwork.models.page.QueryPage;
-import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.profile.ProfileService;
+import net.artux.pdanetwork.service.statistic.StatisticService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Controller
 @Tag(name = "Панель администратора")
@@ -21,24 +22,29 @@ public class AdminController extends BaseUtilityController {
 
     private final ChatHandler chatHandler;
     private final ProfileService profileService;
+    private final StatisticService statisticService;
 
-    private static Date readTime = new Date();
-
-    public AdminController(ChatHandler chatHandler, ProfileService profileService) {
+    public AdminController(ChatHandler chatHandler, ProfileService profileService, StatisticService statisticService) {
         super("Админ панель");
         this.chatHandler = chatHandler;
         this.profileService = profileService;
+        this.statisticService = statisticService;
     }
 
     @Override
     protected Object getHome(Model model) {
-        model.addAttribute("rating", profileService.getRating(new QueryPage()));
+        model.addAttribute("userPage", profileService.getPage(PageRequest.of(0, 20, Sort.by("xp"))));
+        model.addAttribute("totalRegistrations", statisticService.countUsers());
+        model.addAttribute("todayRegistrations", statisticService.countRegistrationsToday());
+        model.addAttribute("nowOnline", statisticService.countOnlineNow());
+        model.addAttribute("todayOnline", statisticService.countOnlineToday());
+        model.addAttribute("serverTime", Instant.now());
+
         return pageWithContent("admin", model);
     }
 
     @GetMapping("/settings")
     public String getSettings(Model model) {
-        model.addAttribute("readTime", readTime);
         return pageWithContent("notReady", model);
     }
 
@@ -58,11 +64,5 @@ public class AdminController extends BaseUtilityController {
         chatHandler.removeMessage(time);
         return getChatPage(model);
     }
-
-    @GetMapping("/users")
-    public String getUsersPage(Model model) {
-        return pageWithContent("notReady", model);
-    }
-
 
 }

@@ -49,4 +49,12 @@ public enum ItemType {
         }
         return ItemType.BULLET;
     }
+
+    public static ItemType getByClass(Class tClass) {
+        for (ItemType type : ItemType.values()) {
+            if (type.getTypeClass() == tClass)
+                return type;
+        }
+        throw new RuntimeException("Can not find itemType");
+    }
 }

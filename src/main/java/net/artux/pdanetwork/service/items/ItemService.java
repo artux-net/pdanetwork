@@ -8,7 +8,6 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.ItemMapper;
-import net.artux.pdanetwork.repository.items.*;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.slf4j.Logger;
@@ -36,12 +35,6 @@ public class ItemService {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final WeaponRepository weaponRepository;
-    private final ArmorRepository armorRepository;
-    private final ItemRepository itemRepository;
-    private final MedicineRepository medicineRepository;
-    private final ArtifactRepository artifactRepository;
-    private final DetectorRepository detectorRepository;
 
 
     @PostConstruct
@@ -100,7 +93,7 @@ public class ItemService {
             itemEntity.setQuantity(quantity);
             addAsCountable(user, itemEntity);
         } else {
-            addAsNotCountable(user, itemEntity, quantity);
+            addAsNotCountable(user, itemEntity);
         }
     }
 
@@ -116,24 +109,6 @@ public class ItemService {
                     .removeIf((Predicate<ItemEntity>) itemEntity -> itemEntity.getBase().getId() == baseId);
         }
     }
-
-    /*public <T extends ItemEntity> void deleteItem(UserEntity user, ItemType type, UUID id, int quantity) {
-        CommonItemRepository<T> repository = getRepository(type);
-        Optional<T> optional = repository.findByOwnerAndId(user, id);
-        if (optional.isPresent()) {
-            T t = optional.get();
-            if (type.isCountable()) {
-                t.setQuantity(t.getQuantity() - quantity);
-                if (t.getQuantity() > 0)
-                    repository.save(t);
-                else
-                    repository.delete(t);
-            } else {
-                repository.delete(t);
-            }
-        }
-    }
-*/
 
     public Status setWearable(ItemType type, UUID id) {
         UserEntity user = userService.getUserById();
@@ -166,16 +141,19 @@ public class ItemService {
         } else return new Status(true, "Невозможно надеть предмет");
     }
 
-    private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item, int quantity) {
-        CommonItemRepository<T> repository = getRepository(item.getBase().getType());
-        item.setQuantity(1);
-        item.setOwner(user);
-        List<T> items = new LinkedList<>();
-        for (int i = 0; i < quantity; i++) {
-            items.add(item);
+    private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item) {
+        var type = item.getBase().getType();
+        if (type.isWearable()) {
+            boolean wear = user.getWearableItems()
+                    .stream()
+                    .filter(userItem -> userItem.isEquipped() && userItem.getBase().getType().equals(type))
+                    .toList()
+                    .size() > 0;
+            if (!wear)
+                ((WearableEntity) item).setEquipped(true);
         }
-        repository.saveAll(items);
-        //todo set wearable for weapons and armors if equipment is empty
+        item.setQuantity(1);
+        addAsIs(user, item);
     }
 
     private <T extends ItemEntity> void addAsCountable(UserEntity user, T itemEntity) {
@@ -201,19 +179,6 @@ public class ItemService {
             case DETECTOR -> user.getDetectors().add((DetectorEntity) itemEntity);
             case MEDICINE -> user.getMedicines().add((MedicineEntity) itemEntity);
         }
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private <T extends ItemEntity> CommonItemRepository<T> getRepository(ItemType type) {
-        return switch (type) {
-            case ARMOR -> (CommonItemRepository<T>) armorRepository;
-            case PISTOL, RIFLE -> (CommonItemRepository<T>) weaponRepository;
-            case ARTIFACT -> (CommonItemRepository<T>) artifactRepository;
-            case MEDICINE -> (CommonItemRepository<T>) medicineRepository;
-            case DETECTOR -> (CommonItemRepository<T>) detectorRepository;
-            default -> (CommonItemRepository<T>) itemRepository;
-        };
     }
 
 }

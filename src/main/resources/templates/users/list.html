@@ -1,0 +1,27 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col"><b>№</b></th>
+        <th scope="col"><b>#ПДА</b></th>
+        <th scope="col"><b>Логин</b>
+        </th>
+        <th scope="col"><b>Псевдоним</b>
+        </th>
+        <th scope="col"><b>Опыт</b>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="user,iter : ${userPage.getContent()}">
+        <tr>
+            <th scope="row" th:text="${iter.index+1}"/>
+            <td >
+                <a th:href="@{/utility/users/{id} (id = ${user.id})}" th:text="${user.pdaId}"></a>
+            </td>
+            <td th:text="${user.login}"/>
+            <td th:text="@{${user.name} + ' ' + ${user.nickname}}"/>
+            <td th:text="${user.xp}"/>
+        </tr>
+    </th:block>
+    </tbody>
+</table>

@@ -6,6 +6,7 @@ import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
+import net.artux.pdanetwork.models.quest.Stage;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
@@ -182,30 +183,45 @@ public class ActionService {
                             storyOptional.setCurrent(false);
                         }
                         break;
-                    case "state":
-                        for (String pass : params) {
-                            String[] values = pass.split(":");
+                    case "state": {
+                        String[] states = params.toArray(new String[0]);
+                        if (states.length > 0) {
+                            String[] values = states[0].split(":");
                             if (values.length == 3) {
                                 int story = Integer.parseInt(values[0]);
-                                int chapter = Integer.parseInt(values[1]);
                                 int stage = Integer.parseInt(values[2]);
+                                int chapter;
 
                                 StoryStateEntity storyStateEntity = userEntity.getStoryState(story);
-                                if (storyStateEntity == null) {
-                                    storyStateEntity = new StoryStateEntity();
-                                    storyStateEntity.setStoryId(story);
-                                    storyStateEntity.setUser(userEntity);
-                                    userEntity.getStoryStates().add(storyStateEntity);
-                                }
-                                storyStateEntity.setChapterId(chapter);
-                                storyStateEntity.setStageId(stage);
                                 storyStateEntity.setCurrent(true);
 
-                                logger.info("Process actions for {},{},{}", story, chapter, stage);
-                                operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
+                                Stage actualStage = questService.getStage(storyStateEntity.getStoryId(),
+                                        storyStateEntity.getChapterId(),
+                                        storyStateEntity.getStageId());
+
+                                int finalStage = stage;
+                                boolean checkStart = actualStage.getTransfers().stream()
+                                        .filter(transfer -> transfer.getStage_id() == finalStage)
+                                        .toList()
+                                        .size() > 0;
+
+                                if (checkStart){
+                                    for (int i = 1; i < states.length; i++) {
+                                        values = states[i].split(":");
+                                        chapter = Integer.parseInt(values[1]);
+                                        stage = Integer.parseInt(values[2]);
+
+                                        storyStateEntity.setChapterId(chapter);
+                                        storyStateEntity.setStageId(stage);
+
+                                        logger.info("Process actions for {},{},{}", story, chapter, stage);
+                                        operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
+                                    }
+                                }else throw new RuntimeException("");
                             }
                         }
-                        break;
+                    }
+                    break;
                     default:
                         logger.error("Unsupported operation: " + command + ", value: " + params);
                         break;

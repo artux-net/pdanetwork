@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -36,4 +37,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
             "on r.user2_id = pu.id", nativeQuery = true)
     List<UserEntity> getFriendsById(UUID id);
 
+
+    int countAllByLastLoginAtAfter(Instant afterTime);
+    int countAllByRegistrationAfter(Instant afterTime);
 }

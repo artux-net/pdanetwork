@@ -1,0 +1,8 @@
+<th:block th:insert="users/list">
+</th:block>
+<div th:if="${userPage.totalPages > 0}" class="pagination"
+     th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/utility/users/list(size=${userPage.size}, page=${pageNumber})}"
+       th:text=${pageNumber}
+       th:class="${pageNumber==userPage.number + 1} ? active"></a>
+</div>

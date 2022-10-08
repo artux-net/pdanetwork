@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,8 @@ public class UserDetailService implements UserDetailsService {
         if (userOptional.isPresent()) {
             UserEntity userEntity = userOptional.get();
             List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().toString()));
-
+            userEntity.setLastLoginAt(Instant.now());
+            userRepository.save(userEntity);
             return new SecurityUser(userEntity.getLogin(), userEntity.getPassword(), authorities, userEntity.getId());
         } else {
             logger.error("User with login '" + username + "' not found.");

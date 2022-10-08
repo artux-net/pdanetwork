@@ -11,6 +11,7 @@ public class SimpleUserDto {
 
     private UUID id;
     private String login;
+    private String name;
     private String nickname;
     private String avatar;
     private int pdaId;

@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserById() {
-        return userRepository.findById(getCurrentId()).orElseThrow();
+        return userRepository.findById(getCurrentId()).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 
     @Override
@@ -150,6 +150,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return status;
+    }
+
+    @Override
+    public void deleteUserById(UUID id) {
+        userRepository.deleteById(id);
     }
 
 

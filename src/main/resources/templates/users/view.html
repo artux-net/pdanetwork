@@ -1,0 +1,57 @@
+<h2 th:text="@{${userEntity.name} + ' ' + ${userEntity.nickname}}"></h2>
+
+
+<div class="mb-3 row">
+    <label for="staticLogin" class="col-sm-2 col-form-label">Login</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticLogin" th:value="${userEntity.login}">
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticEmail" th:value="${userEntity.email}">
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="staticXp" class="col-sm-2 col-form-label">Xp</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticXp" th:value="${userEntity.xp}">
+    </div>
+</div>
+
+
+<div class="mb-3 row">
+    <label for="staticMoney" class="col-sm-2 col-form-label">Денег</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticMoney" th:value="${userEntity.money}">
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="staticRole" class="col-sm-2 col-form-label">Роль</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticRole" th:value="${userEntity.role}">
+    </div>
+</div>
+
+
+<div class="mb-3 row">
+    <label for="staticLoginTime" class="col-sm-2 col-form-label">Последний вход</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticLoginTime" th:value="${#temporals.format(userEntity.lastLoginAt, 'dd-MM-yyyy HH:mm')}">
+    </div>
+</div>
+
+<div class="mb-3 row">
+    <label for="staticRegister" class="col-sm-2 col-form-label">Регистрация</label>
+    <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticRegister" th:value="${#temporals.format(userEntity.registration, 'dd-MM-yyyy HH:mm')}">
+    </div>
+</div>
+
+<form th:action="@{/utility/users/{id} (id = ${userEntity.id})}" th:method="delete">
+    <button type="submit" class="btn btn-danger">Удалить пользователя</button>
+</form>

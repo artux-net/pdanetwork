@@ -5,6 +5,8 @@ import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +18,8 @@ public interface ProfileService {
     Profile getProfile(UUID pdaId);
 
     ResponsePage<SimpleUserDto> getRating(QueryPage queryPage);
+
+    Page<SimpleUserDto> getPage(PageRequest pageRequest);
 
     List<AchievementEntity> getAchievements();
 
