@@ -189,35 +189,42 @@ public class ActionService {
                             String[] values = states[0].split(":");
                             if (values.length == 3) {
                                 int story = Integer.parseInt(values[0]);
+                                int chapter = Integer.parseInt(values[2]);
                                 int stage = Integer.parseInt(values[2]);
-                                int chapter;
 
                                 StoryStateEntity storyStateEntity = userEntity.getStoryState(story);
+                                if (storyStateEntity == null) {
+                                    storyStateEntity = new StoryStateEntity();
+                                    storyStateEntity.setStoryId(story);
+                                    storyStateEntity.setChapterId(chapter);
+                                    storyStateEntity.setStageId(stage);
+                                    storyStateEntity.setUser(userEntity);
+                                    userEntity.getStoryStates().add(storyStateEntity);
+                                } else {
+                                    Stage actualStage = questService.getStage(storyStateEntity.getStoryId(),
+                                            storyStateEntity.getChapterId(),
+                                            storyStateEntity.getStageId());
+                                    int finalStage = stage;
+                                    boolean checkStart = actualStage.getTransfers().stream()
+                                            .filter(transfer -> transfer.getStage_id() == finalStage)
+                                            .toList()
+                                            .size() > 0;
+                                    if (!checkStart)
+                                        throw new RuntimeException();
+                                }
                                 storyStateEntity.setCurrent(true);
 
-                                Stage actualStage = questService.getStage(storyStateEntity.getStoryId(),
-                                        storyStateEntity.getChapterId(),
-                                        storyStateEntity.getStageId());
+                                for (String state : states) {
+                                    values = state.split(":");
+                                    chapter = Integer.parseInt(values[1]);
+                                    stage = Integer.parseInt(values[2]);
 
-                                int finalStage = stage;
-                                boolean checkStart = actualStage.getTransfers().stream()
-                                        .filter(transfer -> transfer.getStage_id() == finalStage)
-                                        .toList()
-                                        .size() > 0;
+                                    storyStateEntity.setChapterId(chapter);
+                                    storyStateEntity.setStageId(stage);
 
-                                if (checkStart){
-                                    for (int i = 1; i < states.length; i++) {
-                                        values = states[i].split(":");
-                                        chapter = Integer.parseInt(values[1]);
-                                        stage = Integer.parseInt(values[2]);
-
-                                        storyStateEntity.setChapterId(chapter);
-                                        storyStateEntity.setStageId(stage);
-
-                                        logger.info("Process actions for {},{},{}", story, chapter, stage);
-                                        operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
-                                    }
-                                }else throw new RuntimeException("");
+                                    logger.info("Process actions for {},{},{}", story, chapter, stage);
+                                    operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
+                                }
                             }
                         }
                     }
@@ -230,6 +237,7 @@ public class ActionService {
                 logger.error("ActionService", e);
             }
         }
+
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {
