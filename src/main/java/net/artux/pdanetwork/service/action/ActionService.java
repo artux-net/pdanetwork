@@ -219,13 +219,16 @@ public class ActionService {
                                     Stage actualStage = questService.getStage(storyStateEntity.getStoryId(),
                                             storyStateEntity.getChapterId(),
                                             storyStateEntity.getStageId());
-                                    int finalStage = stage;
-                                    boolean checkStart = actualStage.getTransfers().stream()
-                                            .filter(transfer -> transfer.getStage_id() == finalStage)
-                                            .toList()
-                                            .size() > 0;
-                                    if (!checkStart)
-                                        throw new RuntimeException();
+
+                                    if (actualStage.getTransfers() != null && actualStage.getTransfers().size() > 0) {
+                                        int finalStage = stage;
+                                        boolean checkStart = actualStage.getTransfers().stream()
+                                                .filter(transfer -> transfer.getStage_id() == finalStage)
+                                                .toList()
+                                                .size() > 0;
+                                        if (!checkStart)
+                                            throw new RuntimeException();
+                                    }
                                 }
                                 storyStateEntity.setCurrent(true);
 
