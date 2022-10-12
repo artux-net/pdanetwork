@@ -7,6 +7,9 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.UUID;
 
 
@@ -31,8 +34,24 @@ public class ValuesService {
     @Value("${files.server.address}")
     private String filesAddress;
 
+    @Value("${files.server.user}")
+    private String filesUser;
+
+    @Value("${files.server.password}")
+    private String filesPassword;
+
     @Value("${spring.mail.username}")
     private String email;
+
+    @PostConstruct
+    public void setFilesServerPassword(){
+        Authenticator.setDefault(new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(filesUser, filesPassword.toCharArray());
+            }
+        });
+    }
 
     public String getStoryFilesUrl() {
         return filesAddress + "stories";
