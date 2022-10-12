@@ -45,7 +45,7 @@ public class AdminQuestController extends BaseUtilityController {
 
     @ModelAttribute("fileServer")
     public String getFileServer() {
-        return valuesService.getFilesAddress();
+        return valuesService.getFilesAddress() + "static/";
     }
 
 }
