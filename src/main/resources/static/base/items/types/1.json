@@ -13,7 +13,7 @@
     "speed": "12",
     "damage": "3",
     "condition": "100",
-    "bulletBaseId": 38,
+    "bulletBaseId": 40,
     "bulletQuantity": "30",
     "baseId": 11
   },
@@ -22,7 +22,7 @@
     "speed": "12",
     "damage": "3",
     "condition": "100",
-    "bulletBaseId": 38,
+    "bulletBaseId": 40,
     "bulletQuantity": "30",
     "baseId": 12
   },
@@ -31,7 +31,7 @@
     "speed": "12",
     "damage": "4",
     "condition": "100",
-    "bulletBaseId": 38,
+    "bulletBaseId": 40,
     "bulletQuantity": "30",
     "baseId": 13
   },
@@ -40,7 +40,7 @@
     "speed": "14",
     "damage": "5.5",
     "condition": "100",
-    "bulletBaseId": 38,
+    "bulletBaseId": 40,
     "bulletQuantity": "30",
     "baseId": 14
   },
