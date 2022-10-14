@@ -66,6 +66,7 @@ public class ResetServiceImpl implements ResetService {
     public StoryData resetData() {
         UserEntity userEntity = userService.getUserById();
         userEntity.reset();
+        userEntity.getStoryStates().clear();
         return storyMapper.storyData(userRepository.saveAndFlush(userEntity));
     }
 

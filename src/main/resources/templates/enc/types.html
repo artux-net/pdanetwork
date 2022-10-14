@@ -1,21 +1,27 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <link th:href="@{/css/enc.css}" rel="stylesheet"/>
+    <meta charset="UTF-8">
     <title>Типы</title>
+    <link rel="stylesheet" th:href="@{/css/enc.css}">
 </head>
-<body link="#d8d8da" vlink="#d8d8da" alink="#d8d8da">
-<th:block th:each="i : ${types}">
-    <table border="0" cellpadding="5" cellspacing="1" style="width:100%;">
-        <tbody>
-        <tr>
-            <td style="text-align: center;"><b><a th:href="@{'/enc/' + ${i}}" th:text="${i.title}"/></b></td>
-            <td>&nbsp;</td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-</th:block>
+<body>
+    <main>
+        <div class="container">
+        <!-- Блок -->
+        <th:block th:each="i : ${types}">
+        <div class="columns col-gapless">
+            <div class="column hero-sm hero-index">
+                <a th:href="@{'/enc/' + ${i}}">
+                    <div class="hero-body">
+                        <h2 class="index-h2" th:text="${i.title}"></h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+        </th:block>
+        <!-- /Блок -->
+        </div>
+    </main>
 </body>
 </html>
-

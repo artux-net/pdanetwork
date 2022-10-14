@@ -1,27 +1,29 @@
-<html lang="RU">
-<head>
-    <meta charset="utf-8">
-    <link th:href="@{/css/enc.css}" rel="stylesheet"/>
-    <title>Список</title>
-</head>
-<body>
-<th:block th:each="i : ${items}">
-    <table>
-        <tbody>
-        <tr>
-            <td style="text-align: center;">
-                <b><a th:href="@{'/enc/item/' + ${i.id}}" th:text="${i.title}"></a></b></td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr>
-            <td style="width: 120px; text-align: center;"><a th:href="@{'/enc/item/' + ${i.id}}">
-                <img th:src="@{'/base/items/icons/' + ${i.icon}}"/></a></td>
-            <td th:text="${i.description}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-</th:block>
-</body>
+<!DOCTYPE html>
+<html lang="ru">
+   <head>
+      <meta charset="UTF-8">
+      <title>Список</title>
+      <link rel="stylesheet" th:href="@{/css/enc.css}" >
+   </head>
+   <body>
+      <main>
+         <div class="container">
+            <!-- Блок -->
+            <th:block th:each="i : ${items}">
+            <div class="columns hero-sm div-list">
+               <a th:href="@{'/enc/item/' + ${i.id}}">
+                  <div class="hero-body">
+                     <img class="img-responsive" th:src="@{'/base/items/icons/' + ${i.icon}}">
+                     <div class="list-description">
+                        <h2 class="list-h2" th:text="${i.title}"></h2>
+                        <p th:text="${i.description}"></p>
+                     </div>
+                  </div>
+               </a>
+            </div>
+            </th:block>
+            <!-- Блок -->
+         </div>
+      </main>
+   </body>
 </html>
-

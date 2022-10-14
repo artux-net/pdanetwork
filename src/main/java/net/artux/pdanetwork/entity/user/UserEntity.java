@@ -124,7 +124,6 @@ public class UserEntity extends BaseEntity {
         gangRelation.resetAll();
         notes.clear();
         parameters.clear();
-        storyStates.clear();
         armors.clear();
         bullets.clear();
         weapons.clear();
