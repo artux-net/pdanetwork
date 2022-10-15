@@ -152,11 +152,14 @@ public class ActionService {
                             int quantity = Integer.parseInt(key[1]);
                             quantityMap.put(id, quantity);
                         }
-                        items.forEach((Consumer<ItemEntity>) itemEntity -> {
-                            if (quantityMap.containsKey(itemEntity.getId())) {
-                                itemEntity.setQuantity(quantityMap.get(itemEntity.getId()));
-                            }
-                        });
+                        if (quantityMap.size() > 0)
+                            items.forEach((Consumer<ItemEntity>) itemEntity -> {
+                                if (quantityMap.containsKey(itemEntity.getId())) {
+                                    itemEntity.setQuantity(quantityMap.get(itemEntity.getId()));
+                                    logger.debug("Set quantity for " +
+                                            itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
+                                }
+                            });
                     }
                     break;
                     case "xp":
