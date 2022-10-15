@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.items.ItemEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
@@ -20,10 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -144,6 +143,22 @@ public class ActionService {
                         for (String pass : params)
                             userEntity.money(Integer.parseInt(pass));
                         break;
+                    case "item": {
+                        Set<? extends ItemEntity> items = userEntity.getAllItems();
+                        Map<UUID, Integer> quantityMap = new HashMap<>();
+                        for (String pass : params) {
+                            String[] key = pass.split(":");
+                            UUID id = UUID.fromString(key[0]);
+                            int quantity = Integer.parseInt(key[1]);
+                            quantityMap.put(id, quantity);
+                        }
+                        items.forEach((Consumer<ItemEntity>) itemEntity -> {
+                            if (quantityMap.containsKey(itemEntity.getId())) {
+                                itemEntity.setQuantity(quantityMap.get(itemEntity.getId()));
+                            }
+                        });
+                    }
+                    break;
                     case "xp":
                         for (String pass : params)
                             userEntity.xp(Integer.parseInt(pass));
