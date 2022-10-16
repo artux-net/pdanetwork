@@ -21,7 +21,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
@@ -152,7 +157,7 @@ public class ActionService {
                             int quantity = Integer.parseInt(key[1]);
                             quantityMap.put(id, quantity);
                         }
-                        if (quantityMap.size() > 0)
+                        if (quantityMap.size() > 0) {
                             items.forEach((Consumer<ItemEntity>) itemEntity -> {
                                 if (quantityMap.containsKey(itemEntity.getId())) {
                                     itemEntity.setQuantity(quantityMap.get(itemEntity.getId()));
@@ -160,6 +165,8 @@ public class ActionService {
                                             itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
                                 }
                             });
+                            items.removeIf(itemEntity -> itemEntity.getQuantity() <= 0);
+                        }
                     }
                     break;
                     case "xp":
