@@ -13,7 +13,7 @@
     "speed": "12",
     "damage": "3",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 11
   },
@@ -22,7 +22,7 @@
     "speed": "12",
     "damage": "3",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 12
   },
@@ -31,7 +31,7 @@
     "speed": "12",
     "damage": "4",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 13
   },
@@ -40,7 +40,7 @@
     "speed": "14",
     "damage": "5.5",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 14
   },
@@ -67,7 +67,7 @@
     "speed": "16.5",
     "damage": "7.5",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 17
   },
@@ -76,7 +76,7 @@
     "speed": "18.5",
     "damage": "6.5",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 18
   },
@@ -85,7 +85,7 @@
     "speed": "24.5",
     "damage": "8",
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 19
   },
@@ -94,7 +94,7 @@
     "speed": "25",
     "damage": 40,
     "condition": "100",
-    "bulletBaseId": 40,
+    "bulletBaseId": 38,
     "bulletQuantity": "30",
     "baseId": 20
   },

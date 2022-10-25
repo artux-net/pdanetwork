@@ -5,6 +5,7 @@
     "damage": "2.5",
     "condition": "100",
     "bulletBaseId": 29,
+    "bulletQuantity": 8,
     "baseId": 0
   },
   {
@@ -13,6 +14,7 @@
     "damage": "2.5",
     "condition": "100",
     "bulletBaseId": 29,
+    "bulletQuantity": 8,
     "baseId": 1
   },
   {
@@ -21,6 +23,7 @@
     "damage": "2.5",
     "condition": "100",
     "bulletBaseId": 29,
+    "bulletQuantity": 8,
     "baseId": 2
   },
   {
