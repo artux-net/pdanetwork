@@ -3,7 +3,13 @@ package net.artux.pdanetwork.service.quest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.file.File;
-import net.artux.pdanetwork.models.quest.*;
+import net.artux.pdanetwork.models.quest.Chapter;
+import net.artux.pdanetwork.models.quest.GameMap;
+import net.artux.pdanetwork.models.quest.Mission;
+import net.artux.pdanetwork.models.quest.QuestMapper;
+import net.artux.pdanetwork.models.quest.Stage;
+import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -12,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -76,6 +83,12 @@ public class QuestServiceImpl implements QuestService {
                         }
                     }
                     story.setMaps(maps);
+                    try {
+                        Mission[] missions = objectMapper.readValue(
+                                new URL(storyUrl + "/missions.json"), Mission[].class);
+                        story.setMissions(Arrays.stream(missions).toList());
+                    } catch (IOException ignored) {
+                    }
 
                     stories.put(story.getId(), story);
                 } catch (IOException e) {

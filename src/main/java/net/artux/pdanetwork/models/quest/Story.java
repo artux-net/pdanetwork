@@ -14,6 +14,7 @@ public class Story {
     private String icon;
     private HashMap<Long, Chapter> chapters;
     private HashMap<Long, GameMap> maps;
+    private List<Mission> missions;
 
     public int stageCount() {
         return getChapterList().stream().mapToInt(chapter -> chapter.getStages().size()).sum();

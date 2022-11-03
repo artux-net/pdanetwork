@@ -3,6 +3,7 @@ package net.artux.pdanetwork.models.quest;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Data
 public class Spawn {
@@ -14,5 +15,6 @@ public class Spawn {
     private boolean angry;
     private boolean ignorePlayer;
     private HashMap<String, String> data;
+    private HashMap<String, List<String>> condition;
 
 }

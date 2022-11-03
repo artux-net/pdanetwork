@@ -8,6 +8,7 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
 import net.artux.pdanetwork.models.quest.Stage;
+import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
@@ -207,6 +208,13 @@ public class ActionService {
                         if (storyOptional != null) {
                             storyOptional.setCurrent(false);
                         }
+                        break;
+                    case "check":{
+                        int storyId = userEntity.getCurrentStoryState().getStoryId();
+                        Story story = questService.getStory(storyId);
+
+                       //todo
+                    }
                         break;
                     case "state": {
                         String[] states = params.toArray(new String[0]);
