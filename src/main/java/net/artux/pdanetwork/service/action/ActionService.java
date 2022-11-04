@@ -7,6 +7,8 @@ import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
+import net.artux.pdanetwork.models.quest.Checkpoint;
+import net.artux.pdanetwork.models.quest.Mission;
 import net.artux.pdanetwork.models.quest.Stage;
 import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.security.SecurityUser;
@@ -22,12 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Service
@@ -123,7 +120,9 @@ public class ActionService {
                                 //"+":["relation_1:5"]
                                 int group = Integer.parseInt(values[0].split("_")[1]);
                                 GangRelationEntity gangRelation = userEntity.getGangRelation();
-                                gangRelation.addRelation(Gang.getById(group), Integer.parseInt(values[1]));
+                                Gang gang = Gang.getById(group);
+                                if (gang != null)
+                                    gangRelation.addRelation(gang, Integer.parseInt(values[1]));
                             } else
                                 addValue(userEntity, values[0], Integer.parseInt(values[1]));
                         }
@@ -134,7 +133,9 @@ public class ActionService {
                             if (values[0].contains("relation")) {
                                 int group = Integer.parseInt(values[0].split("_")[1]);
                                 GangRelationEntity gangRelation = userEntity.getGangRelation();
-                                gangRelation.addRelation(Gang.getById(group), -Integer.parseInt(values[1]));
+                                Gang gang = Gang.getById(group);
+                                if (gang != null)
+                                    gangRelation.addRelation(gang, -Integer.parseInt(values[1]));
                             } else
                                 addValue(userEntity, values[0], -Integer.parseInt(values[1]));
                         }
@@ -199,7 +200,9 @@ public class ActionService {
                                 } else if (pass.contains("relation")) {
                                     int group = Integer.parseInt(pass.split("_")[1]);
                                     GangRelationEntity gangRelation = userEntity.getGangRelation();
-                                    gangRelation.setRelation(Gang.getById(group), 0);
+                                    Gang gang = Gang.getById(group);
+                                    if (gang != null)
+                                        gangRelation.addRelation(gang, 0);
                                 }
                         }
                         break;
@@ -209,12 +212,23 @@ public class ActionService {
                             storyOptional.setCurrent(false);
                         }
                         break;
-                    case "check":{
+                    case "check": {
                         int storyId = userEntity.getCurrentStoryState().getStoryId();
                         Story story = questService.getStory(storyId);
-
-                       //todo
+                        for (String param : params) {
+                            Mission currentMission = story.getMissionByParam(param);
+                            if (currentMission != null) {
+                                Checkpoint checkPoint = currentMission.getNextCheckpoint(param);
+                                addKey(userEntity, checkPoint.getParameter());
+                                userEntity.getParameters()
+                                        .removeIf(parameterEntity -> parameterEntity.getKey().equals(param));
+                            } else
+                                logger.error("Check failed, param " + param + " is not within any of missions");
+                        }
                     }
+                    break;
+                    case "over":
+                        userEntity.getCurrentStoryState().setOver(true);
                         break;
                     case "state": {
                         String[] states = params.toArray(new String[0]);

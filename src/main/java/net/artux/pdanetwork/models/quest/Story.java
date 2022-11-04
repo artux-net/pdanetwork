@@ -31,4 +31,13 @@ public class Story {
     public List<GameMap> getMapList() {
         return maps.values().stream().toList();
     }
+
+    public Mission getMissionByParam(String param) {
+        if (missions != null)
+            for (Mission mission : missions) {
+                if (mission.getCheckpointWithParam(param) != null)
+                    return mission;
+            }
+        return null;
+    }
 }
