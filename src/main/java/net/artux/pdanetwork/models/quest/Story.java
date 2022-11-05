@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.models.quest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -12,23 +13,25 @@ public class Story {
     private String title;
     private String desc;
     private String icon;
+    @JsonIgnore
     private HashMap<Long, Chapter> chapters;
+    @JsonIgnore
     private HashMap<Long, GameMap> maps;
     private List<Mission> missions;
 
     public int stageCount() {
-        return getChapterList().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
+        return getChapters().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
     }
 
     public int pointCount() {
-        return getMapList().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
+        return getMaps().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
     }
 
-    public List<Chapter> getChapterList() {
+    public List<Chapter> getChapters() {
         return chapters.values().stream().toList();
     }
 
-    public List<GameMap> getMapList() {
+    public List<GameMap> getMaps() {
         return maps.values().stream().toList();
     }
 
