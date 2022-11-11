@@ -11,6 +11,7 @@ public class Spawn {
 
     private int id;
     private String title;
+    private String description;
     private Gang group;
     private Strength strength;
     private int r;
