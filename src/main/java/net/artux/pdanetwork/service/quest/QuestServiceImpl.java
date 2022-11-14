@@ -61,7 +61,8 @@ public class QuestServiceImpl implements QuestService {
                             new URL(storyUrl), File[].class);
                     for (var chapterFile : chapterFiles) {
                         if (!(chapterFile.getType() == File.Type.directory
-                                || chapterFile.getName().toLowerCase(Locale.ROOT).contains("info"))) {
+                                || chapterFile.getName().toLowerCase(Locale.ROOT).contains("info")
+                                || chapterFile.getName().toLowerCase(Locale.ROOT).contains("mission"))) {
                             Chapter chapter =
                                     objectMapper.readValue(
                                             new URL(storyUrl + "/" + chapterFile.getName()), Chapter.class);
