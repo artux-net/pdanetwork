@@ -7,7 +7,7 @@ public class Checkpoint {
 
     private String parameter;
     private String title;
-    private int chapterId;
-    private int stageId;
+    private int chapter;
+    private int stage;
 
 }
