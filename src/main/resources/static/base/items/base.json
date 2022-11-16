@@ -1401,5 +1401,41 @@
     "title": "Йодид калия",
     "content": "Не позволяет щитовидной железе впитывать радиацию. Очень востребован в зоне.",
     "description": ""
+  },
+  {
+    "disadvantages": null,
+    "price": "150",
+    "icon": null,
+    "weight": "0.25",
+    "advantages": null,
+    "id": 86,
+    "type": "MEDICINE",
+    "title": "Прокладка",
+    "content": "",
+    "description": ""
+  },
+  {
+    "disadvantages": null,
+    "price": "150",
+    "icon": null,
+    "weight": "0.25",
+    "advantages": null,
+    "id": 87,
+    "type": "MEDICINE",
+    "title": "Бинт",
+    "content": "",
+    "description": ""
+  },
+  {
+    "disadvantages": null,
+    "price": "150",
+    "icon": null,
+    "weight": "0.05",
+    "advantages": null,
+    "id": 88,
+    "type": "ITEM",
+    "title": "Флешка",
+    "content": "",
+    "description": ""
   }
 ]

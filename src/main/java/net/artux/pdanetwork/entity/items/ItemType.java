@@ -7,7 +7,8 @@ public enum ItemType {
     MEDICINE("Лекарства", 6, MedicineEntity.class),
     ARTIFACT("Артефакты", 3, ArtifactEntity.class),
     DETECTOR("Детекторы", 5, DetectorEntity.class),
-    BULLET("Боеприпасы", 2, BulletEntity.class);
+    BULLET("Боеприпасы", 2, BulletEntity.class),
+    ITEM("Предметы", 7, UsualItemEntity.class);
 
     private final String title;
     private final int id;
