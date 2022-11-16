@@ -80,6 +80,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<DetectorEntity> detectors = new HashSet<>();
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UsualItemEntity> items = new HashSet<>();
+
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
         password = passwordEncoder.encode(registerUser.getPassword());
@@ -140,6 +143,7 @@ public class UserEntity extends BaseEntity {
             case ARTIFACT -> artifacts;
             case DETECTOR -> detectors;
             case BULLET -> bullets;
+            case ITEM -> items;
         };
     }
 

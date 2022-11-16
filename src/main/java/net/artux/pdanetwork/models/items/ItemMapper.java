@@ -17,6 +17,14 @@ public interface ItemMapper {
     @Mapping(target = "baseId", source = "entity.base.id")
     ItemDto item(BulletEntity entity);
 
+    @Mapping(target = "weight", source = "entity.base.weight")
+    @Mapping(target = "type", source = "entity.base.type")
+    @Mapping(target = "title", source = "entity.base.title")
+    @Mapping(target = "price", source = "entity.base.price")
+    @Mapping(target = "icon", source = "entity.base.icon")
+    @Mapping(target = "baseId", source = "entity.base.id")
+    ItemDto item(UsualItemEntity entity);
+
     List<ItemDto> items(List<BulletEntity> itemEntities);
 
     @Mapping(target = "weight", source = "entity.base.weight")
