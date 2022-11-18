@@ -18,9 +18,9 @@
                         up the bulk of the card's content.</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item" th:text="${s.getChapterList().size()} + ' глав'"></li>
+                    <li class="list-group-item" th:text="${s.getChapters().size()} + ' глав'"></li>
                     <li class="list-group-item" th:text="${s.stageCount()} + ' стадий'"></li>
-                    <li class="list-group-item" th:text="${s.getMapList().size()} +' карт'"></li>
+                    <li class="list-group-item" th:text="${s.getMaps().size()} +' карт'"></li>
                     <li class="list-group-item" th:text="${s.pointCount()} +' всего точек на них'"></li>
                 </ul>
             </div>
