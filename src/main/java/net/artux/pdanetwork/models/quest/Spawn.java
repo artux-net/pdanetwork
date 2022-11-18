@@ -17,7 +17,7 @@ public class Spawn {
     private int r;
     private int n;
     private String pos;
-    private HashMap<String, String> data;
+    private HashMap<String, List<String>> data;
     private HashMap<String, List<String>> condition;
     private HashMap<String, List<String>> actions;
 

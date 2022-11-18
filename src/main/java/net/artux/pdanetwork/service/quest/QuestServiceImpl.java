@@ -60,14 +60,19 @@ public class QuestServiceImpl implements QuestService {
                     File[] chapterFiles = objectMapper.readValue(
                             new URL(storyUrl), File[].class);
                     for (var chapterFile : chapterFiles) {
-                        if (!(chapterFile.getType() == File.Type.directory
-                                || chapterFile.getName().toLowerCase(Locale.ROOT).contains("info")
-                                || chapterFile.getName().toLowerCase(Locale.ROOT).contains("mission"))) {
-                            Chapter chapter =
-                                    objectMapper.readValue(
-                                            new URL(storyUrl + "/" + chapterFile.getName()), Chapter.class);
-                            chapters.put(chapter.getId(), chapter);
+                        try {
+                            if (!(chapterFile.getType() == File.Type.directory
+                                    || chapterFile.getName().toLowerCase(Locale.ROOT).contains("info")
+                                    || chapterFile.getName().toLowerCase(Locale.ROOT).contains("mission"))) {
+                                Chapter chapter =
+                                        objectMapper.readValue(
+                                                new URL(storyUrl + "/" + chapterFile.getName()), Chapter.class);
+                                chapters.put(chapter.getId(), chapter);
+                            }
+                        }catch (IOException e){
+                            logger.error("Error while reading chapter " + chapterFile.getName(), e);
                         }
+
                     }
                     story.setChapters(chapters);
 
@@ -77,10 +82,14 @@ public class QuestServiceImpl implements QuestService {
                             new URL(storyUrl + "/maps"), File[].class);
                     for (var mapFile : mapFiles) {
                         if (mapFile.getType() == File.Type.file) {
-                            GameMap gameMap =
-                                    objectMapper.readValue(
-                                            new URL(storyUrl + "/maps/" + mapFile.getName()), GameMap.class);
-                            maps.put(gameMap.getId(), gameMap);
+                            try {
+                                GameMap gameMap =
+                                        objectMapper.readValue(
+                                                new URL(storyUrl + "/maps/" + mapFile.getName()), GameMap.class);
+                                maps.put(gameMap.getId(), gameMap);
+                            }catch (IOException e){
+                                logger.error("Error while reading map " + mapFile.getName(), e);
+                            }
                         }
                     }
                     story.setMaps(maps);
@@ -93,7 +102,7 @@ public class QuestServiceImpl implements QuestService {
 
                     stories.put(story.getId(), story);
                 } catch (IOException e) {
-                    logger.error("Error reading stories", e);
+                    logger.error("Error while reading story " + storyFile.getName(), e);
                 }
 
             }
