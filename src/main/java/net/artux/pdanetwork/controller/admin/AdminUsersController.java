@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.controller.admin;
 
+import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.profile.ProfileService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,8 +73,8 @@ public class AdminUsersController extends BaseUtilityController {
     }
 
     @PostMapping("/{id}")
-    public Object editUser(Model model, @PathVariable UUID id){
-
+    public Object editUser(@Valid AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
+        userService.updateByAdmin(id, editUserDto);
         return redirect(getPageUrl(), model, null);
     }
 

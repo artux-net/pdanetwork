@@ -5,7 +5,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.UsualItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
@@ -13,7 +22,15 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -52,8 +69,7 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<NoteEntity> notes;
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<UserAchievementEntity> achievements;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -83,14 +99,14 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsualItemEntity> items = new HashSet<>();
 
-    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
+    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
         login = registerUser.getLogin();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
         name = registerUser.getName();
         nickname = registerUser.getNickname();
         avatar = registerUser.getAvatar();
-        role = Role.USER;
+        this.role = role;
         gang = Gang.LONERS;
         gangRelation = new GangRelationEntity(this);
         xp = 0;
