@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.configuration;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserDetailService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,17 +19,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
 
-    private static final String[] ADMIN_LIST = {
-            "/utility"
+    private static final String[] MODERATOR_LIST = {
+            "/utility/**"
     };
 
-    private static final String[] WHITE_LIST = {
+    private static final String[] TESTER_LIST = {
             "/v3/api-docs/*",
             "/swagger-ui/**",
             "/actuator/**",
-            "/webjars/**",
+            "/webjars/**"
+    };
+
+    private static final String[] WHITE_LIST = {
             "/user/register",
-            "/reset", "/reset/**",
+            "/reset",
+            "/reset/**",
             "/feed/**",
             "/enc/**",
             "/css/**",
@@ -43,7 +48,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST)
                 .permitAll()
-                //.antMatchers(ADMIN_LIST).hasAnyAuthority("ADMIN")
+                .antMatchers(MODERATOR_LIST).hasAuthority(Role.MODERATOR.name())
+                .antMatchers(TESTER_LIST).hasAuthority(Role.TESTER.name())
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().disable()

@@ -52,6 +52,22 @@
     </div>
 </div>
 
+
+<form th:action="@{/utility/users/{id} (id = ${userEntity.id})}" th:method="post">
+
+    <div class="col">
+        <div class="form-group">
+            <label for="role"><b>Роль</b></label>
+            <select name="role" id="role" class="form-control">
+                <option th:each="role : ${roles}" th:value="${role.name}"
+                        th:text="${role.name}" th:selected="${userEntity.role == role}"></option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
 <form th:action="@{/utility/users/{id} (id = ${userEntity.id})}" th:method="delete">
     <button type="submit" class="btn btn-danger">Удалить пользователя</button>
 </form>

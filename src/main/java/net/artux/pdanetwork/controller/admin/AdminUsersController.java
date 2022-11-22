@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.controller.admin;
 
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
+import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.ValuesService;
@@ -58,15 +59,26 @@ public class AdminUsersController extends BaseUtilityController {
     }
 
     @GetMapping("/{id}")
-    public String getUser(Model model, @PathVariable UUID id){
+    public String getUser(Model model, @PathVariable UUID id) {
         model.addAttribute("userEntity", userService.getUserById(id));
         return pageWithContent("users/view", model);
     }
 
     @DeleteMapping("/{id}")
-    public Object deleteUser(Model model, @PathVariable UUID id){
+    public Object deleteUser(Model model, @PathVariable UUID id) {
         userService.deleteUserById(id);
         return redirect(getPageUrl(), model, null);
+    }
+
+    @PostMapping("/{id}")
+    public Object editUser(Model model, @PathVariable UUID id){
+
+        return redirect(getPageUrl(), model, null);
+    }
+
+    @ModelAttribute("roles")
+    public Role[] roles() {
+        return Role.values();
     }
 
 }

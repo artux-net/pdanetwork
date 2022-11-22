@@ -2,16 +2,14 @@ package net.artux.pdanetwork.service.quest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.file.File;
-import net.artux.pdanetwork.models.quest.Chapter;
-import net.artux.pdanetwork.models.quest.GameMap;
-import net.artux.pdanetwork.models.quest.Mission;
-import net.artux.pdanetwork.models.quest.QuestMapper;
-import net.artux.pdanetwork.models.quest.Stage;
-import net.artux.pdanetwork.models.quest.Story;
-import net.artux.pdanetwork.models.quest.StoryDto;
+import net.artux.pdanetwork.models.quest.*;
+import net.artux.pdanetwork.models.user.enums.Role;
+import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.slf4j.Logger;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -29,11 +27,13 @@ public class QuestServiceImpl implements QuestService {
 
     private final ObjectMapper objectMapper;
     private final QuestMapper questMapper;
-
+    private final UserService userService;
     private final ValuesService valuesService;
     private final Logger logger;
     private HashMap<Long, Story> stories;
     private Instant readTime;
+    private HashMap<Role, List<Story>> roleStories;
+    private Exception lastException;
 
     @PostConstruct
     @Override
@@ -45,6 +45,7 @@ public class QuestServiceImpl implements QuestService {
                     new URL(fileServerUrl), File[].class);
         } catch (IOException e) {
             logger.error("Can not connect to files server.", e);
+            lastException = e;
         }
 
         HashMap<Long, Story> stories = new HashMap<>();
@@ -71,6 +72,7 @@ public class QuestServiceImpl implements QuestService {
                             }
                         }catch (IOException e){
                             logger.error("Error while reading chapter " + chapterFile.getName(), e);
+                            lastException = e;
                         }
 
                     }
@@ -89,6 +91,7 @@ public class QuestServiceImpl implements QuestService {
                                 maps.put(gameMap.getId(), gameMap);
                             }catch (IOException e){
                                 logger.error("Error while reading map " + mapFile.getName(), e);
+                                lastException = e;
                             }
                         }
                     }
@@ -103,6 +106,7 @@ public class QuestServiceImpl implements QuestService {
                     stories.put(story.getId(), story);
                 } catch (IOException e) {
                     logger.error("Error while reading story " + storyFile.getName(), e);
+                    lastException = e;
                 }
 
             }
@@ -136,12 +140,17 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public Story getStory(long storyId) {
-        return stories.get(storyId);
+        UserEntity user = userService.getUserById();
+        Story story = stories.get(storyId);
+        if (story.getAccess().getPriority() > user.getRole().getPriority())
+            throw new AccessDeniedException("User has not access to the story");
+        return story;
     }
 
     @Override
     public List<Story> getStories() {
-        return stories.values().stream().toList();
+        int priority = userService.getUserById().getRole().getPriority();
+        return stories.values().stream().filter(story -> story.getAccess().getPriority() <= priority).toList();
     }
 
     @Override

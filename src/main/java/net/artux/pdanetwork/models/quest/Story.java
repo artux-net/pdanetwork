@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.models.quest;
 
 import lombok.Data;
+import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ public class Story {
     private String title;
     private String desc;
     private String icon;
+    private Role access = Role.TESTER;
     private HashMap<Long, Chapter> chapters;
     private HashMap<Long, GameMap> maps;
     private List<Mission> missions;

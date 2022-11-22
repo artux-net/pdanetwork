@@ -22,6 +22,7 @@
                     <li class="list-group-item" th:text="${s.stageCount()} + ' стадий'"></li>
                     <li class="list-group-item" th:text="${s.getMaps().size()} +' карт'"></li>
                     <li class="list-group-item" th:text="${s.pointCount()} +' всего точек на них'"></li>
+                    <li class="list-group-item" th:text="'Уровень доступа ' + ${s.access}"></li>
                 </ul>
             </div>
 
