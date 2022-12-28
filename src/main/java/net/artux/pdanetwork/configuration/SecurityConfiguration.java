@@ -24,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] TESTER_LIST = {
+            "/utility/help",
             "/v3/api-docs/*",
             "/swagger-ui/**",
             "/actuator/**",
