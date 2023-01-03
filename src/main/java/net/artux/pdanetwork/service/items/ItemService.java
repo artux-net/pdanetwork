@@ -3,16 +3,7 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.UsualItemEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
@@ -27,11 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 @Service
@@ -158,13 +145,10 @@ public class ItemService {
     private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item) {
         var type = item.getBase().getType();
         if (type.isWearable()) {
-            boolean wear = user.getWearableItems()
+            boolean userWears = user.getWearableItems()
                     .stream()
-                    .filter(userItem -> userItem.isEquipped() && userItem.getBase().getType().equals(type))
-                    .toList()
-                    .size() > 0;
-            if (!wear)
-                ((WearableEntity) item).setEquipped(true);
+                    .anyMatch(userItem -> userItem.isEquipped() && userItem.getBase().getType().equals(type));
+            ((WearableEntity) item).setEquipped(!userWears);
         }
         item.setQuantity(1);
         addAsIs(user, item);
