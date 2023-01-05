@@ -26,10 +26,10 @@ public class ItemsController {
     }
 
     @Operation(summary = "Операция с предметом")
-    @PostMapping("/{sellerId}/{itemId}")
-    public Status actionWithItem(OperationType operationType, @PathVariable long sellerId,
+    @PostMapping("/{sellerId}/{type}/{itemId}")
+    public Status actionWithItem(@PathVariable OperationType type, @PathVariable long sellerId,
                                  @PathVariable UUID itemId, int quantity) {
-        return switch (operationType) {
+        return switch (type) {
             case BUY -> sellerService.buy(sellerId, itemId, quantity);
             case SELL -> sellerService.sell(sellerId, itemId, quantity);
         };

@@ -5,9 +5,9 @@ import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +25,11 @@ public class AdminUsersController extends BaseUtilityController {
 
     private final ProfileService profileService;
     private final UserService userService;
-    private final ValuesService valuesService;
 
-    public AdminUsersController(ProfileService profileService, UserService userService, ValuesService valuesService) {
+    public AdminUsersController(ProfileService profileService, UserService userService) {
         super("Пользователи");
         this.profileService = profileService;
         this.userService = userService;
-        this.valuesService = valuesService;
     }
 
     @Override
@@ -73,6 +71,7 @@ public class AdminUsersController extends BaseUtilityController {
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Object editUser(@Valid AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
         userService.updateByAdmin(id, editUserDto);
         return redirect(getPageUrl(), model, null);

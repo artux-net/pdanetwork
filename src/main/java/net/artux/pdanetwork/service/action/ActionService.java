@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 @Service
 @Transactional
@@ -61,7 +60,7 @@ public class ActionService {
             try {
                 List<String> params = actions.get(command);
                 Optional<String> timerParam = params.stream().filter(s -> s.toLowerCase().contains("timer:")).findFirst();
-                if (timerParam.isPresent()){
+                if (timerParam.isPresent()) {
                     int minutes = Integer.parseInt(timerParam.get().substring(6));
                     params.remove(timerParam.get());
                     timer.schedule(new TimerTask() {
@@ -70,15 +69,15 @@ public class ActionService {
                             doCommand(command, params, userEntity);
                         }
                     }, 1000L * 60 * minutes);
-                }else
+                } else
                     doCommand(command, params, userEntity);
             } catch (Exception e) {
                 logger.error("ActionService", e);
             }
         }
     }
-    
-    public void doCommand(String command, List<String> params, UserEntity userEntity){
+
+    public void doCommand(String command, List<String> params, UserEntity userEntity) {
         switch (command) {
             case "add":
                 for (String value : params) {
@@ -218,6 +217,7 @@ public class ActionService {
                             if (storyOptional != null) {
                                 storyOptional.setChapterId(1);
                                 storyOptional.setStageId(0);
+                                storyOptional.setOver(false);
                             }
                         } else if (pass.contains("relation")) {
                             int group = Integer.parseInt(pass.split("_")[1]);

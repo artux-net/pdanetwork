@@ -6,7 +6,11 @@
     "condition": "100",
     "bulletBaseId": 29,
     "bulletQuantity": 8,
-    "baseId": 0
+    "baseId": 0,
+    "sounds": {
+      "shot": "pm_shot.ogg",
+      "reload": "pm_reload.ogg"
+    }
   },
   {
     "precision": "4.5",
@@ -15,7 +19,11 @@
     "condition": "100",
     "bulletBaseId": 29,
     "bulletQuantity": 8,
-    "baseId": 1
+    "baseId": 1,
+    "sounds": {
+      "shot": "pb_shot.ogg",
+      "reload": "pm_reload.ogg"
+    }
   },
   {
     "precision": "5",
@@ -24,7 +32,11 @@
     "condition": "100",
     "bulletBaseId": 29,
     "bulletQuantity": 8,
-    "baseId": 2
+    "baseId": 2,
+    "sounds": {
+      "shot": "fort_shot.ogg",
+      "reload": "fort_reload.ogg"
+    }
   },
   {
     "precision": "5",

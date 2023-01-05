@@ -6,7 +6,11 @@
     "condition": "100",
     "bulletBaseId": 31,
     "bulletQuantity": "30",
-    "baseId": 10
+    "baseId": 10,
+    "sounds": {
+      "shot": "mp5_shot.ogg",
+      "reload": "mp5_reload.ogg"
+    }
   },
   {
     "precision": "6",
@@ -15,7 +19,11 @@
     "condition": "100",
     "bulletBaseId": 38,
     "bulletQuantity": "30",
-    "baseId": 11
+    "baseId": 11,
+    "sounds": {
+      "shot": "ak74_shot.ogg",
+      "reload": "ak74u_reload.ogg"
+    }
   },
   {
     "precision": "9.5",
@@ -24,7 +32,11 @@
     "condition": "100",
     "bulletBaseId": 38,
     "bulletQuantity": "30",
-    "baseId": 12
+    "baseId": 12,
+    "sounds": {
+      "shot": "ak74_shot.ogg",
+      "reload": "ak74u_reload.ogg"
+    }
   },
   {
     "precision": 40,
