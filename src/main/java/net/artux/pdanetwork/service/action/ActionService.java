@@ -1,7 +1,10 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
@@ -225,6 +228,18 @@ public class ActionService {
                             Gang gang = Gang.getById(group);
                             if (gang != null)
                                 gangRelation.addRelation(gang, 0);
+                        } else if (pass.contains("wearable")){
+                            for (WearableEntity wearable : userEntity.getWearableItems()){
+                                wearable.setEquipped(false);
+                            }
+                        } else if (pass.contains("weapons")){
+                            for (WeaponEntity wearable : userEntity.getItemsByClass(WeaponEntity.class)){
+                                wearable.setEquipped(false);
+                            }
+                        } else if (pass.contains("armors")){
+                            for (ArmorEntity wearable : userEntity.getItemsByClass(ArmorEntity.class)){
+                                wearable.setEquipped(false);
+                            }
                         }
                 }
                 break;

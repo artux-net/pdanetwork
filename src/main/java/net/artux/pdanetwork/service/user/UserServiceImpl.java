@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         String token = Security.encrypt(newUser.getLogin());
 
         if (status.isSuccess()) {
-            if (!registerUserMap.containsKey(token))
+            if (!registerUserMap.containsKey(token)) //todo token is always different
                 try {
                     emailService.sendConfirmLetter(newUser, token);
                     addCurrent(token, newUser);
