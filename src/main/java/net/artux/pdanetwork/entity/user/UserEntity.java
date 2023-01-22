@@ -59,7 +59,9 @@ public class UserEntity extends BaseEntity {
     private GangRelationEntity gangRelation;
     private int xp;
     private int money;
+    @Column(columnDefinition = "boolean default false")
     private boolean chatBan;
+    @Column(columnDefinition = "boolean default true")
     private boolean receiveEmails;
 
     @Enumerated(EnumType.STRING)
