@@ -14,16 +14,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
 
-@Tag(name = "Пользователь")
+@Tag(name = "Рассылки")
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/user/settings")
-public class UserController {
+@RequestMapping("/mailing")
+public class MailingController {
 
     private final UserService userService;
 
     @Hidden
-    @Operation(summary = "Подтверждение регистрации пользователя")
+    @Operation(summary = "Изменить статус рассылки")
     @GetMapping("/change/{id}")
     public ModelAndView confirmRegistration(Model model, @PathVariable UUID id) {
         boolean emailSetting = userService.changeEmailSetting(id);

@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WHITE_LIST = {
-            "/user/settings",
+            "/mailing/**",
             "/user/register",
             "/reset",
             "/reset/**",
