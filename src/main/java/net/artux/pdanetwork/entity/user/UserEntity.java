@@ -59,6 +59,8 @@ public class UserEntity extends BaseEntity {
     private GangRelationEntity gangRelation;
     private int xp;
     private int money;
+    private boolean chatBan;
+    private boolean receiveEmails;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -108,7 +110,9 @@ public class UserEntity extends BaseEntity {
         avatar = registerUser.getAvatar();
         this.role = role;
         gang = Gang.LONERS;
+        chatBan = false;
         gangRelation = new GangRelationEntity(this);
+        receiveEmails = true;
         xp = 0;
         money = 500;
         lastLoginAt = registration = Instant.now();
@@ -143,6 +147,10 @@ public class UserEntity extends BaseEntity {
         gangRelation.resetAll();
         notes.clear();
         parameters.clear();
+        resetItems();
+    }
+
+    public void resetItems(){
         armors.clear();
         bullets.clear();
         weapons.clear();

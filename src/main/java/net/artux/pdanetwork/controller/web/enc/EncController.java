@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.enc;
+package net.artux.pdanetwork.controller.web.enc;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.BaseItemEntity;

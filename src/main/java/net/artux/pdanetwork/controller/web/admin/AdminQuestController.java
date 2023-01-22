@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.service.quest.QuestService;

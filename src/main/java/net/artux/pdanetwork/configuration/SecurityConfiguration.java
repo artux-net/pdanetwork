@@ -32,6 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] WHITE_LIST = {
+            "/user/settings",
             "/user/register",
             "/reset",
             "/reset/**",
@@ -39,7 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/enc/**",
             "/css/**",
             "/base/**",
-            "/images/**"
+            "/images/**",
+            "/rules"
     };
 
     @Override

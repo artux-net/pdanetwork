@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;

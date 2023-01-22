@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.user;
+package net.artux.pdanetwork.controller.rest.user;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class PasswordController {
   @PostMapping
   public String passwordPage(@RequestParam("token") String token, @RequestParam("password") String password){
     resetService.changePassword(token, password);
-    return "passwordSuccess";
+    return "public/user/passwordSuccess";
   }
 
 }

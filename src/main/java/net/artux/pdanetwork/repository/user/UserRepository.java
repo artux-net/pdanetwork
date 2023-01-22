@@ -14,6 +14,8 @@ import java.util.UUID;
 @Transactional
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
+    List<UserEntity> findAllByReceiveEmailsTrue();
+
     Optional<UserEntity> getMemberByLogin(String login);
 
     Optional<UserEntity> findMemberByEmail(String email);

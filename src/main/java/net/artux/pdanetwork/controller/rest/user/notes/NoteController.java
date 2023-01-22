@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.user.notes;
+package net.artux.pdanetwork.controller.rest.user.notes;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

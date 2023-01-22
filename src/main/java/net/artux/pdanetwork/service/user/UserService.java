@@ -6,6 +6,8 @@ import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 public interface UserService {
@@ -32,4 +34,7 @@ public interface UserService {
 
     void deleteUserById(UUID id);
 
+    ByteArrayInputStream exportMailContacts() throws IOException;
+
+    boolean changeEmailSetting(UUID id);
 }

@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.items;
+package net.artux.pdanetwork.controller.rest.items;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

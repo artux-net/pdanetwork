@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.service.quest.QuestService;

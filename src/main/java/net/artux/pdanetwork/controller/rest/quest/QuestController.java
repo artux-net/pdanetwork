@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.quest;
+package net.artux.pdanetwork.controller.rest.quest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

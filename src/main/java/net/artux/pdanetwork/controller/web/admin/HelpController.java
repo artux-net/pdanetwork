@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import net.artux.pdanetwork.models.user.gang.Gang;
 import org.springframework.stereotype.Controller;

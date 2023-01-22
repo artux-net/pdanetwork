@@ -240,6 +240,8 @@ public class ActionService {
                             for (ArmorEntity wearable : userEntity.getItemsByClass(ArmorEntity.class)){
                                 wearable.setEquipped(false);
                             }
+                        } else if (pass.contains("items")){
+                            userEntity.resetItems();
                         }
                 }
                 break;

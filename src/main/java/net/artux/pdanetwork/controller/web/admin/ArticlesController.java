@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,5 +1,8 @@
+<a th:href="@{/utility/users/mail/export}" class="btn btn-primary">Выгрузить все контакты для рассылки</a>
+
 <th:block th:insert="users/list">
 </th:block>
+
 <div th:if="${userPage.totalPages > 0}" class="pagination"
      th:each="pageNumber : ${pageNumbers}">
     <a th:href="@{/utility/users/list(size=${userPage.size}, page=${pageNumber})}"

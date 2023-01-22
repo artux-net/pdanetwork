@@ -7,6 +7,7 @@ import net.artux.pdanetwork.models.user.enums.Role;
 public class AdminEditUserDto {
 
     private Role role;
+    private boolean chatBan;
 
 }
 

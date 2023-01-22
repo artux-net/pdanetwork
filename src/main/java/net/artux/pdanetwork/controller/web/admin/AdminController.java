@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
@@ -55,7 +55,7 @@ public class AdminController extends BaseUtilityController {
 
     @PostMapping("/chat/ban/{id}")
     public String banUser(Model model, @PathVariable("id") Long pdaId, String reason) {
-        chatHandler.addToBanList(pdaId, reason);
+        chatHandler.banUser(pdaId, reason);
         return getChatPage(model);
     }
 

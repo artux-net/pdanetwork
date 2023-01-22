@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.user;
+package net.artux.pdanetwork.controller.rest.user;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;

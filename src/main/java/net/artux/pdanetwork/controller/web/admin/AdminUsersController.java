@@ -1,18 +1,23 @@
-package net.artux.pdanetwork.controller.admin;
+package net.artux.pdanetwork.controller.web.admin;
 
+import io.swagger.v3.oas.annotations.Operation;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.service.util.ValuesService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +31,7 @@ public class AdminUsersController extends BaseUtilityController {
     private final ProfileService profileService;
     private final UserService userService;
 
-    public AdminUsersController(ProfileService profileService, UserService userService) {
+    public AdminUsersController(ProfileService profileService, UserService userService, ValuesService valuesService) {
         super("Пользователи");
         this.profileService = profileService;
         this.userService = userService;
@@ -58,6 +63,17 @@ public class AdminUsersController extends BaseUtilityController {
         return pageWithContent("users/main", model);
     }
 
+    @Operation(summary = "Выгрузка контактов xlsx-файлом для рассылки")
+    @GetMapping("/mail/export")
+    public void exportUsers(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.addHeader("Content-Disposition", "attachment; filename=\"contacts.xlsx\"");
+
+        ByteArrayInputStream stream = userService.exportMailContacts();
+        IOUtils.copy(stream, response.getOutputStream());
+    }
+
+
     @GetMapping("/{id}")
     public String getUser(Model model, @PathVariable UUID id) {
         model.addAttribute("userEntity", userService.getUserById(id));
@@ -71,7 +87,6 @@ public class AdminUsersController extends BaseUtilityController {
     }
 
     @PostMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public Object editUser(@Valid AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
         userService.updateByAdmin(id, editUserDto);
         return redirect(getPageUrl(), model, null);

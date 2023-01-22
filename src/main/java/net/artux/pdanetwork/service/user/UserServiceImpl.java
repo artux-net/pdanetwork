@@ -12,7 +12,13 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.utills.Security;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +27,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,14 +81,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Status registerUser(RegisterUserDto newUser) {
         Status status = userValidator.checkUser(newUser);
-
-        String token = Security.encrypt(newUser.getLogin());
-
         if (status.isSuccess()) {
-            if (!registerUserMap.containsKey(token)) //todo token is always different
+            if (!registerUserMap.containsKey(newUser.getEmail()))
                 try {
-                    emailService.sendConfirmLetter(newUser, token);
-                    addCurrent(token, newUser);
+                    emailService.sendConfirmLetter(newUser, generateToken(newUser));
                     status = new Status(true, "Проверьте почту.");
                 } catch (Exception e) {
                     status = new Status(false, "Не удалось отправить письмо на " + newUser.getEmail());
@@ -90,7 +96,8 @@ public class UserServiceImpl implements UserService {
         return status;
     }
 
-    private void addCurrent(String token, RegisterUserDto user) {
+    private String generateToken(RegisterUserDto user) {
+        String token  = Security.encrypt(user.getEmail());
         logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
         registerUserMap.put(token, user);
         timer.schedule(new TimerTask() {
@@ -99,16 +106,18 @@ public class UserServiceImpl implements UserService {
                 registerUserMap.remove(token);
             }
         }, 30 * 60 * 1000);
+        return token;
     }
 
     public Status handleConfirmation(String token) {
-        if (registerUserMap.containsKey(token)) {
-            UserEntity member = saveUser(registerUserMap.get(token), Role.USER);
+        String email = Security.decrypt(token);
+        if (registerUserMap.containsKey(email)) {
+            UserEntity member = saveUser(registerUserMap.get(email), Role.USER);
             long pdaId = member.getPdaId();
             logger.info("User PDA#" + member.getLogin() + " registered.");
             registerUserMap.remove(token);
             try {
-                emailService.sendRegisterLetter(registerUserMap.get(token), pdaId);
+                emailService.sendRegisterLetter(registerUserMap.get(email), pdaId);
                 return new Status(true, pdaId + " - Это ваш pdaId, мы вас зарегистрировали, спасибо!");
             } catch (Exception e) {
                 return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
@@ -155,6 +164,7 @@ public class UserServiceImpl implements UserService {
     public UserEntity updateByAdmin(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
         user.setRole(adminEditUserDto.getRole());
+        user.setChatBan(adminEditUserDto.isChatBan());
         return userRepository.save(user);
     }
 
@@ -167,7 +177,7 @@ public class UserServiceImpl implements UserService {
             userEntity.setName(user.getName());
             userEntity.setNickname(user.getNickname());
             userEntity.setLogin(user.getLogin());
-            //TODO email may be wrong
+            //TODO добавить через модуль подтверждения почту
             userEntity.setEmail(user.getEmail());
             userEntity.setAvatar(user.getAvatar());
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -183,5 +193,55 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public ByteArrayInputStream exportMailContacts() throws IOException {
+        return exportUsers(userRepository.findAllByReceiveEmailsTrue());
+    }
 
+    @Override
+    public boolean changeEmailSetting(UUID id) {
+        UserEntity user = userRepository.findById(id).orElseThrow();
+        user.setReceiveEmails(!user.isReceiveEmails());
+        return userRepository.save(user)
+                .isReceiveEmails();
+    }
+
+    public ByteArrayInputStream exportUsers(List<UserEntity> users) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("users");
+
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellStyle(headerCellStyle);
+
+        cell = row.createCell(1);
+        cell.setCellStyle(headerCellStyle);
+
+
+        Iterator<UserEntity> userIterator = users.listIterator();
+        for (int i= 0; userIterator.hasNext(); i++){
+            UserEntity contactEntity = userIterator.next();
+            Row header = sheet.createRow(i);
+
+            Cell headerCell = header.createCell(0);
+            headerCell.setCellStyle(headerCellStyle);
+            headerCell.setCellValue(contactEntity.getEmail());
+
+            headerCell = header.createCell(1);
+            headerCell.setCellStyle(headerCellStyle);
+            headerCell.setCellValue(contactEntity.getName());
+
+            headerCell = header.createCell(2);
+            headerCell.setCellStyle(headerCellStyle);
+            headerCell.setCellValue(contactEntity.getId().toString());
+        }
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+        return new ByteArrayInputStream(outputStream.toByteArray());
+    }
 }
