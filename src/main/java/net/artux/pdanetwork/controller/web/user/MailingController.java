@@ -22,7 +22,6 @@ public class MailingController {
 
     private final UserService userService;
 
-    @Hidden
     @Operation(summary = "Изменить статус рассылки")
     @GetMapping("/change/{id}")
     public ModelAndView confirmRegistration(Model model, @PathVariable UUID id) {

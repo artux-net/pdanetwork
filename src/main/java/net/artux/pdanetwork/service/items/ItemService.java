@@ -3,11 +3,20 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.ItemMapper;
+import net.artux.pdanetwork.models.items.ItemsContainer;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.slf4j.Logger;
@@ -18,7 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 @Service
@@ -26,7 +39,8 @@ import java.util.function.Predicate;
 @RequiredArgsConstructor
 public class ItemService {
 
-    private HashMap<Long, ItemEntity> items = new HashMap<>();
+    private HashMap<Long, ItemEntity> itemsMap;
+    private ItemsContainer itemsContainer;
 
     private final Logger logger;
     private final ObjectMapper objectMapper;
@@ -38,12 +52,19 @@ public class ItemService {
 
 
     @PostConstruct
-    public void init() throws IOException {
-        items = new HashMap<>();
+    public <T extends ItemEntity> void init() throws IOException {
+        itemsMap = new HashMap<>();
+        itemsContainer = new ItemsContainer();
         for (ItemType type : ItemType.values()) {
-            for (ItemEntity item : readType(type))
-                items.put(item.getBase().getId(), item);
+            List<T> items = readType(type);
+            for (ItemEntity item : items)
+                itemsMap.put(item.getBase().getId(), item);
+            itemsContainer.set(itemMapper.anyList(items, type), type);
         }
+    }
+
+    public ItemsContainer getItemsContainer() {
+        return itemsContainer;
     }
 
     @SuppressWarnings("unchecked")
@@ -67,23 +88,11 @@ public class ItemService {
     }
 
     public ItemEntity getItem(long baseId) {
-        return items.get(baseId);
+        return itemsMap.get(baseId);
     }
 
     public ItemDto getItemDto(long baseId) {
-        return any(items.get(baseId));
-    }
-
-    private ItemDto any(ItemEntity entity1) {
-        return switch (entity1.getBase().getType()) {
-            case ARMOR -> itemMapper.armor((ArmorEntity) entity1);
-            case PISTOL, RIFLE -> itemMapper.weapon((WeaponEntity) entity1);
-            case MEDICINE -> itemMapper.medicine((MedicineEntity) entity1);
-            case ARTIFACT -> itemMapper.artifact((ArtifactEntity) entity1);
-            case DETECTOR -> itemMapper.detector((DetectorEntity) entity1);
-            case BULLET -> itemMapper.item((BulletEntity) entity1);
-            case ITEM -> itemMapper.item((UsualItemEntity) entity1);
-        };
+        return itemMapper.any(itemsMap.get(baseId));
     }
 
     public void addItem(UserEntity user, long baseId, int quantity) {
