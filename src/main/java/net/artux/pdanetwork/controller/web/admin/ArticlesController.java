@@ -5,10 +5,16 @@ import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.feed.FeedService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,13 +32,16 @@ public class ArticlesController extends BaseUtilityController {
 
     @Override
     protected Object getHome(Model model) {
-        List<ArticleDto> articleList = feedService.getPageArticles(new QueryPage()).getData();
+        QueryPage queryPage = new QueryPage();
+        queryPage.setSortBy("published");
+        queryPage.setSortDirection(Sort.Direction.DESC);
+        List<ArticleDto> articleList = feedService.getPageArticles(queryPage).getData();
         model.addAttribute("articles", articleList);
         return pageWithContent("articles/list", model);
     }
 
     @PostMapping("/save")
-    public Object addArticle(Model model, @ModelAttribute ArticleEntity article) {
+    public Object addArticle(Model model, @Valid @ModelAttribute ArticleEntity article) {
         feedService.addArticle(article);
         return redirect(getPageUrl(), model, null);
     }
