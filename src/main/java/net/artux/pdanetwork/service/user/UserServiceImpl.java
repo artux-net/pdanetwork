@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     private String generateToken(RegisterUserDto user) {
         String token  = Security.encrypt(user.getEmail());
         logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
-        registerUserMap.put(token, user);
+        registerUserMap.put(user.getEmail(), user);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
