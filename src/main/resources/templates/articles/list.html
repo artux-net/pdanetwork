@@ -25,10 +25,10 @@
 
         <div class="d-flex">
             <div class="flex-shrink-0">
-                <img class="img-fluid" th:src="${a.image}">
+                <img class="img-fluid" th:src="${a.image}" width="300px">
             </div>
             <div class="flex-grow-1 ms-3">
-                <h5 th:text="${a.title}"> <small class="text-muted"><i th:text="${a.published}"></i></small></h5>
+                <h5 th:text="${a.title}"><small class="text-muted"><i th:text="${a.published}"></i></small></h5>
                 <p th:text="${a.description}"></p>
             </div>
         </div>
