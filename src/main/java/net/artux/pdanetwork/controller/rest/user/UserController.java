@@ -36,7 +36,7 @@ public class UserController {
     @GetMapping("/register")
     public ModelAndView confirmRegistration(Model model, String t) {
         model.addAttribute("message", userService.handleConfirmation(t).getDescription());
-        return new ModelAndView("registerSuccess");
+        return new ModelAndView("public/user/registerSuccess");
     }
 
     @Operation(summary = "Информация о пользователе")
