@@ -136,7 +136,7 @@ public class UserEntity extends BaseEntity {
             this.xp = 0;
     }
 
-    public boolean buy(int price) {
+    public boolean canBuy(int price) {
         if (money >= price) {
             money -= price;
             return true;

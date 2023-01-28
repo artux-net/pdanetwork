@@ -1,12 +1,27 @@
 package net.artux.pdanetwork.entity.seller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -60,6 +75,14 @@ public class SellerEntity {
             inverseJoinColumns = @JoinColumn(name = "detector_id"))
     private Set<DetectorEntity> detectors = new HashSet<>();
 
+    public ItemEntity findItem(long baseId) {
+        for (ItemEntity item : getAllItems()) {
+            if (item.getBase().getId() == baseId)
+                return item;
+        }
+        return null;
+    }
+
     public void addItem(ItemEntity itemEntity) {
         switch (itemEntity.getBase().getType()) {
             case BULLET -> bullets.add((BulletEntity) itemEntity);
@@ -80,6 +103,18 @@ public class SellerEntity {
             case DETECTOR -> detectors.remove((DetectorEntity) itemEntity);
             case MEDICINE -> medicines.remove((MedicineEntity) itemEntity);
         }
+    }
+
+    @JsonIgnore
+    public List<ItemEntity> getAllItems() {
+        List<ItemEntity> list = new LinkedList<>();
+        list.addAll(armors);
+        list.addAll(weapons);
+        list.addAll(bullets);
+        list.addAll(medicines);
+        list.addAll(artifacts);
+        list.addAll(detectors);
+        return list;
     }
 
 }

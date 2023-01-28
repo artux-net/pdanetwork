@@ -2,7 +2,6 @@ package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.user.UserEntity;
-import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
@@ -42,8 +41,8 @@ public class GroupsHandler extends SocketHandler {
         super.afterConnectionEstablished(userSession);
 
         UserEntity userEntity = getMember(userSession);
-        GangRelationEntity gang = userEntity.getGangRelation();
-        if (gang != null) {
+        Gang gang = userEntity.getGang();
+        if (gang != Gang.LONERS) {
             sendObject(userSession, lastMessages.get(gang));
         } else {
             sendSystemMessage(userSession, "Ваш PDA не подключен ни к одной из групп");

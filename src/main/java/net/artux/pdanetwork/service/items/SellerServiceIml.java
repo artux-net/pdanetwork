@@ -2,7 +2,11 @@ package net.artux.pdanetwork.service.items;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -83,7 +87,7 @@ public class SellerServiceIml implements SellerService {
 
         if (!sellerItem.getBase().getType().isCountable())
             quantity = 1;
-        if (quantity > 0 && userEntity.buy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
+        if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
                 sellerItem.setOwner(userEntity);
@@ -97,7 +101,7 @@ public class SellerServiceIml implements SellerService {
                 separatedItem.setQuantity(quantity);
                 itemRepository.save(separatedItem);
             } else
-                return new Status(false, "У проодавца столько нет.");
+                return new Status(false, "У продавца столько нет.");
 
             itemRepository.save(sellerItem);
             userRepository.save(userEntity);
@@ -128,13 +132,25 @@ public class SellerServiceIml implements SellerService {
             if (item.getQuantity() > quantity) {
                 item.setQuantity(item.getQuantity() - quantity);
                 item = itemRepository.save(item);
-                //item.setId(null);//TODO!!
-            }
 
-            item.setOwner(null);
-            item = itemRepository.save(item);
-            sellerEntity.addItem(item);
-            sellerRepository.save(sellerEntity);
+                long baseId = item.getBase().getId();
+                ItemEntity sellerItem = sellerEntity.findItem(baseId);
+                if (sellerItem != null)
+                    sellerItem.setQuantity(sellerItem.getQuantity() + quantity);
+                else {
+                    // new item for seller
+                    sellerItem = itemService.getItem(baseId);
+                    sellerItem.setQuantity(quantity);
+                    sellerEntity.addItem(sellerItem);
+                }
+                sellerRepository.save(sellerEntity);
+            } else {
+                // if quantities equals
+                item.setOwner(null);
+                item = itemRepository.save(item);
+                sellerEntity.addItem(item);
+                sellerRepository.save(sellerEntity);
+            }
         }
         userEntity.setMoney(userEntity.getMoney() + getPrice(item, sellerEntity.getSellCoefficient(), quantity));
         userRepository.save(userEntity);
