@@ -84,21 +84,28 @@ public class SellerServiceIml implements SellerService {
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         //todo check if seller does not have item
         ItemEntity sellerItem = itemRepository.findById(id).orElseThrow();
+        long baseId = sellerItem.getBase().getId();
+        ItemEntity userItem = userEntity.findItem(baseId);
 
         if (!sellerItem.getBase().getType().isCountable())
             quantity = 1;
         if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
-                sellerItem.setOwner(userEntity);
+                if (userItem == null) {
+                    sellerItem.setOwner(userEntity);
+                    itemRepository.save(sellerItem);
+                } else {
+                    userItem.setQuantity(userItem.getQuantity() + quantity);
+                    itemRepository.delete(sellerItem);
+                }
                 sellerRepository.save(sellerEntity);
             } else if (quantity < sellerItem.getQuantity()) {
                 sellerItem.setQuantity(sellerItem.getQuantity() - quantity);
                 sellerItem = itemRepository.save(sellerItem);
 
-                long baseId = sellerItem.getBase().getId();
                 ItemEntity separatedItem = itemService.getItem(baseId);
-                ItemEntity userItem = userEntity.findItem(baseId);
+
                 if (userItem == null) {
                     //user does not have an item
                     separatedItem.setOwner(userEntity);
