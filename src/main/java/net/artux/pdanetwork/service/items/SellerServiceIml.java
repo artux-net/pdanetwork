@@ -95,11 +95,20 @@ public class SellerServiceIml implements SellerService {
             } else if (quantity < sellerItem.getQuantity()) {
                 sellerItem.setQuantity(sellerItem.getQuantity() - quantity);
                 sellerItem = itemRepository.save(sellerItem);
-                ItemEntity separatedItem = itemService.getItem(sellerItem.getBase().getId());
-                separatedItem.setBase(sellerItem.getBase());
-                separatedItem.setOwner(userEntity);
-                separatedItem.setQuantity(quantity);
-                itemRepository.save(separatedItem);
+
+                long baseId = sellerItem.getBase().getId();
+                ItemEntity separatedItem = itemService.getItem(baseId);
+                ItemEntity userItem = userEntity.findItem(baseId);
+                if (userItem == null) {
+                    //user does not have an item
+                    separatedItem.setOwner(userEntity);
+                    separatedItem.setQuantity(quantity);
+                    itemRepository.save(separatedItem);
+                } else {
+                    //user has an item
+                    userItem.setQuantity(userItem.getQuantity() + quantity);
+                    itemRepository.save(userItem);
+                }
             } else
                 return new Status(false, "У продавца столько нет.");
 

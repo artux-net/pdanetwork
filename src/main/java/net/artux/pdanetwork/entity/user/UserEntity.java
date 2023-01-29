@@ -178,6 +178,14 @@ public class UserEntity extends BaseEntity {
         return (Set<T>) getItemsByType(ItemType.getByClass(tClass));
     }
 
+    public ItemEntity findItem(long baseId) {
+        for (ItemEntity item : getAllItems()) {
+            if (item.getBase().getId() == baseId)
+                return item;
+        }
+        return null;
+    }
+
     public Set<WearableEntity> getWearableItems() {
         HashSet<WearableEntity> itemEntities = new HashSet<>();
         itemEntities.addAll(armors);
