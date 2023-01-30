@@ -99,7 +99,7 @@ public class SellerServiceIml implements SellerService {
                 } else {
                     userItem.setQuantity(userItem.getQuantity() + quantity);
                     sellerRepository.save(sellerEntity);
-                    itemRepository.delete(sellerItem);
+                    itemRepository.deleteById(sellerItem.getId());
                 }
             } else if (quantity < sellerItem.getQuantity()) {
                 sellerItem.setQuantity(sellerItem.getQuantity() - quantity);
