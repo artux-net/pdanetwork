@@ -98,12 +98,11 @@ public class SellerServiceIml implements SellerService {
                     itemRepository.save(sellerItem);
                 } else{
                     userItem.setQuantity(userItem.getQuantity() + quantity);
-                    sellerRepository.save(sellerEntity);
-                    //itemRepository.deleteById(sellerItem.getId()); // todo remove item
+                    itemRepository.deleteById(sellerItem.getId());
                 }
             } else if (quantity < sellerItem.getQuantity()) {
                 sellerItem.setQuantity(sellerItem.getQuantity() - quantity);
-                sellerItem = itemRepository.save(sellerItem);
+                itemRepository.save(sellerItem);
 
                 ItemEntity separatedItem = itemService.getItem(baseId);
 
@@ -120,7 +119,6 @@ public class SellerServiceIml implements SellerService {
             } else
                 return new Status(false, "У продавца столько нет.");
 
-            itemRepository.save(sellerItem);
             userRepository.save(userEntity);
 
             return new Status(true, "Ok.");
