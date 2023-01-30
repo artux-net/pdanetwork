@@ -92,14 +92,14 @@ public class SellerServiceIml implements SellerService {
         if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
-                if (userItem == null) {
+                if (userItem == null || !userItem.getBase().getType().isCountable()) {
                     sellerItem.setOwner(userEntity);
                     sellerRepository.save(sellerEntity);
                     itemRepository.save(sellerItem);
-                } else {
+                } else{
                     userItem.setQuantity(userItem.getQuantity() + quantity);
                     sellerRepository.save(sellerEntity);
-                    itemRepository.deleteById(sellerItem.getId());
+                    //itemRepository.deleteById(sellerItem.getId()); // todo remove item
                 }
             } else if (quantity < sellerItem.getQuantity()) {
                 sellerItem.setQuantity(sellerItem.getQuantity() - quantity);
