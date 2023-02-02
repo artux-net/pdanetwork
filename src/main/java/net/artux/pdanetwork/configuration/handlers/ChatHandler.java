@@ -83,7 +83,7 @@ public class ChatHandler extends SocketHandler {
             public void run() {
                 banMap.remove(pdaId);
             }
-        }, 60 * 60 * 1000);
+        }, 15 * 60 * 1000);
     }
 
     public void removeMessage(Long time) {
