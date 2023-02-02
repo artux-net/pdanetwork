@@ -3,9 +3,11 @@ package net.artux.pdanetwork.models.story;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.items.ItemMapper;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -23,6 +25,10 @@ public interface StoryMapper {
     List<StoryStateDto> states(List<StoryStateEntity> storyStateEntities);
 
     @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
-    StoryData storyData(UserEntity entity);
+    StoryData storyData(UserEntity user);
+
+    default GangRelationDto mapRelation(GangRelationEntity value) {
+        return new GangRelationDto(value);
+    }
 
 }
