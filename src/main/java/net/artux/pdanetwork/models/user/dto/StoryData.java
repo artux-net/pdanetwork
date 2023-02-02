@@ -4,8 +4,11 @@ import lombok.Data;
 import net.artux.pdanetwork.models.items.*;
 import net.artux.pdanetwork.models.story.ParameterDto;
 import net.artux.pdanetwork.models.story.StoryStateDto;
+import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -15,10 +18,15 @@ public class StoryData {
     private String nickname;
     private String login;
     private String avatar;
+    private Role role;
+    private int pdaId;
+
     private int money;
     private int xp;
-    private int pdaId;
     private Gang gang;
+    private GangRelationDto relations;
+    private Instant registration;
+    private Instant lastLoginAt;
 
     private List<ParameterDto> parameters;
     private List<StoryStateDto> storyStates;
@@ -30,4 +38,6 @@ public class StoryData {
     private List<WeaponDto> weapons;
     private List<ItemDto> bullets;
 
+    private boolean chatBan;
+    private boolean receiveEmails;
 }

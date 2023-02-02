@@ -3,6 +3,7 @@ package net.artux.pdanetwork.models.user.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 
@@ -21,10 +22,9 @@ public class UserDto {
     private String nickname;
     private String avatar;
     private Long pdaId;
-    private String role;
+    private Role role;
     private Gang gang;
     private int xp;
-    private int money;
     private GangRelationDto relations;
     private Instant registration;
     private Instant lastLoginAt;

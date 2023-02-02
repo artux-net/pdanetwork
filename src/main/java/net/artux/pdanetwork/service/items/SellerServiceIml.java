@@ -13,6 +13,8 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.seller.Seller;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.models.seller.SellerMapper;
+import net.artux.pdanetwork.models.story.StoryMapper;
+import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.SellerRepository;
@@ -39,9 +41,11 @@ public class SellerServiceIml implements SellerService {
     private final ItemService itemService;
     private final UserRepository userRepository;
 
+    private final StoryMapper storyMapper;
     private final SellerMapper sellerMapper;
     private final UserService userService;
     private final ObjectMapper mapper;
+
 
     @PostConstruct
     void init() throws IOException {
@@ -96,7 +100,7 @@ public class SellerServiceIml implements SellerService {
                     sellerItem.setOwner(userEntity);
                     sellerRepository.save(sellerEntity);
                     itemRepository.save(sellerItem);
-                } else{
+                } else {
                     userItem.setQuantity(userItem.getQuantity() + quantity);
                     itemRepository.deleteById(sellerItem.getId());
                 }
@@ -119,9 +123,9 @@ public class SellerServiceIml implements SellerService {
             } else
                 return new Status(false, "У продавца столько нет.");
 
-            userRepository.save(userEntity);
+            StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
 
-            return new Status(true, "Ok.");
+            return new Status(true, "Ok.", storyData);
         } else
             return new Status(true, "Недостаточно средств.");
     }
@@ -168,8 +172,9 @@ public class SellerServiceIml implements SellerService {
             }
         }
         userEntity.setMoney(userEntity.getMoney() + getPrice(item, sellerEntity.getSellCoefficient(), quantity));
-        userRepository.save(userEntity);
-        return new Status(true, "Ok.");
+
+        StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
+        return new Status(true, "Ok.", storyData);
     }
 
     private int getPrice(ItemEntity item, float sellerCoefficient, int quantity) {
