@@ -50,19 +50,7 @@ public class AdminController extends BaseUtilityController {
 
     @GetMapping("/chat")
     public String getChatPage(Model model) {
-        return pageWithContent("notReady", model);
-    }
-
-    @PostMapping("/chat/ban/{id}")
-    public String banUser(Model model, @PathVariable("id") Long pdaId, String reason) {
-        chatHandler.banUser(pdaId, reason);
-        return getChatPage(model);
-    }
-
-    @PostMapping("/chat/delete/{time}")
-    public String deleteMessage(Model model, @PathVariable("time") Long time) {
-        chatHandler.removeMessage(time);
-        return getChatPage(model);
+        return pageWithContent("chat", model);
     }
 
 }

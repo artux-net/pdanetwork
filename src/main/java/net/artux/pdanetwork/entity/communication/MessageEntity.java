@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class MessageEntity extends BaseEntity {
     }
 
     public MessageEntity(UserEntity userEntity, String content) {
+        id = UUID.randomUUID();
         this.author = userEntity;
         this.content = content.trim();
         timestamp = Instant.now();
