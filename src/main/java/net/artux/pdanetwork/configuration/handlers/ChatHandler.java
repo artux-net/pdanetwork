@@ -58,7 +58,7 @@ public class ChatHandler extends SocketHandler {
             return;
         } else if (BadWordsFilter.contains(message.getContent())) {
             sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
-            banService.applyBan(author.getId(), "Автоматический бан за использование плохих слов.", message.getContent(), 60 * 15);
+            banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message.getContent(), 60 * 15);
             return;
         }
         lastMessages.add(message);

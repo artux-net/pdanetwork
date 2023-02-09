@@ -52,14 +52,14 @@ public class RPHandler extends SocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
-        MessageDTO message = messageMapper.dto(getMessage(userSession, webSocketMessage));
+        MessageDTO message =  messageMapper.dto(getMessage(userSession, webSocketMessage));
         UserDto author = message.getAuthor();
         if (banService.isBanned(author.getId())) {
             sendSystemMessage(userSession, "Заблокирована отправка сообщений. Причина: " + banService.getCurrentBan(author.getId()).getReason());
             return;
         } else if (BadWordsFilter.contains(message.getContent())) {
             sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
-            banService.applyBan(author.getId(), "Автоматический бан за использование плохих слов.", message.getContent(), 60 * 15);
+            banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message.getContent(), 60 * 15);
             return;
         }
         lastMessages.add(message);

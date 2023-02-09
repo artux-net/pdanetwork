@@ -23,10 +23,15 @@ public class BanController {
 
     @PostMapping("/{id}")
     public BanDto banUser( @PathVariable("id") UUID uuid, String reason, String message, int secs) {
-        return banService.applyBan(uuid, reason, message, secs);
+        return banService.applySystemBan(uuid, reason, message, secs);
     }
 
-    @GetMapping("/{id}")
+    @PostMapping("/{id}/set/always")
+    public boolean alwaysChatBanUser(@PathVariable("id") UUID uuid) {
+        return banService.setChatBan(uuid);
+    }
+
+    @GetMapping("/{id}/all")
     public List<BanDto> getBans(@PathVariable("id") UUID uuid) {
         return banService.getBans(uuid);
     }

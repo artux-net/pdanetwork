@@ -168,6 +168,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public boolean setChatBan(UUID userId) {
+        UserEntity user = getUserById(userId);
+        user.setChatBan(!user.isChatBan());
+        return userRepository.save(user).isChatBan();
+    }
+
 
     @Override
     public Status editUser(RegisterUserDto user) {

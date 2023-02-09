@@ -2,8 +2,10 @@ package net.artux.pdanetwork.service.user.ban;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.BanEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.ban.BanDto;
 import net.artux.pdanetwork.models.user.ban.BanMapper;
+import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.BanRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
@@ -36,14 +38,21 @@ public class BanServiceImpl implements BanService {
     }
 
     @Override
-    public BanDto applyBan(UUID userId, String reason, String message, int secs) {
-        return applyBan(userId, null, reason, message, secs);
+    public boolean setChatBan(UUID userId) {
+        UserEntity user = userService.getUserById();
+        if (user.getRole() == Role.USER)
+            throw new RuntimeException("NOT ADMIN");
+        return userService.setChatBan(userId);
     }
 
     @Override
-    public BanDto applyBan(UUID userId, UUID by, String reason, String message, int secs) {
+    public BanDto applySystemBan(UUID userId, String reason, String message, int secs) {
         BanEntity banEntity = new BanEntity();
-        banEntity.setBy(userService.getUserById(by));
+        banEntity.setBy(null);
+        return banUser(userId, reason, message, secs, banEntity);
+    }
+
+    private BanDto banUser(UUID userId, String reason, String message, int secs, BanEntity banEntity) {
         banEntity.setUser(userService.getUserById(userId));
         banEntity.setReason(reason);
         banEntity.setMessage(message);
@@ -57,6 +66,17 @@ public class BanServiceImpl implements BanService {
             }
         }, 1000L * secs);
         return getCurrentBan(userId);
+    }
+
+    @Override
+    public BanDto applyBan(UUID userId, String reason, String message, int secs) {
+        UserEntity user = userService.getUserById();
+        if (user.getRole() == Role.USER)
+            throw new RuntimeException("NOT ADMIN");
+
+        BanEntity banEntity = new BanEntity();
+        banEntity.setBy(user);
+        return banUser(userId, reason, message, secs, banEntity);
     }
 
     @Override

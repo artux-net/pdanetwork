@@ -30,6 +30,8 @@ public interface UserService {
 
     UserEntity updateByAdmin(UUID userId, AdminEditUserDto adminEditUserDto);
 
+    boolean setChatBan(UUID userId);
+
     Status editUser(RegisterUserDto user);
 
     void deleteUserById(UUID id);
