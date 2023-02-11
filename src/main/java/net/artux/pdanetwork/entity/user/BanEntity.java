@@ -25,4 +25,8 @@ public class BanEntity extends BaseEntity {
     private int seconds;
     private Instant timestamp;
 
+    public BanEntity() {
+        timestamp = Instant.now();
+    }
+
 }

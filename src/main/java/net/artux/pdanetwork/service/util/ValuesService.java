@@ -58,7 +58,11 @@ public class ValuesService {
     }
 
     public String getAddress() {
-        return getProtocol() + "://" + getHost() + getContextPath();
+        return getDomain() + getContextPath();
+    }
+
+    public String getDomain() {
+        return getProtocol() + "://" + getHost();
     }
 
     @Named("articleUrl")

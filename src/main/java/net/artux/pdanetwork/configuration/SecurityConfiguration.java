@@ -3,6 +3,7 @@ package net.artux.pdanetwork.configuration;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserDetailService;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableConfigurationProperties
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
+    private final ValuesService valuesService;
 
     private static final String[] MODERATOR_LIST = {
             "/utility/**"
@@ -68,5 +72,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/**")
+                        .exposedHeaders("Authorization")
+                        .allowedHeaders("Authorization", "Cache-Control", "Content-Type")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS")
+                        .allowCredentials(true)
+                        .allowedOrigins(valuesService.getDomain());
+            }
+        };
     }
 }
