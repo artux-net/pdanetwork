@@ -59,14 +59,12 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     protected void sendSystemMessageByPdaId(Integer pdaId, String msg) {
-        Optional<WebSocketSession> webSocketSessionOptional = sessionList.stream().filter(new Predicate<WebSocketSession>() {
-            @Override
-            public boolean test(WebSocketSession webSocketSession) {
-                return getMember(webSocketSession).getPdaId() == pdaId;
-            }
-        }).findFirst();
-        if (webSocketSessionOptional.isPresent())
-            sendSystemMessage(webSocketSessionOptional.get(), msg);
+        Optional<WebSocketSession> webSocketSessionOptional = sessionList
+                .stream()
+                .filter(webSocketSession -> getMember(webSocketSession).getPdaId() == pdaId)
+                .findFirst();
+
+        webSocketSessionOptional.ifPresent(socketSession -> sendSystemMessage(socketSession, msg));
 
     }
 
@@ -99,7 +97,7 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     protected void sendSystemMessage(WebSocketSession userSession, String msg) {
-        sendObject(userSession, MessageEntity.getSystemMessage("ru", msg));
+        sendUpdate(userSession, ChatUpdate.event(msg));
     }
 
     protected <T> T get(Class<T> clazz, WebSocketMessage<?> message) {

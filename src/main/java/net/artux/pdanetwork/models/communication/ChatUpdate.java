@@ -28,6 +28,9 @@ public class ChatUpdate {
         return new ChatUpdate(Collections.singletonList(message), new LinkedList<>());
     }
 
+    public static ChatUpdate event(String event) {
+        return new ChatUpdate(Collections.emptyList(), Collections.singletonList(ChatEvent.of(event)));
+    }
 
     public static ChatUpdate empty() {
         return new ChatUpdate(Collections.emptyList(), Collections.emptyList());
