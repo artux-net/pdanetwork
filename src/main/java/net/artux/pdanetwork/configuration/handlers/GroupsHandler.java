@@ -2,11 +2,14 @@ package net.artux.pdanetwork.configuration.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.service.user.ban.BanService;
+import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,10 +17,14 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.HashMap;
 
 @Service
-public class GroupsHandler extends SocketHandler {
+public class GroupsHandler extends CommonHandler {
 
-    private HashMap<Gang, LimitedLinkedList<MessageDTO>> lastMessages = initLastMessages();
+    private final HashMap<Gang, LimitedLinkedList<MessageDTO>> lastMessages = initLastMessages();
     private static final int limit = 150;
+
+    public GroupsHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService) {
+        super(userService, objectMapper, messageMapper, valuesService, banService);
+    }
 
     private HashMap<Gang, LimitedLinkedList<MessageDTO>> initLastMessages() {
         HashMap<Gang, LimitedLinkedList<MessageDTO>> lastMessages = new HashMap<>();
@@ -32,32 +39,27 @@ public class GroupsHandler extends SocketHandler {
         return lastMessages;
     }
 
-    public GroupsHandler(UserService userService, ObjectMapper mapper, MessageMapper messageMapper) {
-        super(userService, mapper, messageMapper);
-    }
-
     @Override
     public void afterConnectionEstablished(WebSocketSession userSession) {
-        super.afterConnectionEstablished(userSession);
-
         UserEntity userEntity = getMember(userSession);
         Gang gang = userEntity.getGang();
         if (gang != Gang.LONERS) {
-            sendObject(userSession, lastMessages.get(gang));
+            sendUpdate(userSession, ChatUpdate.of(lastMessages.get(gang)));
         } else {
-            sendSystemMessage(userSession, "Ваш PDA не подключен ни к одной из групп");
+            reject(userSession, "Ваш PDA не подключен ни к одной из групп");
         }
     }
 
     @Override
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
         Gang gang = getMember(userSession).getGang();
-        MessageDTO messageEntity = messageMapper.dto(getMessage(userSession, webSocketMessage));
-        lastMessages.get(gang).add(messageEntity);
+        String text = getTextMessage(webSocketMessage);
+        ChatUpdate update = getUpdate(userSession, text);
+        lastMessages.get(gang).addAll(update.getUpdates());
 
         for (WebSocketSession session : getSessions())
             if (getMember(session).getGang() == gang)
-                sendObject(session, messageEntity);
+                sendUpdate(session, update);
     }
 
 }

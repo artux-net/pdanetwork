@@ -22,8 +22,8 @@ public class BanController {
     private final BanService banService;
 
     @PostMapping("/{id}")
-    public BanDto banUser( @PathVariable("id") UUID uuid, String reason, String message, int secs) {
-        return banService.applySystemBan(uuid, reason, message, secs);
+    public BanDto banUser(@PathVariable("id") UUID uuid, String reason, String message, int secs) {
+        return banService.applyBan(uuid, reason, message, secs);
     }
 
     @PostMapping("/{id}/set/always")

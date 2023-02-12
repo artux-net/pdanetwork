@@ -5,9 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.communication.MessageEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.user.UserService;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -79,6 +84,10 @@ public abstract class SocketHandler implements WebSocketHandler {
         }
     }
 
+    protected void sendUpdate(WebSocketSession userSession, ChatUpdate update) {
+        sendObject(userSession, update);
+    }
+
     protected void sendObject(WebSocketSession userSession, Object object) {
         if (userSession != null && userSession.isOpen())
             try {
@@ -102,9 +111,17 @@ public abstract class SocketHandler implements WebSocketHandler {
         return null;
     }
 
-    protected MessageEntity getMessage(WebSocketSession userSession, WebSocketMessage<?> message) {
-        return new MessageEntity(getMember(userSession), message.getPayload().toString());
+    protected String getTextMessage(WebSocketMessage<?> message) {
+        return message.getPayload().toString();
     }
+
+    protected ChatUpdate getUpdate(WebSocketSession userSession, String textMessage) {
+        if (textMessage.isBlank())
+            return ChatUpdate.empty();
+        else
+            return ChatUpdate.of(messageMapper.dto(new MessageEntity(getMember(userSession), textMessage)));
+    }
+
 
     @Override
     public abstract void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage);

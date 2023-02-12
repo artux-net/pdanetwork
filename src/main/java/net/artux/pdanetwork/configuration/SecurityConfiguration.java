@@ -21,7 +21,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userDetailsService;
-    private final ValuesService valuesService;
 
     private static final String[] MODERATOR_LIST = {
             "/utility/**"
@@ -51,7 +50,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(WHITE_LIST)
@@ -75,19 +73,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry
-                        .addMapping("/**")
-                        .exposedHeaders("Authorization")
-                        .allowedHeaders("Authorization", "Cache-Control", "Content-Type")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PUT", "OPTIONS")
-                        .allowCredentials(true)
-                        .allowedOrigins(valuesService.getDomain());
-            }
-        };
-    }
 }
