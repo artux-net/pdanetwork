@@ -152,7 +152,7 @@ public class UserEntity extends BaseEntity {
         resetItems();
     }
 
-    public void resetItems(){
+    public void resetItems() {
         armors.clear();
         bullets.clear();
         weapons.clear();
@@ -204,6 +204,20 @@ public class UserEntity extends BaseEntity {
         itemEntities.addAll(detectors);
         itemEntities.addAll(artifacts);
         return itemEntities;
+    }
+
+    public void fixAllItems() {
+        fixItems(armors);
+        fixItems(weapons);
+        fixItems(bullets);
+        fixItems(medicines);
+        fixItems(detectors);
+        fixItems(artifacts);
+    }
+
+    private void fixItems(Set<? extends ItemEntity> set) {
+        set.removeIf(itemEntity -> itemEntity.getQuantity() < 1);
+        set.removeIf(itemEntity -> !itemEntity.getBase().getType().isCountable() && itemEntity.getQuantity() > 1);
     }
 
     public StoryStateEntity getStoryState(int storyId) {

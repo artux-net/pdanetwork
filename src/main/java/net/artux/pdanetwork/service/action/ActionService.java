@@ -27,7 +27,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
@@ -52,6 +59,7 @@ public class ActionService {
         UserEntity userEntity = userRepository.getById(id);
         logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
+        userEntity.fixAllItems();
         return storyMapper.storyData(userRepository.save(userEntity));
     }
 
@@ -191,7 +199,6 @@ public class ActionService {
                                     itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
                         }
                     });
-                    items.removeIf(itemEntity -> itemEntity.getQuantity() <= 0);
                 }
             }
             break;
@@ -228,19 +235,19 @@ public class ActionService {
                             Gang gang = Gang.getById(group);
                             if (gang != null)
                                 gangRelation.addRelation(gang, 0);
-                        } else if (pass.contains("wearable")){
-                            for (WearableEntity wearable : userEntity.getWearableItems()){
+                        } else if (pass.contains("wearable")) {
+                            for (WearableEntity wearable : userEntity.getWearableItems()) {
                                 wearable.setEquipped(false);
                             }
-                        } else if (pass.contains("weapons")){
-                            for (WeaponEntity wearable : userEntity.getItemsByClass(WeaponEntity.class)){
+                        } else if (pass.contains("weapons")) {
+                            for (WeaponEntity wearable : userEntity.getItemsByClass(WeaponEntity.class)) {
                                 wearable.setEquipped(false);
                             }
-                        } else if (pass.contains("armors")){
-                            for (ArmorEntity wearable : userEntity.getItemsByClass(ArmorEntity.class)){
+                        } else if (pass.contains("armors")) {
+                            for (ArmorEntity wearable : userEntity.getItemsByClass(ArmorEntity.class)) {
                                 wearable.setEquipped(false);
                             }
-                        } else if (pass.contains("items")){
+                        } else if (pass.contains("items")) {
                             userEntity.resetItems();
                         }
                 }
