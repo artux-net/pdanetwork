@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface BanRepository extends JpaRepository<BanEntity, UUID> {
 
     List<BanEntity> findAllByUserId(UUID id);
+
+    void deleteAllByUserId(UUID id);
 }

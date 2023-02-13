@@ -84,4 +84,17 @@ public class BanServiceImpl implements BanService {
         return banMapper.dto(currentBanMap.get(userId));
     }
 
+    @Override
+    public boolean clearAllBans(UUID uuid) {
+        currentBanMap.remove(uuid);
+        repository.deleteAllByUserId(uuid);
+        return true;
+    }
+
+    @Override
+    public boolean clearBan(UUID banId) {
+        repository.deleteById(banId);
+        return true;
+    }
+
 }

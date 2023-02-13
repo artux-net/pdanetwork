@@ -20,6 +20,8 @@ import java.time.temporal.ChronoUnit;
 
 public abstract class CommonHandler extends SocketHandler {
 
+    private final static ChatUpdate EMPTY_UPDATE = ChatUpdate.empty();
+
     private final LimitedLinkedList<MessageDTO> lastMessages;
     private final ValuesService valuesService;
     private final BanService banService;
@@ -53,13 +55,13 @@ public abstract class CommonHandler extends SocketHandler {
         String message = getTextMessage(webSocketMessage);
         UserEntity author = getMember(userSession);
 
-        ChatUpdate update = getUpdate(userSession, message);
         if (!message.isBlank()) {
+            ChatUpdate update;
             if (banService.isBanned(author.getId())) {
                 BanDto ban = banService.getCurrentBan(author.getId());
                 Instant endTime = ban.getTimestamp().plusSeconds(ban.getSeconds());
-                update.addEvent(ChatEvent.of("Заблокирована отправка сообщений. Причина: "
-                        + ban.getReason() + ", осталось " + ChronoUnit.SECONDS.between(Instant.now(), endTime) + " сек."));
+                update = ChatUpdate.event("Заблокирована отправка сообщений. Причина: "
+                        + ban.getReason() + ", осталось времени: " + ChronoUnit.SECONDS.between(Instant.now(), endTime) + " сек.");
                 sendUpdate(userSession, update);
                 return;
             }
@@ -67,16 +69,16 @@ public abstract class CommonHandler extends SocketHandler {
             if (BadWordsFilter.contains(message)) {
                 sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
                 banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message, 60 * 15);
-                update.addEvent(ChatEvent.of(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил."));
-                return;
-            }
+                update = ChatUpdate.event(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил.");
+            }else
+                update = getUpdate(userSession, message);
 
             for (WebSocketSession session : getSessions()) {
                 sendUpdate(session, update);
             }
             lastMessages.addAll(update.asOld().getUpdates());
         } else {
-            sendUpdate(userSession, update);
+            sendUpdate(userSession, EMPTY_UPDATE);
         }
     }
 

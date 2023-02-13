@@ -18,4 +18,8 @@ public interface BanService {
     BanDto applyBan(UUID userId, String reason, String message, int secs);
 
     BanDto getCurrentBan(UUID userId);
+
+    boolean clearAllBans(UUID uuid);
+
+    boolean clearBan(UUID banId);
 }
