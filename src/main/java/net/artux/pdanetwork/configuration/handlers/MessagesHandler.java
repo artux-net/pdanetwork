@@ -3,6 +3,7 @@ package net.artux.pdanetwork.configuration.handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.communication.ConversationService;
@@ -79,7 +80,7 @@ public class MessagesHandler extends SocketHandler {
         MessageDTO userMessage = messagingService.saveToConversation(webSocketMessage.getPayload().toString(), conversation);//save message
 
         for (WebSocketSession session : conversations.get(conversation)) {
-            sendObject(session, userMessage);
+            sendUpdate(session, ChatUpdate.of(userMessage));
         }
         dialogsHandler.sendUpdates(conversation, userMessage);// send notif
     }
@@ -98,7 +99,7 @@ public class MessagesHandler extends SocketHandler {
 
         List<MessageDTO> messages = messagingService.getLastMessages(conversationEntity, PageRequest.of(0, 20))
                 .toList();
-        sendObject(session, messages);
+        sendUpdate(session, ChatUpdate.of(messages));
     }
 
 

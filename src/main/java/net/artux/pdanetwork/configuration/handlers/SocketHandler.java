@@ -16,17 +16,16 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 
 @RequiredArgsConstructor
 public abstract class SocketHandler implements WebSocketHandler {
 
     private final UserService userService;
-    private static final List<WebSocketSession> sessionList = new ArrayList<>();
+    private final List<WebSocketSession> sessionList = new LinkedList<>();
     private final ObjectMapper objectMapper;
     protected final MessageMapper messageMapper;
 
@@ -54,7 +53,7 @@ public abstract class SocketHandler implements WebSocketHandler {
         sessionList.remove(userSession);
     }
 
-    protected static List<WebSocketSession> getSessions() {
+    protected List<WebSocketSession> getSessions() {
         return sessionList;
     }
 

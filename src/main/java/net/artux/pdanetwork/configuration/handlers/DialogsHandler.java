@@ -56,7 +56,7 @@ public class DialogsHandler extends SocketHandler {
 
     @Override
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
-
+        //todo send another dialogs
     }
 
     public void sendError(WebSocketSession session, String message) {
