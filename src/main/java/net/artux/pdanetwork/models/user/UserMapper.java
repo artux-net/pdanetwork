@@ -21,7 +21,6 @@ public interface UserMapper {
 
     RegisterUserDto regUser(UserEntity user);
 
-    @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
     UserDto dto(UserEntity user);
 
     @Mapping(target = "friendRelation", ignore = true)

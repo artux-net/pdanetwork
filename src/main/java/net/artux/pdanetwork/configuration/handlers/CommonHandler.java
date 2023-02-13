@@ -7,11 +7,15 @@ import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
+import net.artux.pdanetwork.models.user.ban.BanDto;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.user.ban.BanService;
 import net.artux.pdanetwork.service.util.ValuesService;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 
 public abstract class CommonHandler extends SocketHandler {
@@ -52,8 +56,11 @@ public abstract class CommonHandler extends SocketHandler {
         ChatUpdate update = getUpdate(userSession, message);
         if (!message.isBlank()) {
             if (banService.isBanned(author.getId())) {
+                BanDto ban = banService.getCurrentBan(author.getId());
+                Instant endTime = ban.getTimestamp().plusSeconds(ban.getSeconds());
                 update.addEvent(ChatEvent.of("Заблокирована отправка сообщений. Причина: "
-                        + banService.getCurrentBan(author.getId()).getReason()));
+                        + ban.getReason() + ", осталось " + ChronoUnit.SECONDS.between(Instant.now(), endTime) + " сек."));
+                sendUpdate(userSession, update);
                 return;
             }
 
