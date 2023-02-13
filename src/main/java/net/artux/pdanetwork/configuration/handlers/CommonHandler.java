@@ -40,7 +40,7 @@ public abstract class CommonHandler extends SocketHandler {
         ChatUpdate initialUpdate = ChatUpdate.of(lastMessages);
         initialUpdate.addEvent(ChatEvent.of("Вы подключены к чату. <a href=\"" + valuesService.getAddress() + "/rules\">Соблюдайте правила.</a>"));
         if (banService.isBanned(getMember(userSession).getId()))
-            initialUpdate.addEvent(ChatEvent.of("Вы были временно заблокированы за нарушение правил."));
+            initialUpdate.addEvent(ChatEvent.of("Отправка сообщений временно заблокирована."));
         sendUpdate(userSession, initialUpdate);
     }
 
@@ -48,22 +48,29 @@ public abstract class CommonHandler extends SocketHandler {
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
         String message = getTextMessage(webSocketMessage);
         UserEntity author = getMember(userSession);
-        if (banService.isBanned(author.getId())) {
-            sendSystemMessage(userSession, "Заблокирована отправка сообщений. Причина: " + banService.getCurrentBan(author.getId()).getReason());
-            return;
-        }
 
         ChatUpdate update = getUpdate(userSession, message);
-        if (BadWordsFilter.contains(message)) {
-            sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
-            banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message, 60 * 15);
-            update.addEvent(ChatEvent.of(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил."));
-            return;
+        if (!message.isBlank()) {
+            if (banService.isBanned(author.getId())) {
+                update.addEvent(ChatEvent.of("Заблокирована отправка сообщений. Причина: "
+                        + banService.getCurrentBan(author.getId()).getReason()));
+                return;
+            }
+
+            if (BadWordsFilter.contains(message)) {
+                sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
+                banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message, 60 * 15);
+                update.addEvent(ChatEvent.of(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил."));
+                return;
+            }
+
+            for (WebSocketSession session : getSessions()) {
+                sendUpdate(session, update);
+            }
+            lastMessages.addAll(update.asOld().getUpdates());
+        } else {
+            sendUpdate(userSession, update);
         }
-        for (WebSocketSession session : getSessions()) {
-            sendUpdate(session, update);
-        }
-        lastMessages.addAll(update.asOld().getUpdates());
     }
 
 }

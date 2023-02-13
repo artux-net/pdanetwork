@@ -67,6 +67,12 @@ public abstract class SocketHandler implements WebSocketHandler {
 
     }
 
+    public void sendAllUpdate(ChatUpdate update) {
+        for (WebSocketSession session : getSessions()) {
+            sendUpdate(session, update);
+        }
+    }
+
     protected UserEntity getMember(WebSocketSession userSession) {
         if (userSession.getAttributes().containsKey(USER))
             return (UserEntity) userSession.getAttributes().get(USER);

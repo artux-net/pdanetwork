@@ -25,7 +25,6 @@ public class UserDto {
     private Role role;
     private Gang gang;
     private int xp;
-    private GangRelationDto relations;
     private Instant registration;
     private Instant lastLoginAt;
 
