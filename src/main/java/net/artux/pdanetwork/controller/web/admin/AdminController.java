@@ -20,13 +20,11 @@ import java.time.Instant;
 @RequestMapping("/utility")
 public class AdminController extends BaseUtilityController {
 
-    private final ChatHandler chatHandler;
     private final ProfileService profileService;
     private final StatisticService statisticService;
 
-    public AdminController(ChatHandler chatHandler, ProfileService profileService, StatisticService statisticService) {
+    public AdminController(ProfileService profileService, StatisticService statisticService) {
         super("Админ панель");
-        this.chatHandler = chatHandler;
         this.profileService = profileService;
         this.statisticService = statisticService;
     }

@@ -6,17 +6,13 @@ import net.artux.pdanetwork.configuration.handlers.ChatHandler;
 import net.artux.pdanetwork.configuration.handlers.GroupsHandler;
 import net.artux.pdanetwork.configuration.handlers.RPHandler;
 import net.artux.pdanetwork.configuration.handlers.SocketHandler;
+import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
-import net.artux.pdanetwork.models.user.ban.BanDto;
-import net.artux.pdanetwork.service.user.ban.BanService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Tag(name = "Чаты")
@@ -29,19 +25,19 @@ public class ChatController {
     private final RPHandler rpHandler;
 
     @PostMapping("/event")
-    public ChatUpdate addEvent(String event, ChatType type) {
+    public ChatUpdate addEvent(@ParameterObject ChatEvent event, @RequestParam("type") ChatType type) {
         SocketHandler socketHandler;
-        switch (type){
+        switch (type) {
             case RP -> socketHandler = rpHandler;
             case GROUP -> socketHandler = groupsHandler;
             default -> socketHandler = chatHandler;
         }
-        ChatUpdate update = ChatUpdate.event(event);
+        ChatUpdate update = ChatUpdate.event(event.getContent());
         socketHandler.sendAllUpdate(update);
         return update;
     }
 
-    public enum ChatType{
+    public enum ChatType {
         RP,
         GROUP,
         GENERAL
