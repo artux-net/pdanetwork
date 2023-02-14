@@ -38,7 +38,7 @@ public enum ItemType {
 
     public boolean isCountable() {
         return switch (this) {
-            case BULLET, MEDICINE, ARTIFACT -> true;
+            case BULLET, MEDICINE, ITEM -> true;
             default -> false;
         };
     }

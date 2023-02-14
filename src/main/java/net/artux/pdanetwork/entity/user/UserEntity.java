@@ -217,7 +217,9 @@ public class UserEntity extends BaseEntity {
 
     private void fixItems(Set<? extends ItemEntity> set) {
         set.removeIf(itemEntity -> itemEntity.getQuantity() < 1);
-        set.removeIf(itemEntity -> !itemEntity.getBase().getType().isCountable() && itemEntity.getQuantity() > 1);
+        set.stream()
+                .filter(itemEntity -> !itemEntity.getBase().getType().isCountable())
+                .forEach(itemEntity -> itemEntity.setQuantity(1));
     }
 
     public StoryStateEntity getStoryState(int storyId) {

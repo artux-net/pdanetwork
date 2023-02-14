@@ -25,7 +25,7 @@ public class ChatController {
     private final RPHandler rpHandler;
 
     @PostMapping("/event")
-    public ChatUpdate addEvent(@ParameterObject ChatEvent event, @RequestParam("type") ChatType type) {
+    public ChatUpdate addEvent(ChatEvent event, @RequestParam("type") ChatType type) {
         SocketHandler socketHandler;
         switch (type) {
             case RP -> socketHandler = rpHandler;

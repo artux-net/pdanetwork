@@ -9,6 +9,7 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.BanRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,6 +86,7 @@ public class BanServiceImpl implements BanService {
     }
 
     @Override
+    @Transactional
     public boolean clearAllBans(UUID uuid) {
         currentBanMap.remove(uuid);
         repository.deleteAllByUserId(uuid);
@@ -92,6 +94,7 @@ public class BanServiceImpl implements BanService {
     }
 
     @Override
+    @Transactional
     public boolean clearBan(UUID banId) {
         repository.deleteById(banId);
         return true;
