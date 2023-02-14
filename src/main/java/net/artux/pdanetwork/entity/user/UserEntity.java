@@ -220,6 +220,13 @@ public class UserEntity extends BaseEntity {
         set.stream()
                 .filter(itemEntity -> !itemEntity.getBase().getType().isCountable())
                 .forEach(itemEntity -> itemEntity.setQuantity(1));
+
+        set.removeIf(itemEntity ->{
+            if (itemEntity instanceof ArmorEntity && ((ArmorEntity) itemEntity).getCondition() < 10)
+                return true;
+
+            return itemEntity instanceof WeaponEntity && ((WeaponEntity) itemEntity).getCondition() < 10;
+        });
     }
 
     public StoryStateEntity getStoryState(int storyId) {

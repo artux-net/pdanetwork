@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Table(name = "user_armor")
-public class ArmorEntity extends WearableEntity {
+public class ArmorEntity extends ConditionalEntity {
 
     private float thermalProtection;
     private float electricProtection;

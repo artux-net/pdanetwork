@@ -11,12 +11,11 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Table(name = "user_weapon")
-public class WeaponEntity extends WearableEntity {
+public class WeaponEntity extends ConditionalEntity {
 
     private float precision;
     private float speed;
     private float damage;
-    private float condition;
     private int bulletQuantity;
     private int bulletBaseId;
 

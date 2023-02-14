@@ -2,6 +2,7 @@ package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ConditionalEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
 import net.artux.pdanetwork.entity.items.WeaponEntity;
 import net.artux.pdanetwork.entity.items.WearableEntity;
@@ -202,6 +203,37 @@ public class ActionService {
                 }
             }
             break;
+            case "item_condition": {
+                Map<UUID, Float> conditionMap = new HashMap<>();
+                for (String pass : params) {
+                    String[] key = pass.split(":");
+                    UUID id = UUID.fromString(key[0]);
+                    float quantity = Float.parseFloat(key[1]);
+                    conditionMap.put(id, quantity);
+                }
+                if (conditionMap.size() > 0) {
+                    Set<? extends ConditionalEntity> items = userEntity.getArmors();
+
+                    items.forEach((Consumer<ConditionalEntity>) itemEntity -> {
+                        if (conditionMap.containsKey(itemEntity.getId())) {
+                            itemEntity.setCondition(conditionMap.get(itemEntity.getId()));
+                            logger.debug("Set condition for " +
+                                    itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
+                        }
+                    });
+                    items = userEntity.getWeapons();
+
+                    items.forEach((Consumer<ConditionalEntity>) itemEntity -> {
+                        if (conditionMap.containsKey(itemEntity.getId())) {
+                            itemEntity.setCondition(conditionMap.get(itemEntity.getId()));
+                            logger.debug("Set condition for " +
+                                    itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
+                        }
+                    });
+                }
+            }
+            break;
+
             case "xp":
                 for (String pass : params)
                     userEntity.xp(Integer.parseInt(pass));
