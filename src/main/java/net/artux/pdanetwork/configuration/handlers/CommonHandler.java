@@ -70,16 +70,20 @@ public abstract class CommonHandler extends SocketHandler {
                 sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
                 banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message, 60 * 15);
                 update = ChatUpdate.event(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил.");
-            }else
+            } else
                 update = getUpdate(userSession, message);
 
-            for (WebSocketSession session : getSessions()) {
-                sendUpdate(session, update);
-            }
-            lastMessages.addAll(update.asOld().getUpdates());
+            applyUpdate(update);
         } else {
             sendUpdate(userSession, EMPTY_UPDATE);
         }
+    }
+
+    protected void applyUpdate(ChatUpdate update) {
+        for (WebSocketSession session : getSessions()) {
+            sendUpdate(session, update);
+        }
+        lastMessages.addAll(update.asOld().getUpdates());
     }
 
 }

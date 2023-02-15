@@ -37,6 +37,7 @@ public class ChatController {
         return update;
     }
 
+
     public enum ChatType {
         RP,
         GROUP,

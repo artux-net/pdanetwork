@@ -23,9 +23,9 @@ public class RPHandler extends CommonHandler {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendAllUpdate(ChatUpdate.of(contentService.getRandomStalkerMessageDTO()));
+                applyUpdate(ChatUpdate.of(contentService.getRandomStalkerMessageDTO()));
             }
-        }, 1000 * 60 * (random.nextInt(2) + 2));
+        }, 1000 * 60 * (random.nextInt(2) + 2), 1000 * 60 * (random.nextInt(3) + 2));
     }
 
 }
