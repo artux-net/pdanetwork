@@ -27,13 +27,13 @@ public class ContentServiceImpl implements ContentService {
     private void readAll() {
         try {
             Resource messagesResource = new ClassPathResource("config/messages");
-            messages = IOUtils.toString(messagesResource.getInputStream(), StandardCharsets.UTF_8).split("\r");
+            messages = IOUtils.toString(messagesResource.getInputStream(), StandardCharsets.UTF_8).split("\n");
 
             Resource nameResource = new ClassPathResource("config/names");
-            names = IOUtils.toString(nameResource.getInputStream(), StandardCharsets.UTF_8).split("\r");
+            names = IOUtils.toString(nameResource.getInputStream(), StandardCharsets.UTF_8).split("\n");
 
             Resource nicksResource = new ClassPathResource("config/nicks");
-            nicks = IOUtils.toString(nicksResource.getInputStream(), StandardCharsets.UTF_8).split("\r");
+            nicks = IOUtils.toString(nicksResource.getInputStream(), StandardCharsets.UTF_8).split("\n");
 
             logger.debug("Content read, {} names, {} nicks, {} messages", names.length, nicks.length, messages.length);
         } catch (IOException e) {
