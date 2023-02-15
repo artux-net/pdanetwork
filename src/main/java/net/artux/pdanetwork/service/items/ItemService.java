@@ -3,15 +3,7 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
@@ -27,11 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Predicate;
 
 @Service
@@ -120,14 +108,14 @@ public class ItemService {
         }
     }
 
-    public Status setWearable(ItemType type, UUID id) {
-        UserEntity user = userService.getUserById();
+    public Status setWearable(UserEntity user, UUID id) {
         ItemEntity item = user.getAllItems()
                 .stream()
                 .filter(itemEntity -> itemEntity.getId().equals(id))
                 .findFirst()
                 .orElseThrow();
 
+        ItemType type = item.getBase().getType();
         if (type.isWearable()) {
             Optional<WearableEntity> optionalItem = user.getWearableItems()
                     .stream()
@@ -138,17 +126,22 @@ public class ItemService {
                 WearableEntity oldWearable = optionalItem.get();
 
                 oldWearable.setEquipped(false);
-                userRepository.save(user);
                 if (item.getId().equals(oldWearable.getId()))
                     return new Status(true, "Предмет снят.");
             }
 
             ((WearableEntity) item).setEquipped(true);
-            userRepository.save(user);
 
             return new Status(true, "Предмет надет.");
+        } else return new Status(false, "Невозможно надеть предмет");
+    }
 
-        } else return new Status(true, "Невозможно надеть предмет");
+    public Status setWearable(UUID id) {
+        UserEntity user = userService.getUserById();
+        Status status = setWearable(user, id);
+        if (status.isSuccess())
+            userRepository.save(user);
+        return status;
     }
 
     private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item) {

@@ -15,6 +15,14 @@ public class MessageDTO {
     private String content;
     private Instant timestamp;
 
+    public MessageDTO(UserDto author, String content) {
+        id = UUID.randomUUID();
+        type = Type.NEW;
+        this.author = author;
+        this.content = content;
+        timestamp = Instant.now();
+    }
+
     public enum Type {
         OLD,
         NEW,

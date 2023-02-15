@@ -8,11 +8,9 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.user.UserService;
-import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketMessage;
-import org.springframework.web.socket.WebSocketSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.socket.*;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -23,6 +21,8 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class SocketHandler implements WebSocketHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private final UserService userService;
     private final List<WebSocketSession> sessionList = new LinkedList<>();
@@ -38,6 +38,7 @@ public abstract class SocketHandler implements WebSocketHandler {
 
     protected void accept(WebSocketSession userSession) {
         sessionList.add(userSession);
+        logger.debug("{}: User {} accepted", this.getClass().getSimpleName(), getMember(userSession).getLogin());
     }
 
     protected void reject(WebSocketSession userSession, String message) {
@@ -51,6 +52,7 @@ public abstract class SocketHandler implements WebSocketHandler {
             }
         }
         sessionList.remove(userSession);
+        logger.debug("{}: User {} removed", this.getClass().getSimpleName(), getMember(userSession).getLogin());
     }
 
     protected List<WebSocketSession> getSessions() {
@@ -68,6 +70,9 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     public void sendAllUpdate(ChatUpdate update) {
+        logger.debug("{}: Send message to {} sessions. Update contains {} messages, {} events.",
+                this.getClass().getSimpleName(), getSessions().size(),
+                update.getUpdates().size(), update.getEvents().size());
         for (WebSocketSession session : getSessions()) {
             sendUpdate(session, update);
         }
@@ -121,8 +126,10 @@ public abstract class SocketHandler implements WebSocketHandler {
     protected ChatUpdate getUpdate(WebSocketSession userSession, String textMessage) {
         if (textMessage.isBlank())
             return ChatUpdate.empty();
-        else
+        else {
+            logger.debug("{}: Creating chat-update \"{}\" from {}", this.getClass().getSimpleName(), textMessage, getMember(userSession).getLogin());
             return ChatUpdate.of(messageMapper.dto(new MessageEntity(getMember(userSession), textMessage)));
+        }
     }
 
 

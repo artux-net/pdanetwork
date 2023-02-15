@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.entity.items.WeaponEntity;
 import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
@@ -186,12 +185,6 @@ public class SellerServiceIml implements SellerService {
             additionalCoefficient = ((ArmorEntity) item).getCondition() / 100f;
         }
         return (int) (item.getBase().getPrice() * additionalCoefficient * sellerCoefficient) * quantity;
-    }
-
-    @Override
-    @Transactional
-    public Status set(ItemType itemType, UUID id) {
-        return itemService.setWearable(itemType, id);//todo remove from here
     }
 
 }

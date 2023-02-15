@@ -3,7 +3,6 @@ package net.artux.pdanetwork.controller.rest.items;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.service.items.SellerService;
@@ -35,11 +34,6 @@ public class SellerController {
         };
     }
 
-    @Operation(summary = "Сделать предмет по умолчанию")
-    @PostMapping("/set/{itemId}")
-    public Status setItem(@PathVariable UUID itemId, ItemType type) {
-        return sellerService.set(type, itemId);
-    }
 
     @Operation(summary = "Добавить предмет (только для админа)")
     @PostMapping("/add")

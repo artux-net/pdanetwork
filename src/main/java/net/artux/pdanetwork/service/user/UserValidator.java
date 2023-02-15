@@ -33,7 +33,7 @@ public class UserValidator {
     private String blockedNicknames;
     @PostConstruct
     private void initBlockedNicknames() throws IOException {
-        Resource resource = new ClassPathResource("/config/nicknames.txt");
+        Resource resource = new ClassPathResource("/config/forbidden_nicks.txt");
         InputStream in = resource.getInputStream();
         String nicknamesFile = IOUtils.toString(in, StandardCharsets.UTF_8);
         blockedNicknames = nicknamesFile.toLowerCase(Locale.ROOT);
