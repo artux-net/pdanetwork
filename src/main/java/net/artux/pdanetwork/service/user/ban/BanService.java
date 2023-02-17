@@ -3,6 +3,7 @@ package net.artux.pdanetwork.service.user.ban;
 import net.artux.pdanetwork.models.user.ban.BanDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface BanService {
@@ -22,4 +23,6 @@ public interface BanService {
     boolean clearAllBans(UUID uuid);
 
     boolean clearBan(UUID banId);
+
+    Map<UUID, BanDto> getCurrentBans();
 }

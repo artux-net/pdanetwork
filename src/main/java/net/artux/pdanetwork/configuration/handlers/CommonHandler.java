@@ -3,10 +3,12 @@ package net.artux.pdanetwork.configuration.handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ChatEvent;
+import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
+import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.ban.BanDto;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.user.ban.BanService;
@@ -16,6 +18,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 public abstract class CommonHandler extends SocketHandler {
@@ -25,18 +29,19 @@ public abstract class CommonHandler extends SocketHandler {
     private final LimitedLinkedList<MessageDTO> lastMessages;
     private final ValuesService valuesService;
     private final BanService banService;
+    private final UserMapper userMapper;
 
-    public CommonHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService) {
+    public CommonHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService, UserMapper userMapper) {
         super(userService, objectMapper, messageMapper);
         this.valuesService = valuesService;
         this.banService = banService;
-        lastMessages = new LimitedLinkedList<>(150);
+        this.userMapper = userMapper;
+        lastMessages = new LimitedLinkedList<>(100);
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession userSession) {
         super.afterConnectionEstablished(userSession);
-
         accept(userSession);
 
         if (getMember(userSession).isChatBan()) {
@@ -54,6 +59,11 @@ public abstract class CommonHandler extends SocketHandler {
     public void handleMessage(WebSocketSession userSession, WebSocketMessage<?> webSocketMessage) {
         String message = getTextMessage(webSocketMessage);
         UserEntity author = getMember(userSession);
+
+        if (message.length() > 400) {
+            sendUpdate(userSession, ChatUpdate.event("Сообщение слишком большое."));
+            return;
+        }
 
         if (!message.isBlank()) {
             ChatUpdate update;
@@ -86,4 +96,31 @@ public abstract class CommonHandler extends SocketHandler {
         lastMessages.addAll(update.asOld().getUpdates());
     }
 
+    public ChatUpdate deleteMessage(UUID messageId) {
+        MessageDTO message = getDeletedMessage(messageId);
+        if (message != null) {
+            ChatUpdate update = ChatUpdate.of(message);
+            for (WebSocketSession session : getSessions()) {
+                sendUpdate(session, update);
+            }
+            return update;
+        } else return EMPTY_UPDATE;
+    }
+
+    protected MessageDTO getDeletedMessage(UUID messageId) {
+        MessageDTO[] messages = new MessageDTO[1];
+        lastMessages.removeIf(messageDTO -> {
+            if (messageDTO.getId().equals(messageId)) {
+                messages[0] = messageDTO;
+                messages[0].setType(MessageDTO.Type.DELETE);
+                return true;
+            }
+            return false;
+        });
+        return messages[0];
+    }
+
+    public ChatStatistic getStatistic() {
+        return new ChatStatistic(userMapper.info(getSessions().stream().map(this::getMember).collect(Collectors.toList())), banService.getCurrentBans());
+    }
 }

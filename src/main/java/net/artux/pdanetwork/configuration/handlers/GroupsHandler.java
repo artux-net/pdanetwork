@@ -6,6 +6,7 @@ import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.LimitedLinkedList;
 import net.artux.pdanetwork.models.communication.MessageDTO;
 import net.artux.pdanetwork.models.communication.MessageMapper;
+import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.user.ban.BanService;
@@ -15,6 +16,7 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 public class GroupsHandler extends CommonHandler {
@@ -22,8 +24,8 @@ public class GroupsHandler extends CommonHandler {
     private final HashMap<Gang, LimitedLinkedList<MessageDTO>> lastMessages = initLastMessages();
     private static final int limit = 150;
 
-    public GroupsHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService) {
-        super(userService, objectMapper, messageMapper, valuesService, banService);
+    public GroupsHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService, UserMapper userMapper) {
+        super(userService, objectMapper, messageMapper, valuesService, banService, userMapper);
     }
 
     private HashMap<Gang, LimitedLinkedList<MessageDTO>> initLastMessages() {
@@ -60,6 +62,21 @@ public class GroupsHandler extends CommonHandler {
         for (WebSocketSession session : getSessions())
             if (getMember(session).getGang() == gang)
                 sendUpdate(session, update);
+    }
+
+    @Override
+    protected MessageDTO getDeletedMessage(UUID messageId) {
+        MessageDTO[] messages = new MessageDTO[1];
+        lastMessages.values().forEach(list ->
+                list.removeIf(messageDTO -> {
+                            if (messageDTO.getId().equals(messageId)) {
+                                messages[0] = messageDTO;
+                                return true;
+                            }
+                            return false;
+                        }
+                ));
+        return messages[0];
     }
 
 }

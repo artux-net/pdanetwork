@@ -13,7 +13,7 @@ public class LimitedLinkedList<Object> extends LinkedList<Object> {
     @Override
     public boolean add(Object e) {
         if (this.size() >= limitMessages) {
-            this.remove(0);
+            this.removeFirst();
         }
         return super.add(e);
     }

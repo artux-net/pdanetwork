@@ -10,14 +10,16 @@ import net.artux.pdanetwork.models.communication.MessageMapper;
 import net.artux.pdanetwork.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.socket.*;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-
 
 @RequiredArgsConstructor
 public abstract class SocketHandler implements WebSocketHandler {
@@ -57,16 +59,6 @@ public abstract class SocketHandler implements WebSocketHandler {
 
     protected List<WebSocketSession> getSessions() {
         return sessionList;
-    }
-
-    protected void sendSystemMessageByPdaId(Integer pdaId, String msg) {
-        Optional<WebSocketSession> webSocketSessionOptional = sessionList
-                .stream()
-                .filter(webSocketSession -> getMember(webSocketSession).getPdaId() == pdaId)
-                .findFirst();
-
-        webSocketSessionOptional.ifPresent(socketSession -> sendSystemMessage(socketSession, msg));
-
     }
 
     public void sendAllUpdate(ChatUpdate update) {

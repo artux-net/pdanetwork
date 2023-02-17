@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -98,6 +99,15 @@ public class BanServiceImpl implements BanService {
     public boolean clearBan(UUID banId) {
         repository.deleteById(banId);
         return true;
+    }
+
+    @Override
+    public Map<UUID, BanDto> getCurrentBans() {
+        Map<UUID, BanDto> bans = new HashMap<>();
+        currentBanMap.forEach((uuid, banEntity) -> {
+            bans.put(uuid, banMapper.dto(banEntity));
+        });
+        return bans;
     }
 
 }

@@ -3,6 +3,7 @@ package net.artux.pdanetwork.configuration.handlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.MessageMapper;
+import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.service.content.ContentService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.user.ban.BanService;
@@ -16,8 +17,8 @@ import java.util.TimerTask;
 @Service
 public class RPHandler extends CommonHandler {
 
-    public RPHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService, ContentService contentService) {
-        super(userService, objectMapper, messageMapper, valuesService, banService);
+    public RPHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService, ContentService contentService, UserMapper userMapper) {
+        super(userService, objectMapper, messageMapper, valuesService, banService, userMapper);
         Random random = new Random();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {

@@ -5,6 +5,7 @@ import net.artux.pdanetwork.models.user.UserMapper;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface BanMapper {
