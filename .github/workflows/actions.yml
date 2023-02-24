@@ -92,6 +92,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.PORT }}
           source: "docker-compose.yml"
           target: "app"
           
@@ -101,6 +102,7 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.PORT }}
           script: |
             sudo docker login -u ${{secrets.DOCKERHUB_USERNAME}} -p ${{secrets.DOCKERHUB_TOKEN}}
             sudo docker compose -f ~/app/docker-compose.yml pull back
