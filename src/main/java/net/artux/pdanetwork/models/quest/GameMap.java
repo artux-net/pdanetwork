@@ -9,7 +9,7 @@ public class GameMap {
 
     private long id;
     private String title;
-    private String tsx;
+    private String tmx;
     private String texture;
     private String tilesTexture;
     private String boundsTexture;
