@@ -7,9 +7,6 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.UUID;
 
 
@@ -48,6 +45,9 @@ public class ValuesService {
 
     @Value("${stories.webhook.event-type}")
     private String webhookType;
+
+    @Value("${cdn.address}")
+    private String filesAddress;
 
     public String getAddress() {
         return getDomain() + getContextPath();
