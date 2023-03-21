@@ -24,9 +24,9 @@ public interface QuestService {
 
     Story getStory(long storyId);
 
-    Status readStories();
+    Status downloadStories();
 
-    Status saveStories(MultipartFile storiesArchive, String token);
+    Status setStories(MultipartFile storiesArchive);
 
     List<Story> getStories();
 

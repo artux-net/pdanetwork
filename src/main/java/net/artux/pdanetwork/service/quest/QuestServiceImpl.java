@@ -28,12 +28,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,30 +55,33 @@ public class QuestServiceImpl implements QuestService {
     private Exception lastException;
 
     @PostConstruct
-    public void requestStoriesWorkflow() {
+    public Status downloadStories() {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + valuesService.getUploadToken());
+        headers.add("Authorization", "Bearer " + valuesService.getWebhookToken());
 
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromHttpUrl(valuesService.getStoriesWebhookAddress())
-                .queryParam("accept", "application/vnd.github+json");
+                .fromHttpUrl(valuesService.getStoriesWebhookAddress());
 
-        HttpEntity<Trigger> entity =
-                new HttpEntity<>(new Trigger(valuesService.getWebhookType(), Collections.EMPTY_MAP), headers);
+        HttpEntity<Trigger> entity = new HttpEntity<>(headers);
 
-        logger.info("Trying to trigger workflow at " + valuesService.getStoriesWebhookAddress());
-        HttpEntity<String> response = restTemplate.exchange(
+        logger.info("Download stories from " + valuesService.getStoriesWebhookAddress());
+        HttpEntity<byte[]> response = restTemplate.exchange(
                 builder.toUriString(),
                 HttpMethod.POST,
                 entity,
-                String.class);
+                byte[].class);
 
-        logger.info("Workflow answer " + response);
+        try {
+            return saveStories(new ByteArrayInputStream(response.getBody()));
+        } catch (IOException e) {
+            logger.error("Downloading stories error ", e);
+            logger.info("Server answer: " + response);
+            return new Status(false, "Downloading stories error");
+        }
     }
 
-    @PostConstruct
     public Status readStories() {
         File file = new File(valuesService.getStoriesDirectory());
         File[] storiesDirs = file.listFiles();
@@ -163,26 +167,30 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Status saveStories(MultipartFile storiesArchive, String token) {
-        if (!valuesService.getUploadToken().equals(token))
-            return new Status(false, "Wrong token to upload stories.");
+    public Status setStories(MultipartFile storiesArchive) {
+        if (userService.getUserById().getRole() != Role.ADMIN)
+            return new Status(false, "Wrong role.");
 
         try {
-            File zip = File.createTempFile(UUID.randomUUID().toString(), "temp");
-            FileOutputStream o = new FileOutputStream(zip);
-            IOUtils.copy(storiesArchive.getInputStream(), o);
-            o.close();
-
-            ZipFile zipFile = new ZipFile(zip);
-            zipFile.extractAll(valuesService.getStoriesDirectory());
-            Status status = readStories();
-
-            zip.delete();
-            return status;
+            return saveStories(storiesArchive.getInputStream());
         } catch (IOException e) {
             logger.error("Error while saving stories. ", e);
             return new Status(false, "Could not save stories, update failed.");
         }
+    }
+
+    private Status saveStories(InputStream inputStream) throws IOException {
+        File zip = File.createTempFile(UUID.randomUUID().toString(), "temp");
+        FileOutputStream o = new FileOutputStream(zip);
+        IOUtils.copy(inputStream, o);
+        o.close();
+
+        ZipFile zipFile = new ZipFile(zip);
+        zipFile.extractAll(valuesService.getStoriesDirectory());
+        Status status = readStories();
+
+        zip.delete();
+        return status;
     }
 
     @Override

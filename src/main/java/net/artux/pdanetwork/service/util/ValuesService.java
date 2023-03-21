@@ -34,17 +34,11 @@ public class ValuesService {
     @Value("${stories.directory}")
     private String storiesDirectory;
 
-    @Value("${stories.upload.access-token}")
-    private String uploadToken;
-
-    @Value("${stories.webhook.address}")
+    @Value("${stories.github.address}")
     private String storiesWebhookAddress;
 
-    @Value("${stories.webhook.token}")
+    @Value("${stories.github.token}")
     private String webhookToken;
-
-    @Value("${stories.webhook.event-type}")
-    private String webhookType;
 
     @Value("${cdn.address}")
     private String filesAddress;
