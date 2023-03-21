@@ -31,15 +31,6 @@ public class ValuesService {
     @Value("${server.host}")
     private String host;
 
-    @Value("${files.server.address}")
-    private String filesAddress;
-
-    @Value("${files.server.user}")
-    private String filesUser;
-
-    @Value("${files.server.password}")
-    private String filesPassword;
-
     @Value("${spring.mail.username}")
     private String email;
 
@@ -57,20 +48,6 @@ public class ValuesService {
 
     @Value("${stories.webhook.event-type}")
     private String webhookType;
-
-    @PostConstruct
-    public void setFilesServerPassword() {
-        Authenticator.setDefault(new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(filesUser, filesPassword.toCharArray());
-            }
-        });
-    }
-
-    public String getStoryFilesUrl() {
-        return filesAddress + "stories";
-    }
 
     public String getAddress() {
         return getDomain() + getContextPath();
