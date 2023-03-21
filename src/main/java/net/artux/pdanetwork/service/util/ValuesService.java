@@ -43,8 +43,23 @@ public class ValuesService {
     @Value("${spring.mail.username}")
     private String email;
 
+    @Value("${stories.directory}")
+    private String storiesDirectory;
+
+    @Value("${stories.upload.access-token}")
+    private String uploadToken;
+
+    @Value("${stories.webhook.address}")
+    private String storiesWebhookAddress;
+
+    @Value("${stories.webhook.token}")
+    private String webhookToken;
+
+    @Value("${stories.webhook.event-type}")
+    private String webhookType;
+
     @PostConstruct
-    public void setFilesServerPassword(){
+    public void setFilesServerPassword() {
         Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {

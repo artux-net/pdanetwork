@@ -1,6 +1,12 @@
 package net.artux.pdanetwork.service.quest;
 
-import net.artux.pdanetwork.models.quest.*;
+import net.artux.pdanetwork.models.Status;
+import net.artux.pdanetwork.models.quest.Chapter;
+import net.artux.pdanetwork.models.quest.GameMap;
+import net.artux.pdanetwork.models.quest.Stage;
+import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.StoryDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -18,7 +24,9 @@ public interface QuestService {
 
     Story getStory(long storyId);
 
-    void updateStories();
+    Status readStories();
+
+    Status saveStories(MultipartFile storiesArchive, String token);
 
     List<Story> getStories();
 

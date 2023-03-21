@@ -39,7 +39,7 @@ public class AdminQuestController extends BaseUtilityController {
 
     @GetMapping("/update")
     public Object updateStories(Model model) {
-        questService.updateStories();
+        questService.readStories();
         return getHome(model);
     }
 

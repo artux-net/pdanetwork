@@ -2,6 +2,7 @@ package net.artux.pdanetwork.controller.rest.quest;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
@@ -9,8 +10,11 @@ import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.service.quest.QuestService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,5 +44,10 @@ public class QuestController {
     @GetMapping("/maps/{storyId}/{mapId}")
     public GameMap getMap(@PathVariable("storyId") long storyId, @PathVariable("mapId") long mapId) {
         return questService.getMap(storyId, mapId);
+    }
+
+    @PostMapping("/upload")
+    public Status uploadStories(MultipartFile multipartFile, @RequestParam("t") String token) {
+        return questService.saveStories(multipartFile, token);
     }
 }
