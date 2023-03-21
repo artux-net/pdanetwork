@@ -69,7 +69,7 @@ public class QuestServiceImpl implements QuestService {
         logger.info("Download stories from " + valuesService.getStoriesWebhookAddress());
         HttpEntity<byte[]> response = restTemplate.exchange(
                 builder.toUriString(),
-                HttpMethod.POST,
+                HttpMethod.GET,
                 entity,
                 byte[].class);
 
