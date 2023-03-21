@@ -82,11 +82,13 @@ public class QuestServiceImpl implements QuestService {
         }
     }
 
-    public Status readStories() {
-        File file = new File(valuesService.getStoriesDirectory());
+    public Status readStories(File file) {
         File[] storiesDirs = file.listFiles();
         if (storiesDirs == null)
             return new Status(false, "Empty stories folder.");
+
+        if (storiesDirs.length == 1)
+            return readStories(storiesDirs[0]);
 
         int errors = 0;
         HashMap<Long, Story> stories = new HashMap<>();
@@ -155,6 +157,7 @@ public class QuestServiceImpl implements QuestService {
                 lastException = e;
             }
         }
+        file.delete();
         if (stories.values().size() > 0) {
             this.stories = stories;
             readTime = Instant.now();
@@ -187,7 +190,8 @@ public class QuestServiceImpl implements QuestService {
 
         ZipFile zipFile = new ZipFile(zip);
         zipFile.extractAll(valuesService.getStoriesDirectory());
-        Status status = readStories();
+
+        Status status = readStories(new File(valuesService.getStoriesDirectory()));
 
         zip.delete();
         return status;
