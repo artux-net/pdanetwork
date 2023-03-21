@@ -8,11 +8,13 @@ import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.service.quest.QuestService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,8 +48,8 @@ public class QuestController {
         return questService.getMap(storyId, mapId);
     }
 
-    @PostMapping("/upload")
-    public Status uploadStories(MultipartFile multipartFile, @RequestParam("t") String token) {
-        return questService.saveStories(multipartFile, token);
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Status uploadStories(@RequestPart MultipartFile file, @RequestParam("t") String token) {
+        return questService.saveStories(file, token);
     }
 }
