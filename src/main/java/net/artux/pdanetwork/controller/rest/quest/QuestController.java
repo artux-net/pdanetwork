@@ -49,7 +49,7 @@ public class QuestController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Status uploadStories(@RequestPart MultipartFile file, @RequestParam("t") String token) {
+    public Status uploadStories(@RequestPart("file") MultipartFile file, @RequestParam("t") String token) {
         return questService.saveStories(file, token);
     }
 }
