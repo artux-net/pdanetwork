@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class Transfer {
 
-    private long stage_id;
+    private long stage;
     private HashMap<String, List<String>> condition;
     private String text;
 

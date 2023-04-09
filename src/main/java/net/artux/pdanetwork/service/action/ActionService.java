@@ -279,11 +279,8 @@ public class ActionService {
                         }
                 }
                 break;
-            case "reset_current":
-                StoryStateEntity storyOptional = userEntity.getCurrentStoryState();
-                if (storyOptional != null) {
-                    storyOptional.setCurrent(false);
-                }
+            case "exitStory":
+                exitStory(userEntity);
                 break;
             case "check": {
                 int storyId = userEntity.getCurrentStoryState().getStoryId();
@@ -300,8 +297,8 @@ public class ActionService {
                 }
             }
             break;
-            case "over":
-                userEntity.getCurrentStoryState().setOver(true);
+            case "finishStory":
+                finishStory(userEntity);
                 break;
             case "state": {
                 String[] states = params.toArray(new String[0]);
@@ -328,7 +325,7 @@ public class ActionService {
                             if (actualStage.getTransfers() != null && actualStage.getTransfers().size() > 0) {
                                 int finalStage = stage;
                                 boolean checkStart = actualStage.getTransfers().stream()
-                                        .filter(transfer -> transfer.getStage_id() == finalStage)
+                                        .filter(transfer -> transfer.getStage() == finalStage)
                                         .toList()
                                         .size() > 0;
                                 if (!checkStart)
@@ -355,6 +352,18 @@ public class ActionService {
             default:
                 logger.error("Unsupported operation: " + command + ", value: " + params);
                 break;
+        }
+    }
+
+    public void finishStory(UserEntity userEntity){
+        userEntity.getCurrentStoryState().setOver(true);
+        exitStory(userEntity);
+    }
+
+    public void exitStory(UserEntity userEntity){
+        StoryStateEntity storyOptional = userEntity.getCurrentStoryState();
+        if (storyOptional != null) {
+            storyOptional.setCurrent(false);
         }
     }
 

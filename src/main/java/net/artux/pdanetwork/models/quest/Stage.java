@@ -10,7 +10,7 @@ public class Stage {
 
     private long id;
     private Integer type_stage;
-    private String background_url;
+    private String background;
     private int[] music;
     private String title;
     private String message;

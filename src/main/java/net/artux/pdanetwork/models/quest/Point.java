@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Data
-public class Point {
+public class  Point {
 
     public int type;
     private String name;
