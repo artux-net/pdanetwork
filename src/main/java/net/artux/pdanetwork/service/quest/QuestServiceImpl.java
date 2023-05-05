@@ -172,7 +172,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public Status setUserStory(Story story) {
-        logger.debug("Try to set custom story " + story.getId());
+        logger.info("Try to set custom story " + story.getId());
         if (stories.containsKey(story.getId()))
             return new Status(false, "На сервере уже есть история с таким ID");
         usersStories.put(userService.getCurrentId(), story);

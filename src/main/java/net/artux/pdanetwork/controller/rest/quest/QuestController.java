@@ -48,7 +48,7 @@ public class QuestController {
     }
 
     @PostMapping(value = "/uploadCustom")
-    public Status uploadCustomStory(Story story) {
+    public Status uploadCustomStory(@RequestBody Story story) {
         return questService.setUserStory(story);
     }
 }
