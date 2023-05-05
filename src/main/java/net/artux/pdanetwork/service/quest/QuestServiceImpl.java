@@ -4,13 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.Chapter;
-import net.artux.pdanetwork.models.quest.GameMap;
-import net.artux.pdanetwork.models.quest.Mission;
-import net.artux.pdanetwork.models.quest.QuestMapper;
-import net.artux.pdanetwork.models.quest.Stage;
-import net.artux.pdanetwork.models.quest.Story;
-import net.artux.pdanetwork.models.quest.StoryDto;
+import net.artux.pdanetwork.models.quest.*;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
@@ -28,17 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +39,7 @@ public class QuestServiceImpl implements QuestService {
     private HashMap<Long, Story> stories;
     private Instant readTime;
     private HashMap<Role, List<Story>> roleStories;
+    private final HashMap<UUID, Story> usersStories = new HashMap<>();
     private Exception lastException;
 
     @PostConstruct
@@ -182,6 +170,14 @@ public class QuestServiceImpl implements QuestService {
         }
     }
 
+    @Override
+    public Status setUserStory(Story story) {
+        if (stories.get(story.getId()) != null)
+            return new Status(false, "На сервере уже есть история с таким ID");
+        usersStories.put(userService.getCurrentId(), story);
+        return new Status(true, "История загружена. Сбросьте кэш для появления.");
+    }
+
     private Status saveStories(InputStream inputStream) throws IOException {
         File zip = File.createTempFile(UUID.randomUUID().toString(), "temp");
         FileOutputStream o = new FileOutputStream(zip);
@@ -197,7 +193,7 @@ public class QuestServiceImpl implements QuestService {
         return status;
     }
 
-    static public boolean deleteDirectory(File path) {
+    static public void deleteDirectory(File path) {
         if (path.exists()) {
             File[] files = path.listFiles();
             if (files != null)
@@ -209,7 +205,7 @@ public class QuestServiceImpl implements QuestService {
                     }
                 }
         }
-        return (path.delete());
+        path.delete();
     }
 
     @Override
@@ -242,13 +238,16 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public List<Story> getStories() {
+    public Collection<Story> getStories() {
         int priority = userService.getUserById().getRole().getPriority();
-        return stories.values().stream().filter(story -> story.getAccess().getPriority() <= priority).toList();
+        Set<Story> storyList = stories.values().stream().filter(story -> story.getAccess().getPriority() <= priority).collect(Collectors.toSet());
+        if (usersStories.containsKey(userService.getCurrentId()))
+            storyList.add(usersStories.get(userService.getCurrentId()));
+        return storyList;
     }
 
     @Override
-    public List<StoryDto> getStoriesDto() {
+    public Collection<StoryDto> getStoriesDto() {
         return questMapper.dto(getStories());
     }
 

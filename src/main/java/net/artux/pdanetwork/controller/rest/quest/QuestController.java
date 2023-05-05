@@ -9,15 +9,10 @@ import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.service.quest.QuestService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +28,7 @@ public class QuestController {
     }
 
     @GetMapping
-    public List<StoryDto> getStories() {
+    public Collection<StoryDto> getStories() {
         return questService.getStoriesDto();
     }
 
@@ -50,5 +45,10 @@ public class QuestController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Status uploadStories(@RequestPart("file") MultipartFile file) {
         return questService.setStories(file);
+    }
+
+    @PostMapping(value = "/uploadCustom")
+    public Status uploadCustomStory(Story story) {
+        return questService.setUserStory(story);
     }
 }

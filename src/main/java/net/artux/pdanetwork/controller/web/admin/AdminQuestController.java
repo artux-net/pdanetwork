@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/utility/quest")
@@ -28,7 +28,7 @@ public class AdminQuestController extends BaseUtilityController {
 
     @Override
     protected Object getHome(Model model) {
-        List<Story> stories = questService.getStories();
+        Collection<Story> stories = questService.getStories();
         model.addAttribute("stories", stories);
         long minute = Instant.now()
                 .minus(questService.getReadTime().toEpochMilli(), ChronoUnit.MILLIS)

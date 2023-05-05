@@ -37,6 +37,7 @@ public class StoryData {
     private List<MedicineDto> medicines;
     private List<WeaponDto> weapons;
     private List<ItemDto> bullets;
+    private List<ItemDto> items;
 
     private boolean chatBan;
     private boolean receiveEmails;
