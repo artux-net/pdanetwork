@@ -172,7 +172,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public Status setUserStory(Story story) {
-        if (stories.get(story.getId()) != null)
+        if (stories.containsKey(story.getId()))
             return new Status(false, "На сервере уже есть история с таким ID");
         usersStories.put(userService.getCurrentId(), story);
         return new Status(true, "История загружена. Сбросьте кэш для появления.");
