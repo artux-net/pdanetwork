@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class Story {
 
-    private long id;
+    private Long id;
     private String title;
     private String desc;
     private String icon;
