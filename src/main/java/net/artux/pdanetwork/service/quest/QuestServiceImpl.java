@@ -40,6 +40,7 @@ public class QuestServiceImpl implements QuestService {
     private Instant readTime;
     private HashMap<Role, List<Story>> roleStories;
     private final HashMap<UUID, Story> usersStories = new HashMap<>();
+    private long lastStoryId = -2;
     private Exception lastException;
 
     @PostConstruct
@@ -137,7 +138,9 @@ public class QuestServiceImpl implements QuestService {
                     story.setMissions(Arrays.stream(missions).toList());
                 } catch (IOException ignored) {
                 }
-
+                if (story.getId() > lastStoryId) {
+                    lastStoryId = story.getId();
+                }
                 stories.put(story.getId(), story);
             } catch (IOException e) {
                 errors++;
@@ -172,9 +175,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public Status setUserStory(Story story) {
-        logger.info("Try to set custom story " + story.getId());
-        if (stories.containsKey(story.getId()))
-            return new Status(false, "На сервере уже есть история с таким ID");
+        story.setId(lastStoryId + 1);
         usersStories.put(userService.getCurrentId(), story);
         return new Status(true, "История загружена. Сбросьте кэш для появления.");
     }
