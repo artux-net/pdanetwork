@@ -234,6 +234,8 @@ public class QuestServiceImpl implements QuestService {
     public Story getStory(long storyId) {
         UserEntity user = userService.getUserById();
         Story story = stories.get(storyId);
+        if (story == null)
+            story = usersStories.get(user.getId());
         if (story.getAccess().getPriority() > user.getRole().getPriority())
             throw new AccessDeniedException("User has no access to the story");
         return story;
