@@ -8,10 +8,12 @@ import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Data
 public class Profile {
 
+    private UUID id;
     private String login;
     private String name;
     private String nickname;

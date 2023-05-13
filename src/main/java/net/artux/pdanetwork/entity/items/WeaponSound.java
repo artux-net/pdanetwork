@@ -2,7 +2,7 @@ package net.artux.pdanetwork.entity.items;
 
 import lombok.Data;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Data
 @Embeddable

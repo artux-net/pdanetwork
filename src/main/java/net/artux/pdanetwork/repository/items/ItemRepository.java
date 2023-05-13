@@ -10,7 +10,7 @@ import java.util.Optional;
 @Component
 public interface ItemRepository extends CommonItemRepository<ItemEntity> {
 
-    @Query("select w from WeaponEntity w where w.isEquipped is true and w.owner = ?#{ principal?.id }")
-    Optional<WearableEntity> findByOwnerAndIsEquippedTrue();
+   /* @Query("select w from WeaponEntity w where w.isEquipped is true and w.owner = ?#{ principal?.id }")
+    Optional<WearableEntity> findByOwnerAndIsEquippedTrue();*/
 
 }

@@ -14,8 +14,9 @@ import net.artux.pdanetwork.utills.Security;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.*;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class ResetServiceImpl implements ResetService {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final StoryMapper storyMapper;
+    private final Timer timer = new Timer();
 
     private final UserMapper userMapper;
 
@@ -50,7 +52,12 @@ public class ResetServiceImpl implements ResetService {
 
     private void addCurrent(String token, UserEntity user) {
         requests.put(token, user.getEmail());
-        new Timer(30 * 60 * 1000, e -> requests.remove(token)).start();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                requests.remove(token);
+            }
+        }, 30 * 60 * 1000);
     }
 
     @Override

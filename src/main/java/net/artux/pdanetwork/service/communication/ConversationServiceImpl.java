@@ -67,7 +67,9 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public Slice<ConversationDTO> getConversations(Pageable queryPage) {
-        return repository.findByMembersContains(queryPage, userService.getCurrentId()).map(mapper::dto);
+        //repository.findByMembersContains(userService.getCurrentId(), queryPage).map(mapper::dto)
+        //TODO
+        return null;
     }
 
     @Override
@@ -91,8 +93,8 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public ConversationEntity getPrivateConversation(UUID pda1, UUID pda2) {
-        Optional<ConversationEntity> conversation = repository.findByMembersContainsAndType(ConversationEntity.Type.PRIVATE, pda1, pda2);
-        return conversation.orElse(null);
+        //Optional<ConversationEntity> conversation = repository.findByMembersContainsAndType(ConversationEntity.Type.PRIVATE, pda1, pda2);
+        return null; // TODO
     }
 
     public ConversationEntity getConversationByIdForUser(UUID id, UserEntity user) {

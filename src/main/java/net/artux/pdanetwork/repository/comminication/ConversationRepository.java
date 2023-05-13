@@ -14,12 +14,11 @@ import java.util.UUID;
 @Component
 public interface ConversationRepository extends JpaRepository<ConversationEntity, UUID> {
 
-    @Query(value = "select c from ConversationEntity c where ?2 in c.members and " +
-            " c.type = ?1")
+   /* @Query(value = "select c from ConversationEntity c where ?2 in c.members and c.type = ?1")
     Optional<ConversationEntity> findByMembersContainsAndType(ConversationEntity.Type type, UUID... pda1);
 
-    @Query(value = "select c from ConversationEntity c where ?1 in c.members")
-    Slice<ConversationEntity> findByMembersContains(Pageable pageable, UUID... pda1);
+    @Query(value = "select c from ConversationEntity c where :ids in c.members")
+    Slice<ConversationEntity> findByMembersContains(UUID ids, Pageable pageable);*/
 
     Optional<ConversationEntity> findByIdAndMembersContains(UUID id, UserEntity entity);
 

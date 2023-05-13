@@ -1,23 +1,14 @@
 package net.artux.pdanetwork.configuration;
 
-import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.enums.Role;
-import net.artux.pdanetwork.service.user.UserDetailService;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableConfigurationProperties
-@RequiredArgsConstructor
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    private final UserDetailService userDetailsService;
+@EnableWebSecurity
+public class SecurityConfiguration {
 
     private static final String[] MODERATOR_LIST = {
             "/utility/**"
@@ -44,30 +35,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/rules"
     };
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(WHITE_LIST)
-                .permitAll()
-                .antMatchers(MODERATOR_LIST).hasAuthority(Role.MODERATOR.name())
-                .antMatchers(TESTER_LIST).hasAuthority(Role.TESTER.name())
-                .anyRequest().authenticated()
-                .and().httpBasic()
-                .and().sessionManagement().disable()
-        ;
-    }
-
-    @Override
-    public void configure(AuthenticationManagerBuilder builder)
-            throws Exception {
-        builder.userDetailsService(userDetailsService);
-    }
-
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers(MODERATOR_LIST).hasAuthority(Role.MODERATOR.name())
+                        .requestMatchers(TESTER_LIST).hasAuthority(Role.TESTER.name())
+                        .anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
 }

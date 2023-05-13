@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Getter
 @Setter

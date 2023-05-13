@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Getter

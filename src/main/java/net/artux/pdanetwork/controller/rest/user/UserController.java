@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Tag(name = "Пользователь")
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/user")
 public class UserController {
 
