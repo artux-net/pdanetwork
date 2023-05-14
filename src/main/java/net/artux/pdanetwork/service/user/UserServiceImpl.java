@@ -1,11 +1,13 @@
 package net.artux.pdanetwork.service.user;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
+import net.artux.pdanetwork.models.user.dto.AdminUserDto;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
@@ -21,14 +23,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.springframework.core.env.Environment;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final Logger logger;
-    private final Map<String, RegisterUserDto> registerUserMap;
+    private final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
     private final Timer timer = new Timer();
     private final Environment environment;
 
@@ -97,7 +100,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private String generateToken(RegisterUserDto user) {
-        String token  = Security.encrypt(user.getEmail());
+        String token = Security.encrypt(user.getEmail());
         logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
         registerUserMap.put(user.getEmail(), user);
         timer.schedule(new TimerTask() {
@@ -150,6 +153,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public AdminUserDto getUserForAdminById(UUID objectId) {
+        return userMapper.adminDto(getUserById(objectId));
+    }
+
+    @Override
     public UserEntity getUserByEmail(String email) {
         return userRepository.findMemberByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Пользователя не существует"));
@@ -161,11 +169,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity updateByAdmin(UUID id, AdminEditUserDto adminEditUserDto) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public AdminUserDto updateUser(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
         user.setRole(adminEditUserDto.getRole());
         user.setChatBan(adminEditUserDto.isChatBan());
-        return userRepository.save(user);
+        return userMapper.adminDto(userRepository.save(user));
     }
 
     @Override
@@ -227,7 +236,7 @@ public class UserServiceImpl implements UserService {
 
 
         Iterator<UserEntity> userIterator = users.listIterator();
-        for (int i= 0; userIterator.hasNext(); i++){
+        for (int i = 0; userIterator.hasNext(); i++) {
             UserEntity contactEntity = userIterator.next();
             Row header = sheet.createRow(i);
 

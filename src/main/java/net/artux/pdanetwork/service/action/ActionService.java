@@ -43,14 +43,18 @@ public class ActionService {
 
     private final Timer timer = new Timer();
 
-    public StoryData doUserActions(HashMap<String, List<String>> map) {
-        UUID id = ((SecurityUser) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal()).getId();
+    public StoryData doUserActions(UUID id, HashMap<String, List<String>> map) {
         UserEntity userEntity = userRepository.getById(id);
         logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
         userEntity.fixAllItems();
         return storyMapper.storyData(userRepository.save(userEntity));
+    }
+
+    public StoryData doUserActions(HashMap<String, List<String>> map) {
+        UUID id = ((SecurityUser) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getId();
+        return doUserActions(id, map);
     }
 
     protected void operateActions(HashMap<String, List<String>> actions, UserEntity userEntity) {

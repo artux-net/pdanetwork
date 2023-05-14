@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Прохождение")
+@Tag(name = "Прохождение и команды")
 @RequestMapping("/walkthrough")
 public class WalkthroughController {
 

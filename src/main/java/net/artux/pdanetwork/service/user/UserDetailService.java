@@ -7,6 +7,8 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

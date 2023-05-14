@@ -48,7 +48,7 @@ public class AdminUsersController extends BaseUtilityController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
 
-        Page<SimpleUserDto> userPage = profileService.getPage(PageRequest.of(currentPage - 1, pageSize));
+        Page<SimpleUserDto> userPage = profileService.getUsersPage(PageRequest.of(currentPage - 1, pageSize));
 
         model.addAttribute("userPage", userPage);
 
@@ -88,7 +88,7 @@ public class AdminUsersController extends BaseUtilityController {
 
     @PostMapping("/{id}")
     public Object editUser(@Valid AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
-        userService.updateByAdmin(id, editUserDto);
+        userService.updateUser(id, editUserDto);
         return redirect(getPageUrl(), model, null);
     }
 

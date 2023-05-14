@@ -19,7 +19,8 @@ public interface ProfileService {
 
     ResponsePage<SimpleUserDto> getRating(QueryPage queryPage);
 
-    Page<SimpleUserDto> getPage(PageRequest pageRequest);
+    Page<SimpleUserDto> getUsersPage(PageRequest pageRequest);
+    Page<SimpleUserDto> getUsersPageByLoginContaining(String login, PageRequest pageRequest);
 
     List<AchievementEntity> getAchievements();
 

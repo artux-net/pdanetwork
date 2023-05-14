@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.user.ban.BanDto;
 import net.artux.pdanetwork.service.user.ban.BanService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Блокировка пользователей")
-@RequestMapping("/utility/bans")
+@Tag(name = "Блокировка пользователей", description = "Доступна с роли модератора")
+@RequestMapping("/api/v1/admin/bans")
+@PreAuthorize("hasAuthority('MODERATOR')")
 @RequiredArgsConstructor
 public class BanController {
 

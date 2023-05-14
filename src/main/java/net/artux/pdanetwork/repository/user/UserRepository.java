@@ -1,6 +1,8 @@
 package net.artux.pdanetwork.repository.user;
 
 import net.artux.pdanetwork.entity.user.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
             "on r.user2_id = pu.id", nativeQuery = true)
     List<UserEntity> getFriendsById(UUID id);
 
+    Page<UserEntity> findByLoginContainingIgnoreCase(String title, Pageable pageable);
 
     int countAllByLastLoginAtAfter(Instant afterTime);
+
     int countAllByRegistrationAfter(Instant afterTime);
 }

@@ -41,9 +41,6 @@ public class BanServiceImpl implements BanService {
 
     @Override
     public boolean setChatBan(UUID userId) {
-        UserEntity user = userService.getUserById();
-        if (user.getRole() == Role.USER)
-            throw new RuntimeException("NOT ADMIN");
         return userService.setChatBan(userId);
     }
 

@@ -3,6 +3,7 @@ package net.artux.pdanetwork.service.user;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
+import net.artux.pdanetwork.models.user.dto.AdminUserDto;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 
@@ -22,13 +23,15 @@ public interface UserService {
 
     UserEntity getUserById(UUID objectId);
 
+    AdminUserDto getUserForAdminById(UUID objectId);
+
     UUID getCurrentId();
 
     UserEntity getUserByEmail(String email);
 
     UserEntity getUserByLogin(String login);
 
-    UserEntity updateByAdmin(UUID userId, AdminEditUserDto adminEditUserDto);
+    AdminUserDto updateUser(UUID userId, AdminEditUserDto adminEditUserDto);
 
     boolean setChatBan(UUID userId);
 

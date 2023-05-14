@@ -2,6 +2,7 @@ package net.artux.pdanetwork.models.user;
 
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.user.dto.AdminUserDto;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
@@ -22,6 +23,7 @@ public interface UserMapper {
     RegisterUserDto regUser(UserEntity user);
 
     UserDto dto(UserEntity user);
+    AdminUserDto adminDto(UserEntity user);
 
     @Mapping(target = "friendRelation", ignore = true)
     @Mapping(target = "blocked", ignore = true)
