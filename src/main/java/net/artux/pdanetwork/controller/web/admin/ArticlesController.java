@@ -35,7 +35,7 @@ public class ArticlesController extends BaseUtilityController {
         QueryPage queryPage = new QueryPage();
         queryPage.setSortBy("published");
         queryPage.setSortDirection(Sort.Direction.DESC);
-        List<ArticleDto> articleList = feedService.getPageArticles(queryPage).getData();
+        List<ArticleDto> articleList = feedService.getPageArticles(queryPage).getContent();
         model.addAttribute("articles", articleList);
         return pageWithContent("articles/list", model);
     }

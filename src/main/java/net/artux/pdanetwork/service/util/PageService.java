@@ -46,9 +46,9 @@ public class PageService {
         return ResponsePage
                 .<R>builder()
                 .lastPage(dataPage.getTotalPages())
-                .data(data)
-                .dataSize(data.size())
-                .queryDataSize(dataPage.getTotalElements())
+                .content(data)
+                .contentSize(data.size())
+                .totalSize(dataPage.getTotalElements())
                 .number(dataPage.getNumber()+1) // +1 так как отсчет идет от 0
                 .size(dataPage.getSize())
                 .sortBy(dataPage.getSort().stream().iterator().next().getProperty())

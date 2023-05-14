@@ -20,7 +20,7 @@ import java.util.UUID;
 @Tag(name = "Редактор ленты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/feed")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('MODERATOR')")
+@PreAuthorize("hasRole('MODERATOR')")
 public class AdminArticlesController {
 
     private final FeedService feedService;

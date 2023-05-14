@@ -59,12 +59,13 @@ public class ProfileServiceIml implements ProfileService {
     }
 
     @Override
-    public Page<SimpleUserDto> getUsersPage(QueryPage queryPage) {
-        return userRepository.findAll(pageService.getPageable(queryPage)).map(userMapper::info);
+    public ResponsePage<SimpleUserDto> getUsersPage(QueryPage queryPage) {
+        return ResponsePage.of(userRepository.findAll(pageService.getPageable(queryPage)).map(userMapper::info));
     }
 
     @Override
-    public Page<SimpleUserDto> getUsersPageByLoginContaining(String login, QueryPage queryPage) {
-        return userRepository.findByLoginContainingIgnoreCase(login, pageService.getPageable(queryPage)).map(userMapper::info);
+    public ResponsePage<SimpleUserDto> getUsersPageByLoginContaining(String login, QueryPage queryPage) {
+        return ResponsePage.of(userRepository.findByLoginContainingIgnoreCase(login, pageService.getPageable(queryPage))
+                .map(userMapper::info));
     }
 }

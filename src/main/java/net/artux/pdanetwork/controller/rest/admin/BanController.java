@@ -19,7 +19,7 @@ import java.util.UUID;
 @RestController
 @Tag(name = "Блокировка пользователей", description = "Доступна с роли модератора")
 @RequestMapping("/api/v1/admin/bans")
-@PreAuthorize("hasAuthority('MODERATOR')")
+@PreAuthorize("hasRole('MODERATOR')")
 @RequiredArgsConstructor
 public class BanController {
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "Статистика", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/statistic")
-@PreAuthorize("hasAuthority('MODERATOR')")
+@PreAuthorize("hasRole('MODERATOR')")
 @RequiredArgsConstructor
 public class StatisticController {
 

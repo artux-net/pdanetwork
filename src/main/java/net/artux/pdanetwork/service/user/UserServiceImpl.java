@@ -169,7 +169,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public AdminUserDto updateUser(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
         user.setRole(adminEditUserDto.getRole());

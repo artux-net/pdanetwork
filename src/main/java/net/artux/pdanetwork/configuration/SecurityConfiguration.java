@@ -41,8 +41,8 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(MODERATOR_LIST).hasAuthority(Role.MODERATOR.name())
-                        .requestMatchers(TESTER_LIST).hasAuthority(Role.TESTER.name())
+                        .requestMatchers(MODERATOR_LIST).hasRole(Role.MODERATOR.name())
+                        .requestMatchers(TESTER_LIST).hasRole(Role.TESTER.name())
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .build();

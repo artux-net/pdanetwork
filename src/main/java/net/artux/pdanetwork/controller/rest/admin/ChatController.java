@@ -24,7 +24,7 @@ import java.util.UUID;
 @RestController
 @Tag(name = "Чаты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/chats")
-@PreAuthorize("hasAuthority('MODERATOR')")
+@PreAuthorize("hasRole('MODERATOR')")
 @RequiredArgsConstructor
 public class ChatController {
 

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.CommandBlock;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.AdminUserDto;
@@ -38,7 +39,7 @@ import java.util.UUID;
 @RestController
 @Tag(name = "Пользователи - для администратора", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
-@PreAuthorize("hasAuthority('MODERATOR')")
+@PreAuthorize("hasRole('MODERATOR')")
 @RequiredArgsConstructor
 public class AdminUserController {
 
@@ -48,7 +49,7 @@ public class AdminUserController {
 
     @GetMapping
     @Operation(summary = "Получение списка пользователей с пагинацией и поиском")
-    public Slice<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
+    public ResponsePage<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
         if (login.isPresent()) {
             return profileService.getUsersPageByLoginContaining(login.get(), queryPage);
         } else

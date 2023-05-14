@@ -19,5 +19,6 @@ public class SimpleUserDto {
     private int achievements;
     private Gang gang;
     private Instant registration;
+    private Instant lastLoginAt;
 
 }
