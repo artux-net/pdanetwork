@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +48,7 @@ public class AdminUserController {
 
     @GetMapping
     @Operation(summary = "Получение списка пользователей с пагинацией и поиском")
-    public Page<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
+    public Slice<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
         if (login.isPresent()) {
             return profileService.getUsersPageByLoginContaining(login.get(), queryPage);
         } else
