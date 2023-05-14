@@ -6,6 +6,9 @@ import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import org.slf4j.Logger;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,5 +45,15 @@ public class UserDetailService implements UserDetailsService {
             logger.error("User with login '" + username + "' not found.");
             throw new UsernameNotFoundException("User not found");
         }
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_MODERATOR " +
+                "\n ROLE_MODERATOR > ROLE_TESTER " +
+                "\n ROLE_TESTER > ROLE_USER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
     }
 }
