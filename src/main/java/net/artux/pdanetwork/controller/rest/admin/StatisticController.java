@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.controller.rest.admin;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.statistic.StatisticDto;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "Статистика")
+@Tag(name = "Статистика", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/statistic")
 @PreAuthorize("hasAuthority('MODERATOR')")
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class StatisticController {
     private final StatisticService statisticService;
 
     @GetMapping
+    @Operation(description = "Получение текущей статистики")
     public StatisticDto getStatistic() {
         return statisticService.getStatistic();
     }

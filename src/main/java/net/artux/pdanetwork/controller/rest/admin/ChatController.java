@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.controller.rest.admin;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
@@ -32,6 +33,7 @@ public class ChatController {
     private final RPHandler rpHandler;
 
     @PostMapping("/event")
+    @Operation(description = "Добавление события в чат")
     public ChatUpdate addEvent(ChatEvent event, @RequestParam("type") ChatType type) {
         SocketHandler socketHandler;
         switch (type) {
@@ -45,6 +47,7 @@ public class ChatController {
     }
 
     @DeleteMapping("/deleteMessage")
+    @Operation(description = "Удаление сообщения из чата")
     public ChatUpdate deleteMessage(@RequestParam("messageId") UUID messageId, @RequestParam("type") ChatType type) {
         CommonHandler socketHandler;
         switch (type) {
@@ -56,6 +59,7 @@ public class ChatController {
     }
 
     @GetMapping("/statistic")
+    @Operation(description = "Получение текущей статистики чата")
     public ChatStatistic writeMessage(@RequestParam("type") ChatType type) {
         CommonHandler socketHandler;
         switch (type) {
@@ -64,6 +68,12 @@ public class ChatController {
             default -> socketHandler = chatHandler;
         }
         return socketHandler.getStatistic();
+    }
+
+    @GetMapping("/types")
+    @Operation(description = "Получение типов чатов")
+    public ChatType[] getTypes() {
+        return ChatType.values();
     }
 
     public enum ChatType {

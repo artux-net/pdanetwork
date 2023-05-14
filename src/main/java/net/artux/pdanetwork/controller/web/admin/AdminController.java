@@ -28,7 +28,7 @@ public class AdminController extends BaseUtilityController {
 
     @Override
     protected Object getHome(Model model) {
-        model.addAttribute("userPage", profileService.getUsersPage(PageRequest.of(0, 20, Sort.by("xp"))));
+        //model.addAttribute("userPage", profileService.getUsersPage(PageRequest.of(0, 20, Sort.by("xp"))));
         model.addAttribute("totalRegistrations", statisticService.countUsers());
         model.addAttribute("todayRegistrations", statisticService.countRegistrationsToday());
         model.addAttribute("nowOnline", statisticService.countOnlineNow());

@@ -2,6 +2,7 @@ package net.artux.pdanetwork.controller.rest.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.achievement.AchievementEntity;
 import net.artux.pdanetwork.models.page.QueryPage;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,21 +28,25 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping("/{id}")
+    @Operation(summary = "Получить профиль пользователя по id")
     public Profile getProfile(@PathVariable("id") UUID id) {
         return profileService.getProfile(id);
     }
 
     @GetMapping
+    @Operation(summary = "Получить профиль пользователя")
     public Profile getProfile() {
         return profileService.getProfile();
     }
 
     @GetMapping("/achievements")
+    @Operation(summary = "Получить достижения пользователя")
     public List<AchievementEntity> getAchievements() {
         return profileService.getAchievements();
     }
 
     @GetMapping("/achievements/{id}")
+    @Operation(summary = "Получить достижения пользователя по id")
     public List<AchievementEntity> getAchievements(@PathVariable("id") UUID id) {
         return profileService.getAchievements(id);
     }

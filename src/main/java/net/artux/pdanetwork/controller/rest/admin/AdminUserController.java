@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.user.CommandBlock;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.AdminUserDto;
@@ -15,6 +16,7 @@ import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
 import org.apache.commons.io.IOUtils;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +35,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Пользователи - для администратора")
+@Tag(name = "Пользователи - для администратора", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
 @PreAuthorize("hasAuthority('MODERATOR')")
 @RequiredArgsConstructor
@@ -44,13 +46,12 @@ public class AdminUserController {
     private final UserService userService;
 
     @GetMapping
-    public Page<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @RequestParam("page") Optional<Integer> page, @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(20);
+    @Operation(summary = "Получение списка пользователей с пагинацией и поиском")
+    public Page<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
         if (login.isPresent()) {
-            return profileService.getUsersPageByLoginContaining(login.get(), PageRequest.of(currentPage - 1, pageSize));
+            return profileService.getUsersPageByLoginContaining(login.get(), queryPage);
         } else
-            return profileService.getUsersPage(PageRequest.of(currentPage - 1, pageSize));
+            return profileService.getUsersPage(queryPage);
     }
 
     @Operation(summary = "Выгрузка контактов xlsx-файлом для рассылки")
@@ -64,27 +65,32 @@ public class AdminUserController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Получение пользователя")
     public AdminUserDto getUser(@PathVariable UUID id) {
         return userService.getUserForAdminById(id);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Удаление пользователя")
     public boolean deleteUser(@PathVariable UUID id) {
         userService.deleteUserById(id);
         return true;
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Редактирование пользователя")
     public AdminUserDto updateUser(@Valid AdminEditUserDto editUserDto, @PathVariable UUID id) {
         return userService.updateUser(id, editUserDto);
     }
 
     @PostMapping("/commands/apply/{id}")
+    @Operation(summary = "Применение команд")
     public StoryData applyCommands(@PathVariable("id") UUID id, CommandBlock commandBlock) {
         return actionService.doUserActions(id, commandBlock.getActions());
     }
 
     @GetMapping("/roles")
+    @Operation(summary = "Получение списка ролей")
     public Role[] getRoles() {
         return Role.values();
     }

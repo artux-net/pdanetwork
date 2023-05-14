@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.service.items;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
@@ -24,7 +25,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -65,9 +65,15 @@ public class SellerServiceIml implements SellerService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public SellerDto getSeller(long id) {
         return sellerRepository.findById(id).map(sellerMapper::dto).orElseThrow();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SellerDto> getSellers() {
+        return sellerRepository.findAll().stream().map(sellerMapper::dto).collect(Collectors.toList());
     }
 
     @Override
