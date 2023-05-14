@@ -1,5 +1,7 @@
 package net.artux.pdanetwork.service.statistic;
 
+import net.artux.pdanetwork.models.statistic.StatisticDto;
+
 public interface StatisticService {
 
     long countUsers();
@@ -10,5 +12,6 @@ public interface StatisticService {
 
     long countOnlineNow();
 
+    StatisticDto getStatistic();
 
 }
