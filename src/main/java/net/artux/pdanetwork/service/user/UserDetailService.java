@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -35,7 +36,6 @@ public class UserDetailService implements UserDetailsService {
             userEntity.setLastLoginAt(Instant.now());
             userRepository.save(userEntity);
             UserDetails userDetails = User.builder()
-                    .passwordEncoder(s -> passwordEncoder.encode(s))
                     .username(userEntity.getLogin())
                     .password(userEntity.getPassword())
                     .roles(Role.getRoles(userEntity.getRole()))
@@ -47,13 +47,4 @@ public class UserDetailService implements UserDetailsService {
         }
     }
 
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_MODERATOR " +
-                "\n ROLE_MODERATOR > ROLE_TESTER " +
-                "\n ROLE_TESTER > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
-        return roleHierarchy;
-    }
 }
