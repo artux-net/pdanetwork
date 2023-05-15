@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.service.feed.FeedService;
+import net.artux.pdanetwork.utills.IsModerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Tag(name = "Редактор ленты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/feed")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('MODERATOR')")
+@IsModerator
 public class AdminArticlesController {
 
     private final FeedService feedService;

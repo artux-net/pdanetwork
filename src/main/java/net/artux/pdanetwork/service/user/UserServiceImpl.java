@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         String name = environment.getProperty("administrator.name");
         String nickname = environment.getProperty("administrator.nickname");
 
-        String password = "doge4563";
+        String password = "12345678";
 
         if (userRepository.count() < 1) {
             saveUser(RegisterUserDto.builder()

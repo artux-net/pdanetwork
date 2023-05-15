@@ -38,7 +38,7 @@ public class UserDetailService implements UserDetailsService {
             UserDetails userDetails = User.builder()
                     .username(userEntity.getLogin())
                     .password(userEntity.getPassword())
-                    .roles(Role.getRoles(userEntity.getRole()))
+                    .authorities("ROLE_" + userEntity.getRole().name())
                     .build();
             return new SecurityUser(userEntity.getId(), userDetails);
         } else {

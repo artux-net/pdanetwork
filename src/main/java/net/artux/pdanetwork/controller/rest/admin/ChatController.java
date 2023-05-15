@@ -11,6 +11,7 @@ import net.artux.pdanetwork.configuration.handlers.SocketHandler;
 import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
+import net.artux.pdanetwork.utills.IsModerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @RestController
 @Tag(name = "Чаты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/chats")
-@PreAuthorize("hasRole('MODERATOR')")
+@IsModerator
 @RequiredArgsConstructor
 public class ChatController {
 

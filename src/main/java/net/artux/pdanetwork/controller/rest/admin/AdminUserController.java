@@ -16,11 +16,9 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.utills.IsModerator;
 import org.apache.commons.io.IOUtils;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +37,7 @@ import java.util.UUID;
 @RestController
 @Tag(name = "Пользователи - для администратора", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
-@PreAuthorize("hasRole('MODERATOR')")
+@IsModerator
 @RequiredArgsConstructor
 public class AdminUserController {
 
