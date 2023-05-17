@@ -1,10 +1,18 @@
 package net.artux.pdanetwork.service.quest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.*;
+import net.artux.pdanetwork.models.quest.Chapter;
+import net.artux.pdanetwork.models.quest.GameMap;
+import net.artux.pdanetwork.models.quest.Mission;
+import net.artux.pdanetwork.models.quest.QuestMapper;
+import net.artux.pdanetwork.models.quest.Stage;
+import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.StoryDto;
+import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
@@ -21,10 +29,19 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.annotation.PostConstruct;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -258,5 +275,14 @@ public class QuestServiceImpl implements QuestService {
     @Override
     public Instant getReadTime() {
         return readTime;
+    }
+
+    @Override
+    public StoriesStatus getStatus() {
+        return StoriesStatus.builder()
+                .readTime(readTime)
+                .userStories(usersStories.size())
+                .stories(questMapper.info(stories.values()))
+                .build();
     }
 }

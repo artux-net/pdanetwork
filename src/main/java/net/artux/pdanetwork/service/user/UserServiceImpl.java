@@ -15,7 +15,6 @@ import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.utills.Security;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -172,8 +171,16 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public AdminUserDto updateUser(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
+        user.setName(adminEditUserDto.getName());
+        user.setNickname(adminEditUserDto.getNickname());
+        user.setLogin(adminEditUserDto.getLogin());
+        user.setEmail(adminEditUserDto.getEmail());
+        user.setAvatar(adminEditUserDto.getAvatar());
+
         user.setRole(adminEditUserDto.getRole());
+        user.setGang(adminEditUserDto.getGang());
         user.setChatBan(adminEditUserDto.isChatBan());
+
         return userMapper.adminDto(userRepository.save(user));
     }
 

@@ -25,11 +25,20 @@ public class SwaggerConfig {
 
     private final ValuesService valuesService;
 
-    @Bean
+    @Bean(name = "restApi")
     public GroupedOpenApi restApi() {
         return GroupedOpenApi.builder()
                 .group("pdanetwork-rest")
                 .pathsToMatch("/**")
+                .pathsToExclude("/api/v1/admin/**")
+                .build();
+    }
+
+    @Bean(name = "restAdminApi")
+    public GroupedOpenApi restAdminApi() {
+        return GroupedOpenApi.builder()
+                .group("pdanetwork-rest-admin")
+                .pathsToMatch("/api/v1/admin/**")
                 .build();
     }
 
@@ -46,7 +55,7 @@ public class SwaggerConfig {
                                 " на замок и ввести свои данные. <br>"
                                 + "<br> <a href=\"" + valuesService.getAddress() + "/utility\">Панель администратора</a>"
                                 + "<br> <a href=\"" + valuesService.getAddress() + "/enc\">Энциклопедия</a>")
-                        .version("0.3")
+                        .version("0.4")
                         .license(null)
                 )
                 .addSecurityItem(new SecurityRequirement().addList("basicAuth"));

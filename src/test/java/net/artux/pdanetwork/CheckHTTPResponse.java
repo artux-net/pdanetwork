@@ -24,8 +24,8 @@ public class CheckHTTPResponse {
                 String.class);
         Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
     }
-
- /*   @Test
+/*
+   @Test
     @WithAnonymousUser
     public void isStatisticOpen() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/admin/statistic",

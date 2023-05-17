@@ -33,12 +33,4 @@ public class PDANetworkApplication {
         return new BCryptPasswordEncoder();
     }
 
-    /*@Bean
-    public ISpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
-        SpringTemplateEngine engine = new SpringTemplateEngine();
-        engine.addDialect(new Java8TimeDialect());
-        engine.setTemplateResolver(templateResolver);
-        return engine;
-    }*/
-
 }

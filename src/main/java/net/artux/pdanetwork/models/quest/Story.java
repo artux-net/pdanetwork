@@ -22,6 +22,11 @@ public class Story {
         return getChapters().values().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
     }
 
+    public int chapterCount() {
+        return (int) getChapters().values().stream().count();
+    }
+
+
     public int pointCount() {
         return getMaps().values().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
     }

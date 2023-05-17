@@ -63,17 +63,6 @@ public class AdminUsersController extends BaseUtilityController {
         return pageWithContent("users/main", model);
     }
 
-    @Operation(summary = "Выгрузка контактов xlsx-файлом для рассылки")
-    @GetMapping("/mail/export")
-    public void exportUsers(HttpServletResponse response) throws IOException {
-        response.setContentType("application/octet-stream");
-        response.addHeader("Content-Disposition", "attachment; filename=\"contacts.xlsx\"");
-
-        ByteArrayInputStream stream = userService.exportMailContacts();
-        IOUtils.copy(stream, response.getOutputStream());
-    }
-
-
     @GetMapping("/{id}")
     public String getUser(Model model, @PathVariable UUID id) {
         model.addAttribute("userEntity", userService.getUserById(id));
@@ -87,7 +76,7 @@ public class AdminUsersController extends BaseUtilityController {
     }
 
     @PostMapping("/{id}")
-    public Object editUser(@Valid AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
+    public Object editUser(@Valid @RequestBody AdminEditUserDto editUserDto, Model model, @PathVariable UUID id){
         userService.updateUser(id, editUserDto);
         return redirect(getPageUrl(), model, null);
     }

@@ -1,9 +1,11 @@
 package net.artux.pdanetwork.service.feed;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleDto;
+import net.artux.pdanetwork.models.feed.ArticleFullDto;
 import net.artux.pdanetwork.models.feed.ArticleMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
@@ -25,8 +27,10 @@ public class FeedServiceImpl implements FeedService {
     private final ArticleMapper articleMapper;
 
     @Override
-    public ArticleEntity getArticle(UUID id) {
-        return articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Can not find article"));
+    public ArticleFullDto getArticle(UUID id) {
+        ArticleEntity article = articleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
+        return articleMapper.fullDto(article);
     }
 
     @Override
@@ -52,7 +56,8 @@ public class FeedServiceImpl implements FeedService {
 
     @Override
     public ArticleDto editArticle(UUID id, ArticleCreateDto createDto) {
-        ArticleEntity article = getArticle(id);
+        ArticleEntity article = articleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
         article.setTitle(createDto.getTitle());
         article.setDescription(createDto.getDescription());
         article.setImage(createDto.getImage());

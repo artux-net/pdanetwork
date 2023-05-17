@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Пользователи - для администратора", description = "Доступен с роли модератора")
+@Tag(name = "Пользователи", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
 @IsModerator
 @RequiredArgsConstructor
@@ -79,13 +80,13 @@ public class AdminUserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Редактирование пользователя")
-    public AdminUserDto updateUser(@Valid AdminEditUserDto editUserDto, @PathVariable UUID id) {
+    public AdminUserDto updateUser(@Valid @RequestBody AdminEditUserDto editUserDto, @PathVariable UUID id) {
         return userService.updateUser(id, editUserDto);
     }
 
     @PostMapping("/commands/apply/{id}")
     @Operation(summary = "Применение команд")
-    public StoryData applyCommands(@PathVariable("id") UUID id, CommandBlock commandBlock) {
+    public StoryData applyCommands(@PathVariable("id") UUID id, @RequestBody CommandBlock commandBlock) {
         return actionService.doUserActions(id, commandBlock.getActions());
     }
 

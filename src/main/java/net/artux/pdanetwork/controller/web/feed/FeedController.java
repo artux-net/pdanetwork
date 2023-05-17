@@ -1,9 +1,10 @@
 package net.artux.pdanetwork.controller.web.feed;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.models.feed.ArticleDto;
+import net.artux.pdanetwork.models.feed.ArticleFullDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.FeedService;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.validation.Valid;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -38,11 +38,11 @@ public class FeedController {
 
     @GetMapping("/{id}")
     public String getArticlePage(Model model, @PathVariable UUID id) {
-        ArticleEntity article = feedService.getArticle(id);
-        model.addAttribute("title", article.getTitle());
-        model.addAttribute("content", article.getContent());
+        ArticleFullDto article = feedService.getArticle(id);
+        model.addAttribute("title", article.title());
+        model.addAttribute("content", article.content());
         //model.addAttribute("tags", article.getTags());
-        model.addAttribute("date", df.format(article.getPublished()));
+        model.addAttribute("date", df.format(article.published()));
         model.addAttribute("comments", 0);
         return "article";
     }

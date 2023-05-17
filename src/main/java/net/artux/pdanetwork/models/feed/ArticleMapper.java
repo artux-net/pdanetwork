@@ -14,6 +14,10 @@ public interface ArticleMapper {
     @Mapping(target = "tags", ignore = true)
     ArticleDto dto(ArticleEntity entity);
 
+    @Mapping(target = "url", source = "id", qualifiedByName = "articleUrl")
+    @Mapping(target = "tags", ignore = true)
+    ArticleFullDto fullDto(ArticleEntity entity);
+
     List<ArticleDto> dto(List<ArticleEntity> entities);
 
 
