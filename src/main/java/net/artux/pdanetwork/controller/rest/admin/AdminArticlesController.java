@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.models.feed.ArticleFullDto;
+import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.FeedService;
 import net.artux.pdanetwork.utills.IsModerator;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,11 @@ import java.util.UUID;
 public class AdminArticlesController {
 
     private final FeedService feedService;
+
+    @GetMapping
+    public ResponsePage<ArticleDto> getPageArticles(@Valid QueryPage page) {
+        return feedService.getPageArticles(page);
+    }
 
     @PostMapping("/create")
     @Operation(description = "Создание новой статьи")

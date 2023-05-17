@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -39,10 +38,9 @@ public class LogServiceImpl implements LogService {
         String logs = readLogs();
         int maxPageSize = size.orElse(300);
         int pageIndex = page.orElse(1);
-        Stream<String> lines = logs.lines();
-        long linesCount = lines.count();
+        long linesCount = logs.lines().count();
 
-        List<Object> responseLog = lines
+        List<Object> responseLog = logs.lines()
                 .skip(linesCount - maxPageSize * pageIndex)
                 .limit(maxPageSize)
                 .collect(Collectors.toUnmodifiableList());

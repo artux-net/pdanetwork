@@ -13,13 +13,13 @@ import net.artux.pdanetwork.models.user.dto.AdminUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.enums.Role;
+import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.IsModerator;
 import org.apache.commons.io.IOUtils;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,5 +94,11 @@ public class AdminUserController {
     @Operation(summary = "Получение списка ролей")
     public Role[] getRoles() {
         return Role.values();
+    }
+
+    @GetMapping("/gangs")
+    @Operation(summary = "Получение списка группировок")
+    public Gang[] getGangs() {
+        return Gang.values();
     }
 }
