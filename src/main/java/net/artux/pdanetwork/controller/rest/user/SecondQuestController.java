@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Прохождение и команды")
+@Tag(name = "Прохождение и команды 2")
 @RestController
-@RequestMapping("/api/v1/quest")
+@RequestMapping("/api/v2/quest")
 @RequiredArgsConstructor
-public class UserQuestController {
+public class SecondQuestController {
 
     private final ActionService actionService;
 
