@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,13 +37,13 @@ public class AdminArticlesController {
 
     @PostMapping("/create")
     @Operation(description = "Создание новой статьи")
-    public ArticleDto addArticle(@Valid ArticleCreateDto createDto) {
+    public ArticleDto addArticle(@Valid @RequestBody ArticleCreateDto createDto) {
         return feedService.addArticle(createDto);
     }
 
     @PostMapping("/edit/{id}")
     @Operation(description = "Редактирование статьи")
-    public ArticleDto getArticle(@PathVariable UUID id, @Valid ArticleCreateDto createDto) {
+    public ArticleDto getArticle(@PathVariable UUID id, @Valid @RequestBody ArticleCreateDto createDto) {
         return feedService.editArticle(id, createDto);
     }
 

@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.Collections.emptyMap;
+
 @RestController
 @Tag(name = "Пользователи", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
@@ -84,10 +86,16 @@ public class AdminUserController {
         return userService.updateUser(id, editUserDto);
     }
 
-    @PostMapping("/commands/apply/{id}")
+    @PostMapping("/{id}/quest/commands")
     @Operation(summary = "Применение команд")
     public StoryData applyCommands(@PathVariable("id") UUID id, @RequestBody CommandBlock commandBlock) {
         return actionService.doUserActions(id, commandBlock.getActions());
+    }
+
+    @GetMapping("/{id}/quest/info")
+    @Operation(summary = "Получение информации о прохождении")
+    public StoryData getCurrentStoryData(@PathVariable("id") UUID id) {
+        return actionService.doUserActions(id, emptyMap());
     }
 
     @GetMapping("/roles")

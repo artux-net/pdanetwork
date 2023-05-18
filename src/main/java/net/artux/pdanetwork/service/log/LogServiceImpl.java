@@ -40,8 +40,12 @@ public class LogServiceImpl implements LogService {
         int pageIndex = page.orElse(1);
         long linesCount = logs.lines().count();
 
+        long linesToSkip = linesCount - maxPageSize * pageIndex;
+        if (linesToSkip < 0) {
+            linesToSkip = 0;
+        }
         List<Object> responseLog = logs.lines()
-                .skip(linesCount - maxPageSize * pageIndex)
+                .skip(linesToSkip)
                 .limit(maxPageSize)
                 .collect(Collectors.toUnmodifiableList());
 

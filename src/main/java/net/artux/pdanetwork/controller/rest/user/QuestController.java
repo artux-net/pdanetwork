@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Прохождение и команды")
-@RequestMapping("/walkthrough")
-public class WalkthroughController {
+@RequestMapping("/api/v1/quest")
+public class QuestController {
 
     private final ActionService actionService;
 
     @Operation(summary = "Выполнение действий")
-    @PutMapping("/actions")
-    public StoryData doActions(@RequestBody CommandBlock block) {
+    @PutMapping("/commands")
+    public StoryData applyCommands(@RequestBody CommandBlock block) {
         return actionService.doUserActions(block.getActions());
     }
 
     @Operation(summary = "Информация о прохождении")
     @GetMapping("/info")
-    public StoryData getActualData() {
+    public StoryData getCurrentStoryData() {
         return actionService.doUserActions(null);
     }
 
