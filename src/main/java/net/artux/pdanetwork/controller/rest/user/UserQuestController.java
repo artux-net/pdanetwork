@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Прохождение и команды")
 @RequestMapping("/api/v1/quest")
-public class QuestController {
+public class UserQuestController {
 
     private final ActionService actionService;
 
