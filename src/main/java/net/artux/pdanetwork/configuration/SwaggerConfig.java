@@ -60,7 +60,7 @@ public class SwaggerConfig {
                                 " подтвердить почту и войти в аккаунт. Чтобы войти в аккаунт необходимо нажать" +
                                 " на замок и ввести свои данные. <br>"
                                 + "<br> <a href=\"" + valuesService.getAddress() + "/utility\">Панель администратора старая</a>"
-                                + "<br> <a href=\"" + valuesService.getAdminAddress() + ">Панель администратора новая</a>"
+                                + "<br> <a href=\"" + valuesService.getAdminAddress() + "\">Панель администратора новая</a>"
                                 + "<br> <a href=\"" + valuesService.getAddress() + "/enc\">Энциклопедия</a>")
                         .contact(contact)
                         .version("0.4")

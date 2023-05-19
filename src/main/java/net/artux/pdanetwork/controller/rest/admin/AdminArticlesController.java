@@ -9,7 +9,7 @@ import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.models.feed.ArticleFullDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.service.feed.FeedService;
+import net.artux.pdanetwork.service.feed.ArticleService;
 import net.artux.pdanetwork.utills.IsModerator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,35 +28,35 @@ import java.util.UUID;
 @IsModerator
 public class AdminArticlesController {
 
-    private final FeedService feedService;
+    private final ArticleService articleService;
 
     @GetMapping
     public ResponsePage<ArticleDto> getPageArticles(@Valid QueryPage page) {
-        return feedService.getPageArticles(page);
+        return articleService.getPageArticles(page);
     }
 
     @PostMapping("/create")
     @Operation(description = "Создание новой статьи")
     public ArticleDto addArticle(@Valid @RequestBody ArticleCreateDto createDto) {
-        return feedService.addArticle(createDto);
+        return articleService.addArticle(createDto);
     }
 
     @PostMapping("/edit/{id}")
     @Operation(description = "Редактирование статьи")
     public ArticleDto getArticle(@PathVariable UUID id, @Valid @RequestBody ArticleCreateDto createDto) {
-        return feedService.editArticle(id, createDto);
+        return articleService.editArticle(id, createDto);
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Получение статьи в виде JSON")
     public ArticleFullDto getArticle(@PathVariable UUID id) {
-        return feedService.getArticle(id);
+        return articleService.getArticle(id);
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(description = "Удаление статьи")
     public boolean deleteArticle(@PathVariable UUID id) {
-        feedService.deleteArticle(id);
+        articleService.deleteArticle(id);
         return true;
     }
 

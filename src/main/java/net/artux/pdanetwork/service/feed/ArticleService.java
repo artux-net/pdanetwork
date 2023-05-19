@@ -9,7 +9,7 @@ import net.artux.pdanetwork.models.page.ResponsePage;
 
 import java.util.UUID;
 
-public interface FeedService {
+public interface ArticleService {
 
     ArticleFullDto getArticle(UUID id);
 
