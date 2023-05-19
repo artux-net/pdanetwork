@@ -89,13 +89,13 @@ public class AdminUserController {
     @PostMapping("/{id}/quest/commands")
     @Operation(summary = "Применение команд")
     public StoryData applyCommands(@PathVariable("id") UUID id, @RequestBody CommandBlock commandBlock) {
-        return actionService.doUserActions(id, commandBlock.getActions());
+        return actionService.applyCommands(id, commandBlock.getActions());
     }
 
     @GetMapping("/{id}/quest/info")
     @Operation(summary = "Получение информации о прохождении")
     public StoryData getCurrentStoryData(@PathVariable("id") UUID id) {
-        return actionService.doUserActions(id, emptyMap());
+        return actionService.applyCommands(id, emptyMap());
     }
 
     @GetMapping("/roles")

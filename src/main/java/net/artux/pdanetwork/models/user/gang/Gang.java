@@ -1,5 +1,8 @@
 package net.artux.pdanetwork.models.user.gang;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Gang {
     LONERS("Одиночки", 0),
     BANDITS("Бандиты", 1),

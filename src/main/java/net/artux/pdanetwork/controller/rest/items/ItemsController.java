@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Tag(name = "Предметы")
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/api/v1/items")
 @RequiredArgsConstructor
 public class ItemsController {
 

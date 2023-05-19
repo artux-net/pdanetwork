@@ -1,25 +1,28 @@
 package net.artux.pdanetwork.models.user.enums;
 
-import java.util.Arrays;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Role {
 
-    ADMIN(10),
-    USER(0),
-    TESTER(1),
-    MODERATOR(2);
+    ADMIN(10, "Администратор"),
+    USER(0, "Обычный пользователь"),
+    TESTER(1, "Тестер"),
+    MODERATOR(2, "Модератор");
 
     private final int priority;
+    private final String title;
 
-    Role(int priority) {
+    Role(int priority, String title) {
         this.priority = priority;
+        this.title = title;
     }
 
     public int getPriority() {
         return priority;
     }
 
-    public static String[] getRoles(Role role){
-        return Arrays.stream(Role.values()).filter(r -> r.getPriority() <= role.getPriority()).map(Role::name).toArray(String[]::new);
+    public String getTitle() {
+        return title;
     }
 }

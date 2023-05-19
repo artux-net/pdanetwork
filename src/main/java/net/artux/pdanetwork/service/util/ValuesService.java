@@ -43,6 +43,9 @@ public class ValuesService {
     @Value("${cdn.address}")
     private String filesAddress;
 
+    @Value("${admin.address}")
+    private String adminAddress;
+
     public String getAddress() {
         return getDomain() + getContextPath();
     }

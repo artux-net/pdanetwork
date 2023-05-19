@@ -30,12 +30,6 @@ public class FeedController {
             .ofPattern("dd.MM.yyyy")
             .withZone(ZoneId.systemDefault());
 
-    @ResponseBody
-    @GetMapping
-    public ResponsePage<ArticleDto> getPageArticles(@Valid QueryPage page) {
-        return feedService.getPageArticles(page);
-    }
-
     @GetMapping("/{id}")
     public String getArticlePage(Model model, @PathVariable UUID id) {
         ArticleFullDto article = feedService.getArticle(id);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Прохождение и команды")
+@Tag(name = "Прохождение")
 @RestController
 @RequestMapping("/api/v1/quest")
 @RequiredArgsConstructor
@@ -23,13 +23,13 @@ public class UserQuestController {
     @Operation(summary = "Выполнение действий")
     @PutMapping("/commands")
     public StoryData applyCommands(@RequestBody CommandBlock block) {
-        return actionService.doUserActions(block.getActions());
+        return actionService.applyCommands(block.getActions());
     }
 
     @Operation(summary = "Информация о прохождении")
     @GetMapping("/info")
     public StoryData getCurrentStoryData() {
-        return actionService.doUserActions(null);
+        return actionService.applyCommands(null);
     }
 
 }

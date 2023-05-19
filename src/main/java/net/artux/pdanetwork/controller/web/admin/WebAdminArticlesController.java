@@ -21,11 +21,11 @@ import java.util.UUID;
 @Controller
 @Tag(name = "Лента")
 @RequestMapping("/utility/articles")
-public class ArticlesController extends BaseUtilityController {
+public class WebAdminArticlesController extends BaseUtilityController {
 
     private final FeedService feedService;
 
-    public ArticlesController(FeedService feedService) {
+    public WebAdminArticlesController(FeedService feedService) {
         super("Лента");
         this.feedService = feedService;
     }

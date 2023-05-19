@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class RegisterUserDto {
 
+    //TODO validation
     private String login;
     private String password;
     private String email;

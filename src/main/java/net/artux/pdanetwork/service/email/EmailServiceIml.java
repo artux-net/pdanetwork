@@ -71,8 +71,8 @@ public class EmailServiceIml implements EmailService {
     }
 
     public void sendConfirmLetter(RegisterUserDto user, String token) {
-        sendSimpleMessage(user.getEmail(), "Подтвердите регистацию", mailTemplateCon
-                .replace("${link}", valuesService.getAddress() + "/user/register?t=" + token));
+        sendSimpleMessage(user.getEmail(), "Подтвердите регистрацию", mailTemplateCon
+                .replace("${link}", valuesService.getAddress() + "/confirmation/register?t=" + token));
     }
 
 

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Tag(name = "Беседы")
 @RestController
-@RequestMapping("/conversations")
+@RequestMapping("/api/v1/conversations")
 @RequiredArgsConstructor
 public class ConversationController {
 

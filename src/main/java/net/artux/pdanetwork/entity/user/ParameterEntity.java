@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 @Table(name = "user_parameter")
 public class ParameterEntity extends BaseEntity {
 
-    @ManyToOne()
+    @ManyToOne
     public UserEntity user;
     public String key;
     public Integer value;

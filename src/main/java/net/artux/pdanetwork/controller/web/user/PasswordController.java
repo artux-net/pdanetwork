@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.controller.rest.user;
+package net.artux.pdanetwork.controller.web.user;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;

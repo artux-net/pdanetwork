@@ -24,7 +24,7 @@ import java.util.Collection;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Сюжет")
-@RequestMapping("/quest")
+@RequestMapping("/api/v1/quest")
 public class QuestController {
 
     private final QuestService questService;

@@ -15,7 +15,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Друзья")
-@RequestMapping("/profile/friends")
+@RequestMapping("/api/v1/profile/friends")
 public class FriendsController {
 
     private final FriendService friendService;

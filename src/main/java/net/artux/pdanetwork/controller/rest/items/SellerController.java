@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Продавцы")
-@RequestMapping("/sellers")
+@RequestMapping("/api/v1/sellers")
 public class SellerController {
 
     private final SellerService sellerService;
