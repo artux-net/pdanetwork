@@ -1,9 +1,8 @@
 package net.artux.pdanetwork.models.user.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import net.artux.pdanetwork.models.enums.EnumGetter;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Role {
+public enum Role implements EnumGetter {
 
     ADMIN(10, "Администратор"),
     USER(0, "Обычный пользователь"),
@@ -20,6 +19,11 @@ public enum Role {
 
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public String getId() {
+        return this.name();
     }
 
     public String getTitle() {

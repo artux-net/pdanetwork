@@ -1,9 +1,8 @@
 package net.artux.pdanetwork.models.user.gang;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import net.artux.pdanetwork.models.enums.EnumGetter;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Gang {
+public enum Gang implements EnumGetter {
     LONERS("Одиночки", 0),
     BANDITS("Бандиты", 1),
     MILITARY("Военные", 2),
@@ -14,20 +13,21 @@ public enum Gang {
     SCIENTISTS("Ученые", 7),
     CLEAR_SKY("Чистое небо", 8);
 
-    private final String name;
+    private final String title;
     private final int id;
 
-    Gang(String name, int id) {
-        this.name = name;
+    Gang(String title, int id) {
+        this.title = title;
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String getId() {
+        return this.name();
     }
 
-    public int getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
     public static Gang getById(int id) {

@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.models.enums.EnumDto;
+import net.artux.pdanetwork.models.enums.EnumMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.CommandBlock;
@@ -47,6 +49,7 @@ public class AdminUserController {
     private final ProfileService profileService;
     private final ActionService actionService;
     private final UserService userService;
+    private final EnumMapper enumMapper;
 
     @GetMapping
     @Operation(summary = "Получение списка пользователей с пагинацией и поиском")
@@ -100,13 +103,13 @@ public class AdminUserController {
 
     @GetMapping("/roles")
     @Operation(summary = "Получение списка ролей")
-    public Role[] getRoles() {
-        return Role.values();
+    public EnumDto[] getRoles() {
+        return enumMapper.dto(Role.values());
     }
 
     @GetMapping("/gangs")
     @Operation(summary = "Получение списка группировок")
-    public Gang[] getGangs() {
-        return Gang.values();
+    public EnumDto[] getGangs() {
+        return enumMapper.dto(Gang.values());
     }
 }

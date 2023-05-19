@@ -30,7 +30,7 @@ public class SwaggerConfig {
     public GroupedOpenApi restApi() {
         return GroupedOpenApi.builder()
                 .group("pdanetwork-rest")
-                .pathsToMatch("/**")
+                .pathsToMatch("/api/v1/**")
                 .pathsToExclude("/api/v1/admin/**")
                 .build();
     }
