@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
@@ -38,11 +37,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void addArticle(ArticleEntity article) {
         articleRepository.save(article);
     }
 
     @Override
+    @Transactional
     public ArticleDto addArticle(ArticleCreateDto createDto) {
         ArticleEntity article = articleMapper.createDto(createDto);
         article = articleRepository.save(article);
@@ -51,6 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void deleteArticle(UUID id) {
         logger.info("Article deleted: {}", id);
         articleRepository.deleteById(id);
@@ -63,6 +65,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleDto editArticle(UUID id, ArticleCreateDto createDto) {
         ArticleEntity article = articleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find article"));

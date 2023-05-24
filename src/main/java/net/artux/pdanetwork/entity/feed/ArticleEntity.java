@@ -13,7 +13,7 @@ import net.artux.pdanetwork.entity.BaseEntity;
 
 import java.time.Instant;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @Setter
 @Entity
@@ -22,7 +22,6 @@ public class ArticleEntity extends BaseEntity {
 
     @NotBlank(message = "Заголовок не может быть пустым")
     private String title;
-    @Pattern(regexp = "[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)", message = "Неправильный формат ссылки на изображение")
     private String image;
     //private List<String> tags = new HashSet<>();//todo
     @NotBlank(message = "Описание не может быть пустым")
