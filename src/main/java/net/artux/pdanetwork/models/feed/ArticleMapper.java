@@ -21,4 +21,7 @@ public interface ArticleMapper {
     List<ArticleDto> dto(List<ArticleEntity> entities);
 
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "published", expression = "java(java.time.Instant.now())")
+    ArticleEntity createDto(ArticleCreateDto createDto);
 }

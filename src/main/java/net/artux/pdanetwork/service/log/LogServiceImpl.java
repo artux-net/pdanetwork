@@ -48,9 +48,12 @@ public class LogServiceImpl implements LogService {
                 .skip(linesToSkip)
                 .limit(maxPageSize)
                 .collect(Collectors.toUnmodifiableList());
+        if (maxPageSize > linesCount) {
+            maxPageSize = (int) linesCount;
+        }
 
         return ResponsePage.builder()
-                .lastPage((int) Math.ceil(linesCount / maxPageSize))
+                .lastPage((int) (linesCount / maxPageSize))
                 .content(responseLog)
                 .contentSize(responseLog.size())
                 .number(pageIndex)

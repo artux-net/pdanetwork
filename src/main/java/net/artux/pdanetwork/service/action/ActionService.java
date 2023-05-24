@@ -45,7 +45,6 @@ public class ActionService {
 
     public StoryData applyCommands(UUID id, Map<String, List<String>> map) {
         UserEntity userEntity = userRepository.getById(id);
-        logger.info("Start actions for {}", userEntity.getLogin());
         operateActions(map, userEntity);
         userEntity.fixAllItems();
         return storyMapper.storyData(userRepository.save(userEntity));
@@ -58,9 +57,9 @@ public class ActionService {
     }
 
     protected void operateActions(Map<String, List<String>> actions, UserEntity userEntity) {
-        if (actions == null)
+        if (actions == null || actions.isEmpty())
             return;
-
+        logger.info("Got commands for {} : {}", userEntity.getLogin(), actions.toString());
         for (String command : actions.keySet()) {
             try {
                 List<String> params = actions.get(command);

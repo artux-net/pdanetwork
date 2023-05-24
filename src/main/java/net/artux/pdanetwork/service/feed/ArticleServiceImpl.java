@@ -10,7 +10,9 @@ import net.artux.pdanetwork.models.feed.ArticleMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.feed.ArticleRepository;
+import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
+import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
+    private final Logger logger;
+    private final UserService userService;
     private final ArticleRepository articleRepository;
     private final PageService pageService;
     private final ArticleMapper articleMapper;
@@ -40,11 +44,15 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ArticleDto addArticle(ArticleCreateDto createDto) {
-        return null;
+        ArticleEntity article = articleMapper.createDto(createDto);
+        article = articleRepository.save(article);
+        logger.info("Article created: {} by {}", article, userService.getUserById().getLogin());
+        return articleMapper.dto(article);
     }
 
     @Override
     public void deleteArticle(UUID id) {
+        logger.info("Article deleted: {}", id);
         articleRepository.deleteById(id);
     }
 
@@ -62,6 +70,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDescription(createDto.getDescription());
         article.setImage(createDto.getImage());
         article.setContent(createDto.getContent());
+        logger.info("Article edited: {} by {}", article, userService.getUserById().getLogin());
 
         return articleMapper.dto(articleRepository.save(article));
     }

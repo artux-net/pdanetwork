@@ -180,6 +180,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(adminEditUserDto.getRole());
         user.setGang(adminEditUserDto.getGang());
         user.setChatBan(adminEditUserDto.isChatBan());
+        logger.info("User {} updated by {}", userMapper.dto(user), getUserById().getLogin());
 
         return userMapper.adminDto(userRepository.save(user));
     }
@@ -230,6 +231,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public ByteArrayInputStream exportUsers(List<UserEntity> users) throws IOException {
+        logger.info("{} exported contacts.", getUserById().getLogin());
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("users");
 

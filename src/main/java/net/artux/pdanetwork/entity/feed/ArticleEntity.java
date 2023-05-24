@@ -1,17 +1,19 @@
 package net.artux.pdanetwork.entity.feed;
 
-import lombok.Getter;
-import lombok.Setter;
-import net.artux.pdanetwork.entity.BaseEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import net.artux.pdanetwork.entity.BaseEntity;
+
 import java.time.Instant;
 
+@ToString
 @Getter
 @Setter
 @Entity

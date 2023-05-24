@@ -40,7 +40,7 @@ public abstract class SocketHandler implements WebSocketHandler {
 
     protected void accept(WebSocketSession userSession) {
         sessionList.add(userSession);
-        logger.debug("{}: User {} accepted", this.getClass().getSimpleName(), getMember(userSession).getLogin());
+        logger.info("{}: User {} connected to chat.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
     }
 
     protected void reject(WebSocketSession userSession, String message) {
@@ -54,7 +54,7 @@ public abstract class SocketHandler implements WebSocketHandler {
             }
         }
         sessionList.remove(userSession);
-        logger.debug("{}: User {} removed", this.getClass().getSimpleName(), getMember(userSession).getLogin());
+        logger.info("{}: User {} rejected, because: ", this.getClass().getSimpleName(), getMember(userSession).getLogin(), message);
     }
 
     protected List<WebSocketSession> getSessions() {
