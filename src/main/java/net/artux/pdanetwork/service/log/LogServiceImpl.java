@@ -50,7 +50,7 @@ public class LogServiceImpl implements LogService {
                 .collect(Collectors.toUnmodifiableList());
 
         return ResponsePage.builder()
-                .lastPage((int) (linesCount / maxPageSize))
+                .lastPage((int) Math.ceil(linesCount / maxPageSize))
                 .content(responseLog)
                 .contentSize(responseLog.size())
                 .number(pageIndex)

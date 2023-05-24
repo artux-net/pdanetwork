@@ -94,6 +94,8 @@ public class BanServiceImpl implements BanService {
     @Override
     @Transactional
     public boolean clearBan(UUID banId) {
+        BanEntity ban = repository.findById(banId).orElseThrow(() -> new RuntimeException("Ban not found"));
+        currentBanMap.remove(ban.getUser().getId());
         repository.deleteById(banId);
         return true;
     }
