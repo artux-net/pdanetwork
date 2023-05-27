@@ -24,6 +24,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Set<UserEntity> findAllByIdIn(List<UUID> list);
 
+    @Query(value = "select row_number() over(ORDER BY xp) from pda_user pu where pu.id = :id", nativeQuery = true)
+    long ratingPosition(UUID id);
+
     @Query(value = "select * from pda_user pu join " +
             "(select r.user1_id, r.user2_id from relationship r where r.id not in (select r1.id from relationship r1  " +
             "join relationship r2 on r1.user1_id = r2.user2_id and r1.user2_id = r2.user1_id)) " +

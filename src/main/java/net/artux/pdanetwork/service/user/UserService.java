@@ -6,6 +6,7 @@ import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.AdminUserDto;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
+import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,4 +43,6 @@ public interface UserService {
     ByteArrayInputStream exportMailContacts() throws IOException;
 
     boolean changeEmailSetting(UUID id);
+
+    UserEntity saveUser(RegisterUserDto registerUserDto, Role role);
 }

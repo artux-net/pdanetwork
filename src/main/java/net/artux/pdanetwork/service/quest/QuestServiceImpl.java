@@ -7,7 +7,6 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.GameMap;
-import net.artux.pdanetwork.models.quest.Mission;
 import net.artux.pdanetwork.models.quest.QuestMapper;
 import net.artux.pdanetwork.models.quest.Stage;
 import net.artux.pdanetwork.models.quest.Story;
@@ -35,7 +34,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -149,12 +147,6 @@ public class QuestServiceImpl implements QuestService {
                 }
                 story.setMaps(maps);
 
-                try {
-                    Mission[] missions = objectMapper.readValue(
-                            new File(storyDir + "/missions.json"), Mission[].class);
-                    story.setMissions(Arrays.stream(missions).toList());
-                } catch (IOException ignored) {
-                }
                 if (story.getId() > lastStoryId) {
                     lastStoryId = story.getId();
                 }

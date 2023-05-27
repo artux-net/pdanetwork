@@ -10,10 +10,6 @@ public class GameMap {
     private long id;
     private String title;
     private String tmx;
-    private String texture;
-    private String tilesTexture;
-    private String boundsTexture;
-    private String blurTexture;
     private String defPos;
     private List<Point> points;
     private List<Spawn> spawns;

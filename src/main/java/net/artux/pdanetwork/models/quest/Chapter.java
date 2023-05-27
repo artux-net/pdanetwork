@@ -10,7 +10,9 @@ public class Chapter {
 
     private long id;
     private HashMap<Long, Stage> stages;
-    private List<Sound> music;
+    private HashMap<Long, Point> points;
+    private HashMap<Long, Spawn> spawns;
+    private Mission mission;
 
     public void setStages(List<Stage> stageList) {
         stages = new HashMap<>();

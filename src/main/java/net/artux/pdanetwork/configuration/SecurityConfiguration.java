@@ -3,17 +3,13 @@ package net.artux.pdanetwork.configuration;
 import net.artux.pdanetwork.models.user.enums.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.authorization.AuthorityAuthorizationManager;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +30,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST = {
             "/mailing/**",
-            "/user/register",
+            "/confirmation/register",
             "/reset",
             "/reset/**",
             "/feed/**",

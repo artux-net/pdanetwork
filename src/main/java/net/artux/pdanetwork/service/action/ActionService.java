@@ -1,16 +1,17 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ConditionalEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
-import net.artux.pdanetwork.models.quest.Checkpoint;
-import net.artux.pdanetwork.models.quest.Mission;
 import net.artux.pdanetwork.models.quest.Stage;
-import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
@@ -24,7 +25,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
@@ -285,7 +293,7 @@ public class ActionService {
             case "exitStory":
                 exitStory(userEntity);
                 break;
-            case "check": {
+            /*case "check": { // TODO
                 int storyId = userEntity.getCurrentStoryState().getStoryId();
                 Story story = questService.getStory(storyId);
                 for (String param : params) {
@@ -299,7 +307,7 @@ public class ActionService {
                         logger.error("Check failed, param " + param + " is not within any of missions");
                 }
             }
-            break;
+            break;*/
             case "finishStory":
                 finishStory(userEntity);
                 break;

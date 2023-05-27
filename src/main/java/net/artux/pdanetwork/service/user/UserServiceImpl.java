@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
         } else return new Status(false, "Ссылка устарела или не существует");
     }
 
-    private UserEntity saveUser(RegisterUserDto registerUserDto, Role role) {
+    public UserEntity saveUser(RegisterUserDto registerUserDto, Role role) {
         return userRepository.save(new UserEntity(registerUserDto, passwordEncoder, role));
     }
 

@@ -25,8 +25,8 @@ public interface UserMapper {
     UserDto dto(UserEntity user);
     AdminUserDto adminDto(UserEntity user);
 
+    @Mapping(target = "ratingPosition", ignore = true)
     @Mapping(target = "friendRelation", ignore = true)
-    @Mapping(target = "blocked", ignore = true)
     @Mapping(target = "friends", ignore = true)
     @Mapping(target = "subs", ignore = true)
     @Mapping(target = "achievements", expression = "java(user.getAchievements().size())")

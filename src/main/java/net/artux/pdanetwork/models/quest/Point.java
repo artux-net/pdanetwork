@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class  Point {
 
+    private int id;
     public int type;
     private String name;
     private String pos;

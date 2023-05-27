@@ -31,13 +31,17 @@ public class ProfileServiceIml implements ProfileService {
     private final PageService pageService;
 
     @Override
-    public Profile getProfile(UUID pdaId) {
-        return userMapper.profile(userService.getUserById(pdaId), userService.getUserById());
+    public Profile getProfile(UUID uuid) {
+        Profile profile = userMapper.profile(userService.getUserById(uuid), userService.getUserById());
+        profile.setRatingPosition(userRepository.ratingPosition(profile.getId()));
+        return profile;
     }
 
     @Override
     public Profile getProfile() {
-        return userMapper.profile(userService.getUserById());
+        Profile profile = userMapper.profile(userService.getUserById());
+        profile.setRatingPosition(userRepository.ratingPosition(profile.getId()));
+        return profile;
     }
 
     @Override
