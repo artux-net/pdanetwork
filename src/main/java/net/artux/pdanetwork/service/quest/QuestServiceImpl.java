@@ -3,10 +3,11 @@ package net.artux.pdanetwork.service.quest;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.Chapter;
+import net.artux.pdanetwork.models.quest.ChapterDto;
 import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.QuestMapper;
 import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.StoryDto;
 import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
@@ -30,15 +31,15 @@ public class QuestServiceImpl implements QuestService {
     private final QuestMapper questMapper;
     private final UserService userService;
     private Instant updatedTime;
-    private Map<Long, Story> stories = new HashMap<>();
-    private Map<Role, List<Story>> roleStories = new HashMap<>();
-    private final Map<UUID, Story> usersStories = new HashMap<>();
+    private Map<Long, StoryDto> stories = new HashMap<>();
+    private Map<Role, List<StoryDto>> roleStories = new HashMap<>();
+    private final Map<UUID, StoryDto> usersStories = new HashMap<>();
     private long lastStoryId = -2;
 
     @Override
     public Status setUserStory(Story story) {
         story.setId(lastStoryId + 1);
-        usersStories.put(userService.getCurrentId(), story);
+        usersStories.put(userService.getCurrentId(), questMapper.dto(story));
         return new Status(true, "История загружена. Сбросьте кэш для появления.");
     }
 
@@ -53,7 +54,7 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Chapter getChapter(long storyId, long chapterId) {
+    public ChapterDto getChapter(long storyId, long chapterId) {
         return getStory(storyId).getChapters().get(chapterId);
     }
 
@@ -63,11 +64,13 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Story getStory(long storyId) {
+    public StoryDto getStory(long storyId) {
         UserEntity user = userService.getUserById();
-        Story story = stories.get(storyId);
+        StoryDto story = stories.get(storyId);
         if (story == null)
             story = usersStories.get(user.getId());
+        if (story == null)
+            throw new RuntimeException();
         if (story.getAccess().getPriority() > user.getRole().getPriority())
             throw new AccessDeniedException("User has no access to the story");
         return story;
@@ -80,7 +83,7 @@ public class QuestServiceImpl implements QuestService {
             if (story.getId() > lastStoryId)
                 lastStoryId = story.getId();
 
-            this.stories.put(story.getId(), story);
+            this.stories.put(story.getId(), questMapper.dto(story));
         }
 
         roleStories = new HashMap<>();
@@ -90,14 +93,14 @@ public class QuestServiceImpl implements QuestService {
                 if (story.getAccess().getPriority() <= role.getPriority())
                     roleStories.add(story);
             }
-            this.roleStories.put(role, roleStories);
+            this.roleStories.put(role, questMapper.storiesDto(roleStories));
         }
         updatedTime = Instant.now();
         return null;
     }
 
     @Override
-    public Collection<Story> getStories() {
+    public Collection<StoryDto> getStories() {
         Role role = userService.getUserById().getRole();
         return roleStories.get(role);
     }

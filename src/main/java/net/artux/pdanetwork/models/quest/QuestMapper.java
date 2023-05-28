@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.models.quest;
 
-import net.artux.pdanetwork.models.enums.EnumGetter;
 import net.artux.pdanetwork.models.quest.admin.StoryInfoAdmin;
 import net.artux.pdanetwork.models.quest.map.MapDto;
 import net.artux.pdanetwork.models.quest.map.MapEnumGetter;
@@ -16,13 +15,13 @@ public interface QuestMapper {
     @Mapping(target = "stages", expression = "java(story.stageCount())")
     @Mapping(target = "chapters", expression = "java(story.chapterCount())")
     @Mapping(target = "points", expression = "java(story.pointCount())")
-    StoryInfoAdmin adminInfo(Story story);
+    StoryInfoAdmin adminInfo(StoryDto story);
 
-    List<StoryInfoAdmin> adminInfo(Collection<Story> story);
+    List<StoryInfoAdmin> adminInfo(Collection<StoryDto> story);
 
-    StoryInfo info(Story story);
+    StoryInfo info(StoryDto story);
 
-    List<StoryInfo> info(Collection<Story> story);
+    List<StoryInfo> info(Collection<StoryDto> story);
 
     @Mapping(target = "id", expression = "java(enumGetter.getId())")
     @Mapping(target = "name", expression = "java(enumGetter.getName())")
