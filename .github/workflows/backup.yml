@@ -1,13 +1,15 @@
-name: Backup DB
+name: CI/CD
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
     
-  build:
-    runs-on: self-hosted
-    name: 'Build and upload artifact'
+  tests:
+    runs-on: ubuntu-latest
+    name: 'Test artifact'
     steps:
     - uses: actions/checkout@v3
     
@@ -17,18 +19,21 @@ jobs:
         java-version: '17'
         distribution: 'zulu'
         cache: maven
-        
+      
+    - name: Run Tests
+      run: mvn -B test
+      
     - name: Build with Maven
-      run: mvn clean package
+      run: mvn package
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         path: target/*.jar
     
-  push:
-    needs: build
-    name: 'Build Docker-image and push to registry'
+  build:
+    needs: tests
+    name: 'Build Docker-image'
     runs-on: ubuntu-latest
     steps:
     - name: Set up QEMU
@@ -37,10 +42,9 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
       
-    - name: Login to Artux registry
+    - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
-          registry: registry.artux.net
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -60,22 +64,22 @@ jobs:
          context: .
          platforms: linux/arm64
          push: true
-         tags: registry.artux.net/pdanetwork:${{github.run_number}}
+         tags: ${{ secrets.DOCKERHUB_USERNAME }}/pdanetwork:latest
        
   deploy:
-    needs: push
+    needs: build
     name: 'Deploy image to server'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Upload compose.dev.yml
+      - name: Upload docker-compose.yml
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.PORT }}
-          source: "compose.dev.yml"
+          source: "docker-compose.yml"
           target: "app"
           
       - name: "Start container"
