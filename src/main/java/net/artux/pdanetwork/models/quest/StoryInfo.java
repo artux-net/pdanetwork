@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.models.quest.admin;
+package net.artux.pdanetwork.models.quest;
 
 import lombok.Data;
 
@@ -9,9 +9,5 @@ public class StoryInfo {
     private String title;
     private String desc;
     private String icon;
-
-    private int chapters;
-    private int stages;
-    private int points;
 
 }

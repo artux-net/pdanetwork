@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.models.quest;
+package net.artux.pdanetwork.models.quest.map;
 
 import lombok.Data;
 import net.artux.pdanetwork.models.user.gang.Gang;

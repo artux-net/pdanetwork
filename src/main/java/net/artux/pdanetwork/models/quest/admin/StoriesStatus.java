@@ -12,6 +12,6 @@ public class StoriesStatus {
 
     private Instant readTime;
     private int userStories;
-    private List<StoryInfo> stories;
+    private List<StoryInfoAdmin> stories;
 
 }

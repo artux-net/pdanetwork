@@ -54,8 +54,8 @@ public abstract class SocketHandler implements WebSocketHandler {
             }
         }
         sessionList.remove(userSession);
-        logger.debug(" User {} disconnected.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
-        if (message.isBlank())
+        logger.debug("User {} disconnected.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
+        if (message != null && !message.isBlank())
             logger.info("{}: Disconnect reason for {}: ", this.getClass().getSimpleName(), getMember(userSession).getLogin(), message);
     }
 
@@ -132,7 +132,7 @@ public abstract class SocketHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus closeStatus) throws Exception {
-        reject(webSocketSession, null);
+        reject(webSocketSession, "Code: " + closeStatus.getCode() + ", reason: " + closeStatus.getReason());
     }
 
     @Override
@@ -141,7 +141,7 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     @Override
-    public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) throws Exception {
-
+    public void handleTransportError(WebSocketSession webSocketSession, Throwable throwable) {
+        reject(webSocketSession, throwable.getMessage());
     }
 }

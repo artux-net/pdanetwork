@@ -11,7 +11,7 @@ import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
-import net.artux.pdanetwork.models.quest.Stage;
+import net.artux.pdanetwork.models.quest.stage.Stage;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
@@ -52,7 +52,7 @@ public class ActionService {
     private final Timer timer = new Timer();
 
     public StoryData applyCommands(UUID id, Map<String, List<String>> map) {
-        UserEntity userEntity = userRepository.getById(id);
+        UserEntity userEntity = userRepository.findById(id).orElseThrow();
         operateActions(map, userEntity);
         userEntity.fixAllItems();
         return storyMapper.storyData(userRepository.save(userEntity));

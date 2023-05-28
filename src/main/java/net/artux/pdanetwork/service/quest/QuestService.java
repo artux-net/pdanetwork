@@ -3,6 +3,7 @@ package net.artux.pdanetwork.service.quest;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.*;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
+import net.artux.pdanetwork.models.quest.stage.Stage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
@@ -22,16 +23,13 @@ public interface QuestService {
 
     Story getStory(long storyId);
 
-    Status downloadStories();
-
-    Status setStories(MultipartFile storiesArchive);
+    Status setStories(Collection<Story> stories);
 
     Status setUserStory(Story story);
+
     Collection<Story> getStories();
 
-    Collection<StoryDto> getStoriesDto();
-
-    Instant getReadTime();
+    Collection<StoryInfo> getStoriesInfo();
 
     StoriesStatus getStatus();
 }

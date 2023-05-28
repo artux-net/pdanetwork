@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.models.quest;
+package net.artux.pdanetwork.models.quest.mission;
 
 import lombok.Data;
 

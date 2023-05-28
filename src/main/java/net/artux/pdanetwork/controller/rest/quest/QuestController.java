@@ -7,7 +7,7 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
-import net.artux.pdanetwork.models.quest.StoryDto;
+import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.service.quest.QuestService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,8 +37,8 @@ public class QuestController {
 
     @GetMapping
     @Operation(summary = "Получить сюжеты")
-    public Collection<StoryDto> getStories() {
-        return questService.getStoriesDto();
+    public Collection<StoryInfo> getStories() {
+        return questService.getStoriesInfo();
     }
 
     @GetMapping("/{storyId}/{chapterId}")
@@ -53,14 +53,5 @@ public class QuestController {
         return questService.getMap(storyId, mapId);
     }
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Status uploadStories(@RequestPart("file") MultipartFile file) {
-        return questService.setStories(file);
-    }
 
-    @PostMapping(value = "/uploadCustom")
-    @Operation(summary = "Загрузить пользовательский сюжет")
-    public Status uploadCustomStory(@RequestBody Story story) {
-        return questService.setUserStory(story);
-    }
 }
