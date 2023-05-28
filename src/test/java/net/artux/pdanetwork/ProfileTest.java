@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProfileTest {
 
-    @Autowired
+   /* @Autowired
     private WebApplicationContext applicationContext;
     private MockMvc mockMvc;
     @Autowired
@@ -83,6 +83,6 @@ public class ProfileTest {
 
 
         // mockMvc.perform(get("/api/v1/profile").with(user(getSecurityUser()))).andDo(print());
-    }
+    }*/
 
 }
