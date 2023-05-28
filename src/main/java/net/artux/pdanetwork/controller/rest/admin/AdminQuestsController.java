@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
+import net.artux.pdanetwork.models.quest.map.GameMapDto;
+import net.artux.pdanetwork.models.quest.map.GameMapEnumMapper;
+import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.service.quest.QuestManagerService;
 import net.artux.pdanetwork.service.quest.QuestService;
 import net.artux.pdanetwork.utills.IsModerator;
@@ -27,6 +30,7 @@ public class AdminQuestsController {
 
     private final QuestService questService;
     private final QuestManagerService questManagerService;
+    private final GameMapEnumMapper mapper;
 
     @Operation(summary = "Обновить сюжеты с GitHub", description = "https://github.com/artux-net/pda-quests")
     @PostMapping("/update")
@@ -50,6 +54,12 @@ public class AdminQuestsController {
     @Operation(summary = "Загрузить пользовательский сюжет")
     public Status uploadCustomStory(@RequestBody Story story) {
         return questService.setUserStory(story);
+    }
+
+    @Operation(summary = "Получить информацию о картах")
+    @GetMapping("/maps/all")
+    public GameMapDto[] getMaps() {
+        return mapper.dto(MapEnum.values());
     }
 
 }

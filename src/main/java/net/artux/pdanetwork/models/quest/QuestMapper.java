@@ -1,7 +1,7 @@
 package net.artux.pdanetwork.models.quest;
 
 import net.artux.pdanetwork.models.quest.admin.StoryInfoAdmin;
-import net.artux.pdanetwork.models.quest.map.MapDto;
+import net.artux.pdanetwork.models.quest.map.GameMapDto;
 import net.artux.pdanetwork.models.quest.map.MapEnumGetter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,9 +27,9 @@ public interface QuestMapper {
     @Mapping(target = "name", expression = "java(enumGetter.getName())")
     @Mapping(target = "background", expression = "java(enumGetter.getBackground())")
     @Mapping(target = "title", expression = "java(enumGetter.getTitle())")
-    MapDto dto(MapEnumGetter enumGetter);
+    GameMapDto dto(MapEnumGetter enumGetter);
 
-    List<MapDto> mapsDto(Collection<MapEnumGetter> enumGetters);
+    List<GameMapDto> mapsDto(Collection<MapEnumGetter> enumGetters);
 
     StoryDto dto(Story story);
 
