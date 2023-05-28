@@ -7,6 +7,8 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.map.Point;
+import net.artux.pdanetwork.models.quest.map.Spawn;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
@@ -29,7 +31,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -122,9 +126,13 @@ public class QuestManagerServiceImpl implements QuestManagerService {
                     try {
                         GameMap gameMap = objectMapper.readValue(mapFile, GameMap.class);
                         maps.put(gameMap.getId(), gameMap);
-                        for(var chapter : chapters.values()){
-                            gameMap.getPoints().addAll(chapter.getPoints().get(gameMap.getId()));
-                            gameMap.getSpawns().addAll(chapter.getSpawns().get(gameMap.getId()));
+                        for (var chapter : chapters.values()) {
+                            Map<Long, List<Point>> points = chapter.getPoints();
+                            if (points != null && points.containsKey(gameMap.getId()))
+                                gameMap.getPoints().addAll(points.get(gameMap.getId()));
+                            Map<Long, List<Spawn>> spawns = chapter.getSpawns();
+                            if (spawns != null && spawns.containsKey(gameMap.getId()))
+                                gameMap.getSpawns().addAll(spawns.get(gameMap.getId()));
                         }
                     } catch (IOException e) {
                         errors++;
