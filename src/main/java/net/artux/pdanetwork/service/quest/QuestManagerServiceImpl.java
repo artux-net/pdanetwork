@@ -102,7 +102,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
                     String filename = chapterFile.getName().toLowerCase(Locale.ROOT);
                     if (chapterFile.isDirectory()
                             || filename.contains("info.json")
-                            || filename.contains("mission.json"))
+                            || filename.contains("missions.json"))
                         continue;
 
                     try {
@@ -114,7 +114,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
                     }
 
                 }
-                story.setChapters(chapters);
+                story.setChapters(chapters.values());
 
                 //maps
                 HashMap<Long, GameMap> maps = new HashMap<>();
@@ -139,7 +139,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
                         logger.error("Error while reading map " + mapFile.getName(), e);
                     }
                 }
-                story.setMaps(maps);
+                story.setMaps(maps.values());
                 stories.put(story.getId(), story);
             } catch (IOException e) {
                 errors++;
@@ -148,7 +148,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
         }
         deleteDirectory(file);
         if (stories.values().size() > 0) {
-            questService.setStories(stories.values());
+            questService.addStories(stories.values());
 
             logger.info("Stories updated, count: {}", stories.values().size());
             return new Status(true, "Stories updated, errors " + errors);

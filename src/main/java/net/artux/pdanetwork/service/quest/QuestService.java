@@ -10,14 +10,14 @@ import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface QuestService {
 
     Stage getStage(long storyId, long chapterId, long stageId);
 
-    HashMap<String, List<String>> getActionsOfStage(long storyId, long chapterId, long stageId);
+    Map<String, List<String>> getActionsOfStage(long storyId, long chapterId, long stageId);
 
     ChapterDto getChapter(long storyId, long chapterId);
 
@@ -25,13 +25,17 @@ public interface QuestService {
 
     StoryDto getStory(long storyId);
 
-    Status setStories(Collection<Story> stories);
-
-    Status setUserStory(Story story);
+    Status addStories(Collection<Story> stories);
 
     Collection<StoryDto> getStories();
 
     Collection<StoryInfo> getStoriesInfo();
 
     StoriesStatus getStatus();
+
+    Status setUserStory(Story story);
+
+    Status setPublicStory(Story story);
+
+    Story getOriginalStory(long storyId);
 }

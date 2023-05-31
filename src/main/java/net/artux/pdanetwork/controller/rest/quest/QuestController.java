@@ -24,25 +24,25 @@ public class QuestController {
     private final QuestService questService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Получить сюжет по указанному ID")
+    @Operation(summary = "Получить скомпилированный сюжет по указанному ID")
     public StoryDto getStory(@PathVariable("id") long id) {
         return questService.getStory(id);
     }
 
     @GetMapping
-    @Operation(summary = "Получить сюжеты")
+    @Operation(summary = "Получить скомпилированные сюжеты")
     public Collection<StoryInfo> getStories() {
         return questService.getStoriesInfo();
     }
 
     @GetMapping("/{storyId}/{chapterId}")
-    @Operation(summary = "Получить главу по указанному ID в сюжете")
+    @Operation(summary = "Получить скомпилированную главу по указанному ID в сюжете")
     public ChapterDto getChapter(@PathVariable("storyId") long storyId, @PathVariable("chapterId") long chapterId) {
         return questService.getChapter(storyId, chapterId);
     }
 
     @GetMapping("/maps/{storyId}/{mapId}")
-    @Operation(summary = "Получить карту по указанному ID в сюжете")
+    @Operation(summary = "Получить скомпилированную карту по указанному ID в сюжете")
     public GameMap getMap(@PathVariable("storyId") long storyId, @PathVariable("mapId") long mapId) {
         return questService.getMap(storyId, mapId);
     }

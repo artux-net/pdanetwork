@@ -333,7 +333,7 @@ public class ActionService {
                                     storyStateEntity.getChapterId(),
                                     storyStateEntity.getStageId());
 
-                            if (actualStage.getTransfers() != null && actualStage.getTransfers().size() > 0) {
+                            /*if (actualStage.getTransfers() != null && actualStage.getTransfers().size() > 0) {
                                 int finalStage = stage;
                                 boolean checkStart = actualStage.getTransfers().stream()
                                         .filter(transfer -> transfer.getStage() == finalStage)
@@ -341,7 +341,7 @@ public class ActionService {
                                         .size() > 0;
                                 if (!checkStart)
                                     throw new RuntimeException();
-                            }
+                            }*/
                         }
                         storyStateEntity.setCurrent(true);
 

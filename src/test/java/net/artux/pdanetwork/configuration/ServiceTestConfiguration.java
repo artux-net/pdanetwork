@@ -1,11 +1,8 @@
 package net.artux.pdanetwork.configuration;
 
 import net.artux.pdanetwork.entity.user.UserEntity;
-import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.service.email.EmailService;
-import net.artux.pdanetwork.service.quest.QuestManagerService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -15,9 +12,6 @@ import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfig
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Collection;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -63,32 +57,4 @@ public class ServiceTestConfiguration {
             // implement methods
         };
     }
-
-    @Bean
-    @Primary
-    public QuestManagerService questService() {
-        return new QuestManagerService() {
-
-            @Override
-            public Status downloadStories() {
-                return null;
-            }
-
-            @Override
-            public Status uploadStories(MultipartFile storiesArchive) {
-                return null;
-            }
-
-            @Override
-            public Status setUserStory(Story story) {
-                return null;
-            }
-
-            @Override
-            public Collection<Story> getStories() {
-                return null;
-            }
-        };
-    }
-
 }

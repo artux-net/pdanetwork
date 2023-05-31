@@ -14,6 +14,7 @@ import net.artux.pdanetwork.service.quest.QuestService;
 import net.artux.pdanetwork.utills.IsModerator;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,10 +51,22 @@ public class AdminQuestsController {
         return questManagerService.uploadStories(file);
     }
 
-    @PostMapping(value = "/uploadCustom")
+    @PostMapping(value = "/upload/private")
     @Operation(summary = "Загрузить пользовательский сюжет")
-    public Status uploadCustomStory(@RequestBody Story story) {
+    public Status uploadPrivateStory(@RequestBody Story story) {
         return questService.setUserStory(story);
+    }
+
+    @PostMapping(value = "/upload/public")
+    @Operation(summary = "Загрузить публичный сюжет (ВРЕМЕННО!)", description = "Хранится для всех пользователей до следующей перезагрузки, историю необходимо загрузить на гитхаб")
+    public Status uploadPublicStory(@RequestBody Story story) {
+        return questService.setPublicStory(story);
+    }
+
+    @GetMapping(value = "/{storyId}")
+    @Operation(summary = "Получить нескомпилированный сюжет")
+    public Story getStory(@PathVariable long storyId) {
+        return questService.getOriginalStory(storyId);
     }
 
     @Operation(summary = "Получить информацию о картах")

@@ -3,7 +3,7 @@ package net.artux.pdanetwork.models.quest;
 import lombok.Data;
 import net.artux.pdanetwork.models.user.enums.Role;
 
-import java.util.Map;
+import java.util.Collection;
 
 @Data
 public class Story {
@@ -14,20 +14,20 @@ public class Story {
     private String icon;
     private int[] needs;
     private Role access = Role.TESTER;
-    private Map<Long, Chapter> chapters;
-    private Map<Long, GameMap> maps;
+    private Collection<Chapter> chapters;
+    private Collection<GameMap> maps;
 
     public int stageCount() {
-        return getChapters().values().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
+        return getChapters().stream().mapToInt(chapter -> chapter.getStages().size()).sum();
     }
 
     public int chapterCount() {
-        return (int) getChapters().values().stream().count();
+        return getChapters().size();
     }
 
 
     public int pointCount() {
-        return getMaps().values().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
+        return getMaps().stream().mapToInt(gameMap -> gameMap.getPoints().size()).sum();
     }
 
     /*public Mission getMissionByParam(String param) {

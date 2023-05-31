@@ -30,10 +30,11 @@ public class QuestServiceImpl implements QuestService {
 
     private final QuestMapper questMapper;
     private final UserService userService;
-    private Instant updatedTime;
-    private Map<Long, StoryDto> stories = new HashMap<>();
-    private Map<Role, List<StoryDto>> roleStories = new HashMap<>();
+    private final Map<Long, Story> storiesCache = new HashMap<>();
+    private final Map<Long, StoryDto> stories = new HashMap<>();
+    private final Map<Role, List<StoryDto>> roleStories = new HashMap<>();
     private final Map<UUID, StoryDto> usersStories = new HashMap<>();
+    private Instant updatedTime;
     private long lastStoryId = -2;
 
     @Override
@@ -44,12 +45,22 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
+    public Status setPublicStory(Story story) {
+        return addStories(List.of(story));
+    }
+
+    @Override
+    public Story getOriginalStory(long storyId) {
+        return storiesCache.get(storyId);
+    }
+
+    @Override
     public Stage getStage(long storyId, long chapterId, long stageId) {
         return getChapter(storyId, chapterId).getStage(stageId);
     }
 
     @Override
-    public HashMap<String, List<String>> getActionsOfStage(long storyId, long chapterId, long stageId) {
+    public Map<String, List<String>> getActionsOfStage(long storyId, long chapterId, long stageId) {
         return getStage(storyId, chapterId, stageId).getActions();
     }
 
@@ -77,26 +88,25 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Status setStories(Collection<Story> stories) {
-        this.stories = new HashMap<>();
+    public Status addStories(Collection<Story> stories) {
         for (var story : stories) {
             if (story.getId() > lastStoryId)
                 lastStoryId = story.getId();
 
+            storiesCache.put(story.getId(), story);
             this.stories.put(story.getId(), questMapper.dto(story));
         }
 
-        roleStories = new HashMap<>();
         for (Role role : Role.values()) {
-            List<Story> roleStories = new LinkedList<>();
-            for (var story : stories) {
+            List<StoryDto> roleStories = new LinkedList<>();
+            for (var story : this.stories.values()) {
                 if (story.getAccess().getPriority() <= role.getPriority())
                     roleStories.add(story);
             }
-            this.roleStories.put(role, questMapper.storiesDto(roleStories));
+            this.roleStories.put(role, roleStories);
         }
         updatedTime = Instant.now();
-        return null;
+        return new Status(true, "Истории обновлены.");
     }
 
     @Override
