@@ -12,6 +12,7 @@ public interface GameMapEnumMapper {
     @Mapping(target = "title", expression = "java(enumGetter.getTitle())")
     @Mapping(target = "name", expression = "java(enumGetter.getName())")
     @Mapping(target = "background", expression = "java(enumGetter.getBackground())")
+    @Mapping(target = "defaultPosition", expression = "java(enumGetter.getDefaultPosition())")
     GameMapDto dto(MapEnumGetter enumGetter);
 
     List<GameMapDto> dto(List<MapEnumGetter> enumGetters);

@@ -12,4 +12,6 @@ public interface MapEnumGetter {
 
     String getTitle();
 
+    Position getDefaultPosition();
+
 }

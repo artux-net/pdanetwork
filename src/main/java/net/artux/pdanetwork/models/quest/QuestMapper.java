@@ -30,6 +30,8 @@ public interface QuestMapper {
     @Mapping(target = "name", expression = "java(enumGetter.getName())")
     @Mapping(target = "background", expression = "java(enumGetter.getBackground())")
     @Mapping(target = "title", expression = "java(enumGetter.getTitle())")
+    @Mapping(target = "tmx", expression = "java(enumGetter.getTmx())")
+    @Mapping(target = "defaultPosition", expression = "java(enumGetter.getDefaultPosition())")
     GameMapDto dto(MapEnumGetter enumGetter);
 
     @Mapping(target = "maps", expression = "java(mapsToMap(story.getMaps(), story.getChapters()))")
