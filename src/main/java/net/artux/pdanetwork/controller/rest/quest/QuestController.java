@@ -30,7 +30,7 @@ public class QuestController {
     }
 
     @GetMapping
-    @Operation(summary = "Получить скомпилированные сюжеты")
+    @Operation(summary = "Получить информацию о доступных сюжетах")
     public Collection<StoryInfo> getStories() {
         return questService.getStoriesInfo();
     }

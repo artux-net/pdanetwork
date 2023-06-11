@@ -2,6 +2,7 @@ package net.artux.pdanetwork.models.quest;
 
 import net.artux.pdanetwork.models.quest.admin.StoryInfoAdmin;
 import net.artux.pdanetwork.models.quest.map.GameMapDto;
+import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.models.quest.map.MapEnumGetter;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import org.mapstruct.Mapper;
@@ -38,7 +39,13 @@ public interface QuestMapper {
     StoryDto dto(Story story);
 
     default Map<Long, GameMap> mapsToMap(Collection<GameMap> maps, Collection<Chapter> chapters) {
-        HashMap<Long, GameMap> map = new HashMap<>();
+        HashMap<Long, GameMap> result = new HashMap<>();
+        for (MapEnum enumGetter : MapEnum.values())
+            result.put((long) enumGetter.getId(), new GameMap(enumGetter));
+
+        if (maps == null)
+            return result;
+
         for (GameMap gameMap : maps) {
             for (Chapter chapter : chapters) {
                 //compile maps
@@ -52,9 +59,9 @@ public interface QuestMapper {
                     }
             }
 
-            map.put(gameMap.getId(), gameMap);
+            result.put(gameMap.getId(), gameMap);
         }
-        return map;
+        return result;
     }
 
     default Map<Long, ChapterDto> chaptersToMap(Collection<Chapter> chapters) {
