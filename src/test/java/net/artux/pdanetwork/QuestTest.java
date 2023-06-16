@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class QuestTest {
@@ -70,7 +71,7 @@ public class QuestTest {
      */
     public Point generatePoint() {
         Point point = new Point();
-        point.setId(++pointId);
+        point.setId(UUID.randomUUID());
         point.setName("Some point");
         return point;
     }

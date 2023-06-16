@@ -4,11 +4,12 @@ import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Data
-public class  Point {
+public class Point {
 
-    private int id;
+    private UUID id;
     public int type;
     private String name;
     private String pos;

@@ -1,5 +1,7 @@
 package net.artux.pdanetwork.service.quest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -13,6 +15,7 @@ import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.service.util.S3Service;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,9 @@ public class QuestServiceImpl implements QuestService {
 
     private final QuestMapper questMapper;
     private final UserService userService;
+    private final S3Service s3Service;
+    private final ObjectMapper objectMapper;
+
     private final Map<Long, Story> storiesCache = new HashMap<>();
     private final Map<Long, StoryDto> stories = new HashMap<>();
     private final Map<Role, List<StoryDto>> roleStories = new HashMap<>();
@@ -94,6 +100,11 @@ public class QuestServiceImpl implements QuestService {
                 lastStoryId = story.getId();
 
             storiesCache.put(story.getId(), story);
+            try {
+                s3Service.putString("story-" + story.getId(), objectMapper.writeValueAsString(story));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
             this.stories.put(story.getId(), questMapper.dto(story));
         }
 
