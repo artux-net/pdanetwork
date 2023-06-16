@@ -120,15 +120,18 @@ public class QuestServiceImpl implements QuestService {
         return new Status(true, "Истории обновлены.");
     }
 
-    @Override
-    public Collection<StoryDto> getStories() {
-        Role role = userService.getUserById().getRole();
+    private Collection<StoryDto> getStories(UserEntity user) {
+        Role role = user.getRole();
         return roleStories.get(role);
     }
 
     @Override
     public Collection<StoryInfo> getStoriesInfo() {
-        return questMapper.info(getStories());
+        UserEntity user = userService.getUserById();
+        Collection<StoryInfo> storiesInfo = questMapper.info(getStories(user));
+        StoryInfo userStory = questMapper.info(usersStories.get(user.getId()));
+        storiesInfo.add(userStory);
+        return storiesInfo;
     }
 
     @Override

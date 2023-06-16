@@ -27,8 +27,6 @@ public interface QuestService {
 
     Status addStories(Collection<Story> stories);
 
-    Collection<StoryDto> getStories();
-
     Collection<StoryInfo> getStoriesInfo();
 
     StoriesStatus getStatus();
