@@ -130,7 +130,7 @@ public class QuestServiceImpl implements QuestService {
         UserEntity user = userService.getUserById();
         Collection<StoryInfo> storiesInfo = questMapper.info(getStories(user));
         StoryInfo userStory = questMapper.info(usersStories.get(user.getId()));
-        storiesInfo.add(userStory);
+        if (userStory != null) storiesInfo.add(userStory);
         return storiesInfo;
     }
 
