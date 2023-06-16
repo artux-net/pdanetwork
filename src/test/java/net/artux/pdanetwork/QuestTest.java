@@ -79,7 +79,7 @@ public class QuestTest {
 
     public Point generateRandomPoint() {
         Point point = new Point();
-        point.setId(++pointId);
+        point.setId(UUID.randomUUID());
         point.setName("Some point");
         return point;
     }
