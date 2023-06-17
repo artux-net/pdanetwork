@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class S3ServiceImpl implements S3Service {
@@ -29,4 +31,10 @@ public class S3ServiceImpl implements S3Service {
     public String getString(String key) {
         return client.getObjectAsString(bucketName, key);
     }
+
+    @Override
+    public List<String> getEntries(String prefix) {
+        return client.listObjects(bucketName, prefix).getObjectSummaries().stream().map(s -> s.getKey()).toList();
+    }
+
 }

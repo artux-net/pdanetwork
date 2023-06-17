@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class Point {
 
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     public int type;
     private String name;
     private String pos;
