@@ -19,6 +19,8 @@ services:
     depends_on:
       - db
     environment:
+      - SERVER_PROTOCOL=http
+      - SERVER_HOST=localhost:8888
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
       - SPRING_DATASOURCE_USERNAME=pdanetwork
       - SPRING_DATASOURCE_PASSWORD=pass

@@ -24,6 +24,12 @@ public class QuestTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "MODERATOR")
+    public void info() {
+        System.out.println(adminQuestsController.getStatus());
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "MODERATOR")
     public void isStatisticClosed() {
         Story story = new Story();
         story.setId(1L);
@@ -31,8 +37,6 @@ public class QuestTest {
         Chapter chapter = new Chapter();
         chapter.setId(1L);
         chapter.setPoints(Map.of(1l, List.of(new Point())));
-        //adminQuestsController.uploadPublicStory();
-        //assertThrows(AccessDeniedException.class, () -> statisticController.getStatistic());
     }
 
     /**

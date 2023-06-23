@@ -6,11 +6,11 @@ public enum MapEnum implements MapEnumGetter {
     GARBAGE(2, "garbage.tmx", "map_garbage.png", "Свалка"),
     BAR(3, "bar.tmx", "map_bar.png", "Бар"),
     DIKIY_BAR(4, "bar.tmx", "map_bar.png", "Дикий бар"),
-    DARK_VALLEY(5, "darkvalley.tmx", "map_darkvalley.png", "Тёмная далина"),
+    DARK_VALLEY(5, "darkvalley.tmx", "map_darkvalley.png", "Тёмная долина"),
     YANTAR(6, "none", "map_yantar.png", "Янтарь"), //TODO
     MILITARY(7, "military.tmx", "map_military.png", "Военные склады"),
     AGROPROM(8, "agroprom.tmx", "map_agroprom.png", "Агропром"),
-    ;
+    MARSH(9, "marsh.tmx", "map_marsh.png", "Болота");
 
     private final int id;
     private final String tmx;

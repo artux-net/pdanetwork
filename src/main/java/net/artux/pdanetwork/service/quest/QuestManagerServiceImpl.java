@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -208,13 +207,4 @@ public class QuestManagerServiceImpl implements QuestManagerService {
         return status;
     }
 
-    @Override
-    public Status setUserStory(Story story) {
-        return null;
-    }
-
-    @Override
-    public Collection<Story> getStories() {
-        return null;
-    }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.error.ErrorMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,11 +29,11 @@ public class ErrorAdvice extends ResponseEntityExceptionHandler implements Authe
 
     private final ErrorMapper errorMapper;
     private final ObjectMapper objectMapper;
-
+    private final Logger logger;
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        //log.error("Error request", ex);
+        logger.error("Error request", ex);
         return new ResponseEntity<>(errorMapper.of(ex, "Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
