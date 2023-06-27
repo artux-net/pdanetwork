@@ -20,7 +20,7 @@ public class Chapter {
     private Collection<Stage> stages = new HashSet<>();
     private Map<Long, List<Point>> points = new HashMap<>();
     private Map<Long, List<Spawn>> spawns = new HashMap<>();
-    private Mission mission;
+    private List<Mission> missions;
 
     public void setStages(List<Stage> stageList) {
         stages = stageList;

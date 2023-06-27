@@ -1,8 +1,10 @@
 package net.artux.pdanetwork.models.quest;
 
 import lombok.Data;
+import net.artux.pdanetwork.models.quest.mission.Mission;
 import net.artux.pdanetwork.models.user.enums.Role;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -16,6 +18,7 @@ public class StoryDto {
     private Role access = Role.TESTER;
     private Map<Long, ChapterDto> chapters;
     private Map<Long, GameMap> maps;
+    private List<Mission> missions;
 
     public int stageCount() {
         return getChapters().values().stream().mapToInt(chapter -> chapter.getStages().size()).sum();

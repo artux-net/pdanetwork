@@ -4,12 +4,14 @@ import net.artux.pdanetwork.models.quest.admin.StoryInfoAdmin;
 import net.artux.pdanetwork.models.quest.map.GameMapDto;
 import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.models.quest.map.MapEnumGetter;
+import net.artux.pdanetwork.models.quest.mission.Mission;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ public interface QuestMapper {
     GameMapDto dto(MapEnumGetter enumGetter);
 
     @Mapping(target = "maps", expression = "java(mapsToMap(story.getMaps(), story.getChapters()))")
+    @Mapping(target = "missions", expression = "java(missions(story.getChapters()))")
     StoryDto dto(Story story);
 
     default Map<Long, GameMap> mapsToMap(Collection<GameMap> maps, Collection<Chapter> chapters) {
@@ -60,6 +63,15 @@ public interface QuestMapper {
             }
 
             result.put(gameMap.getId(), gameMap);
+        }
+        return result;
+    }
+
+    default List<Mission> missions(Collection<Chapter> chapters) {
+        LinkedList<Mission> result = new LinkedList<>();
+        for (Chapter chapter : chapters) {
+            if (chapter.getMissions() != null)
+                result.addAll(chapter.getMissions());
         }
         return result;
     }
