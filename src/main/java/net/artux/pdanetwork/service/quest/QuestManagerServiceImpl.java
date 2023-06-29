@@ -8,6 +8,7 @@ import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.GameMap;
 import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
@@ -132,14 +133,20 @@ public class QuestManagerServiceImpl implements QuestManagerService {
 
                 //maps
                 HashMap<Long, GameMap> maps = new HashMap<>();
+                for (MapEnum enumGetter : MapEnum.values())
+                    maps.put((long) enumGetter.getId(), new GameMap(enumGetter));
+
                 File[] mapFiles = new File(storyDir + "/maps").listFiles();
                 if (mapFiles == null)
                     continue;
 
+
                 for (var mapFile : mapFiles) {
                     try {
                         GameMap gameMap = objectMapper.readValue(mapFile, GameMap.class);
-                        maps.put(gameMap.getId(), gameMap);
+                        maps.get(gameMap.getId()).getSpawns().addAll(gameMap.getSpawns());
+                        maps.get(gameMap.getId()).getPoints().addAll(gameMap.getPoints());
+
                     } catch (IOException e) {
                         errors++;
                         logger.error("Error while reading map " + mapFile.getName(), e);
