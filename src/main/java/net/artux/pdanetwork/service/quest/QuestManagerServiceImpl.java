@@ -144,8 +144,13 @@ public class QuestManagerServiceImpl implements QuestManagerService {
                 for (var mapFile : mapFiles) {
                     try {
                         GameMap gameMap = objectMapper.readValue(mapFile, GameMap.class);
-                        maps.get(gameMap.getId()).getSpawns().addAll(gameMap.getSpawns());
-                        maps.get(gameMap.getId()).getPoints().addAll(gameMap.getPoints());
+                        if (maps.containsKey(gameMap.getId())) {
+                            if (gameMap.getSpawns() != null)
+                                maps.get(gameMap.getId()).getSpawns().addAll(gameMap.getSpawns());
+                            if (gameMap.getPoints() != null)
+                                maps.get(gameMap.getId()).getPoints().addAll(gameMap.getPoints());
+                        } else
+                            maps.put(gameMap.getId(), gameMap);
 
                     } catch (IOException e) {
                         errors++;
