@@ -18,6 +18,9 @@ public class GameMap {
     private List<Point> points;
     private List<Spawn> spawns;
 
+    public GameMap() {
+    }
+
     public GameMap(MapEnum mapEnum) {
         this.id = mapEnum.getId();
         this.title = mapEnum.getTitle();
