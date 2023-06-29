@@ -7,7 +7,7 @@ public enum MapEnum implements MapEnumGetter {
     BAR(3, "bar.tmx", "map_bar.png", "Бар"),
     DIKIY_BAR(4, "bar.tmx", "map_bar.png", "Дикий бар"),
     DARK_VALLEY(5, "darkvalley.tmx", "map_darkvalley.png", "Тёмная долина"),
-    YANTAR(6, "none", "map_yantar.png", "Янтарь"), //TODO
+    YANTAR(6, "bar.tmx", "map_yantar.png", "Янтарь"), //TODO
     MILITARY(7, "military.tmx", "map_military.png", "Военные склады"),
     AGROPROM(8, "agroprom.tmx", "map_agroprom.png", "Агропром"),
     MARSH(9, "marsh.tmx", "map_marsh.png", "Болота");
