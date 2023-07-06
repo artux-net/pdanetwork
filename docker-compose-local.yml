@@ -14,16 +14,17 @@ services:
   back:
     build:
       context: .
+
     container_name: pdanetwork_back
     restart: unless-stopped
     depends_on:
       - db
     environment:
       - SERVER_PROTOCOL=http
-      - SERVER_HOST=localhost:8888
+      - SERVER_HOST=localhost:8080
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
       - SPRING_DATASOURCE_USERNAME=pdanetwork
       - SPRING_DATASOURCE_PASSWORD=pass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "8888:8080"
+      - "8080:8080"

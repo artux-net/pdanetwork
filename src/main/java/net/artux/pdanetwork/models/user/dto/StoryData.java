@@ -1,14 +1,18 @@
 package net.artux.pdanetwork.models.user.dto;
 
 import lombok.Data;
-import net.artux.pdanetwork.models.items.*;
+import net.artux.pdanetwork.models.items.ArmorDto;
+import net.artux.pdanetwork.models.items.ArtifactDto;
+import net.artux.pdanetwork.models.items.DetectorDto;
+import net.artux.pdanetwork.models.items.ItemDto;
+import net.artux.pdanetwork.models.items.MedicineDto;
+import net.artux.pdanetwork.models.items.WeaponDto;
 import net.artux.pdanetwork.models.story.ParameterDto;
 import net.artux.pdanetwork.models.story.StoryStateDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.models.user.gang.GangRelationDto;
 
-import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -25,8 +29,6 @@ public class StoryData {
     private int xp;
     private Gang gang;
     private GangRelationDto relations;
-    private Instant registration;
-    private Instant lastLoginAt;
 
     private List<ParameterDto> parameters;
     private List<StoryStateDto> storyStates;

@@ -1369,7 +1369,7 @@
   {
     "disadvantages": null,
     "price": "100",
-    "icon": null,
+    "icon": "vodka.png",
     "weight": "0.25",
     "advantages": null,
     "id": 83,
@@ -1381,7 +1381,7 @@
   {
     "disadvantages": null,
     "price": "250",
-    "icon": null,
+    "icon": "fak1.png",
     "weight": "0.25",
     "advantages": null,
     "id": 84,
@@ -1403,21 +1403,21 @@
     "description": ""
   },
   {
-    "disadvantages": null,
     "price": "150",
-    "icon": null,
+    "icon": "ai2.gif",
     "weight": "0.25",
     "advantages": null,
+    "disadvantages": null,
     "id": 86,
     "type": "MEDICINE",
-    "title": "Прокладка",
+    "title": "Аптечка индивидуальная - 2",
     "content": "",
     "description": ""
   },
   {
     "disadvantages": null,
     "price": "150",
-    "icon": null,
+    "icon": "bint.png",
     "weight": "0.25",
     "advantages": null,
     "id": 87,
@@ -1429,12 +1429,36 @@
   {
     "disadvantages": null,
     "price": "150",
-    "icon": null,
+    "icon": "usb.png",
     "weight": "0.05",
     "advantages": null,
     "id": 88,
     "type": "ITEM",
     "title": "Флешка",
+    "content": "",
+    "description": ""
+  },
+  {
+    "disadvantages": null,
+    "price": "350",
+    "icon": "fak2.png",
+    "weight": "0.25",
+    "advantages": null,
+    "id": 89,
+    "type": "MEDICINE",
+    "title": "Военная улучшенная аптечка",
+    "content": "",
+    "description": ""
+  },
+  {
+    "disadvantages": null,
+    "price": "750",
+    "icon": "fak3.png",
+    "weight": "0.25",
+    "advantages": null,
+    "id": 90,
+    "type": "MEDICINE",
+    "title": "Научная аптечка",
     "content": "",
     "description": ""
   }

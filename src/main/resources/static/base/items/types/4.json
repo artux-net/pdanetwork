@@ -6,7 +6,7 @@
     "radioProtection": "0",
     "psyProtection": "0",
     "damageProtection": "0",
-    "condition": "100",
+    "condition": 100,
     "baseId": 68
   },
   {
@@ -16,7 +16,7 @@
     "radioProtection": "0",
     "psyProtection": "0",
     "damageProtection": "10",
-    "condition": "100",
+    "condition": 100,
     "baseId": 69
   },
   {
@@ -26,7 +26,7 @@
     "radioProtection": "0",
     "psyProtection": "0",
     "damageProtection": "15",
-    "condition": "100",
+    "condition": 100,
     "baseId": 70
   },
   {
@@ -36,7 +36,7 @@
     "radioProtection": "50",
     "psyProtection": "0",
     "damageProtection": "30",
-    "condition": "100",
+    "condition": 100,
     "baseId": 71
   },
   {
@@ -46,7 +46,7 @@
     "radioProtection": "30",
     "psyProtection": "0",
     "damageProtection": "20",
-    "condition": "100",
+    "condition": 100,
     "baseId": 72
   },
   {
@@ -56,7 +56,7 @@
     "radioProtection": "50",
     "psyProtection": "0",
     "damageProtection": "40",
-    "condition": "100",
+    "condition": 100,
     "baseId": 73
   },
   {
@@ -66,7 +66,7 @@
     "radioProtection": "50",
     "psyProtection": "0",
     "damageProtection": "40",
-    "condition": "100",
+    "condition": 100,
     "baseId": 74
   },
   {
@@ -76,7 +76,7 @@
     "radioProtection": "90",
     "psyProtection": "50",
     "damageProtection": "40",
-    "condition": "100",
+    "condition": 100,
     "baseId": 75
   },
   {
@@ -86,7 +86,7 @@
     "radioProtection": "50",
     "psyProtection": "0",
     "damageProtection": "30",
-    "condition": "100",
+    "condition": 100,
     "baseId": 76
   },
   {
@@ -96,7 +96,7 @@
     "radioProtection": "30",
     "psyProtection": "0",
     "damageProtection": "45",
-    "condition": "100",
+    "condition": 100,
     "baseId": 77
   },
   {
@@ -106,7 +106,7 @@
     "radioProtection": "70",
     "psyProtection": "25",
     "damageProtection": "55",
-    "condition": "100",
+    "condition": 100,
     "baseId": 78
   },
   {
@@ -116,7 +116,7 @@
     "radioProtection": "90",
     "psyProtection": "80",
     "damageProtection": "20",
-    "condition": "100",
+    "condition": 100,
     "baseId": 79
   },
   {
@@ -126,7 +126,7 @@
     "radioProtection": "90",
     "psyProtection": "80",
     "damageProtection": "40",
-    "condition": "100",
+    "condition": 100,
     "baseId": 80
   },
   {
@@ -136,7 +136,7 @@
     "radioProtection": "90",
     "psyProtection": "80",
     "damageProtection": "40",
-    "condition": "100",
+    "condition": 100,
     "baseId": 81
   },
   {
@@ -146,7 +146,7 @@
     "radioProtection": "30",
     "psyProtection": "80",
     "damageProtection": "90",
-    "condition": "100",
+    "condition": 100,
     "baseId": 82
   }
 ]
