@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.repository.user;
 
+import net.artux.pdanetwork.entity.user.SimpleUser;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     List<UserEntity> findAllByReceiveEmailsTrue();
+
+    Optional<SimpleUser> getByLogin(String login);
 
     Optional<UserEntity> getMemberByLogin(String login);
 

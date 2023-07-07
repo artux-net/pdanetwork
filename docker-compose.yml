@@ -18,6 +18,9 @@ services:
     depends_on:
       - db
     environment:
+      - SERVER_HOST=dev.artux.net
+      - SERVER_PROTOCOL=https
+      - SERVER_WEBSOCKET_PROTOCOL=wss
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
       - SPRING_DATASOURCE_USERNAME=pdanetwork
       - SPRING_DATASOURCE_PASSWORD=pass

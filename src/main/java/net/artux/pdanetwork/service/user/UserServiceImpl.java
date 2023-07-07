@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -138,7 +139,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserById() {
-        return userRepository.findById(getCurrentId()).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        UserEntity userEntity = userRepository.findById(getCurrentId()).orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        if (userEntity.getLastLoginAt().plusSeconds(300).isBefore(Instant.now())) {
+            userEntity.setLastLoginAt(Instant.now());
+            return userRepository.save(userEntity);
+        } else return userEntity;
     }
 
     @Override
