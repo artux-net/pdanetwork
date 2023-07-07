@@ -241,7 +241,7 @@ public class ActionService {
 
             case "set":
                 for (String pass : params) {
-                    itemsService.setWearable(userEntity, UUID.fromString(pass));
+                    itemsService.setWearableItemById(userEntity, UUID.fromString(pass));
                 }
                 break;
             case "note":

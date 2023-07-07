@@ -1,17 +1,15 @@
 package net.artux.pdanetwork.entity.items;
 
-import lombok.Getter;
-import lombok.Setter;
-import net.artux.pdanetwork.entity.BaseEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.Setter;
+import net.artux.pdanetwork.entity.BaseEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 
 import static jakarta.persistence.InheritanceType.TABLE_PER_CLASS;
 
@@ -28,5 +26,15 @@ public abstract class ItemEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     protected UserEntity owner;
+
+    @Transient
+    public ItemType getBasedType() {
+        return base.type;
+    }
+
+    @Transient
+    public long getBasedId() {
+        return base.id;
+    }
 
 }

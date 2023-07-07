@@ -2,8 +2,15 @@ package net.artux.pdanetwork.service.items;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ArtifactEntity;
+import net.artux.pdanetwork.entity.items.BulletEntity;
+import net.artux.pdanetwork.entity.items.DetectorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.MedicineEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
@@ -17,17 +24,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class ItemService {
 
-    private HashMap<Long, ItemEntity> itemsMap;
+    private final HashMap<Long, ItemEntity> itemsMap;
     private ItemsContainer itemsContainer;
 
     private final Logger logger;
@@ -38,16 +46,28 @@ public class ItemService {
     private final UserService userService;
     private final UserRepository userRepository;
 
+    public <T extends ItemEntity> ItemService(Logger logger, ObjectMapper objectMapper, ItemMapper itemMapper,
+                                              BaseItemService baseItemService,
+                                              UserService userService, UserRepository userRepository) {
+        this.logger = logger;
+        this.objectMapper = objectMapper;
+        this.itemMapper = itemMapper;
+        this.baseItemService = baseItemService;
+        this.userService = userService;
+        this.userRepository = userRepository;
 
-    @PostConstruct
-    public <T extends ItemEntity> void init() throws IOException {
         itemsMap = new HashMap<>();
         itemsContainer = new ItemsContainer();
-        for (ItemType type : ItemType.values()) {
-            List<T> items = readType(type);
-            for (ItemEntity item : items)
-                itemsMap.put(item.getBase().getId(), item);
-            itemsContainer.set(itemMapper.anyList(items, type), type);
+        try {
+            for (ItemType type : ItemType.values()) {
+                List<T> items = readType(type);
+                for (ItemEntity item : items)
+                    itemsMap.put(item.getBasedId(), item);
+                itemsContainer.set(itemMapper.anyList(items, type), type);
+            }
+            logger.info("Total read {} items", itemsMap.size());
+        } catch (IOException e) {
+            logger.error("Failed to read items", e.getMessage());
         }
     }
 
@@ -71,6 +91,7 @@ public class ItemService {
                 list.add(t);
             }
         }
+        logger.info("Read {} items of type {}", list.size(), type.name());
 
         return list;
     }
@@ -80,12 +101,12 @@ public class ItemService {
     }
 
     public ItemDto getItemDto(long baseId) {
-        return itemMapper.any(itemsMap.get(baseId));
+        return itemMapper.any(getItem(baseId));
     }
 
     public void addItem(UserEntity user, long baseId, int quantity) {
-        ItemEntity itemEntity = getItem(baseId);
-        ItemType type = itemEntity.getBase().getType();
+        final ItemEntity itemEntity = getItem(baseId);
+        ItemType type = itemEntity.getBasedType();
         logger.info("Add item {} for {}", itemEntity.getBase().getTitle(), user.getLogin());
         if (type.isCountable()) {
             itemEntity.setQuantity(quantity);
@@ -96,49 +117,58 @@ public class ItemService {
     }
 
     public void deleteItem(UserEntity user, int baseId, int quantity) {
-        List<? extends ItemEntity> optional = user.getAllItems().stream()
-                .filter(item -> item.getBase().getId() == baseId)
+        ItemType type = getItem(baseId).getBasedType();
+        List<? extends ItemEntity> optional = user.getItemsByType(type)
+                .stream()
+                .filter(item -> item.getBasedId() == baseId)
                 .toList();
+
         if (optional.size() == 1) {
-            ItemEntity t = optional.get(0);
-            t.setQuantity(t.getQuantity() - quantity);
+            ItemEntity item = optional.get(0);
+            item.setQuantity(item.getQuantity() - quantity);
+            if (item.getQuantity() <= 0)
+                user.getItemsByType(type).remove(item);
         } else {
-            user.getItemsByType(getItem(baseId).getBase().getType())
-                    .removeIf((Predicate<ItemEntity>) itemEntity -> itemEntity.getBase().getId() == baseId);
+            final int q[] = {quantity};
+            user.getItemsByType(type)
+                    .removeIf(itemEntity -> {
+                        boolean toRemove = itemEntity.getBasedId() == baseId;
+                        if (toRemove)
+                            q[0]--;
+                        if (q[0] < 0)
+                            return false;
+                        return toRemove;
+                    });
         }
     }
 
-    public Status setWearable(UserEntity user, UUID id) {
+    public Status setWearableItemById(UserEntity user, UUID id) {
         ItemEntity item = user.getAllItems()
                 .stream()
                 .filter(itemEntity -> itemEntity.getId().equals(id))
                 .findFirst()
                 .orElseThrow();
 
-        ItemType type = item.getBase().getType();
-        if (type.isWearable()) {
-            Optional<WearableEntity> optionalItem = user.getWearableItems()
-                    .stream()
-                    .filter(wearableEntity -> wearableEntity.getId().equals(id) && wearableEntity.isEquipped())
-                    .findFirst();
+        ItemType type = item.getBasedType();
+        if (!type.isWearable())
+            return new Status(false, "Невозможно надеть предмет");
 
-            if (optionalItem.isPresent()) {
-                WearableEntity oldWearable = optionalItem.get();
+        WearableEntity wearableItem = (WearableEntity) item;
+        boolean isEquippedNow = !wearableItem.isEquipped();
+        wearableItem.setEquipped(isEquippedNow);
 
-                oldWearable.setEquipped(false);
-                if (item.getId().equals(oldWearable.getId()))
-                    return new Status(true, "Предмет снят.");
-            }
-
-            ((WearableEntity) item).setEquipped(true);
-
+        if (isEquippedNow) {
+            user.getItemsByType(type)
+                    .forEach(wearableEntity -> ((WearableEntity) wearableEntity).setEquipped(false));
             return new Status(true, "Предмет надет.");
-        } else return new Status(false, "Невозможно надеть предмет");
+        }
+
+        return new Status(true, "Предмет снят.");
     }
 
-    public Status setWearable(UUID id) {
+    public Status setWearableItemById(UUID id) {
         UserEntity user = userService.getUserById();
-        Status status = setWearable(user, id);
+        Status status = setWearableItemById(user, id);
         if (status.isSuccess())
             userRepository.save(user);
         return status;
@@ -147,9 +177,9 @@ public class ItemService {
     private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item) {
         var type = item.getBase().getType();
         if (type.isWearable()) {
-            boolean userWears = user.getWearableItems()
+            boolean userWears = user.getItemsByType(item.getBasedType())
                     .stream()
-                    .anyMatch(userItem -> userItem.isEquipped() && userItem.getBase().getType().equals(type));
+                    .anyMatch(userItem -> ((WearableEntity) userItem).isEquipped());
             ((WearableEntity) item).setEquipped(!userWears);
         }
         item.setQuantity(1);
@@ -157,9 +187,9 @@ public class ItemService {
     }
 
     private <T extends ItemEntity> void addAsCountable(UserEntity user, T itemEntity) {
-        Optional<? extends ItemEntity> optionalItem = user.getAllItems()
+        Optional<? extends ItemEntity> optionalItem = user.getItemsByType(itemEntity.getBasedType())
                 .stream()
-                .filter(item -> item.getBase().getId().equals(itemEntity.getBase().getId()))
+                .filter(item -> item.getBasedId() == itemEntity.getBasedId())
                 .findFirst();
         if (optionalItem.isPresent()) {
             ItemEntity item = optionalItem.get();
@@ -171,7 +201,7 @@ public class ItemService {
 
     private <T extends ItemEntity> void addAsIs(UserEntity user, T itemEntity) {
         itemEntity.setOwner(user);
-        switch (itemEntity.getBase().getType()) {
+        switch (itemEntity.getBasedType()) {
             case BULLET -> user.getBullets().add((BulletEntity) itemEntity);
             case ARMOR -> user.getArmors().add((ArmorEntity) itemEntity);
             case PISTOL, RIFLE -> user.getWeapons().add((WeaponEntity) itemEntity);

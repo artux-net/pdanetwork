@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.entity.items.WeaponEntity;
 import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -80,7 +82,7 @@ public class SellerServiceIml implements SellerService {
     @Transactional
     public Status add(UUID pdaId, int baseId, int quantity) {
         if (userService.getUserById().getRole() == Role.ADMIN) {
-            UserEntity userEntity = userRepository.getById(pdaId);
+            UserEntity userEntity = userRepository.findById(pdaId).orElseThrow();
             itemService.addItem(userEntity, baseId, quantity);
             return new Status(true, "Ok");
         } else return new Status(false, "Not admin");
@@ -93,19 +95,22 @@ public class SellerServiceIml implements SellerService {
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         //todo check if seller does not have item
         ItemEntity sellerItem = itemRepository.findById(id).orElseThrow();
-        long baseId = sellerItem.getBase().getId();
-        ItemEntity userItem = userEntity.findItem(baseId);
+        long baseId = sellerItem.getBasedId();
+        ItemType type = sellerItem.getBasedType();
+
+        Optional<? extends ItemEntity> optionalUserItem = userEntity.findItem(baseId);
 
         if (!sellerItem.getBase().getType().isCountable())
             quantity = 1;
         if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
-                if (userItem == null || !userItem.getBase().getType().isCountable()) {
+                if (optionalUserItem.isEmpty() || !type.isCountable()) {
                     sellerItem.setOwner(userEntity);
                     sellerRepository.save(sellerEntity);
                     itemRepository.save(sellerItem);
                 } else {
+                    ItemEntity userItem = optionalUserItem.get();
                     userItem.setQuantity(userItem.getQuantity() + quantity);
                     itemRepository.deleteById(sellerItem.getId());
                 }
@@ -115,13 +120,14 @@ public class SellerServiceIml implements SellerService {
 
                 ItemEntity separatedItem = itemService.getItem(baseId);
 
-                if (userItem == null) {
+                if (optionalUserItem.isEmpty()) {
                     //user does not have an item
                     separatedItem.setOwner(userEntity);
                     separatedItem.setQuantity(quantity);
                     itemRepository.save(separatedItem);
                 } else {
                     //user has an item
+                    ItemEntity userItem = optionalUserItem.get();
                     userItem.setQuantity(userItem.getQuantity() + quantity);
                     itemRepository.save(userItem);
                 }

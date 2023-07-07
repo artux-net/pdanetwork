@@ -6,7 +6,11 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemsContainer;
 import net.artux.pdanetwork.service.items.ItemService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -28,7 +32,7 @@ public class ItemsController {
     @Operation(summary = "Экипировать предмет")
     @PostMapping("/set/{itemId}")
     public Status setItem(@PathVariable UUID itemId) {
-        return itemService.setWearable(itemId);
+        return itemService.setWearableItemById(itemId);
     }
 
 }

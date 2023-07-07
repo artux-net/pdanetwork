@@ -1,5 +1,14 @@
 package net.artux.pdanetwork.entity.user;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,19 +31,12 @@ import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
@@ -178,12 +180,11 @@ public class UserEntity extends BaseEntity {
         return (Set<T>) getItemsByType(ItemType.getByClass(tClass));
     }
 
-    public ItemEntity findItem(long baseId) {
-        for (ItemEntity item : getAllItems()) {
-            if (item.getBase().getId() == baseId)
-                return item;
-        }
-        return null;
+    public Optional<? extends ItemEntity> findItem(long baseId) {
+        return Stream.of(armors, weapons, bullets, medicines, detectors, artifacts)
+                .flatMap(Set::stream)
+                .filter(item -> item.getBasedId() == baseId)
+                .findFirst();
     }
 
     public Set<WearableEntity> getWearableItems() {
