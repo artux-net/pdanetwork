@@ -46,6 +46,12 @@ public class ValuesService {
     @Value("${admin.address}")
     private String adminAddress;
 
+    @Value("${postman.team.link}")
+    private String postmanTeamLink;
+
+    @Value("${postman.invite.link}")
+    private String postmanInviteLink;
+
     public String getAddress() {
         return getDomain() + getContextPath();
     }

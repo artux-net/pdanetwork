@@ -59,7 +59,9 @@ public class SwaggerConfig {
                         .description("Сервисы REST Api. Для использования необходимо зарегистрироваться," +
                                 " подтвердить почту и войти в аккаунт. Чтобы войти в аккаунт необходимо нажать" +
                                 " на замок и ввести свои данные. <br>"
-                                + "<br> <a href=\"" + valuesService.getAdminAddress() + "\">Панель администратора</a>"
+                                + "<br> <a href=\"" + valuesService.getPostmanTeamLink() + "\">Postman Workspace</a>"
+                                + "<br> <a href=\"" + valuesService.getPostmanInviteLink() + "\">Приглашение в Postman</a> <br>"
+                                + "<br> <a href=\"" + valuesService.getAdminAddress() + "\">Панель администратора</a> <br>"
                                 + "<br> <a href=\"" + valuesService.getAddress() + "/enc\">Энциклопедия</a>")
                         .contact(contact)
                         .version("0.4")

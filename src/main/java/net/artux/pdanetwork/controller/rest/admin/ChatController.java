@@ -2,6 +2,7 @@ package net.artux.pdanetwork.controller.rest.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.configuration.handlers.ChatHandler;
 import net.artux.pdanetwork.configuration.handlers.CommonHandler;
@@ -12,10 +13,10 @@ import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.utills.IsModerator;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class ChatController {
 
     @PostMapping("/event")
     @Operation(description = "Добавление события в чат")
-    public ChatUpdate addEvent(ChatEvent event, @RequestParam("type") ChatType type) {
+    public ChatUpdate addEvent(@Valid @RequestBody ChatEvent event, @RequestParam("type") ChatType type) {
         SocketHandler socketHandler;
         switch (type) {
             case RP -> socketHandler = rpHandler;

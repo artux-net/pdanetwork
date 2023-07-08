@@ -3,9 +3,7 @@ package net.artux.pdanetwork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +23,7 @@ public class PDANetworkApplication {
 
     @Bean
     public Logger logger() {
-        return LoggerFactory.getLogger("application");
+        return LoggerFactory.getLogger("PDANet");
     }
 
     @Bean
