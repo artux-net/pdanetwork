@@ -1,14 +1,14 @@
 package net.artux.pdanetwork.entity.user.gang;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.gang.Gang;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 @RequiredArgsConstructor
 @Entity
@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 @Table(name = "user_gang_relation")
 public class GangRelationEntity extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
     private int loners;

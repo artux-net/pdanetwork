@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.service.action;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ConditionalEntity;
@@ -46,16 +47,20 @@ public class ActionService {
     private final QuestService questService;
     private final NoteService noteService;
     private final StoryMapper storyMapper;
-
+    private final EntityManager entityManager;
     private final UserRepository userRepository;
 
     private final Timer timer = new Timer();
 
     public StoryData applyCommands(UUID id, Map<String, List<String>> map) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow();
-        operateActions(map, userEntity);
-        userEntity.fixAllItems();
-        return storyMapper.storyData(userRepository.save(userEntity));
+        try {
+            UserEntity userEntity = userRepository.findById(id).orElseThrow();
+            operateActions(map, userEntity);
+            userEntity.fixAllItems();
+            return storyMapper.storyData(userRepository.save(userEntity));
+        } finally {
+            entityManager.clear();
+        }
     }
 
     public StoryData applyCommands(Map<String, List<String>> map) {

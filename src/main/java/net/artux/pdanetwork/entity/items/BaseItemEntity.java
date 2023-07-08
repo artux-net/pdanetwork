@@ -1,11 +1,19 @@
 package net.artux.pdanetwork.entity.items;
 
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import jakarta.persistence.*;
 import java.util.List;
 
 @Setter
@@ -23,16 +31,19 @@ public class BaseItemEntity {
     protected float weight;
     protected int price;
 
+    @Basic(fetch = FetchType.LAZY)
     protected String description;
+
+    @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "TEXT")
     protected String content;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     protected List<String> advantages;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     protected List<String> disadvantages;
 
 }
