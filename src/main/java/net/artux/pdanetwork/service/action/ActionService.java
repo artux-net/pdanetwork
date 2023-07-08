@@ -59,6 +59,7 @@ public class ActionService {
             userEntity.fixAllItems();
             return storyMapper.storyData(userRepository.save(userEntity));
         } finally {
+            entityManager.flush();
             entityManager.clear();
         }
     }

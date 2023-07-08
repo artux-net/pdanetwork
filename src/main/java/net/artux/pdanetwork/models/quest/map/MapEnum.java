@@ -10,7 +10,8 @@ public enum MapEnum implements MapEnumGetter {
     YANTAR(6, "bar.tmx", "map_yantar.png", "Янтарь"), //TODO
     MILITARY(7, "military.tmx", "map_military.png", "Военные склады"),
     AGROPROM(8, "agroprom.tmx", "map_agroprom.png", "Агропром"),
-    MARSH(9, "marsh.tmx", "map_marsh.png", "Болота");
+    MARSH(9, "marsh.tmx", "map_marsh.png", "Болота"),
+    EAST_KORDON(10, "kordon.tmx", "map_east_kordon.png", "Восточный кордон");
 
     private final int id;
     private final String tmx;
