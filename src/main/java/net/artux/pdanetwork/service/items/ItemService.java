@@ -177,10 +177,12 @@ public class ItemService {
     private <T extends ItemEntity> void addAsNotCountable(UserEntity user, T item) {
         var type = item.getBase().getType();
         if (type.isWearable()) {
-            boolean userWears = user.getItemsByType(item.getBasedType())
-                    .stream()
-                    .anyMatch(userItem -> ((WearableEntity) userItem).isEquipped());
-            ((WearableEntity) item).setEquipped(!userWears);
+            if (type.getTypeClass() != ArtifactEntity.class) {
+                boolean userWears = user.getItemsByClass(type.getTypeClass())
+                        .stream()
+                        .anyMatch(userItem -> ((WearableEntity) userItem).isEquipped());
+                ((WearableEntity) item).setEquipped(!userWears);
+            }
         }
         item.setQuantity(1);
         addAsIs(user, item);
