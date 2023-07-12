@@ -151,10 +151,14 @@ public class ItemService {
         WearableEntity wearableItem = item;
         boolean isEquippedNow = !wearableItem.isEquipped();
         wearableItem.setEquipped(isEquippedNow);
-
+        logger.info("Set wearable item {} for {}", item.getBase().getTitle(), user.getLogin(), isEquippedNow);
         if (isEquippedNow) {
             user.getItemsByType(type)
-                    .forEach(wearableEntity -> ((WearableEntity) wearableEntity).setEquipped(false));
+                    .forEach(wearableEntity -> {
+                        if (wearableEntity != item) {
+                            ((WearableEntity) wearableEntity).setEquipped(false);
+                        }
+                    });
             return new Status(true, "Предмет надет.");
         }
 
