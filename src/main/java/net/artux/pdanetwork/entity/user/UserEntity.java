@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NoArgsConstructor
@@ -161,12 +162,14 @@ public class UserEntity extends BaseEntity {
         medicines.clear();
         artifacts.clear();
         detectors.clear();
+        items.clear();
     }
 
     public Set<? extends ItemEntity> getItemsByType(ItemType type) {
         return switch (type) {
             case ARMOR -> armors;
-            case RIFLE, PISTOL -> weapons;
+            case RIFLE, PISTOL ->
+                    weapons.stream().filter(weapon -> weapon.getBasedType() == type).collect(Collectors.toSet());
             case MEDICINE -> medicines;
             case ARTIFACT -> artifacts;
             case DETECTOR -> detectors;

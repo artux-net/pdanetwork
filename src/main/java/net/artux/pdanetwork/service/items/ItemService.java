@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -142,18 +143,12 @@ public class ItemService {
         }
     }
 
-    public Status setWearableItemById(UserEntity user, UUID id) {
-        ItemEntity item = user.getAllItems()
-                .stream()
-                .filter(itemEntity -> itemEntity.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
-
+    public Status setWearableItem(UserEntity user, WearableEntity item) {
         ItemType type = item.getBasedType();
         if (!type.isWearable())
             return new Status(false, "Невозможно надеть предмет");
 
-        WearableEntity wearableItem = (WearableEntity) item;
+        WearableEntity wearableItem = item;
         boolean isEquippedNow = !wearableItem.isEquipped();
         wearableItem.setEquipped(isEquippedNow);
 
@@ -164,6 +159,27 @@ public class ItemService {
         }
 
         return new Status(true, "Предмет снят.");
+    }
+
+    public Status setWearableItemById(UserEntity user, UUID id) {
+        ItemEntity item = user.getAllItems()
+                .stream()
+                .filter(itemEntity -> itemEntity.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+
+        return setWearableItem(user, (WearableEntity) item);
+    }
+
+    public Status setWearableItemById(UserEntity user, Integer id) {
+        ItemEntity item = user.getAllItems()
+                .stream()
+                .filter(itemEntity -> itemEntity.getBasedId() == id)
+                .sorted((Comparator<ItemEntity>) (o1, o2) -> o1.getId() == null ? -1 : 0)
+                .findFirst()
+                .orElseThrow();
+
+        return setWearableItem(user, (WearableEntity) item);
     }
 
     public Status setWearableItemById(UUID id) {
@@ -178,10 +194,12 @@ public class ItemService {
         var type = item.getBase().getType();
         if (type.isWearable()) {
             if (type.getTypeClass() != ArtifactEntity.class) {
-                boolean userWears = user.getItemsByClass(type.getTypeClass())
+                boolean userWears = user
+                        .getItemsByType(type)
                         .stream()
                         .anyMatch(userItem -> ((WearableEntity) userItem).isEquipped());
                 ((WearableEntity) item).setEquipped(!userWears);
+                logger.info("User {} wears {} - ", user.getLogin(), item.getBase().getTitle(), !userWears);
             }
         }
         item.setQuantity(1);

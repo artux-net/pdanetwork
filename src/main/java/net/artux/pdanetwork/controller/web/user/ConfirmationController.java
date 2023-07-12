@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.controller.web.user;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,6 @@ public class ConfirmationController {
 
     private final UserService userService;
 
-    @Hidden
     @Operation(summary = "Подтверждение регистрации пользователя")
     @GetMapping("/register")
     public ModelAndView confirmRegistration(Model model, @RequestParam String t) {

@@ -247,7 +247,10 @@ public class ActionService {
 
             case "set":
                 for (String pass : params) {
-                    itemsService.setWearableItemById(userEntity, UUID.fromString(pass));
+                    if (pass.matches("[0-9]+[\\\\.]?[0-9]*")) {
+                        itemsService.setWearableItemById(userEntity, Integer.parseInt(pass));
+                    } else
+                        itemsService.setWearableItemById(userEntity, UUID.fromString(pass));
                 }
                 break;
             case "note":
