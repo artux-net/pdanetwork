@@ -12,7 +12,7 @@ import net.artux.pdanetwork.configuration.handlers.SocketHandler;
 import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
-import net.artux.pdanetwork.utills.IsModerator;
+import net.artux.pdanetwork.utills.security.IsModerator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

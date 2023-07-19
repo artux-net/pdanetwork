@@ -19,7 +19,7 @@ import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.IsModerator;
+import net.artux.pdanetwork.utills.security.IsModerator;
 import org.apache.commons.io.IOUtils;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.DeleteMapping;

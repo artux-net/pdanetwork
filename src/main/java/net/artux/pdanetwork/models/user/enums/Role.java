@@ -5,9 +5,10 @@ import net.artux.pdanetwork.models.enums.EnumGetter;
 public enum Role implements EnumGetter {
 
     ADMIN(10, "Администратор"),
-    USER(0, "Обычный пользователь"),
+    MODERATOR(3, "Модератор"),
+    CREATOR(2, "Писатель"),
     TESTER(1, "Тестер"),
-    MODERATOR(2, "Модератор");
+    USER(0, "Обычный пользователь");
 
     private final int priority;
     private final String title;

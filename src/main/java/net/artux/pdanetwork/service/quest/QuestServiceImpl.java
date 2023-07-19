@@ -15,12 +15,14 @@ import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.service.util.S3Service;
+import net.artux.pdanetwork.service.util.QuestBackupService;
+import net.artux.pdanetwork.service.util.S3ServiceImpl;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,12 +35,13 @@ public class QuestServiceImpl implements QuestService {
 
     private final QuestMapper questMapper;
     private final UserService userService;
-    private final S3Service s3Service;
+    private final S3ServiceImpl s3Service;
     private final ObjectMapper objectMapper;
+    private final QuestBackupService questBackupService;
 
     private final Map<Long, Story> storiesCache = new HashMap<>();
     private final Map<Long, StoryDto> stories = new HashMap<>();
-    private final Map<Role, List<StoryDto>> roleStories = new HashMap<>();
+    private final Map<Role, List<StoryDto>> roleStories = new EnumMap<>(Role.class);
     private final Map<UUID, StoryDto> usersStories = new HashMap<>();
     private Instant updatedTime;
     private long lastStoryId = -2;
@@ -47,7 +50,7 @@ public class QuestServiceImpl implements QuestService {
     public Status setUserStory(Story story) {
         story.setId(lastStoryId + 1);
         usersStories.put(userService.getCurrentId(), questMapper.dto(story));
-        return new Status(true, "История загружена. Сбросьте кэш для появления.");
+        return new Status(true, "История загружена, размещена в архиве. Сбросьте кэш пда для появления.");
     }
 
     @Override
@@ -101,7 +104,7 @@ public class QuestServiceImpl implements QuestService {
 
             storiesCache.put(story.getId(), story);
             try {
-                s3Service.putString("story-" + story.getId(), objectMapper.writeValueAsString(story));
+                s3Service.put("story-" + story.getId(), objectMapper.writeValueAsString(story));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }

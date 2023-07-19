@@ -1,6 +1,7 @@
 package net.artux.pdanetwork;
 
-import net.artux.pdanetwork.controller.rest.admin.ServerStatisticController;
+import net.artux.pdanetwork.configuration.SecurityConfiguration;
+import net.artux.pdanetwork.controller.rest.admin.StatisticController;
 import net.artux.pdanetwork.models.statistic.StatisticDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class RolesTest {
 
     @Autowired
-    private ServerStatisticController serverStatisticController;
+    private StatisticController statisticController;
+
+    @Autowired
+    private SecurityConfiguration securityConfiguration;
 
     @Test
     @WithAnonymousUser
     public void isStatisticClosed() {
-        assertThrows(AccessDeniedException.class, () -> serverStatisticController.getStatistic());
+        assertThrows(AccessDeniedException.class, () -> statisticController.getStatistic());
     }
 
     @Test
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void isStatisticOpenForAdmins() {
-        StatisticDto statistic = serverStatisticController.getStatistic();
+        StatisticDto statistic = statisticController.getStatistic();
         assertNotNull(statistic);
+    }
+
+    @Test
+    public void printHierarchy() {
+        System.out.println(securityConfiguration.getRoleHierarchy());
     }
 
 }

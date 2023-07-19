@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.service.quest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,7 @@ import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.service.util.S3Service;
+import net.artux.pdanetwork.service.util.QuestBackupService;
 import net.artux.pdanetwork.service.util.ValuesService;
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
@@ -31,7 +30,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -45,22 +43,14 @@ public class QuestManagerServiceImpl implements QuestManagerService {
     private final ValuesService valuesService;
     private final Logger logger;
     private final QuestService questService;
-    private final S3Service s3Service;
+    private final QuestBackupService questBackupService;
 
     @PostConstruct
     public void initFromR2() {
-        List<Story> stories = new LinkedList<>();
-        for (String name : s3Service.getEntries("story-")) {
-            try {
-                stories.add(objectMapper.readValue(s3Service.getString(name), Story.class));
-            } catch (JsonProcessingException e) {
-                logger.error("Reading story error " + name, e);
-            }
-        }
+        List<Story> stories = questBackupService.getPublicStories();
         questService.addStories(stories);
         logger.info("Stories updated from r2, count: {}", stories.size());
     }
-
 
     public Status downloadStories() {
         RestTemplate restTemplate = new RestTemplate();

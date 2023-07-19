@@ -33,7 +33,7 @@ public interface QuestService {
 
     Status setUserStory(Story story);
 
-    Status setPublicStory(Story story);
+    Status setPublicStory(Story story, String message);
 
     Story getOriginalStory(long storyId);
 }

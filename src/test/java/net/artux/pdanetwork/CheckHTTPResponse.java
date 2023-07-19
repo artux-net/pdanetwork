@@ -1,6 +1,6 @@
 package net.artux.pdanetwork;
 
-import net.artux.pdanetwork.controller.rest.admin.AdminQuestsController;
+import net.artux.pdanetwork.controller.rest.admin.quest.QuestStorageController;
 import net.artux.pdanetwork.models.quest.map.GameMapDto;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +20,7 @@ public class CheckHTTPResponse {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
-    private AdminQuestsController adminQuestsController;
+    private QuestStorageController questStorageController;
 
     @Test
     public void isEncWorks() {
@@ -40,7 +40,7 @@ public class CheckHTTPResponse {
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void getMaps() {
-        GameMapDto[] maps = adminQuestsController.getMaps();
+        GameMapDto[] maps = questStorageController.getMaps();
         System.out.println(Arrays.toString(maps));
     }
 

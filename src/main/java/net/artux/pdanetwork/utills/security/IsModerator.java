@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.utills;
+package net.artux.pdanetwork.utills.security;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

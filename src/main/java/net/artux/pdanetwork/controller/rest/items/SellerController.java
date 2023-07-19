@@ -6,7 +6,11 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.service.items.SellerService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,13 +43,6 @@ public class SellerController {
             case BUY -> sellerService.buy(sellerId, itemId, quantity);
             case SELL -> sellerService.sell(sellerId, itemId, quantity);
         };
-    }
-
-
-    @Operation(summary = "Добавить предмет (только для админа)")
-    @PostMapping("/add")
-    public Status addItem(UUID userId, int id, int quantity) {
-        return sellerService.add(userId, id, quantity);
     }
 
     enum OperationType {

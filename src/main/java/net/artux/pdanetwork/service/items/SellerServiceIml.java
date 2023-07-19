@@ -12,15 +12,16 @@ import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.seller.Seller;
+import net.artux.pdanetwork.models.seller.SellerCreateDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.models.seller.SellerMapper;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
-import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.SellerRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
+import net.artux.pdanetwork.utills.security.IsModerator;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 @RequiredArgsConstructor
 public class SellerServiceIml implements SellerService {
 
@@ -46,7 +48,6 @@ public class SellerServiceIml implements SellerService {
     private final SellerMapper sellerMapper;
     private final UserService userService;
     private final ObjectMapper mapper;
-
 
     @PostConstruct
     void init() throws IOException {
@@ -76,16 +77,6 @@ public class SellerServiceIml implements SellerService {
     @Transactional(readOnly = true)
     public List<SellerDto> getSellers() {
         return sellerRepository.findAll().stream().map(sellerMapper::dto).collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public Status add(UUID pdaId, int baseId, int quantity) {
-        if (userService.getUserById().getRole() == Role.ADMIN) {
-            UserEntity userEntity = userRepository.findById(pdaId).orElseThrow();
-            itemService.addItem(userEntity, baseId, quantity);
-            return new Status(true, "Ok");
-        } else return new Status(false, "Not admin");
     }
 
     @Override
@@ -197,6 +188,72 @@ public class SellerServiceIml implements SellerService {
             additionalCoefficient = ((ArmorEntity) item).getCondition() / 100f;
         }
         return (int) (item.getBase().getPrice() * additionalCoefficient * sellerCoefficient) * quantity;
+    }
+
+    @IsModerator
+    public SellerDto createSeller(SellerCreateDto dto) {
+        SellerEntity sellerEntity = new SellerEntity();
+        sellerEntity.setName(dto.getName());
+        sellerEntity.setIcon(dto.getName());
+        sellerEntity.setImage(dto.getImage());
+        sellerEntity.setBuyCoefficient(dto.getBuyCoefficient());
+        sellerEntity.setSellCoefficient(dto.getSellCoefficient());
+
+        return sellerMapper.dto(sellerRepository.save(sellerEntity));
+    }
+
+    @IsModerator
+    public SellerDto updateSeller(SellerCreateDto dto) {
+        SellerEntity sellerEntity = sellerRepository.findById(dto.getId()).orElseThrow();
+        sellerEntity.setName(dto.getName());
+        sellerEntity.setIcon(dto.getName());
+        sellerEntity.setImage(dto.getImage());
+        sellerEntity.setBuyCoefficient(dto.getBuyCoefficient());
+        sellerEntity.setSellCoefficient(dto.getSellCoefficient());
+
+        return sellerMapper.dto(sellerRepository.save(sellerEntity));
+    }
+
+    @IsModerator
+    public SellerDto addSellerItems(Long sellerId, List<String> s) {
+        SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
+        for (String couple : s) {
+            if (!couple.contains(":"))
+                continue;
+
+            String[] parts = couple.split(":");
+            try {
+                int id = Integer.parseInt(parts[0]);
+                int quantity = Integer.parseInt(parts[1]);
+
+                ItemEntity item = itemService.getItem(id);
+                item.setQuantity(quantity);
+                sellerEntity.addItem(itemRepository.save(item));
+            } catch (Exception ignored) {
+            }
+        }
+
+        return sellerMapper.dto(sellerRepository.save(sellerEntity));
+    }
+
+    @IsModerator
+    public SellerDto deleteSellerItems(Long sellerId, List<UUID> ids) {
+        SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
+        List<UUID> sellerItemIds = sellerEntity.getAllItems()
+                .stream()
+                .map(ItemEntity::getId)
+                .collect(Collectors.toList());
+        ids.removeIf(id -> !sellerItemIds.contains(id));
+
+        for (UUID itemId : ids) {
+            itemRepository.deleteById(itemId);
+        }
+        return sellerMapper.dto(sellerEntity);
+    }
+
+    @IsModerator
+    public void deleteSeller(Long id) {
+        sellerRepository.deleteById(id);
     }
 
 }

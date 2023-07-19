@@ -19,4 +19,7 @@ public class Stage {
     private HashMap<String, List<String>> actions;
     private HashMap<String, String> data;
 
+    private Editor editor;
+    private String _comment;
+
 }

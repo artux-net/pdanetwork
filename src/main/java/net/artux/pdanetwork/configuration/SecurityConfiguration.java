@@ -1,6 +1,8 @@
 package net.artux.pdanetwork.configuration;
 
 import net.artux.pdanetwork.models.user.enums.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -10,6 +12,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +48,9 @@ public class SecurityConfiguration {
             "/rules"
     };
 
+    private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+    private String roleHierarchy;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -60,11 +69,32 @@ public class SecurityConfiguration {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_ADMIN > ROLE_MODERATOR" +
-                "\n ROLE_MODERATOR > ROLE_TESTER" +
-                "\n ROLE_TESTER > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
+        List<Role> roles = Arrays.stream(Role.values())
+                .collect(Collectors.toList());
+
+        StringBuilder builder = new StringBuilder();
+        String prefix = "ROLE_";
+
+        for (int i = 1; i < roles.size(); i++) {
+            builder.append(prefix)
+                    .append(roles.get(i - 1).name());
+
+            Role nextRole = roles.get(i);
+            builder.append(" > ")
+                    .append(prefix)
+                    .append(nextRole.name())
+                    .append("\n");
+
+        }
+
+        String hierarchy = builder.toString();
+        logger.info("Role hierarchy: \n" + hierarchy);
+        this.roleHierarchy = hierarchy;
+        roleHierarchy.setHierarchy(this.roleHierarchy);
         return roleHierarchy;
     }
 
+    public String getRoleHierarchy() {
+        return roleHierarchy;
+    }
 }

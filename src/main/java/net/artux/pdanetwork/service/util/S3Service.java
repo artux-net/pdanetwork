@@ -2,11 +2,13 @@ package net.artux.pdanetwork.service.util;
 
 import java.util.List;
 
-public interface S3Service {
+public interface S3Service<T> {
 
-    boolean putString(String key, String content);
+    boolean put(String key, T content);
 
-    String getString(String key);
+    T get(String key);
+
+    void delete(String key);
 
     List<String> getEntries(String prefix);
 }

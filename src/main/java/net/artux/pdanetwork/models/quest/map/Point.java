@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.models.quest.map;
 
 import lombok.Data;
+import net.artux.pdanetwork.models.quest.stage.Editor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,5 +16,7 @@ public class Point {
     private String pos;
     private HashMap<String, String> data;
     public HashMap<String, List<String>> condition;
+
+    private Editor editor;
 
 }
