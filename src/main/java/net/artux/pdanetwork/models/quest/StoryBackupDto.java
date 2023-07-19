@@ -10,12 +10,13 @@ import java.util.UUID;
 @Data
 public class StoryBackupDto extends StoryInfo {
 
-    private UUID uuid;
+    private UUID storageId;
 
     private String comment;
     private boolean archive;
     private StoryType type;
     private Instant timestamp;
     private SimpleUserDto author;
+    private int hashcode;
 
 }

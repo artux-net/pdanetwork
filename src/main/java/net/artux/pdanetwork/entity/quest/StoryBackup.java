@@ -22,6 +22,7 @@ public class StoryBackup extends BaseEntity {
     private String desc;
     private String icon;
     private String comment;
+    private int hashcode;
     private boolean archive;
 
     private int[] needs;

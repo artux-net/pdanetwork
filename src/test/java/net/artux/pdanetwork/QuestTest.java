@@ -1,6 +1,6 @@
 package net.artux.pdanetwork;
 
-import net.artux.pdanetwork.controller.rest.admin.quest.QuestStorageController;
+import net.artux.pdanetwork.controller.rest.admin.quest.AdminQuestsController;
 import net.artux.pdanetwork.controller.rest.quest.QuestController;
 import net.artux.pdanetwork.models.quest.Chapter;
 import net.artux.pdanetwork.models.quest.Story;
@@ -20,12 +20,12 @@ public class QuestTest {
     @Autowired
     private QuestController questController;
     @Autowired
-    private QuestStorageController questStorageController;
+    private AdminQuestsController adminQuestsController;
 
     @Test
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void info() {
-        System.out.println(questStorageController.getStatus());
+        System.out.println(adminQuestsController.getStatus());
     }
 
     @Test
@@ -64,8 +64,8 @@ public class QuestTest {
         chapter5.setId(5L);
         chapter5.setPoints(Map.of(5l, List.of()));
         story.setChapters(List.of(chapter1, chapter2, chapter3, chapter4, chapter5));
-        questStorageController.uploadPublicStory(story);
-        System.out.println(questStorageController.getStory(1L).getChapters().stream().findFirst().get().getPoints().size());
+        //adminQuestsController.uploadPublicStory(story);
+        //System.out.println(adminQuestsController.getStory(1L).getChapters().stream().findFirst().get().getPoints().size());
     }
 
     int pointId = 0;

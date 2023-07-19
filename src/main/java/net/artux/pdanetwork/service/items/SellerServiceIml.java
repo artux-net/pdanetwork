@@ -3,11 +3,7 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -21,7 +17,7 @@ import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.SellerRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.security.IsModerator;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -190,7 +186,7 @@ public class SellerServiceIml implements SellerService {
         return (int) (item.getBase().getPrice() * additionalCoefficient * sellerCoefficient) * quantity;
     }
 
-    @IsModerator
+    @ModeratorAccess
     public SellerDto createSeller(SellerCreateDto dto) {
         SellerEntity sellerEntity = new SellerEntity();
         sellerEntity.setName(dto.getName());
@@ -202,7 +198,7 @@ public class SellerServiceIml implements SellerService {
         return sellerMapper.dto(sellerRepository.save(sellerEntity));
     }
 
-    @IsModerator
+    @ModeratorAccess
     public SellerDto updateSeller(SellerCreateDto dto) {
         SellerEntity sellerEntity = sellerRepository.findById(dto.getId()).orElseThrow();
         sellerEntity.setName(dto.getName());
@@ -214,7 +210,7 @@ public class SellerServiceIml implements SellerService {
         return sellerMapper.dto(sellerRepository.save(sellerEntity));
     }
 
-    @IsModerator
+    @ModeratorAccess
     public SellerDto addSellerItems(Long sellerId, List<String> s) {
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         for (String couple : s) {
@@ -236,7 +232,7 @@ public class SellerServiceIml implements SellerService {
         return sellerMapper.dto(sellerRepository.save(sellerEntity));
     }
 
-    @IsModerator
+    @ModeratorAccess
     public SellerDto deleteSellerItems(Long sellerId, List<UUID> ids) {
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         List<UUID> sellerItemIds = sellerEntity.getAllItems()
@@ -251,7 +247,7 @@ public class SellerServiceIml implements SellerService {
         return sellerMapper.dto(sellerEntity);
     }
 
-    @IsModerator
+    @ModeratorAccess
     public void deleteSeller(Long id) {
         sellerRepository.deleteById(id);
     }

@@ -31,6 +31,11 @@ public class S3ServiceImpl implements S3Service<String> {
     }
 
     @Override
+    public void delete(String key) {
+        client.deleteObject(bucketName, key);
+    }
+
+    @Override
     public List<String> getEntries(String prefix) {
         return client.listObjects(bucketName, prefix)
                 .getObjectSummaries()

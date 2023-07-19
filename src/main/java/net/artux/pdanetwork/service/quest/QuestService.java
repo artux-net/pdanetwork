@@ -1,17 +1,14 @@
 package net.artux.pdanetwork.service.quest;
 
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.ChapterDto;
-import net.artux.pdanetwork.models.quest.GameMap;
-import net.artux.pdanetwork.models.quest.Story;
-import net.artux.pdanetwork.models.quest.StoryDto;
-import net.artux.pdanetwork.models.quest.StoryInfo;
+import net.artux.pdanetwork.models.quest.*;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface QuestService {
 
@@ -25,15 +22,16 @@ public interface QuestService {
 
     StoryDto getStory(long storyId);
 
-    Status addStories(Collection<Story> stories);
+    Status reloadPublicStories(Collection<Story> stories);
 
     Collection<StoryInfo> getStoriesInfo();
 
     StoriesStatus getStatus();
 
-    Status setUserStory(Story story);
+    Status setUserStory(Story story, String message);
+
+    Status setUserStory(UUID backupId);
 
     Status setPublicStory(Story story, String message);
 
-    Story getOriginalStory(long storyId);
 }

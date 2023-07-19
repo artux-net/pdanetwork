@@ -10,14 +10,8 @@ import net.artux.pdanetwork.models.feed.ArticleFullDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.ArticleService;
-import net.artux.pdanetwork.utills.security.IsModerator;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -25,7 +19,7 @@ import java.util.UUID;
 @Tag(name = "Редактор ленты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/feed")
 @RequiredArgsConstructor
-@IsModerator
+@ModeratorAccess
 public class AdminArticlesController {
 
     private final ArticleService articleService;

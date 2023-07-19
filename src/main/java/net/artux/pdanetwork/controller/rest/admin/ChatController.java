@@ -4,29 +4,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.configuration.handlers.ChatHandler;
-import net.artux.pdanetwork.configuration.handlers.CommonHandler;
-import net.artux.pdanetwork.configuration.handlers.GroupsHandler;
-import net.artux.pdanetwork.configuration.handlers.RPHandler;
-import net.artux.pdanetwork.configuration.handlers.SocketHandler;
+import net.artux.pdanetwork.configuration.handlers.*;
 import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
-import net.artux.pdanetwork.utills.security.IsModerator;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @Tag(name = "Чаты", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/chats")
-@IsModerator
+@ModeratorAccess
 @RequiredArgsConstructor
 public class ChatController {
 

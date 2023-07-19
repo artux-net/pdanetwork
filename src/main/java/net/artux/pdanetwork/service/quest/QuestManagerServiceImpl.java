@@ -11,8 +11,8 @@ import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.models.quest.workflow.Trigger;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.service.util.QuestBackupService;
 import net.artux.pdanetwork.service.util.ValuesService;
+import net.artux.pdanetwork.utills.security.AdminAccess;
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
@@ -24,11 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,10 +44,11 @@ public class QuestManagerServiceImpl implements QuestManagerService {
     @PostConstruct
     public void initFromR2() {
         List<Story> stories = questBackupService.getPublicStories();
-        questService.addStories(stories);
-        logger.info("Stories updated from r2, count: {}", stories.size());
+        questService.reloadPublicStories(stories);
+        logger.info("Истории загружены из R2, количество: {}", stories.size());
     }
 
+    @AdminAccess
     public Status downloadStories() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -156,7 +153,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
         }
         deleteDirectory(file);
         if (stories.values().size() > 0) {
-            questService.addStories(stories.values());
+            questService.reloadPublicStories(stories.values());
 
             logger.info("Stories updated from github, count: {}", stories.values().size());
             return new Status(true, "Stories updated, errors " + errors);

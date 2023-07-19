@@ -7,17 +7,12 @@ import net.artux.pdanetwork.models.user.ban.BanDto;
 import net.artux.pdanetwork.models.user.ban.BanMapper;
 import net.artux.pdanetwork.repository.user.BanRepository;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.security.IsModerator;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -73,7 +68,7 @@ public class BanServiceImpl implements BanService {
     }
 
     @Override
-    @IsModerator
+    @ModeratorAccess
     public BanDto applyBan(UUID userId, String reason, String message, int secs) {
         UserEntity user = userService.getUserById();
         BanEntity banEntity = new BanEntity();

@@ -6,24 +6,18 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.seller.SellerCreateDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.service.items.SellerService;
-import net.artux.pdanetwork.utills.security.IsModerator;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Управление продавцами", description = "Доступен с роли модератора")
+@Tag(name = "Управление продавцами", description = "Доступен с роли модератора, лучше сохранять все что вводите отдельно")
 @RequestMapping("/api/v1/admin/seller")
-@IsModerator
+@ModeratorAccess
 @RequiredArgsConstructor
-public class SellerController {
+public class AdminSellerController {
 
     private final SellerService service;
 
@@ -40,7 +34,7 @@ public class SellerController {
     }
 
     @PutMapping(value = "/{sellerId}/items")
-    @Operation(summary = "Добавить предметы продавца, массивом указывается id:quantity")
+    @Operation(summary = "Добавить предметы продавца, в массиве указывается id:quantity")
     public SellerDto addSellerItems(@PathVariable Long sellerId, @RequestBody List<String> s) {
         return service.addSellerItems(sellerId, s);
     }

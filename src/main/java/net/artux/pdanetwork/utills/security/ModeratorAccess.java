@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
-public @interface IsModerator {
+public @interface ModeratorAccess {
 }

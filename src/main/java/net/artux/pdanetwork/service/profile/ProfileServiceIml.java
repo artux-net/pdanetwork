@@ -7,11 +7,14 @@ import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.models.user.UserMapper;
+import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.achievement.AchievementsService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,8 +71,41 @@ public class ProfileServiceIml implements ProfileService {
     }
 
     @Override
-    public ResponsePage<SimpleUserDto> getUsersPageByLoginContaining(String login, QueryPage queryPage) {
-        return ResponsePage.of(userRepository.findByLoginContainingIgnoreCase(login, pageService.getPageable(queryPage))
+    public ResponsePage<SimpleUserDto> findUsers(String query, QueryPage queryPage) {
+        UserEntity user = new UserEntity();
+        user.setLogin(query);
+        user.setNickname(query);
+        user.setName(query);
+        user.setEmail(query);
+
+        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase("email", "nickname", "name", "login");
+
+        Example<UserEntity> example = Example.of(user, matcher);
+
+        return ResponsePage.of(userRepository.findAll(example, pageService.getPageable(queryPage))
+                .map(userMapper::info));
+    }
+
+    public ResponsePage<SimpleUserDto> findUsers(AdminEditUserDto exampleDto, QueryPage queryPage) {
+        UserEntity user = new UserEntity();
+        user.setLogin(exampleDto.getLogin());
+        user.setNickname(exampleDto.getNickname());
+        user.setName(exampleDto.getName());
+        user.setRole(exampleDto.getRole());
+        user.setGang(exampleDto.getGang());
+        user.setEmail(exampleDto.getEmail());
+        user.setAvatar(exampleDto.getAvatar());
+        user.setChatBan(exampleDto.isChatBan());
+
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase("email", "nickname", "name", "avatar", "login", "role", "gang")
+                .withMatcher("chatBan", ExampleMatcher.GenericPropertyMatchers.exact());
+
+        Example<UserEntity> example = Example.of(user, matcher);
+        return ResponsePage.of(userRepository.findAll(example, pageService.getPageable(queryPage))
                 .map(userMapper::info));
     }
 }

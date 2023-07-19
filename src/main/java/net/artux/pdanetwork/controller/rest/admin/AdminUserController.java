@@ -19,18 +19,10 @@ import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.security.IsModerator;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.apache.commons.io.IOUtils;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,7 +34,7 @@ import static java.util.Collections.emptyMap;
 @RestController
 @Tag(name = "Пользователи", description = "Доступен с роли модератора")
 @RequestMapping("/api/v1/admin/users")
-@IsModerator
+@ModeratorAccess
 @RequiredArgsConstructor
 public class AdminUserController {
 
@@ -52,12 +44,18 @@ public class AdminUserController {
     private final EnumMapper enumMapper;
 
     @GetMapping
-    @Operation(summary = "Получение списка пользователей с пагинацией и поиском")
-    public ResponsePage<SimpleUserDto> listUsers(@RequestParam("login") Optional<String> login, @Valid @ParameterObject QueryPage queryPage) {
-        if (login.isPresent()) {
-            return profileService.getUsersPageByLoginContaining(login.get(), queryPage);
+    @Operation(summary = "Список пользователей с пагинацией и поиском по всем полям")
+    public ResponsePage<SimpleUserDto> findUsers(@RequestParam(value = "query", required = false) Optional<String> query, @Valid @ParameterObject QueryPage queryPage) {
+        if (query.isPresent()) {
+            return profileService.findUsers(query.get(), queryPage);
         } else
             return profileService.getUsersPage(queryPage);
+    }
+
+    @PostMapping
+    @Operation(summary = "Жесткий поиск по примеру")
+    public ResponsePage<SimpleUserDto> findUsers(@RequestBody AdminEditUserDto example, @Valid @ParameterObject QueryPage queryPage) {
+        return profileService.findUsers(example, queryPage);
     }
 
     @Operation(summary = "Выгрузка контактов xlsx-файлом для рассылки")
@@ -90,13 +88,13 @@ public class AdminUserController {
     }
 
     @PostMapping("/{id}/quest/commands")
-    @Operation(summary = "Применение команд")
+    @Operation(summary = "Применение команд для юзера")
     public StoryData applyCommands(@PathVariable("id") UUID id, @RequestBody CommandBlock commandBlock) {
         return actionService.applyCommands(id, commandBlock.getActions());
     }
 
     @GetMapping("/{id}/quest/info")
-    @Operation(summary = "Получение информации о прохождении")
+    @Operation(summary = "Получение информации о прохождении юзера")
     public StoryData getCurrentStoryData(@PathVariable("id") UUID id) {
         return actionService.applyCommands(id, emptyMap());
     }

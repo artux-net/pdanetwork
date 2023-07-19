@@ -31,13 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -153,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserById(UUID objectId) {
-        return userRepository.getById(objectId);
+        return userRepository.findById(objectId).orElseThrow();
     }
 
     @Override
@@ -236,7 +230,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public ByteArrayInputStream exportUsers(List<UserEntity> users) throws IOException {
-        logger.info("{} exported contacts.", getUserById().getLogin());
+        logger.info("{} exported {} contacts.", getUserById().getLogin(), users.size());
         XSSFWorkbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("users");
 
@@ -260,14 +254,19 @@ public class UserServiceImpl implements UserService {
 
             headerCell = header.createCell(1);
             headerCell.setCellStyle(headerCellStyle);
-            headerCell.setCellValue(contactEntity.getName());
+            headerCell.setCellValue(contactEntity.getLogin());
 
             headerCell = header.createCell(2);
+            headerCell.setCellStyle(headerCellStyle);
+            headerCell.setCellValue(contactEntity.getName());
+
+            headerCell = header.createCell(3);
             headerCell.setCellStyle(headerCellStyle);
             headerCell.setCellValue(contactEntity.getId().toString());
         }
         sheet.autoSizeColumn(0);
         sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
