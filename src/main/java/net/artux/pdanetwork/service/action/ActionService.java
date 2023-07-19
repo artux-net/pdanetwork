@@ -1,8 +1,11 @@
 package net.artux.pdanetwork.service.action;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ConditionalEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
@@ -21,7 +24,14 @@ import org.slf4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
@@ -34,21 +44,15 @@ public class ActionService {
     private final QuestService questService;
     private final NoteService noteService;
     private final StoryMapper storyMapper;
-    private final EntityManager entityManager;
     private final UserRepository userRepository;
 
     private final Timer timer = new Timer();
 
     public StoryData applyCommands(UUID id, Map<String, List<String>> map) {
-        try {
-            UserEntity userEntity = userRepository.findById(id).orElseThrow();
-            operateActions(map, userEntity);
-            userEntity.fixAllItems();
-            return storyMapper.storyData(userRepository.save(userEntity));
-        } finally {
-            entityManager.flush();
-            entityManager.clear();
-        }
+        UserEntity userEntity = userRepository.findById(id).orElseThrow();
+        operateActions(map, userEntity);
+        userEntity.fixAllItems();
+        return storyMapper.storyData(userRepository.saveAndFlush(userEntity));
     }
 
     public StoryData applyCommands(Map<String, List<String>> map) {

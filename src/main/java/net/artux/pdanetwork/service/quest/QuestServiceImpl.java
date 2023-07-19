@@ -4,7 +4,12 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.quest.StoryType;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.quest.*;
+import net.artux.pdanetwork.models.quest.ChapterDto;
+import net.artux.pdanetwork.models.quest.GameMap;
+import net.artux.pdanetwork.models.quest.QuestMapper;
+import net.artux.pdanetwork.models.quest.Story;
+import net.artux.pdanetwork.models.quest.StoryDto;
+import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import net.artux.pdanetwork.models.user.enums.Role;
@@ -17,7 +22,13 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -97,7 +108,7 @@ public class QuestServiceImpl implements QuestService {
         for (var story : stories) {
             if (story.getId() > lastStoryId)
                 lastStoryId = story.getId();
-
+            this.stories.put(story.getId(), questMapper.dto(story));
             counter++;
         }
 

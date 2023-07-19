@@ -24,7 +24,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +49,9 @@ public class QuestManagerServiceImpl implements QuestManagerService {
     public void initFromR2() {
         List<Story> stories = questBackupService.getPublicStories();
         questService.reloadPublicStories(stories);
-        logger.info("Истории загружены из R2, количество: {}", stories.size());
+        logger.info("Истории из R2, количество: {}", stories.size());
+        if (stories.size() == 0)
+            downloadStories();
     }
 
     @AdminAccess
