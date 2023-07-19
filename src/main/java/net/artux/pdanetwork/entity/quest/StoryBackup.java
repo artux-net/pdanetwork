@@ -14,14 +14,13 @@ import java.time.Instant;
 @Setter
 @Getter
 @Entity
-@Table
+@Table(name = "story_backup")
 public class StoryBackup extends BaseEntity {
 
     private Long storyId;
     private String title;
-    private String desc;
     private String icon;
-    private String comment;
+    private String message;
     private int hashcode;
     private boolean archive;
 

@@ -3,16 +3,23 @@ package net.artux.pdanetwork.models.quest;
 import lombok.Data;
 import net.artux.pdanetwork.entity.quest.StoryType;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
+import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Data
-public class StoryBackupDto extends StoryInfo {
+public class StoryBackupDto {
 
     private UUID storageId;
 
-    private String comment;
+    private Long id;
+    private String title;
+    private String icon;
+    private int[] needs;
+    private Role access = Role.TESTER;
+
+    private String message;
     private boolean archive;
     private StoryType type;
     private Instant timestamp;

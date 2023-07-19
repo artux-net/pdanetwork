@@ -100,9 +100,8 @@ public class QuestBackupService extends SimpleS3Service<Story> {
         backup.setType(type);
         backup.setTitle(story.getTitle());
         backup.setIcon(story.getIcon());
-        backup.setDesc(story.getDesc());
         backup.setAuthor(userService.getUserById());
-        backup.setComment(comment);
+        backup.setMessage(comment);
         backup.setNeeds(story.getNeeds());
         backup.setAccess(story.getAccess());
         backup.setTimestamp(Instant.now());
@@ -153,7 +152,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
     public StoryBackupDto update(StoryBackupEditDto dto) {
         StoryBackup backup = questRepository.findById(dto.getId()).orElseThrow();
         if (isUserCanManipulateStory(dto.getId())) {
-            backup.setComment(dto.getComment());
+            backup.setMessage(dto.getComment());
             backup.setType(dto.getType());
             backup.setArchive(dto.isArchive());
             backup.setTimestamp(Instant.now());
