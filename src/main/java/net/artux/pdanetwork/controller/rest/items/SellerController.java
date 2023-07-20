@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Продавцы и система купли/продажи")
+@Tag(name = "Продавцы")
 @RequestMapping("/api/v1/seller")
 public class SellerController {
 
