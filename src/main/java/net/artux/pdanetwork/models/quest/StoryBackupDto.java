@@ -13,7 +13,7 @@ public class StoryBackupDto {
 
     private UUID storageId;
 
-    private Long id;
+    private Long storyId;
     private String title;
     private String icon;
     private int[] needs;

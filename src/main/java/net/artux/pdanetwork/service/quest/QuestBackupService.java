@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.LinkedList;
@@ -72,22 +72,23 @@ public class QuestBackupService extends SimpleS3Service<Story> {
     }
 
     @ModeratorAccess
-    public ResponsePage<StoryBackupDto> getAllBackups(StoryType type, boolean archive, QueryPage queryPage) {
+    public ResponsePage<StoryBackupDto> getAllBackups(Long storyId, StoryType type, boolean archive, QueryPage queryPage) {
         Pageable pageable = pageService.getPageable(queryPage);
-        return ResponsePage.of(questRepository.findAllByTypeAndArchive(type, archive, pageable).map(backupMapper::dto));
+        if (storyId == null)
+            return ResponsePage.of(questRepository.findAllByTypeAndArchive(type, archive, pageable).map(backupMapper::dto));
+        else
+            return ResponsePage.of(questRepository.findAllByStoryIdAndTypeAndArchive(storyId, type, archive, pageable).map(backupMapper::dto));
     }
 
-    @CreatorAccess
-    public StoryBackupDto saveStory(Story story, StoryType type, String comment) {
+    @Transactional
+    public StoryBackupDto saveStory(Story story, String comment) {
         UserEntity user = userService.getUserById();
-        if (type == StoryType.PUBLIC && user.getRole() != Role.ADMIN) {
-            throw new AccessDeniedException("Wrong role");
-        }
+        StoryType type = StoryType.PRIVATE;
         int hashcode = story.hashCode();
 
-        logger.info("Загрузка " + type + " истории (id = " + story.getId() + ") пользователем " + user.getLogin() + ", хэш: " + hashcode);
+        logger.info("Загрузка " + type + " истории (id = " + story.getId() + ") пользователем " + user.getLogin() + ", hash=" + hashcode);
 
-        Optional<StoryBackup> lastBackup = questRepository.findByAuthorAndTypeAndStoryIdAndArchiveFalse(user, type, story.getId());
+        Optional<StoryBackup> lastBackup = questRepository.findByAuthorAndStoryIdAndArchiveFalse(user, story.getId());
         if (lastBackup.isPresent()) {
             StoryBackup backup = lastBackup.get();
             backup.setArchive(true);
@@ -98,6 +99,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
 
         StoryBackup backup = new StoryBackup();
         backup.setType(type);
+        backup.setStoryId(story.getId());
         backup.setTitle(story.getTitle());
         backup.setIcon(story.getIcon());
         backup.setAuthor(userService.getUserById());
@@ -114,22 +116,23 @@ public class QuestBackupService extends SimpleS3Service<Story> {
         return backupMapper.dto(backup);
     }
 
-    @CreatorAccess
-    public ResponsePage<StoryBackupDto> getUserBackups(StoryType type, QueryPage queryPage, boolean archive) {
+    public ResponsePage<StoryBackupDto> getUserBackups(Long id, QueryPage queryPage, boolean archive) {
         UserEntity user = userService.getUserById();
         Pageable pageable = pageService.getPageable(queryPage);
-        return ResponsePage.of(questRepository.findAllByTypeAndAuthorAndArchive(type, user, archive, pageable)
-                .map(backupMapper::dto));
+        if (id == null)
+            return ResponsePage.of(questRepository.findAllByAuthorAndArchive(user, archive, pageable)
+                    .map(backupMapper::dto));
+        else
+            return ResponsePage.of(questRepository.findAllByAuthorAndArchiveAndStoryId(user, archive, id, pageable)
+                    .map(backupMapper::dto));
     }
 
-    @CreatorAccess
     public Story getBackup(UUID id) {
         if (isUserCanManipulateStory(id)) {
             return get(id.toString());
         } else return null;
     }
 
-    @CreatorAccess
     public boolean deleteBackup(UUID id) {
         if (isUserCanManipulateStory(id)) {
             questRepository.deleteById(id);
@@ -152,12 +155,62 @@ public class QuestBackupService extends SimpleS3Service<Story> {
     public StoryBackupDto update(UUID id, StoryBackupEditDto dto) {
         StoryBackup backup = questRepository.findById(id).orElseThrow();
         if (isUserCanManipulateStory(id)) {
+            backup.setStoryId(dto.getStoryId());
             backup.setMessage(dto.getComment());
-            backup.setType(dto.getType());
-            backup.setArchive(dto.isArchive());
+            backup.setTimestamp(Instant.now());
+
+            Story storageStory = get(id.toString());
+            storageStory.setId(dto.getStoryId());
+            put(id.toString(), storageStory);
+
+            return backupMapper.dto(questRepository.save(backup));
+        }
+        return null;
+    }
+
+    @CreatorAccess
+    public StoryBackupDto changeType(UUID id, StoryType type) {
+        StoryBackup backup = questRepository.findById(id).orElseThrow();
+        if (isUserCanManipulateStory(id)) {
+            backup.setType(type);
             backup.setTimestamp(Instant.now());
 
             return backupMapper.dto(questRepository.save(backup));
+        }
+        return null;
+    }
+
+    @Transactional
+    @CreatorAccess
+    public StoryBackupDto makeArchive(UUID id, boolean archive) {
+        StoryBackup backup = questRepository.findById(id).orElseThrow();
+        UserEntity user = userService.getUserById();
+        StoryType type = backup.getType();
+        int hashcode = backup.getHashcode();
+        if (isUserCanManipulateStory(id)) {
+            logger.info("Смена архивности истории (id = " + backup.getStoryId() + ") пользователем " + user.getLogin() + ", hash=" + hashcode + " на " + archive);
+            if (!archive) {
+                // make current story with this storyId archive
+                Optional<StoryBackup> lastBackup = questRepository.findByTypeAndStoryIdAndArchiveIsFalse(type, backup.getStoryId());
+                if (lastBackup.isPresent()) {
+                    StoryBackup last = lastBackup.get();
+                    last.setArchive(true);
+                    logger.info("Существующая история (hash=" + last.getHashcode() + ") признана архивной.");
+                    questRepository.save(last);
+                }
+            }
+            backup.setArchive(archive);
+            backup.setTimestamp(Instant.now());
+
+            return backupMapper.dto(questRepository.save(backup));
+        }
+        return null;
+    }
+
+    public Story getCommunityStory(long storyId) {
+        StoryBackup backup = questRepository.findByStoryIdAndTypeAndArchiveIsFalse(storyId, StoryType.COMMUNITY).orElse(null);
+        if (backup != null) {
+            return get(backup.getId().toString());
         }
         return null;
     }

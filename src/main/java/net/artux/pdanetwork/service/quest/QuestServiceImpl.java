@@ -1,7 +1,6 @@
 package net.artux.pdanetwork.service.quest;
 
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.quest.StoryType;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.quest.ChapterDto;
@@ -50,7 +49,7 @@ public class QuestServiceImpl implements QuestService {
     public Status setUserStory(Story story, String message) {
         story.setId(lastStoryId + 1);
         usersStories.put(userService.getCurrentId(), questMapper.dto(story));
-        questBackupService.saveStory(story, StoryType.PRIVATE, message);
+        questBackupService.saveStory(story, message);
         return new Status(true, "История загружена, размещена в архиве. Сбросьте кэш пда для появления.");
     }
 
@@ -65,7 +64,7 @@ public class QuestServiceImpl implements QuestService {
     @Override
     @AdminAccess
     public Status setPublicStory(Story story, String message) {
-        questBackupService.saveStory(story, StoryType.PUBLIC, message);
+        //questBackupService.saveStory(story, StoryType.PUBLIC, message);
         return reloadPublicStories(List.of(story));
     }
 
@@ -95,6 +94,8 @@ public class QuestServiceImpl implements QuestService {
         StoryDto story = stories.get(storyId);
         if (story == null)
             story = usersStories.get(user.getId());
+        if (story == null)
+            story = questMapper.dto(questBackupService.getCommunityStory(storyId));
         if (story == null)
             throw new RuntimeException();
         if (story.getAccess().getPriority() > user.getRole().getPriority())
@@ -132,12 +133,17 @@ public class QuestServiceImpl implements QuestService {
     }
 
     @Override
-    public Collection<StoryInfo> getStoriesInfo() {
+    public Collection<StoryInfo> getPublicStories() {
         UserEntity user = userService.getUserById();
         Collection<StoryInfo> storiesInfo = questMapper.info(getStories(user));
         StoryInfo userStory = questMapper.info(usersStories.get(user.getId()));
         if (userStory != null) storiesInfo.add(userStory);
         return storiesInfo;
+    }
+
+    @Override
+    public Collection<StoryInfo> getCommunityStories() {
+        return questMapper.info(questMapper.dto(questBackupService.getCommunityStories()));
     }
 
     @Override

@@ -41,6 +41,8 @@ public interface QuestMapper {
     @Mapping(target = "missions", expression = "java(missions(story.getChapters()))")
     StoryDto dto(Story story);
 
+    List<StoryDto> dto(List<Story> story);
+
     default Map<Long, GameMap> mapsToMap(Collection<GameMap> maps, Collection<Chapter> chapters) {
         HashMap<Long, GameMap> result = new HashMap<>();
         for (MapEnum enumGetter : MapEnum.values())

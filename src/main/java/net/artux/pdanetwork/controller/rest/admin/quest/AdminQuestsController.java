@@ -12,7 +12,13 @@ import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.service.quest.QuestManagerService;
 import net.artux.pdanetwork.service.quest.QuestService;
 import net.artux.pdanetwork.utills.security.CreatorAccess;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -29,8 +35,14 @@ public class AdminQuestsController {
 
     @Operation(summary = "Обновить сюжеты с GitHub", description = "https://github.com/artux-net/pda-quests")
     @PostMapping("/git/update")
-    public Status updateStories() {
-        return questManagerService.downloadStories();
+    public Status readFromGit() {
+        return questManagerService.readFromGit();
+    }
+
+    @Operation(summary = "Обновить сюжеты с хранилища")
+    @PostMapping("/r2/update")
+    public Status readFromR2() {
+        return questManagerService.readFromR2();
     }
 
     @Operation(summary = "Получить информацию о всех публичных сюжетах")

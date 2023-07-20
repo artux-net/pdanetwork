@@ -30,9 +30,21 @@ public class QuestController {
     }
 
     @GetMapping
-    @Operation(summary = "Получить информацию о доступных сюжетах")
+    @Operation(summary = "Сюжеты по умолчанию")
     public Collection<StoryInfo> getStories() {
-        return questService.getStoriesInfo();
+        return getPublicStories();
+    }
+
+    @GetMapping("/stories/public")
+    @Operation(summary = "Публичные сюжеты")
+    public Collection<StoryInfo> getPublicStories() {
+        return questService.getPublicStories();
+    }
+
+    @GetMapping("/stories/community")
+    @Operation(summary = "Сюжеты сообщества")
+    public Collection<StoryInfo> getCommunityStories() {
+        return questService.getCommunityStories();
     }
 
     @GetMapping("/{storyId}/{chapterId}")

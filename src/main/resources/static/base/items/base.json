@@ -732,18 +732,6 @@
   },
   {
     "disadvantages": null,
-    "price": "8",
-    "icon": "9x18P.gif",
-    "weight": "0.02",
-    "advantages": null,
-    "id": 30,
-    "type": "BULLET",
-    "title": "9х18 мм +P+",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
     "price": "10",
     "icon": "9x19zmo.gif",
     "weight": "0.02",
@@ -756,18 +744,6 @@
   },
   {
     "disadvantages": null,
-    "price": "12",
-    "icon": "9x19pbp.gif",
-    "weight": "0.02",
-    "advantages": null,
-    "id": 32,
-    "type": "BULLET",
-    "title": "9х19 мм РВР",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
     "price": "20",
     "icon": "45ACP.gif",
     "weight": "0.015",
@@ -775,18 +751,6 @@
     "id": 33,
     "type": "BULLET",
     "title": ".45 АСР",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
-    "price": "21",
-    "icon": "45hidro.gif",
-    "weight": "0.018",
-    "advantages": null,
-    "id": 34,
-    "type": "BULLET",
-    "title": ".45 АСР Гидрошок",
     "content": null,
     "description": null
   },

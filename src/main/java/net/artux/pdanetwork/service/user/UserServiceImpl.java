@@ -13,7 +13,8 @@ import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
-import net.artux.pdanetwork.utills.Security;
+import net.artux.pdanetwork.utills.RandomString;
+import net.artux.pdanetwork.utills.security.AdminAccess;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -22,7 +23,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.springframework.core.env.Environment;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -47,6 +53,7 @@ public class UserServiceImpl implements UserService {
     private final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
     private final Timer timer = new Timer();
     private final Environment environment;
+    private final RandomString randomString = new RandomString();
 
     @PostConstruct
     private void registerFirstUsers() {
@@ -55,7 +62,7 @@ public class UserServiceImpl implements UserService {
         String name = environment.getProperty("administrator.name");
         String nickname = environment.getProperty("administrator.nickname");
 
-        String password = "12345678";
+        String password = randomString.nextString();
 
         if (userRepository.count() < 1) {
             saveUser(RegisterUserDto.builder()
@@ -94,27 +101,27 @@ public class UserServiceImpl implements UserService {
     }
 
     private String generateToken(RegisterUserDto user) {
-        String token = Security.encrypt(user.getEmail());
+        String token = randomString.nextString();
         logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
-        registerUserMap.put(user.getEmail(), user);
+        registerUserMap.put(token, user);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 registerUserMap.remove(token);
             }
-        }, 30 * 60 * 1000);
+        }, 10 * 60 * 1000);
         return token;
     }
 
     public Status handleConfirmation(String token) {
-        String email = Security.decrypt(token);
-        if (registerUserMap.containsKey(email)) {
-            UserEntity member = saveUser(registerUserMap.get(email), Role.USER);
+        if (registerUserMap.containsKey(token)) {
+            RegisterUserDto regDto = registerUserMap.get(token);
+            UserEntity member = saveUser(regDto, Role.USER);
             long pdaId = member.getPdaId();
-            logger.info("User PDA#" + member.getLogin() + " registered.");
+            logger.info("Пользователь {} ({} {}) зарегистрирован.", member.getLogin(), member.getName(), member.getNickname());
             registerUserMap.remove(token);
             try {
-                emailService.sendRegisterLetter(registerUserMap.get(email), pdaId);
+                emailService.sendRegisterLetter(regDto, pdaId);
                 return new Status(true, pdaId + " - Это ваш pdaId, мы вас зарегистрировали, спасибо!");
             } catch (Exception e) {
                 return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
@@ -167,7 +174,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @AdminAccess
     public AdminUserDto updateUser(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
         user.setName(adminEditUserDto.getName());

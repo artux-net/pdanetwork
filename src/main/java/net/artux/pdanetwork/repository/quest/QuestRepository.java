@@ -15,7 +15,7 @@ import java.util.UUID;
 @Repository
 public interface QuestRepository extends JpaRepository<StoryBackup, UUID> {
 
-    Optional<StoryBackup> findByAuthorAndTypeAndStoryIdAndArchiveFalse(UserEntity user, StoryType type, Long storyId);
+    Optional<StoryBackup> findByTypeAndStoryIdAndArchiveIsFalse(StoryType type, Long storyId);
 
     Page<StoryBackup> findAllByAuthor(UserEntity user, Pageable pageable);
 
@@ -25,4 +25,13 @@ public interface QuestRepository extends JpaRepository<StoryBackup, UUID> {
 
     Page<StoryBackup> findAllByTypeAndAuthorAndArchive(StoryType type, UserEntity user, boolean archive, Pageable pageable);
 
+    Page<StoryBackup> findAllByAuthorAndArchive(UserEntity user, boolean archive, Pageable pageable);
+
+    Page<StoryBackup> findAllByAuthorAndArchiveAndStoryId(UserEntity user, boolean archive, Long storyId, Pageable pageable);
+
+    Optional<StoryBackup> findByAuthorAndStoryIdAndArchiveFalse(UserEntity user, Long id);
+
+    Page<StoryBackup> findAllByStoryIdAndTypeAndArchive(Long storyId, StoryType type, boolean archive, Pageable pageable);
+
+    Optional<StoryBackup> findByStoryIdAndTypeAndArchiveIsFalse(Long storyId, StoryType type);
 }

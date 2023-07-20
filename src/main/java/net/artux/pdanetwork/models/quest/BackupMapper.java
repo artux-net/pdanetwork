@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface BackupMapper {
 
     @Mapping(target = "storageId", source = "storyBackup.id")
-    @Mapping(target = "id", source = "storyBackup.storyId")
     StoryBackupDto dto(StoryBackup storyBackup);
 
 }

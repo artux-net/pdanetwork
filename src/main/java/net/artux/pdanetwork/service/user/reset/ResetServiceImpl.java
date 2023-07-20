@@ -10,7 +10,7 @@ import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.Security;
+import net.artux.pdanetwork.utills.RandomString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,7 @@ public class ResetServiceImpl implements ResetService {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final StoryMapper storyMapper;
+    private final RandomString randomString = new RandomString();
     private final Timer timer = new Timer();
 
     private final UserMapper userMapper;
@@ -37,7 +38,7 @@ public class ResetServiceImpl implements ResetService {
         UserEntity userEntity = userService.getUserByEmail(email);
         //TODO
         if (!requests.containsValue(userEntity.getEmail())) {
-            String token = Security.encrypt(userEntity.getPassword() + userEntity.getLogin());
+            String token = randomString.nextString();
             try {
                 emailService.askForPassword(userEntity, token);
                 addCurrent(token, userEntity);
@@ -57,7 +58,7 @@ public class ResetServiceImpl implements ResetService {
             public void run() {
                 requests.remove(token);
             }
-        }, 30 * 60 * 1000);
+        }, 10 * 60 * 1000);
     }
 
     @Override

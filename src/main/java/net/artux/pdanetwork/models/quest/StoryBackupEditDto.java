@@ -1,13 +1,16 @@
 package net.artux.pdanetwork.models.quest;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import net.artux.pdanetwork.entity.quest.StoryType;
 
 @Data
 public class StoryBackupEditDto {
 
+    @NotNull
+    private Long storyId;
+
+    @NotBlank
     private String comment;
-    private boolean archive;
-    private StoryType type;
 
 }

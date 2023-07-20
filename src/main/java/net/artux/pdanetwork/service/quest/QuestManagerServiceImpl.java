@@ -46,16 +46,22 @@ public class QuestManagerServiceImpl implements QuestManagerService {
     private final QuestBackupService questBackupService;
 
     @PostConstruct
-    public void initFromR2() {
+    public void init() {
+        if (!readFromR2().isSuccess())
+            readFromGit();
+    }
+
+    public Status readFromR2() {
         List<Story> stories = questBackupService.getPublicStories();
         questService.reloadPublicStories(stories);
         logger.info("Истории из R2, количество: {}", stories.size());
-        if (stories.size() == 0)
-            downloadStories();
+        if (stories.isEmpty())
+            return new Status(false, "Истории из R2, количество: " + 0);
+        return new Status(true, "Истории из R2, количество: " + stories.size());
     }
 
     @AdminAccess
-    public Status downloadStories() {
+    public Status readFromGit() {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();

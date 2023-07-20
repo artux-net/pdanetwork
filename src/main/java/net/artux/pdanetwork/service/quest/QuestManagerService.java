@@ -5,8 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface QuestManagerService {
 
-    Status downloadStories();
+    Status readFromGit();
 
     Status uploadStories(MultipartFile storiesArchive);
 
+    Status readFromR2();
 }

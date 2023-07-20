@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Хранилище историй", description = "Доступен с роли писателя")
+@Tag(name = "Хранилище историй", description = "Актуальными истории считаются те, которые публичны и не являются архивными")
 @RequestMapping("/api/v1/admin/quest/storage")
 @CreatorAccess
 @RequiredArgsConstructor
@@ -36,24 +36,25 @@ public class QuestStorageController {
 
     @PostMapping("/upload")
     @Operation(summary = "Загрузить историю в хранилище", description = "Предыдущая с этим id станет архивной")
-    public StoryBackupDto uploadPublicStory(@Valid @RequestBody Story story, @RequestParam("message") String message, @RequestParam("type") StoryType type) {
-        return backupService.saveStory(story, type, message);
+    public StoryBackupDto uploadPublicStory(@Valid @RequestBody Story story, @RequestParam("message") String message) {
+        return backupService.saveStory(story, message);
     }
 
     @GetMapping("/all")
     @Operation(summary = "Получить все истории по типу", description = "Может только модератор, надо в админку")
     public ResponsePage<StoryBackupDto> getAllBackups(@Valid @ParameterObject QueryPage page,
+                                                      @RequestParam(value = "storyId", required = false) Long storyId,
                                                       @RequestParam(value = "type", defaultValue = "PUBLIC") StoryType type,
                                                       @RequestParam(value = "archive", defaultValue = "false") boolean archive) {
-        return backupService.getAllBackups(type, archive, page);
+        return backupService.getAllBackups(storyId, type, archive, page);
     }
 
     @GetMapping
-    @Operation(summary = "Истории юзера", description = "Доступен с роли писателя")
+    @Operation(summary = "Истории юзера")
     public ResponsePage<StoryBackupDto> getMyBackups(@Valid @ParameterObject QueryPage page,
-                                                     @RequestParam(value = "type", defaultValue = "PRIVATE") StoryType type,
-                                                     @RequestParam(value = "archive", defaultValue = "false") boolean archive) {
-        return backupService.getUserBackups(type, page, archive);
+                                                     @RequestParam(value = "storyId", required = false) Long storyId,
+                                                     @RequestParam(value = "archive", required = false, defaultValue = "false") boolean archive) {
+        return backupService.getUserBackups(storyId, page, archive);
     }
 
     @GetMapping(value = "/{id}")
@@ -62,8 +63,20 @@ public class QuestStorageController {
         return backupService.getBackup(id);
     }
 
+    @PutMapping(value = "/{id}/type")
+    @Operation(summary = "Изменить тип, админ может публиковать, писатель только в сообщество, юзер никак")
+    public StoryBackupDto updateType(@PathVariable UUID id, @RequestParam StoryType type) {
+        return backupService.changeType(id, type);
+    }
+
+    @PutMapping(value = "/{id}/archive")
+    @Operation(summary = "Изменить архивность")
+    public StoryBackupDto makeArchive(@PathVariable UUID id, @RequestParam boolean archive) {
+        return backupService.makeArchive(id, archive);
+    }
+
     @PutMapping(value = "/{id}")
-    @Operation(summary = "Обновить информацию о истории в хранилище", description = "Модератор может обновить любую, писатель только свои")
+    @Operation(summary = "Обновить информацию о истории в хранилище", description = "Модератор может обновить любую, юзер только свои")
     public StoryBackupDto updateStory(@PathVariable UUID id, @RequestBody @Valid StoryBackupEditDto dto) {
         return backupService.update(id, dto);
     }

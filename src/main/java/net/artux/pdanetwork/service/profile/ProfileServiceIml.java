@@ -78,9 +78,11 @@ public class ProfileServiceIml implements ProfileService {
         user.setName(query);
         user.setEmail(query);
 
-        ExampleMatcher matcher = ExampleMatcher.matchingAny()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withIgnoreCase("email", "nickname", "name", "login");
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("nickname", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
         Example<UserEntity> example = Example.of(user, matcher);
 
@@ -100,9 +102,14 @@ public class ProfileServiceIml implements ProfileService {
         user.setChatBan(exampleDto.isChatBan());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                .withIgnoreCase("email", "nickname", "name", "avatar", "login", "role", "gang")
-                .withMatcher("chatBan", ExampleMatcher.GenericPropertyMatchers.exact());
+                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("nickname", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("chatBan", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("role", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withMatcher("gang", ExampleMatcher.GenericPropertyMatchers.exact())
+                .withIgnoreNullValues();
 
         Example<UserEntity> example = Example.of(user, matcher);
         return ResponsePage.of(userRepository.findAll(example, pageService.getPageable(queryPage))
