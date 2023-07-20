@@ -37,7 +37,7 @@ public class SellerController {
         return sellerService.getSellers();
     }
 
-    @Operation(summary = "Продать или купить предмет заданному продавцу в количестве quantity")
+    @Operation(summary = "Сделка с продавцом")
     @PostMapping("/{sellerId}/{operationType}/{itemId}")
     public Status actionWithItem(@PathVariable OperationType operationType, @PathVariable long sellerId,
                                  @PathVariable UUID itemId, @RequestParam int quantity) {
