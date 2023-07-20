@@ -3,12 +3,16 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.seller.Seller;
-import net.artux.pdanetwork.models.seller.SellerCreateDto;
+import net.artux.pdanetwork.models.seller.SellerAdminDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.models.seller.SellerMapper;
 import net.artux.pdanetwork.models.story.StoryMapper;
@@ -71,8 +75,8 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SellerDto> getSellers() {
-        return sellerRepository.findAll().stream().map(sellerMapper::dto).collect(Collectors.toList());
+    public List<SellerAdminDto> getSellers() {
+        return sellerRepository.findAll().stream().map(sellerMapper::adminDto).collect(Collectors.toList());
     }
 
     @Override
@@ -187,7 +191,7 @@ public class SellerServiceIml implements SellerService {
     }
 
     @ModeratorAccess
-    public SellerDto createSeller(SellerCreateDto dto) {
+    public SellerDto createSeller(SellerAdminDto dto) {
         SellerEntity sellerEntity = new SellerEntity();
         sellerEntity.setName(dto.getName());
         sellerEntity.setIcon(dto.getName());
@@ -199,8 +203,8 @@ public class SellerServiceIml implements SellerService {
     }
 
     @ModeratorAccess
-    public SellerDto updateSeller(SellerCreateDto dto) {
-        SellerEntity sellerEntity = sellerRepository.findById(dto.getId()).orElseThrow();
+    public SellerDto updateSeller(Long id, SellerAdminDto dto) {
+        SellerEntity sellerEntity = sellerRepository.findById(id).orElseThrow();
         sellerEntity.setName(dto.getName());
         sellerEntity.setIcon(dto.getName());
         sellerEntity.setImage(dto.getImage());

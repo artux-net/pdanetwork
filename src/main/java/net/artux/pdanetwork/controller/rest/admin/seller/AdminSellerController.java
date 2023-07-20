@@ -3,11 +3,18 @@ package net.artux.pdanetwork.controller.rest.admin.seller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.seller.SellerCreateDto;
+import net.artux.pdanetwork.models.seller.SellerAdminDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.service.items.SellerService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,16 +28,28 @@ public class AdminSellerController {
 
     private final SellerService service;
 
+    @Operation(summary = "Продавец по id")
+    @GetMapping("/{id}")
+    public SellerDto getSeller(@PathVariable long id) {
+        return service.getSeller(id);
+    }
+
+    @Operation(summary = "Продавец по id")
+    @GetMapping("/all")
+    public List<SellerAdminDto> getSellers() {
+        return service.getSellers();
+    }
+
     @PostMapping
-    @Operation(summary = "Создать нового продавца")
-    public SellerDto createSeller(@RequestBody SellerCreateDto dto) {
+    @Operation(summary = "Создание продавца")
+    public SellerDto createSeller(@RequestBody SellerAdminDto dto) {
         return service.createSeller(dto);
     }
 
-    @PutMapping
-    @Operation(summary = "Обновить продавца")
-    public SellerDto updateSeller(@RequestBody SellerCreateDto dto) {
-        return service.updateSeller(dto);
+    @PutMapping(value = "/{sellerId}")
+    @Operation(summary = "Обновление продавца")
+    public SellerDto updateSeller(@RequestBody SellerAdminDto dto, @PathVariable Long sellerId) {
+        return service.updateSeller(sellerId, dto);
     }
 
     @PutMapping(value = "/{sellerId}/items")

@@ -149,9 +149,9 @@ public class QuestBackupService extends SimpleS3Service<Story> {
             return currentUser.getRole().getPriority() > Role.CREATOR.getPriority();
     }
 
-    public StoryBackupDto update(StoryBackupEditDto dto) {
-        StoryBackup backup = questRepository.findById(dto.getId()).orElseThrow();
-        if (isUserCanManipulateStory(dto.getId())) {
+    public StoryBackupDto update(UUID id, StoryBackupEditDto dto) {
+        StoryBackup backup = questRepository.findById(id).orElseThrow();
+        if (isUserCanManipulateStory(id)) {
             backup.setMessage(dto.getComment());
             backup.setType(dto.getType());
             backup.setArchive(dto.isArchive());

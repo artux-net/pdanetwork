@@ -3,7 +3,7 @@ package net.artux.pdanetwork.models.seller;
 import lombok.Data;
 
 @Data
-public class SellerCreateDto {
+public class SellerAdminDto {
 
     private long id;
     private String name;

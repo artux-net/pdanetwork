@@ -15,6 +15,8 @@ public abstract class SellerMapper {
 
     public abstract SellerDto dto(SellerEntity entity);
 
+    public abstract SellerAdminDto adminDto(SellerEntity entity);
+
     public SellerEntity entity(Seller seller) {
         SellerEntity sellerEntity = new SellerEntity();
         sellerEntity.setId(seller.getId());

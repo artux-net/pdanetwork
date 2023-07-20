@@ -36,6 +36,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST = {
             "/api/v1/user/register",
+            "/api/v1/user/reset/pass",
             "/mailing/**",
             "/confirmation/register",
             "/reset",
