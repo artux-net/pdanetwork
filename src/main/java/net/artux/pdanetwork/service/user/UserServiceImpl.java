@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
     private final Timer timer = new Timer();
     private final Environment environment;
@@ -102,7 +103,7 @@ public class UserServiceImpl implements UserService {
 
     private String generateToken(RegisterUserDto user) {
         String token = randomString.nextString();
-        logger.info("Add to register wait list with token: " + token + ", " + user.getEmail());
+        logger.info("Пользователь {} добавлен в лист ожидания регистрации с токеном {}, токен возможно использовать через сваггер.", user.getEmail(), token);
         registerUserMap.put(token, user);
         timer.schedule(new TimerTask() {
             @Override
@@ -186,7 +187,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(adminEditUserDto.getRole());
         user.setGang(adminEditUserDto.getGang());
         user.setChatBan(adminEditUserDto.isChatBan());
-        logger.info("User {} updated by {}", userMapper.dto(user), getUserById().getLogin());
+        logger.info("Пользователь {} обновлен модератором {}", userMapper.dto(user), getUserById().getLogin());
 
         return userMapper.adminDto(userRepository.save(user));
     }
@@ -212,7 +213,10 @@ public class UserServiceImpl implements UserService {
             userEntity.setAvatar(user.getAvatar());
             userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(userEntity);
-            status.setDescription("Данные изменены");
+
+            String message = "Обновлен пользователь " + user.getLogin();
+            status.setDescription(message);
+            return status;
         }
 
         return status;

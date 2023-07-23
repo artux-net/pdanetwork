@@ -8,97 +8,109 @@
 <body>
 <main>
     <div class="container item-container">
-        <p class="p-header"><b th:text="${base.title}"></b></p>
+        <p class="p-header">
+            <b th:text="${base.title}"></b>
+        </p>
         <table>
-        <tbody>
+            <tbody>
             <tr>
                 <td>
-                    <img th:src="@{'/base/items/icons/' + ${base.icon}}" class="img-responsive" align="left" vspace="5" hspace="5">
+                    <img th:src="@{'/base/items/icons/' + ${base.icon}}" class="img-responsive" align="left" vspace="5"
+                         hspace="5">
                     <p class="p-description" th:text="${base.description}"></p>
                     <i class="i-item" th:text="${base.content}"></i>
                 </td>
             </tr>
-        </tbody>
-    </table>
-    <h4>Свойства</h4>
-    <table class="table">
-        <tbody id="features">
-          <tr>
-            <td>Цена: <span th:text="${item.price} + ' RU'"></span></td>
-            <td>Вес: <span th:text="${item.weight} + ' RU'"></span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div th:if="${base.type.name() == 'ARMOR'}">
-      <h4>Характеристики</h4>
-      <table class="table">
-        <tbody id="features">
-          <tr>
-            <td>Ожог: <span th:text="${item.thermalProtection}"></span></td>
-          </tr>
-          <tr>
-            <td>Электрошок: <span th:text="${item.electricProtection}"></span></td>
-          </tr>
-          <tr>
-            <td>Урон: <span th:text="${item.damageProtection}"></span></td>
-          </tr>
-          <tr>
-            <td>Пси: <span th:text="${item.psyProtection}"></span></td>
-          </tr>
-          <tr>
-            <td>Хим. Ожог: <span th:text="${item.chemicalProtection}"></span></td>
-          </tr>
-          <tr>
-            <td>Радиация: <span th:text="${item.radioProtection}"></span></td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      <div th:if="${base.type.name() == 'RIFLE' || base.type.name() == 'PISTOL'}">
-      <h4>Характеристики</h4>
-      <table class="table">
-        <tbody id="features">
-          <tr>
-            <td>Точность: <span th:text="${item.precision}"></span></td>
-          </tr>
-          <tr>
-            <td>Скорострельность: <span th:text="${item.speed}"></span></td>
-          </tr>
-          <tr>
-            <td>Урон: <span th:text="${item.damage}"></span></td>
-          </tr>
-          <tr>
-            <td>Патрон в магазине: <span th:text="${item.bulletQuantity}"></span></td>
-          </tr>
-        </tbody>
-      </table>
-      </div>
-      <div class="columns">
-        <div class="column col-6" th:if="${base.advantages != null && base.advantages.size() > 0}">
-        <h4>Достоинства</h4>
-        <table class="table">
-          <tbody id="features">
-            <th:block th:each="i : ${base.advantages}">
-            <tr>
-              <td><span th:text="${i}"></span></td>
-            </tr>
-            </th:block>
-          </tbody>
+            </tbody>
         </table>
-      </div>
-      <div class="column col-6" th:if="${base.disadvantages != null && base.disadvantages.size() > 0}">
-        <h4>Недостатки</h4>
+        <h4>Свойства</h4>
         <table class="table">
-          <tbody id="features">
-            <th:block th:each="i : ${base.disadvantages}">
+            <tbody id="features">
             <tr>
-              <td><span th:text="${i}"></span></td>
+                <td>Цена: <span th:text="${item.price} + ' RU'"></span></td>
+                <td>Вес: <span th:text="${item.weight} + ' кг.'"></span></td>
             </tr>
-          </th:block>
-          </tbody>
+            </tbody>
         </table>
-      </div>
-      </div>
+        <div th:if="${base.type.name() == 'ARMOR'}">
+            <h4>Характеристики</h4>
+            <table class="table">
+                <tbody id="features">
+                <tr>
+                    <td>Ожог: <span th:text="${item.thermalProtection}"></span></td>
+                </tr>
+                <tr>
+                    <td>Электрошок: <span th:text="${item.electricProtection}"></span></td>
+                </tr>
+                <tr>
+                    <td>Урон: <span th:text="${item.damageProtection}"></span></td>
+                </tr>
+                <tr>
+                    <td>Пси: <span th:text="${item.psyProtection}"></span></td>
+                </tr>
+                <tr>
+                    <td>Хим. Ожог: <span th:text="${item.chemicalProtection}"></span></td>
+                </tr>
+                <tr>
+                    <td>Радиация: <span th:text="${item.radioProtection}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${base.type.name() == 'RIFLE' || base.type.name() == 'PISTOL'}">
+            <h4>Характеристики</h4>
+            <table class="table">
+                <tbody id="features">
+                <tr>
+                    <td>Точность: <span th:text="${item.precision}"></span></td>
+                </tr>
+                <tr>
+                    <td>Скорострельность: <span th:text="${item.speed}"></span></td>
+                </tr>
+                <tr>
+                    <td>Урон: <span th:text="${item.damage}"></span></td>
+                </tr>
+                <tr>
+                    <td>
+                        Патрон:
+                        <a th:href="@{'/enc/item/' + ${bullet.baseId}}">
+                            <span><b th:text="${bullet.title}"></b></span>
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Патрон в магазине: <span th:text="${item.bulletQuantity}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="columns">
+            <div class="column col-6" th:if="${base.advantages != null && base.advantages.size() > 0}">
+                <h4>Достоинства</h4>
+                <table class="table">
+                    <tbody id="features">
+                    <th:block th:each="i : ${base.advantages}">
+                        <tr>
+                            <td><span th:text="${i}"></span></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column col-6" th:if="${base.disadvantages != null && base.disadvantages.size() > 0}">
+                <h4>Недостатки</h4>
+                <table class="table">
+                    <tbody id="features">
+                    <th:block th:each="i : ${base.disadvantages}">
+                        <tr>
+                            <td><span th:text="${i}"></span></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </main>
 </body>

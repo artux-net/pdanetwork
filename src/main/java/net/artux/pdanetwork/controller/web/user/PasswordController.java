@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static net.artux.pdanetwork.controller.web.user.PasswordController.RESET_PASSWORD_URL;
+
 @Controller
 @RequiredArgsConstructor
 @Hidden
-@RequestMapping("/reset/password")
+@RequestMapping(RESET_PASSWORD_URL)
 public class PasswordController {
-
+  public final static String RESET_PASSWORD_URL = "/reset/password";
   private final ResetService resetService;
 
   @GetMapping

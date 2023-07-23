@@ -11,6 +11,8 @@ import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.RandomString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,9 @@ public class ResetServiceImpl implements ResetService {
     private final EmailService emailService;
     private final UserRepository userRepository;
     private final StoryMapper storyMapper;
+    private final Logger logger = LoggerFactory.getLogger(ResetServiceImpl.class);
     private final RandomString randomString = new RandomString();
+
     private final Timer timer = new Timer();
 
     private final UserMapper userMapper;
@@ -63,10 +67,20 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     public Status changePassword(String token, String password) {
-        UserEntity userEntity = userService.getUserByEmail(requests.get(token));
+        String email = requests.get(token);
+        UserEntity userEntity = userService.getUserByEmail(email);
         RegisterUserDto registerUser = userMapper.regUser(userEntity);
         registerUser.setPassword(password);
-        return userService.editUser(registerUser);
+
+        logger.info("Изменение пароля для пользователя: {}", userEntity.getLogin());
+        logger.info("Хэш старого пароля: {}", userEntity.getPassword());
+
+        Status status = userService.editUser(registerUser);
+        userEntity = userService.getUserByEmail(email);
+
+        logger.info("Хэш нового пароля: {}", userEntity.getPassword());
+
+        return status;
     }
 
     @Override

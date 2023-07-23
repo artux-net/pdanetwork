@@ -768,30 +768,6 @@
   },
   {
     "disadvantages": null,
-    "price": "6",
-    "icon": "12x76jekan.gif",
-    "weight": "0.03",
-    "advantages": null,
-    "id": 36,
-    "type": "BULLET",
-    "title": "12х76 мм Жекан",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
-    "price": "10",
-    "icon": "12x76drot.gif",
-    "weight": "0.03",
-    "advantages": null,
-    "id": 37,
-    "type": "BULLET",
-    "title": "12х76 мм Дротик",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
     "price": "12",
     "icon": "5-45x39.gif",
     "weight": "0.032",
@@ -799,18 +775,6 @@
     "id": 38,
     "type": "BULLET",
     "title": "5.45х39 мм",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
-    "price": "13",
-    "icon": "5-45x39AP.gif",
-    "weight": "0.032",
-    "advantages": null,
-    "id": 39,
-    "type": "BULLET",
-    "title": "5.45х39 мм АР",
     "content": null,
     "description": null
   },
@@ -828,18 +792,6 @@
   },
   {
     "disadvantages": null,
-    "price": "14",
-    "icon": "5-56x45AP.gif",
-    "weight": "0.033",
-    "advantages": null,
-    "id": 41,
-    "type": "BULLET",
-    "title": "5.56х45 мм АР",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
     "price": "15",
     "icon": "9x39-SP-6.gif",
     "weight": "0.07",
@@ -852,18 +804,6 @@
   },
   {
     "disadvantages": null,
-    "price": "17",
-    "icon": "9x39-SP-5.gif",
-    "weight": "0.05",
-    "advantages": null,
-    "id": 43,
-    "type": "BULLET",
-    "title": "9х39 СП-5",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
     "price": "31",
     "icon": "7-62x54PP.gif",
     "weight": "0.023",
@@ -871,18 +811,6 @@
     "id": 44,
     "type": "BULLET",
     "title": "7.62х54 мм АР",
-    "content": null,
-    "description": null
-  },
-  {
-    "disadvantages": null,
-    "price": "33",
-    "icon": "7-62x54-7H1.gif",
-    "weight": "0.01",
-    "advantages": null,
-    "id": 45,
-    "type": "BULLET",
-    "title": "7.62х54 мм 7Н14",
     "content": null,
     "description": null
   },
