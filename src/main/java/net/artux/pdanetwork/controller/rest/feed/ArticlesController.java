@@ -28,7 +28,7 @@ public class ArticlesController {
 
     @GetMapping
     @Operation(summary = "Новости списком с пагинацией")
-    public ResponsePage<ArticleSimpleDto> getPageArticles(@Valid QueryPage page, @RequestParam("tags") Set<String> tags) {
+    public ResponsePage<ArticleSimpleDto> getPageArticles(@Valid QueryPage page, @RequestParam(name = "tags", required = false) Set<String> tags) {
         return articleService.getPageArticles(page, tags);
     }
 

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,6 +64,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage queryPage, Set<String> tags) {
+        if (tags == null)
+            tags = Collections.emptySet();
         Page<ArticleEntity> page = articleRepository
                 .findAllByTagsIn(tags, pageService.getPageable(queryPage));
         return pageService.mapDataPageToResponsePage(page, feedMapper.dto(page.getContent()));
