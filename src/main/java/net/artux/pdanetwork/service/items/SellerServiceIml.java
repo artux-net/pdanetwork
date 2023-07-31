@@ -193,6 +193,7 @@ public class SellerServiceIml implements SellerService {
     @ModeratorAccess
     public SellerDto createSeller(SellerAdminDto dto) {
         SellerEntity sellerEntity = new SellerEntity();
+        sellerEntity.setId(dto.getId());
         sellerEntity.setName(dto.getName());
         sellerEntity.setIcon(dto.getName());
         sellerEntity.setImage(dto.getImage());
@@ -206,7 +207,7 @@ public class SellerServiceIml implements SellerService {
     public SellerDto updateSeller(Long id, SellerAdminDto dto) {
         SellerEntity sellerEntity = sellerRepository.findById(id).orElseThrow();
         sellerEntity.setName(dto.getName());
-        sellerEntity.setIcon(dto.getName());
+        sellerEntity.setIcon(dto.getIcon());
         sellerEntity.setImage(dto.getImage());
         sellerEntity.setBuyCoefficient(dto.getBuyCoefficient());
         sellerEntity.setSellCoefficient(dto.getSellCoefficient());

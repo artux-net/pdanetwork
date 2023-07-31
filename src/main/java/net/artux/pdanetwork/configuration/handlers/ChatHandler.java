@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatHandler extends CommonHandler {
 
-    public ChatHandler(UserService userService, ObjectMapper objectMapper, MessageMapper messageMapper, ValuesService valuesService, BanService banService, UserMapper userMapper) {
+    public ChatHandler(UserService userService, ObjectMapper objectMapper,
+                       MessageMapper messageMapper, ValuesService valuesService,
+                       BanService banService, UserMapper userMapper) {
         super(userService, objectMapper, messageMapper, valuesService, banService, userMapper);
     }
 

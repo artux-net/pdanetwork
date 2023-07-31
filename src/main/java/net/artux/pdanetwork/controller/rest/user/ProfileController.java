@@ -4,11 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.achievement.AchievementEntity;
+import net.artux.pdanetwork.models.feed.PostDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
+import net.artux.pdanetwork.repository.achievement.RepositoryAchCategoryDto;
+import net.artux.pdanetwork.service.achievement.AchievementService;
+import net.artux.pdanetwork.service.feed.PostService;
 import net.artux.pdanetwork.service.profile.ProfileService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,8 @@ import java.util.UUID;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final PostService postService;
+    private final AchievementService achievementService;
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить профиль пользователя по id")
@@ -41,14 +46,20 @@ public class ProfileController {
 
     @GetMapping("/achievements")
     @Operation(summary = "Получить достижения пользователя")
-    public List<AchievementEntity> getAchievements() {
-        return profileService.getAchievements();
+    public List<RepositoryAchCategoryDto> getAchievements() {
+        return achievementService.getUserAchievements();
     }
 
-    @GetMapping("/achievements/{id}")
+    @GetMapping("/{id}/achievements")
     @Operation(summary = "Получить достижения пользователя по id")
-    public List<AchievementEntity> getAchievements(@PathVariable("id") UUID id) {
-        return profileService.getAchievements(id);
+    public List<RepositoryAchCategoryDto> getAchievements(@PathVariable("id") UUID id) {
+        return achievementService.getUserAchievements(id);
+    }
+
+    @GetMapping("/{id}/posts")
+    @Operation(summary = "Получить достижения пользователя по id")
+    public ResponsePage<PostDto> getPosts(@PathVariable UUID id, @Valid QueryPage page) {
+        return postService.getUserPosts(id, page);
     }
 
     @Operation(summary = "Рейтинг пользователей")

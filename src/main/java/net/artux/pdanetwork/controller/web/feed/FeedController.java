@@ -2,7 +2,7 @@ package net.artux.pdanetwork.controller.web.feed;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.models.feed.ArticleFullDto;
+import net.artux.pdanetwork.models.feed.ArticleDto;
 import net.artux.pdanetwork.service.feed.ArticleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +27,7 @@ public class FeedController {
 
     @GetMapping("/{id}")
     public String getArticlePage(Model model, @PathVariable UUID id) {
-        ArticleFullDto article = articleService.getArticle(id);
+        ArticleDto article = articleService.getArticle(id);
         model.addAttribute("title", article.title());
         model.addAttribute("content", article.content());
         //model.addAttribute("tags", article.getTags());

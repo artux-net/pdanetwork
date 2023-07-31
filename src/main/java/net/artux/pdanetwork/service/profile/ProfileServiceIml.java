@@ -10,7 +10,7 @@ import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
-import net.artux.pdanetwork.service.achievement.AchievementsService;
+import net.artux.pdanetwork.service.achievement.AchievementServiceImpl;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Example;
@@ -30,7 +30,7 @@ public class ProfileServiceIml implements ProfileService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final AchievementsService achievementsService;
+    private final AchievementServiceImpl achievementServiceImpl;
     private final PageService pageService;
 
     @Override
@@ -50,7 +50,7 @@ public class ProfileServiceIml implements ProfileService {
     @Override
     public List<AchievementEntity> getAchievements(UUID pdaId) {
         UserEntity userEntity = userService.getUserById(pdaId);
-        return achievementsService.getForUser(userEntity);
+        return null; // TODO
     }
 
     @Override
@@ -79,6 +79,10 @@ public class ProfileServiceIml implements ProfileService {
         user.setEmail(query);
 
         ExampleMatcher matcher = ExampleMatcher.matching()
+                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase()
+                .withIgnoreNullValues()
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("nickname", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
@@ -102,14 +106,17 @@ public class ProfileServiceIml implements ProfileService {
         user.setChatBan(exampleDto.isChatBan());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
+                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase()
+                .withIgnoreNullValues()
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("nickname", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("chatBan", ExampleMatcher.GenericPropertyMatchers.exact())
                 .withMatcher("role", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withMatcher("gang", ExampleMatcher.GenericPropertyMatchers.exact())
-                .withIgnoreNullValues();
+                .withMatcher("gang", ExampleMatcher.GenericPropertyMatchers.exact());
 
         Example<UserEntity> example = Example.of(user, matcher);
         return ResponsePage.of(userRepository.findAll(example, pageService.getPageable(queryPage))

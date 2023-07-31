@@ -27,9 +27,10 @@ public class ServiceTestConfiguration {
 
     @Bean
     @Primary
-    public EmailService employeeService() {
+    public EmailService emailService() {
         this.mockMvc = MockMvcBuilders
-                .webAppContextSetup(applicationContext).apply(SecurityMockMvcConfigurers.springSecurity())
+                .webAppContextSetup(applicationContext)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
         return new EmailService() {

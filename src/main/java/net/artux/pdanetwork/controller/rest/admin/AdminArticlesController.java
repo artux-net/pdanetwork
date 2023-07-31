@@ -6,13 +6,21 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleDto;
-import net.artux.pdanetwork.models.feed.ArticleFullDto;
+import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.ArticleService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -25,33 +33,32 @@ public class AdminArticlesController {
     private final ArticleService articleService;
 
     @GetMapping
-    public ResponsePage<ArticleDto> getPageArticles(@Valid QueryPage page) {
-        return articleService.getPageArticles(page);
+    public ResponsePage<ArticleSimpleDto> getPageArticles(@Valid QueryPage page, @RequestParam("tags") Set<String> tags) {
+        return articleService.getPageArticles(page, tags);
     }
 
     @PostMapping("/create")
     @Operation(description = "Создание новой статьи")
-    public ArticleDto addArticle(@Valid @RequestBody ArticleCreateDto createDto) {
-        return articleService.addArticle(createDto);
+    public ArticleSimpleDto addArticle(@Valid @RequestBody ArticleCreateDto createDto) {
+        return articleService.createArticle(createDto);
     }
 
     @PostMapping("/edit/{id}")
     @Operation(description = "Редактирование статьи")
-    public ArticleDto getArticle(@PathVariable UUID id, @Valid @RequestBody ArticleCreateDto createDto) {
+    public ArticleSimpleDto getArticle(@PathVariable UUID id, @Valid @RequestBody ArticleCreateDto createDto) {
         return articleService.editArticle(id, createDto);
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Получение статьи в виде JSON")
-    public ArticleFullDto getArticle(@PathVariable UUID id) {
+    public ArticleDto getArticle(@PathVariable UUID id) {
         return articleService.getArticle(id);
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(description = "Удаление статьи")
     public boolean deleteArticle(@PathVariable UUID id) {
-        articleService.deleteArticle(id);
-        return true;
+        return articleService.deleteArticle(id);
     }
 
 }

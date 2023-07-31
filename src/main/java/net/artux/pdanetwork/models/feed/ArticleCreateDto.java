@@ -6,9 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
@@ -18,7 +16,7 @@ public class ArticleCreateDto {
     private String title;
     @Pattern(regexp = ".*?(gif|jpeg|png|jpg|bmp)", message = "Неправильный формат ссылки на изображение")
     private String image;
-    private List<String> tags;
+    private Set<String> tags;
     @NotBlank(message = "Описание не может быть пустым")
     @Size(min = 0, max = 250, message = "Описание слишком большое")
     private String description;

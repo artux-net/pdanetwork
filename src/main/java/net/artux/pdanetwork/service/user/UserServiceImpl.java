@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.service.user;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -45,43 +44,20 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
     private final Timer timer = new Timer();
     private final Environment environment;
     private final RandomString randomString = new RandomString();
 
-    @PostConstruct
-    private void registerFirstUsers() {
-        String email = environment.getProperty("administrator.email");
-        String login = environment.getProperty("administrator.login");
-        String name = environment.getProperty("administrator.name");
-        String nickname = environment.getProperty("administrator.nickname");
 
-        String password = randomString.nextString();
-
-        if (userRepository.count() < 1) {
-            saveUser(RegisterUserDto.builder()
-                    .email(email)
-                    .login(login)
-                    .name(name)
-                    .password(password)
-                    .nickname(nickname)
-                    .avatar("1").build(), Role.ADMIN);
-            logger.info("""
-                    There are no users, the first user with a admin role created.\s
-                     Email: {}\s
-                     Login: {}\s
-                     Password: {}\s
-                    """, email, login, password);
-        }
-
-    }
 
     @Override
     public Status registerUser(RegisterUserDto newUser) {

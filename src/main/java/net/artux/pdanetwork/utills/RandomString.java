@@ -1,10 +1,13 @@
 package net.artux.pdanetwork.utills;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
+@Component
 public class RandomString {
 
     /**

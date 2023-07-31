@@ -1,26 +1,27 @@
 package net.artux.pdanetwork.service.feed;
 
-import net.artux.pdanetwork.entity.feed.ArticleEntity;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleDto;
-import net.artux.pdanetwork.models.feed.ArticleFullDto;
+import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface ArticleService {
 
-    ArticleFullDto getArticle(UUID id);
+    ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage page, Set<String> tags);
 
-    void addArticle(ArticleEntity article);
+    ArticleDto getArticle(UUID id);
 
-    ArticleDto addArticle(ArticleCreateDto createDto);
+    ArticleSimpleDto createArticle(ArticleCreateDto createDto);
 
-    void deleteArticle(UUID id);
+    ArticleSimpleDto editArticle(UUID id, ArticleCreateDto createDto);
 
-    ResponsePage<ArticleDto> getPageArticles(QueryPage page);
+    boolean deleteArticle(UUID id);
 
-    ArticleDto editArticle(UUID id, ArticleCreateDto createDto);
+    boolean likeArticle(UUID id);
 
+    Set<String> getTags();
 }
