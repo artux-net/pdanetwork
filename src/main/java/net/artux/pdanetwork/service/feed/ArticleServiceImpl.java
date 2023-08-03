@@ -64,10 +64,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage queryPage, Set<String> tags) {
-        if (tags == null)
-            tags = Collections.emptySet();
-        Page<ArticleEntity> page = articleRepository
-                .findAllByTagsIn(tags, pageService.getPageable(queryPage));
+        Page<ArticleEntity> page;
+        if(tags == null || tags.isEmpty())
+            page = articleRepository
+                    .findAllByTagsIn(tags, pageService.getPageable(queryPage));
+       else
+            page = articleRepository.findAll(pageService.getPageable(queryPage));
+
         return pageService.mapDataPageToResponsePage(page, feedMapper.dto(page.getContent()));
     }
 

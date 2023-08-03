@@ -16,7 +16,8 @@ public interface PostRepository extends JpaRepository<PostEntity, UUID> {
     @Query("select p from PostEntity p where p.author.id = ?1")
     Page<PostEntity> findAllByAuthor(UUID id, Pageable pageable);
 
-    @Query("select p from PostEntity p where p.published > ?1 order by count(p.likes)")
-    Page<PostEntity> findAllRecent(Instant timestamp, Pageable pageable);
+    Page<PostEntity> findAllByPublishedIsAfter(Instant timestamp, Pageable pageable);
 
+    @Override
+    Page<PostEntity> findAll(Pageable pageable);
 }

@@ -16,6 +16,7 @@ import net.artux.pdanetwork.entity.CommentableEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @ToString(callSuper = true)
@@ -44,6 +45,8 @@ public class PostEntity extends CommentableEntity {
     private Set<UserEntity> likes;
 
     public PostEntity() {
+        super();
+        likes = new HashSet<>();
         setPublished(Instant.now());
     }
 

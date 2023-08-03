@@ -13,6 +13,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.artux.pdanetwork.entity.feed.CommentEntity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,7 +21,6 @@ import java.util.Set;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @MappedSuperclass
 public abstract class CommentableEntity extends BaseEntity {
 
@@ -31,6 +31,10 @@ public abstract class CommentableEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
     protected Set<CommentEntity> comments;
+
+    protected CommentableEntity() {
+        comments = new HashSet<>();
+    }
 
     public void addComment(CommentEntity commentEntity) {
         comments.add(commentEntity);

@@ -9,6 +9,7 @@ import net.artux.pdanetwork.models.feed.PostDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.PostService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,15 +28,15 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/posts/recent")
-    @Operation(summary = "Актуальные посты, сорт по кол-ву лайков")
-    public ResponsePage<PostDto> getRecentPosts(@Valid QueryPage page) {
+    @GetMapping("/posts")
+    @Operation(summary = "Актуальные посты, сортить по лайкам")
+    public ResponsePage<PostDto> getRecentPosts(@Valid @ParameterObject QueryPage page) {
         return postService.getRecentPosts(page);
     }
 
     @GetMapping("/posts/all")
-    @Operation(summary = "Актуальные посты")
-    public ResponsePage<PostDto> getAllPosts(@Valid QueryPage page) {
+    @Operation(summary = "Все посты")
+    public ResponsePage<PostDto> getAllPosts(@Valid @ParameterObject QueryPage page) {
         return postService.getAllPosts(page);
     }
 

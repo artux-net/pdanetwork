@@ -10,6 +10,7 @@ import net.artux.pdanetwork.models.feed.CommentType;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.CommentService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +37,7 @@ public class CommentController {
 
     @GetMapping("/{type}/{id}/all")
     @Operation(summary = "Комментарии поста или статьи")
-    public ResponsePage<CommentDto> getComments(@PathVariable CommentType type, @PathVariable UUID id, @Valid QueryPage page) {
+    public ResponsePage<CommentDto> getComments(@PathVariable CommentType type, @PathVariable UUID id, @Valid @ParameterObject QueryPage page) {
         return commentService.getComments(type, id, page);
     }
 

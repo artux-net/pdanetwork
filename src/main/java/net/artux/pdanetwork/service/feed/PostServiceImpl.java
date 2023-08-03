@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponsePage<PostDto> getRecentPosts(QueryPage page) {
-        return ResponsePage.of(repository.findAllRecent(Instant.now().minus(7, ChronoUnit.DAYS), pageService.getPageable(page)).map(feedMapper::dto));
+        return ResponsePage.of(repository.findAllByPublishedIsAfter(Instant.now().minus(7, ChronoUnit.DAYS), pageService.getPageable(page)).map(feedMapper::dto));
     }
 
     @Override
