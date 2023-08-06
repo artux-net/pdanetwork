@@ -66,10 +66,10 @@ public class ArticleServiceImpl implements ArticleService {
     public ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage queryPage, Set<String> tags) {
         Page<ArticleEntity> page;
         if(tags == null || tags.isEmpty())
+            page = articleRepository.findAll(pageService.getPageable(queryPage));
+       else
             page = articleRepository
                     .findAllByTagsIn(tags, pageService.getPageable(queryPage));
-       else
-            page = articleRepository.findAll(pageService.getPageable(queryPage));
 
         return pageService.mapDataPageToResponsePage(page, feedMapper.dto(page.getContent()));
     }

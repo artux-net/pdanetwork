@@ -33,7 +33,7 @@ public class AdminArticlesController {
     private final ArticleService articleService;
 
     @GetMapping
-    public ResponsePage<ArticleSimpleDto> getPageArticles(@Valid QueryPage page, @RequestParam("tags") Set<String> tags) {
+    public ResponsePage<ArticleSimpleDto> getPageArticles(@Valid QueryPage page, @RequestParam(value = "tags", required = false) Set<String> tags) {
         return articleService.getPageArticles(page, tags);
     }
 

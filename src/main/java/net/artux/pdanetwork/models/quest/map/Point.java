@@ -15,7 +15,9 @@ public class Point {
     private String name;
     private String pos;
     private HashMap<String, String> data;
+    public HashMap<String, List<String>> actions;
     public HashMap<String, List<String>> condition;
+
 
     private Editor editor;
 
