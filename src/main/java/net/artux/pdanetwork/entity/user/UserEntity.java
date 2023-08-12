@@ -263,4 +263,10 @@ public class UserEntity extends BaseEntity {
     public StoryStateEntity getCurrentStoryState() {
         return getStoryStates().stream().filter(StoryStateEntity::isCurrent).findFirst().orElse(null);
     }
+
+    public void addAchievement(Optional<AchievementEntity> byId) {
+        if (byId.isEmpty())
+            return;
+        achievements.add(byId.get());
+    }
 }

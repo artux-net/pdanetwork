@@ -19,14 +19,14 @@ public interface AchievementService {
 
     AchCategoryDto createCategory(AchCategoryCreateDto createDto);
 
-    AchCategoryDto updateCategory(UUID id, AchCategoryCreateDto createDto);
+    AchCategoryDto updateCategory(String name, AchCategoryCreateDto createDto);
 
-    boolean deleteCategory(UUID id);
+    boolean deleteCategory(String name);
 
-    AchDto createAchievement(UUID categoryId, AchievementCreateDto createDto);
+    AchDto createAchievement(String name, AchievementCreateDto createDto);
 
-    AchDto updateAchievement(UUID id, AchievementCreateDto createDto);
+    AchDto updateAchievement(String name, AchievementCreateDto createDto);
 
-    boolean deleteAchievement(UUID id);
+    boolean deleteAchievement(String name);
 
 }

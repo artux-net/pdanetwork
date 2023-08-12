@@ -24,4 +24,5 @@ public interface ArticleService {
     boolean likeArticle(UUID id);
 
     Set<String> getTags();
+
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface AchievementCategoryRepository extends JpaRepository<AchievementCategoryEntity, UUID> {
+public interface AchievementCategoryRepository extends JpaRepository<AchievementCategoryEntity, String> {
 
     @Query("select c,  (?1 member of a.users) as enabled from AchievementCategoryEntity c join AchievementEntity a on a.category = c")
     List<RepositoryAchCategoryDto> findAllByUser(UserEntity user);

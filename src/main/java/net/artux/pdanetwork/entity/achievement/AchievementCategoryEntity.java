@@ -2,6 +2,7 @@ package net.artux.pdanetwork.entity.achievement;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -16,10 +17,11 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "achievement_category")
-public class AchievementCategoryEntity extends BaseEntity {
+public class AchievementCategoryEntity {
 
-    private String title;
+    @Id
     private String name;
+    private String title;
     private String image;
     private String description;
 

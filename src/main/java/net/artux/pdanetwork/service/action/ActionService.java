@@ -10,13 +10,16 @@ import net.artux.pdanetwork.entity.user.ParameterEntity;
 import net.artux.pdanetwork.entity.user.StoryStateEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
+import net.artux.pdanetwork.models.command.ServerCommand;
 import net.artux.pdanetwork.models.note.NoteCreateDto;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 import net.artux.pdanetwork.models.security.SecurityUser;
 import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.models.user.gang.Gang;
+import net.artux.pdanetwork.repository.achievement.AchievementRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
+import net.artux.pdanetwork.service.achievement.AchievementService;
 import net.artux.pdanetwork.service.items.ItemService;
 import net.artux.pdanetwork.service.note.NoteService;
 import net.artux.pdanetwork.service.quest.QuestService;
@@ -45,6 +48,7 @@ public class ActionService {
     private final NoteService noteService;
     private final StoryMapper storyMapper;
     private final UserRepository userRepository;
+    private final AchievementRepository achievementRepository;
 
     private final Timer timer = new Timer();
 
@@ -64,7 +68,7 @@ public class ActionService {
     protected void operateActions(Map<String, List<String>> actions, UserEntity userEntity) {
         if (actions == null || actions.isEmpty())
             return;
-        logger.info("Got commands for {} : {}", userEntity.getLogin(), actions.toString());
+        logger.info("Commands for {} : {}", userEntity.getLogin(), actions);
         for (String command : actions.keySet()) {
             try {
                 List<String> params = actions.get(command);
@@ -81,40 +85,52 @@ public class ActionService {
                 } else
                     doCommand(command, params, userEntity);
             } catch (Exception e) {
-                logger.error("ActionService", e);
+                logger.error("Error executing command {} for user {}", e, userEntity.getLogin());
             }
         }
     }
 
     public void doCommand(String command, List<String> params, UserEntity userEntity) {
-        switch (command) {
-            case "add":
+        ServerCommand enumServerCommand = ServerCommand.valueOf(command);
+        switch (enumServerCommand) {
+            case ADD -> {
                 for (String value : params) {
                     String[] param = value.split(":");
-                    if (param[0].matches("[0-9]+[\\\\.]?[0-9]*")) {
+                    if (isNumber(param[0])) {
                         long baseId = Long.parseLong(param[0]);
                         int quantity = Integer.parseInt(param[1]);
                         itemsService.addItem(userEntity, baseId, quantity);
                     } else if (param.length == 2) {
                         //add_value
                         addValue(userEntity, param[0], Integer.parseInt(param[1]));
+                    } else if (param[0].contains("relation")) {
+                        //"+":["relation_1:5"]
+                        int group = Integer.parseInt(param[0].split("_")[1]);
+                        GangRelationEntity gangRelation = userEntity.getGangRelation();
+                        Gang gang = Gang.getById(group);
+                        if (gang != null)
+                            gangRelation.addRelation(gang, Integer.parseInt(param[1]));
                     } else {
                         //add_param
                         addKey(userEntity, value);
                     }
                 }
-                break;
-            case "add_param":
+            }
+
+            //@Deprecated
+            /*case "add_param":
                 for (String value : params) {
                     addKey(userEntity, value);
                 }
                 break;
+                //@Deprecated
             case "add_value":
                 for (String value : params) {
                     String[] values = value.split(":");
                     addValue(userEntity, values[0], Integer.valueOf(values[1]));
                 }
                 break;
+                //@Deprecated
             case "add_items":
                 for (String value : params) {
                     String[] values = value.split(":");
@@ -124,40 +140,37 @@ public class ActionService {
                         itemsService.addItem(userEntity, baseId, quantity);
                     }
                 }
-                break;
-            case "remove":
-                for (String pass : params) {
-                    String[] values = pass.split(":");
-                    if (values.length == 2) {
-                        int baseId = Integer.parseInt(values[0]);
-                        int quantity = Integer.parseInt(values[1]);
-                        itemsService.deleteItem(userEntity, baseId, quantity);
-                    } else
-                        userEntity.getParameters()
-                                .removeIf(parameterEntity -> parameterEntity.getKey().equals(pass));
-                }
-                break;
-            case "=":
-                for (String pass : params) {
-                    String[] values = pass.split(":");
-                    setValue(userEntity, values[0], Integer.valueOf(values[1]));
-                }
-                break;
-            case "+":
+                break;*/
+            case REMOVE -> {
                 for (String pass : params) {
                     String[] values = pass.split(":");
                     if (values[0].contains("relation")) {
-                        //"+":["relation_1:5"]
                         int group = Integer.parseInt(values[0].split("_")[1]);
                         GangRelationEntity gangRelation = userEntity.getGangRelation();
                         Gang gang = Gang.getById(group);
                         if (gang != null)
-                            gangRelation.addRelation(gang, Integer.parseInt(values[1]));
+                            gangRelation.addRelation(gang, -Integer.parseInt(values[1]));
+
+                    } else if (values.length == 2) {
+                        if (isNumber(values[0])) {
+                            int baseId = Integer.parseInt(values[0]);
+                            int quantity = Integer.parseInt(values[1]);
+                            itemsService.deleteItem(userEntity, baseId, quantity);
+                        } else
+                            addValue(userEntity, values[0], -Integer.parseInt(values[1]));
                     } else
-                        addValue(userEntity, values[0], Integer.parseInt(values[1]));
+                        userEntity.getParameters()
+                                .removeIf(parameterEntity -> parameterEntity.getKey().equals(pass));
                 }
-                break;
-            case "-":
+            }
+            case SET_VALUE -> {
+                for (String pass : params) {
+                    String[] values = pass.split(":");
+                    setValue(userEntity, values[0], Integer.valueOf(values[1]));
+                }
+            }
+            //@Deprecated, use remove
+            /*case "-":
                 for (String pass : params) {
                     String[] values = pass.split(":");
                     if (values[0].contains("relation")) {
@@ -169,18 +182,18 @@ public class ActionService {
                     } else
                         addValue(userEntity, values[0], -Integer.parseInt(values[1]));
                 }
-                break;
-            case "*":
+                break;*/
+            case MULTIPLY_VALUE -> {
                 for (String pass : params) {
                     String[] values = pass.split(":");
                     multiplyValue(userEntity, values[0], Integer.parseInt(values[1]));
                 }
-                break;
-            case "money":
+            }
+            case SET_MONEY -> {
                 for (String pass : params)
                     userEntity.money(Integer.parseInt(pass));
-                break;
-            case "item": {
+            }
+            case SET_ITEM_QUANTITY -> {
                 Set<? extends ItemEntity> items = userEntity.getAllItems();
                 Map<UUID, Integer> quantityMap = new HashMap<>();
                 for (String pass : params) {
@@ -199,8 +212,7 @@ public class ActionService {
                     });
                 }
             }
-            break;
-            case "item_condition": {
+            case SET_ITEM_CONDITION -> {
                 Map<UUID, Float> conditionMap = new HashMap<>();
                 for (String pass : params) {
                     String[] key = pass.split(":");
@@ -229,32 +241,44 @@ public class ActionService {
                     });
                 }
             }
-            break;
-
-            case "xp":
+            case SET_XP -> {
                 for (String pass : params)
                     userEntity.xp(Integer.parseInt(pass));
-                break;
-
-            case "set":
+            }
+            case SET_MAIN_ITEM -> {
                 for (String pass : params) {
-                    if (pass.matches("[0-9]+[\\\\.]?[0-9]*")) {
+                    if (isNumber(pass)) {
                         itemsService.setWearableItemById(userEntity, Integer.parseInt(pass));
                     } else
                         itemsService.setWearableItemById(userEntity, UUID.fromString(pass));
                 }
-                break;
-            case "note":
+            }
+            case ADD_NOTE -> {
                 if (params.size() == 2)
                     noteService.createNote(new NoteCreateDto(params.get(0), params.get(1)));
                 else if (params.size() == 1)
                     noteService.createNote(new NoteCreateDto("Новая заметка", params.get(0)));
-                break;
-            case "achieve":
-                //TODO
-                //userEntity.achievements.add(Integer.parseInt(pass));
-                break;
-            case "reset":
+            }
+            case ACHIEVE -> {
+                for (String pass : params)
+                    userEntity.addAchievement(achievementRepository.findById(pass));
+            }
+            case SET_RELATION -> {
+                String gang;
+                String relation;
+                if (params.size() == 2){
+                    gang = params.get(0);
+                    relation = params.get(1);
+                }else if (params.size() == 1){
+                    String[] values = params.get(0).split(":");
+                    gang = values[0];
+                    relation = values[1];
+                }else
+                    return;
+                userEntity.getGangRelation()
+                        .setRelation(Gang.valueOf(gang), Integer.parseInt(relation));
+            }
+            case RESET -> {
                 if (params.size() == 0) {
                     userEntity.reset();
                 } else {
@@ -289,29 +313,10 @@ public class ActionService {
                             userEntity.resetItems();
                         }
                 }
-                break;
-            case "exitStory":
-                exitStory(userEntity);
-                break;
-            /*case "check": { // TODO
-                int storyId = userEntity.getCurrentStoryState().getStoryId();
-                Story story = questService.getStory(storyId);
-                for (String param : params) {
-                    Mission currentMission = story.getMissionByParam(param);
-                    if (currentMission != null) {
-                        Checkpoint checkPoint = currentMission.getNextCheckpoint(param);
-                        addKey(userEntity, checkPoint.getParameter());
-                        userEntity.getParameters()
-                                .removeIf(parameterEntity -> parameterEntity.getKey().equals(param));
-                    } else
-                        logger.error("Check failed, param " + param + " is not within any of missions");
-                }
             }
-            break;*/
-            case "finishStory":
-                finishStory(userEntity);
-                break;
-            case "state": {
+            case EXIT_STORY -> exitStory(userEntity);
+            case FINISH_STORY -> finishStory(userEntity);
+            case STATE -> {
                 String[] states = params.toArray(new String[0]);
                 if (states.length > 0) {
                     String[] values = states[0].split(":");
@@ -359,23 +364,38 @@ public class ActionService {
                     }
                 }
             }
-            break;
-            default:
-                logger.error("Unsupported operation: " + command + ", value: " + params);
-                break;
+            /*case "check": { // TODO
+                int storyId = userEntity.getCurrentStoryState().getStoryId();
+                Story story = questService.getStory(storyId);
+                for (String param : params) {
+                    Mission currentMission = story.getMissionByParam(param);
+                    if (currentMission != null) {
+                        Checkpoint checkPoint = currentMission.getNextCheckpoint(param);
+                        addKey(userEntity, checkPoint.getParameter());
+                        userEntity.getParameters()
+                                .removeIf(parameterEntity -> parameterEntity.getKey().equals(param));
+                    } else
+                        logger.error("Check failed, param " + param + " is not within any of missions");
+                }
+            }
+            break;*/
+            default -> logger.error("Unsupported operation: " + command + ", value: " + params);
         }
     }
 
-    public void finishStory(UserEntity userEntity){
+    public boolean isNumber(String s) {
+        return s.matches("[0-9]+[\\\\.]?[0-9]*");
+    }
+
+    public void finishStory(UserEntity userEntity) {
         userEntity.getCurrentStoryState().setOver(true);
         exitStory(userEntity);
     }
 
-    public void exitStory(UserEntity userEntity){
+    public void exitStory(UserEntity userEntity) {
         StoryStateEntity storyOptional = userEntity.getCurrentStoryState();
-        if (storyOptional != null) {
+        if (storyOptional != null)
             storyOptional.setCurrent(false);
-        }
     }
 
     public void multiplyValue(UserEntity user, String key, Integer integer) {

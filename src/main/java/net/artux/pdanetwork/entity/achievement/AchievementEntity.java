@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -27,18 +28,20 @@ import java.util.Map;
 @Getter
 @Setter
 @Table(name = "achievement")
-public class AchievementEntity extends BaseEntity {
+public class AchievementEntity{
 
-    private String title;
+    @Id
     private String name;
+    private String title;
     private String image;
     private String description;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private AchievementCategoryEntity category;
 
     @ElementCollection
     @CollectionTable(name = "achievement_condition",
-            joinColumns = {@JoinColumn(name = "achievement_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "achievement_name", referencedColumnName = "name")})
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     private Map<String, HashSet<String>> condition;

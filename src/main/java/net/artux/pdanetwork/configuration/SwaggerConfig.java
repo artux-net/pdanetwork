@@ -26,12 +26,15 @@ public class SwaggerConfig {
 
     private final ValuesService valuesService;
 
+    private final String[] adminPaths = {"/api/v1/admin/**", "/api/v1/**/admin/**"};
+
     @Bean(name = "restApi")
     public GroupedOpenApi restApi() {
         return GroupedOpenApi.builder()
+                .displayName("pda-api")
                 .group("pdanetwork-rest")
                 .pathsToMatch("/api/v1/**")
-                .pathsToExclude("/api/v1/admin/**")
+                .pathsToExclude(adminPaths)
                 .build();
     }
 
@@ -39,7 +42,8 @@ public class SwaggerConfig {
     public GroupedOpenApi restAdminApi() {
         return GroupedOpenApi.builder()
                 .group("pdanetwork-rest-admin")
-                .pathsToMatch("/api/v1/admin/**")
+                .pathsToMatch(adminPaths)
+                .displayName("admin-api")
                 .build();
     }
 
