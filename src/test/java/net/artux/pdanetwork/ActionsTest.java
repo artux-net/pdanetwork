@@ -40,7 +40,7 @@ public class ActionsTest {
         UserEntity user = userService.getUserByLogin("admin");
         actionService.applyCommands(user.getId(), Map.of("money", List.of("1000")));
         user = userService.getUserByLogin("admin");
-        Assert.assertEquals(user.getMoney(), 1500);
+        Assert.assertEquals(1500, user.getMoney());
     }
 
     @Test

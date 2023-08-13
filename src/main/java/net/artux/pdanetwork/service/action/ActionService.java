@@ -91,7 +91,11 @@ public class ActionService {
     }
 
     public void doCommand(String command, List<String> params, UserEntity userEntity) {
-        ServerCommand enumServerCommand = ServerCommand.valueOf(command);
+        ServerCommand enumServerCommand = ServerCommand.of(command);
+        if (enumServerCommand == null){
+            logger.error("Unknown command: " + command + ", value: " + params);
+            return;
+        }
         switch (enumServerCommand) {
             case ADD -> {
                 for (String value : params) {
@@ -379,7 +383,7 @@ public class ActionService {
                 }
             }
             break;*/
-            default -> logger.error("Unsupported operation: " + command + ", value: " + params);
+            default -> logger.error("Unsupported command: " + command + ", value: " + params);
         }
     }
 
