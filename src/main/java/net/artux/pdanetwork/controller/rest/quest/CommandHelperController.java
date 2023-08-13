@@ -25,7 +25,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Tag(name = "Список поддерживаемых команд")
 @RequestMapping("/api/v1/commands")
-@ModeratorAccess
 public class CommandHelperController {
 
     private final EnumMapper enumMapper;
