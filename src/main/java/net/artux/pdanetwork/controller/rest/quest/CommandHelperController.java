@@ -5,7 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.command.ClientCommand;
 import net.artux.pdanetwork.models.command.ServerCommand;
+import net.artux.pdanetwork.models.enums.CommandDto;
+import net.artux.pdanetwork.models.enums.EnumDto;
 import net.artux.pdanetwork.models.enums.EnumGetter;
+import net.artux.pdanetwork.models.enums.EnumMapper;
 import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.service.quest.QuestService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
@@ -25,10 +28,12 @@ import java.util.Set;
 @ModeratorAccess
 public class CommandHelperController {
 
+    private final EnumMapper enumMapper;
+
     @GetMapping("/server")
     @Operation(summary = "Серверные команды")
-    public EnumGetter[] getServerCommands() {
-        return ServerCommand.values();
+    public CommandDto[] getServerCommands() {
+        return enumMapper.dto(ServerCommand.values());
     }
 
     @GetMapping("/server/{type}/list")
@@ -39,8 +44,8 @@ public class CommandHelperController {
 
     @GetMapping("/client")
     @Operation(summary = "Клиентские команды")
-    public EnumGetter[] getClientCommands() {
-        return ClientCommand.values();
+    public CommandDto[] getClientCommands() {
+        return enumMapper.dto(ClientCommand.values());
     }
 
     @GetMapping("/client/{type}/list")
