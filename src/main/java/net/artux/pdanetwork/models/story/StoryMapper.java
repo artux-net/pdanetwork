@@ -25,6 +25,7 @@ public interface StoryMapper {
     List<StoryStateDto> states(List<StoryStateEntity> storyStateEntities);
 
     @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
+    @Mapping(target = "money", expression = "java(user.getMoney())")
     StoryData storyData(UserEntity user);
 
     default GangRelationDto mapRelation(GangRelationEntity value) {

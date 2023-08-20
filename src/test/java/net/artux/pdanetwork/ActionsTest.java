@@ -13,6 +13,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
 public class ActionsTest {
@@ -40,7 +41,7 @@ public class ActionsTest {
         UserEntity user = userService.getUserByLogin("admin");
         actionService.applyCommands(user.getId(), Map.of("money", List.of("1000")));
         user = userService.getUserByLogin("admin");
-        Assert.assertEquals(1500, user.getMoney());
+        Assert.assertTrue(1500 == user.getMoney());
     }
 
     @Test
