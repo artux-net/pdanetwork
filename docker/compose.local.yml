@@ -5,6 +5,7 @@ services:
     image: postgres
     container_name: pdanetwork_db
     restart: unless-stopped
+
     environment:
       - POSTGRES_USER=pdanetwork
       - POSTGRES_PASSWORD=pass
@@ -34,5 +35,7 @@ services:
     restart: unless-stopped
     depends_on:
       - back
+    environment:
+      - API_URL=localhost:8080
     ports:
       - "8081:3000"

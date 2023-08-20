@@ -23,11 +23,9 @@ import java.util.stream.Collectors;
 public class SecurityConfiguration {
 
     private static final String[] MODERATOR_LIST = {
-            "/utility/**"
     };
 
     private static final String[] TESTER_LIST = {
-            "/utility/help",
             "/v3/api-docs/*",
             "/swagger-ui/**",
             "/actuator/**",
@@ -36,7 +34,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST = {
             "/api/v1/user/register",
-            "/api/v1/commands",
+            "/api/v1/commands/**",
             "/api/v1/user/reset/pass",
             "/mailing/**",
             "/confirmation/register",

@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(adminEditUserDto.getRole());
         user.setGang(adminEditUserDto.getGang());
-        user.setChatBan(adminEditUserDto.isChatBan());
+        user.setChatBan(adminEditUserDto.getChatBan());
         logger.info("Пользователь {} обновлен модератором {}", userMapper.dto(user), getUserById().getLogin());
 
         return userMapper.adminDto(userRepository.save(user));
@@ -171,8 +171,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean setChatBan(UUID userId) {
         UserEntity user = getUserById(userId);
-        user.setChatBan(!user.isChatBan());
-        return userRepository.save(user).isChatBan();
+        user.setChatBan(!user.getChatBan());
+        return userRepository.save(user).getChatBan();
     }
 
 
@@ -211,9 +211,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changeEmailSetting(UUID id) {
         UserEntity user = userRepository.findById(id).orElseThrow();
-        user.setReceiveEmails(!user.isReceiveEmails());
+        user.setReceiveEmails(!user.getReceiveEmails());
         return userRepository.save(user)
-                .isReceiveEmails();
+                .getReceiveEmails();
     }
 
     public ByteArrayInputStream exportUsers(List<UserEntity> users) throws IOException {

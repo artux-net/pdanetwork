@@ -15,8 +15,8 @@ public class SimpleUserDto {
     private String nickname;
     private String avatar;
     private Long pdaId;
-    private int xp;
-    private int achievements;
+    private Integer xp;
+    private Integer achievements;
     private Gang gang;
     private Instant registration;
     private Instant lastLoginAt;

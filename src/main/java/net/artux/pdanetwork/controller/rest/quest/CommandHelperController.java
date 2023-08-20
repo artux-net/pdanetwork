@@ -12,6 +12,7 @@ import net.artux.pdanetwork.models.enums.EnumMapper;
 import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.service.quest.QuestService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

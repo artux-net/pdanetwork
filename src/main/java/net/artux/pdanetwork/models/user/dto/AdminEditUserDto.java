@@ -25,7 +25,7 @@ public class AdminEditUserDto {
     private Role role;
     @NotNull
     private Gang gang;
-    private boolean chatBan;
+    private Boolean chatBan;
 
 }
 

@@ -74,18 +74,12 @@ public class ProfileServiceIml implements ProfileService {
     public ResponsePage<SimpleUserDto> findUsers(String query, QueryPage queryPage) {
         UserEntity user = new UserEntity();
         user.setLogin(query);
-        user.setNickname(query);
-        user.setName(query);
-        user.setEmail(query);
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreCase()
                 .withIgnoreNullValues()
-                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("nickname", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
                 .withMatcher("login", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 
         Example<UserEntity> example = Example.of(user, matcher);
@@ -103,7 +97,7 @@ public class ProfileServiceIml implements ProfileService {
         user.setGang(exampleDto.getGang());
         user.setEmail(exampleDto.getEmail());
         user.setAvatar(exampleDto.getAvatar());
-        user.setChatBan(exampleDto.isChatBan());
+        user.setChatBan(exampleDto.getChatBan());
 
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withNullHandler(ExampleMatcher.NullHandler.IGNORE)

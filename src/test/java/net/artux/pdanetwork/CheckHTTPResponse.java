@@ -23,6 +23,7 @@ public class CheckHTTPResponse {
     private AdminQuestsController questController;
 
     @Test
+    @WithAnonymousUser
     public void isEncWorks() {
         ResponseEntity<String> response = restTemplate.getForEntity("/enc",
                 String.class);
@@ -31,7 +32,15 @@ public class CheckHTTPResponse {
 
     @Test
     @WithAnonymousUser
-    public void isStatisticOpen() {
+    public void isCommandsWorks() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/commands/server",
+                String.class);
+        Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
+    }
+
+    @Test
+    @WithAnonymousUser
+    public void isStatisticClosedForAnonymous() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/admin/statistic",
                 String.class);
         Assertions.assertEquals(401, response.getStatusCode().value());

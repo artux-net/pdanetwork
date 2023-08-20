@@ -66,12 +66,12 @@ public class UserEntity extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private GangRelationEntity gangRelation;
-    private int xp;
-    private int money;
+    private Integer xp;
+    private Integer money;
     @Column(columnDefinition = "boolean default false")
-    private boolean chatBan;
+    private Boolean chatBan;
     @Column(columnDefinition = "boolean default true")
-    private boolean receiveEmails;
+    private Boolean receiveEmails;
 
     @Enumerated(EnumType.STRING)
     private Role role;

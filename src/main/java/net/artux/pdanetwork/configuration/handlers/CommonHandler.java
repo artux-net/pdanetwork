@@ -44,7 +44,7 @@ public abstract class CommonHandler extends SocketHandler {
         super.afterConnectionEstablished(userSession);
         accept(userSession);
 
-        if (getMember(userSession).isChatBan()) {
+        if (getMember(userSession).getChatBan()) {
             reject(userSession, "Вы были заблокированы за нарушение правил.");
             return;
         }
