@@ -43,6 +43,7 @@ jobs:
           registry: registry.artux.net
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+          logout: false
 
     - name: Checkout
       uses: actions/checkout@v3
