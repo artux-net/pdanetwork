@@ -49,7 +49,7 @@ public class AchievementEntity{
     @Enumerated(EnumType.STRING)
     private AchievementGroup type;
 
-    @ManyToMany(mappedBy = "achievements", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<UserEntity> users;
 
 }

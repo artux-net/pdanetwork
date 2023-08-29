@@ -5,7 +5,7 @@ import net.artux.pdanetwork.entity.user.StatisticEntity;
 import net.artux.pdanetwork.models.user.UserMapper;
 import net.artux.pdanetwork.models.user.UserStatisticDto;
 import net.artux.pdanetwork.repository.user.StatisticRepository;
-import net.artux.pdanetwork.utills.IsModerator;
+import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ public class StatisticServiceImpl implements StatisticService {
     private final StatisticRepository repository;
     private final UserMapper userMapper;
     private final Logger logger = LoggerFactory.getLogger(StatisticService.class);
+
     @Override
     public UserStatisticDto getStatistic() {
         return userMapper.dto(repository.findByUser_Id(userService.getCurrentId()));
@@ -49,7 +50,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    @IsModerator
+    @ModeratorAccess
     public UserStatisticDto setStatisticAsModerator(UUID userId, UserStatisticDto userStatisticDto) {
         StatisticEntity entity = repository.findByUser_Id(userId);
         userMapper.entity(userStatisticDto);

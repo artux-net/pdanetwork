@@ -104,9 +104,6 @@ public class ActionService {
                         long baseId = Long.parseLong(param[0]);
                         int quantity = Integer.parseInt(param[1]);
                         itemsService.addItem(userEntity, baseId, quantity);
-                    } else if (param.length == 2) {
-                        //add_value
-                        addValue(userEntity, param[0], Integer.parseInt(param[1]));
                     } else if (param[0].contains("relation")) {
                         //"+":["relation_1:5"]
                         int group = Integer.parseInt(param[0].split("_")[1]);
@@ -114,7 +111,10 @@ public class ActionService {
                         Gang gang = Gang.getById(group);
                         if (gang != null)
                             gangRelation.addRelation(gang, Integer.parseInt(param[1]));
-                    } else {
+                    } else if (param.length == 2) {
+                        //add_value
+                        addValue(userEntity, param[0], Integer.parseInt(param[1]));
+                    }  else {
                         //add_param
                         addKey(userEntity, value);
                     }

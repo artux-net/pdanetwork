@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.statistic.StatisticDto;
-import net.artux.pdanetwork.service.statistic.StatisticService;
+import net.artux.pdanetwork.service.statistic.ServerStatisticService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/admin/statistic")
 @ModeratorAccess
 @RequiredArgsConstructor
-public class StatisticController {
+public class ServerStatisticController {
 
-    private final StatisticService statisticService;
+    private final ServerStatisticService serverStatisticService;
 
     @GetMapping
     @Operation(description = "Получение текущей статистики")
     public StatisticDto getStatistic() {
-        return statisticService.getStatistic();
+        return serverStatisticService.getStatistic();
     }
 }

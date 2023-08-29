@@ -1,35 +1,12 @@
 package net.artux.pdanetwork.entity.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.AchievementEntity;
-import net.artux.pdanetwork.entity.feed.ArticleEntity;
-import net.artux.pdanetwork.entity.feed.PostEntity;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.UsualItemEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
@@ -82,52 +59,38 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "author", orphanRemoval = true)
     private List<NoteEntity> notes;
 
-    //@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<AchievementEntity> achievements;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<StoryStateEntity> storyStates;
+    private Set<StoryStateEntity> storyStates = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ParameterEntity> parameters;
+    private Set<ParameterEntity> parameters = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<BulletEntity> bullets;
+    private Set<BulletEntity> bullets = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ArmorEntity> armors;
+    private Set<ArmorEntity> armors = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<WeaponEntity> weapons;
+    private Set<WeaponEntity> weapons = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<MedicineEntity> medicines;
+    private Set<MedicineEntity> medicines = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ArtifactEntity> artifacts;
+    private Set<ArtifactEntity> artifacts = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<DetectorEntity> detectors;
+    private Set<DetectorEntity> detectors = new HashSet<>();
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UsualItemEntity> items;
+    private Set<UsualItemEntity> items = new HashSet<>();
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "article_like",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "article_id"))
-    private Set<ArticleEntity> likedArticles;
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "post_like",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id"))
-    private Set<PostEntity> likedPosts;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private StatisticEntity statistic;
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
         login = registerUser.getLogin();
@@ -144,6 +107,7 @@ public class UserEntity extends BaseEntity {
         xp = 0;
         money = 500;
         lastLoginAt = registration = Instant.now();
+        statistic = new StatisticEntity();
     }
 
     public long getPdaId() {
@@ -248,7 +212,7 @@ public class UserEntity extends BaseEntity {
                 .filter(itemEntity -> !itemEntity.getBase().getType().isCountable())
                 .forEach(itemEntity -> itemEntity.setQuantity(1));
 
-        set.removeIf(itemEntity ->{
+        set.removeIf(itemEntity -> {
             if (itemEntity instanceof ArmorEntity && ((ArmorEntity) itemEntity).getCondition() < 10)
                 return true;
 
@@ -265,8 +229,7 @@ public class UserEntity extends BaseEntity {
     }
 
     public void addAchievement(Optional<AchievementEntity> byId) {
-        if (byId.isEmpty())
-            return;
-        achievements.add(byId.get());
+        if (byId.isPresent())
+            achievements.add(byId.get());
     }
 }
