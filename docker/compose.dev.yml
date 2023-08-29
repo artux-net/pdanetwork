@@ -12,7 +12,7 @@ services:
       - "9999:5432"
 
   backend:
-    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    image: registry.artux.net/pdanet/pdanetwork:${IMAGE_TAG}
     container_name: pdanetwork_backend
     restart: unless-stopped
     depends_on:
