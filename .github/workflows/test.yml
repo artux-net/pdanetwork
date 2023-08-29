@@ -11,14 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test artifact'
     steps:
+    - name: Setup Maven Action
+      uses: s4u/setup-maven-action@< version >
+    
     - uses: actions/checkout@v3
     
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'zulu'
-        cache: maven
-        
     - name: Test with Maven
       run: mvn clean test
