@@ -75,7 +75,7 @@ jobs:
             ${{github.run_number}}
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
-          docker compose -f "./docker/compose.dev.yml" pull back
+          docker compose -f "./docker/compose.dev.yml" pull backend
           docker compose -f "./docker/compose.dev.yml" up
         
 
