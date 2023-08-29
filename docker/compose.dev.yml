@@ -11,9 +11,9 @@ services:
     ports:
       - "9999:5432"
 
-  back:
-    image: prygunov/pdanetwork:latest
-    container_name: pdanetwork_back
+  backend:
+    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    container_name: pdanetwork_backend
     restart: unless-stopped
     depends_on:
       - db

@@ -1,0 +1,74 @@
+name: CI/CD
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+    
+  build:
+    runs-on: self-hosted
+    name: 'Build and upload artifact'
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'zulu'
+        cache: maven
+        
+    - name: Build with Maven
+      run: mvn clean package
+      
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: target/*.jar
+    
+  push:
+    needs: build
+    name: 'Build Docker-image and push to registry'
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: Login to Artux registry
+      uses: docker/login-action@v2
+      with:
+          registry: registry.artux.net
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        path: target
+
+    - name: Move to target folder
+      run: mv target/artifact/pdanetwork.jar target
+      
+    - name: Build and push docker image
+      uses: docker/build-push-action@v3
+      with:
+         context: .
+         platforms: linux/arm64
+         push: true
+         tags: registry.artux.net/pdanetwork:${{github.run_number}}
+       
+  deploy:
+    needs: push
+    name: 'Deploy image on server'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: "./docker/compose.dev.yml"
+        env:
+          IMAGE_TAG: ${{github.run_number}}
+

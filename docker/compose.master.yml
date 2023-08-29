@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  backend:
+    image: registry.artux.net/pdanetwork:latest
+    container_name: pdanetwork_backend
+    restart: unless-stopped
+    environment:
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_PROTOCOL=https
+      - SERVER_WEBSOCKET_PROTOCOL=wss
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${DATASOURCE_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8889:8080"

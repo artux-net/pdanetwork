@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class StatisticServiceImpl implements StatisticService {
+public class ServerStatisticServiceImpl implements ServerStatisticService {
 
     private final UserRepository repository;
 

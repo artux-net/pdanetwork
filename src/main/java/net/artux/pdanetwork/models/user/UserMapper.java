@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.models.user;
 
+import net.artux.pdanetwork.entity.user.StatisticEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.AdminUserDto;
@@ -43,4 +44,9 @@ public interface UserMapper {
         return new GangRelationDto(value);
     }
 
+    UserStatisticDto dto(StatisticEntity statistic);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    StatisticEntity entity(UserStatisticDto userStatisticDto);
 }

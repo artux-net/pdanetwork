@@ -13,7 +13,7 @@ services:
 
   back:
     build:
-      context: .
+      context: ..
 
     container_name: pdanetwork_back
     restart: unless-stopped

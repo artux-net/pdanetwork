@@ -1,29 +1,12 @@
 package net.artux.pdanetwork.entity.user;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.achievement.UserAchievementEntity;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ArtifactEntity;
-import net.artux.pdanetwork.entity.items.BulletEntity;
-import net.artux.pdanetwork.entity.items.DetectorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.MedicineEntity;
-import net.artux.pdanetwork.entity.items.UsualItemEntity;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.note.NoteEntity;
 import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
@@ -106,6 +89,9 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsualItemEntity> items = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private StatisticEntity statistic;
+
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
         login = registerUser.getLogin();
         password = passwordEncoder.encode(registerUser.getPassword());
@@ -121,6 +107,7 @@ public class UserEntity extends BaseEntity {
         xp = 0;
         money = 500;
         lastLoginAt = registration = Instant.now();
+        statistic = new StatisticEntity();
     }
 
     public long getPdaId() {
