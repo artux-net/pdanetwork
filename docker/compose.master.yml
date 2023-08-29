@@ -2,7 +2,7 @@ version: '3'
 
 services:
   backend:
-    image: registry.artux.net/pdanet/pdanetwork:latest
+    image: registry.artux.net/pdanetwork:latest
     container_name: pdanetwork_backend
     restart: unless-stopped
     environment:
