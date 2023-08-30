@@ -7,6 +7,8 @@ services:
     image: postgres
     container_name: pdanetwork_db
     restart: unless-stopped
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=pdanetwork
       - POSTGRES_PASSWORD=pass
@@ -18,6 +20,7 @@ services:
   backend:
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     container_name: pdanetwork_backend
+    pull_policy: always
     restart: unless-stopped
     depends_on:
       - db
@@ -30,6 +33,19 @@ services:
       - SPRING_DATASOURCE_PASSWORD=pass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "8888:8080"
+      - "8000:8080"
+    labels:
+      io.portainer.accesscontrol.teams: dev,prod
+  frontend:
+    image: registry.artux.net/pda-admin-web:main
+    container_name: pdanet_admin_panel
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      - API_URL=dev.artux.net
+    ports:
+      - "8001:3000"
     labels:
       io.portainer.accesscontrol.teams: dev,prod

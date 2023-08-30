@@ -4,8 +4,9 @@ name: pdanetwork
 
 services:
   backend:
-    image: registry.artux.net/pdanetwork:latest
+    image: registry.artux.net/pdanetwork:main
     container_name: pdanetwork_backend
+    pull_policy: always
     restart: unless-stopped
     environment:
       - SERVER_HOST=${SERVER_HOST}
@@ -16,6 +17,20 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "8889:8080"
+      - "9000:8080"
     labels:
-      io.portainer.accesscontrol.teams: dev,prod
+      io.portainer.accesscontrol.teams: prod
+
+  frontend:
+    image: registry.artux.net/pda-admin-web:main
+    container_name: pdanet_admin_panel
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      - API_URL=app.artux.net
+    ports:
+      - "9001:3000"
+    labels:
+      io.portainer.accesscontrol.teams: prod

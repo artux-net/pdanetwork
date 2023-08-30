@@ -27,11 +27,6 @@ jobs:
         
     - name: Build with Maven
       run: mvn clean package
-      
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        path: target/*.jar
 
     - name: Login to Artux registry
       uses: docker/login-action@v2
@@ -75,7 +70,7 @@ jobs:
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
           
-          docker compose -f "./docker/compose.dev.yml" pull backend
+          docker compose -f "./docker/compose.dev.yml" pull
           docker compose -f "./docker/compose.dev.yml" down
           docker compose -f "./docker/compose.dev.yml" up -d 
           docker system prune -a -f

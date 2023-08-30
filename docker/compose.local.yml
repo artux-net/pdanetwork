@@ -14,7 +14,7 @@ services:
     ports:
       - "9999:5432"
 
-  back:
+  backend:
     build:
       context: ..
 
@@ -31,12 +31,13 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
-  front:
-    image: registry.artux.net/pda-admin-web
+  frontend:
+    image: registry.artux.net/pda-admin-web:main
     container_name: pdanet_admin_panel
+    pull_policy: always
     restart: unless-stopped
     depends_on:
-      - back
+      - backend
     environment:
       - API_URL=localhost:8080
     ports:
