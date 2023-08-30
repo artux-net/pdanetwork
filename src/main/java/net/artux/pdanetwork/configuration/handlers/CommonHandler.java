@@ -49,7 +49,10 @@ public abstract class CommonHandler extends SocketHandler {
             return;
         }
         ChatUpdate initialUpdate = ChatUpdate.of(lastMessages);
-        initialUpdate.addEvent(ChatEvent.of("Вы подключены к чату. <a href=\"" + valuesService.getAddress() + "/rules\">Соблюдайте правила.</a>"));
+        initialUpdate.addEvent(ChatEvent.of("Вы подключены к чату. <a href=\"" + valuesService.getAddress() + "/rules\">Соблюдайте правила.</a> \n Основные правила:\n" +
+                "1. Не материться\n" +
+                "2. Никого не оскорблять\n" +
+                "3. Сохранять дружелюбную атмосферу"));
         if (banService.isBanned(getMember(userSession).getId()))
             initialUpdate.addEvent(ChatEvent.of("Отправка сообщений временно заблокирована."));
         sendUpdate(userSession, initialUpdate);
