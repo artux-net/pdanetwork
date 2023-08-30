@@ -1,10 +1,10 @@
 version: '3.9'
 
-name: pdanetwork
+name: pdanetwork_master
 
 services:
-  backend:
-    image: registry.artux.net/pdanetwork:main
+  backend_master:
+    image: registry.artux.net/pdanetwork:master
     container_name: pdanetwork_backend
     pull_policy: always
     restart: unless-stopped
@@ -21,13 +21,13 @@ services:
     labels:
       io.portainer.accesscontrol.teams: prod
 
-  frontend:
-    image: registry.artux.net/pda-admin-web:main
+  frontend_master:
+    image: registry.artux.net/pda-admin-web:master
     container_name: pdanet_admin_panel
     pull_policy: always
     restart: unless-stopped
     depends_on:
-      - backend
+      - backend_master
     environment:
       - BASE_PATH=/panel
       - API_URL=https://app.artux.net/pdanetwork/:path*

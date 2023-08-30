@@ -50,9 +50,7 @@ jobs:
             registry.artux.net/pdanetwork
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=raw,value=${{github.run_number}}
             type=ref,event=branch
-            type=sha 
 
       - name: Build and push docker image
         uses: docker/build-push-action@v4
@@ -70,7 +68,10 @@ jobs:
 
       - name: Run services
         env:
-          IMAGE_TAG: ${{github.run_number}}
+          DATASOURCE_USERNAME: ${{DATASOURCE_USERNAME}}
+          DATASOURCE_PASSWORD: ${{DATASOURCE_PASSWORD}}
+          DATASOURCE_DB_NAME: pdanetwork
+          SERVER_HOST: app.artux.net
 
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
