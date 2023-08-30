@@ -50,17 +50,20 @@ jobs:
 
   deploy:
     needs: build
-    name: 'Deploy image on server'
+    name: 'Deploy Compose on server'
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
 
-      - env:
-          IMAGE_TAG:
-            ${{github.run_number}}
+      - name: Run services
+        env:
+          IMAGE_TAG: ${{github.run_number}}
+
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
+          
           docker compose -f "./docker/compose.dev.yml" pull backend
+          docker compose -f "./docker/compose.dev.yml" down
           docker compose -f "./docker/compose.dev.yml" up
           docker system prune -a -f
         
