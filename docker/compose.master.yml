@@ -19,6 +19,8 @@ services:
     ports:
       - "11111:8080"
     network_mode: host
+    networks:
+      - pda_network_master
     labels:
       io.portainer.accesscontrol.teams: prod
 
