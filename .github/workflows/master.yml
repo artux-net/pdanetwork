@@ -68,9 +68,9 @@ jobs:
 
       - name: Run services
         env:
-          DATASOURCE_USERNAME: ${{DATASOURCE_USERNAME}}
-          DATASOURCE_PASSWORD: ${{DATASOURCE_PASSWORD}}
-          DATASOURCE_DB_NAME: pdanetwork
+          DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
+          DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
+          DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
           SERVER_HOST: app.artux.net
 
         run: |
