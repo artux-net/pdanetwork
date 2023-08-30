@@ -17,7 +17,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "10001:8080"
+      - "11111:8080"
     network_mode: host
     labels:
       io.portainer.accesscontrol.teams: prod
