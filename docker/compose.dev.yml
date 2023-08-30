@@ -33,7 +33,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=pass
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - "8000:8080"
+      - "8002:8080"
     labels:
       io.portainer.accesscontrol.teams: dev,prod
   frontend:
