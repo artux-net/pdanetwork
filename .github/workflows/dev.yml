@@ -77,7 +77,7 @@ jobs:
           
           docker compose -f "./docker/compose.dev.yml" pull backend
           docker compose -f "./docker/compose.dev.yml" down
-          docker compose -d -f "./docker/compose.dev.yml" up 
+          docker compose -f "./docker/compose.dev.yml" up -d 
           docker system prune -a -f
         
 
