@@ -39,6 +39,7 @@ services:
     depends_on:
       - backend
     environment:
-      - API_URL=localhost:8080
+      - BASE_PATH=/panel
+      - API_URL=http://localhost:8080/pdanetwork/:path*
     ports:
       - "8081:3000"

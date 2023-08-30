@@ -37,14 +37,15 @@ services:
     labels:
       io.portainer.accesscontrol.teams: dev,prod
   frontend:
-    image: registry.artux.net/pda-admin-web:main
+    image: registry.artux.net/pda-admin-web:dev
     container_name: pdanet_admin_panel
     pull_policy: always
     restart: unless-stopped
     depends_on:
       - backend
     environment:
-      - API_URL=dev.artux.net
+      - BASE_PATH=/panel
+      - API_URL=https://dev.artux.net/pdanetwork/:path*
     ports:
       - "8001:3000"
     labels:
