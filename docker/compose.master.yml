@@ -18,6 +18,8 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "9002:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       io.portainer.accesscontrol.teams: prod
 
