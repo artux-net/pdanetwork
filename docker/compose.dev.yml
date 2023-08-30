@@ -1,4 +1,6 @@
-version: '3'
+version: '3.9'
+
+name: pdanetwork
 
 services:
   db:
@@ -10,6 +12,8 @@ services:
       - POSTGRES_PASSWORD=pass
     ports:
       - "9999:5432"
+    labels:
+      io.portainer.accesscontrol.teams: dev,prod
 
   backend:
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
@@ -27,3 +31,5 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8888:8080"
+    labels:
+      io.portainer.accesscontrol.teams: dev,prod

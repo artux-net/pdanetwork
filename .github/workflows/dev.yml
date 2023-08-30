@@ -41,12 +41,25 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
         logout: false
 
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          registry.artux.net/pdanetwork
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=raw,value=${{github.run_number}}
+          type=ref,event=branch
+          type=sha 
+
     - name: Build and push docker image
-      uses: docker/build-push-action@v3
+      uses: docker/build-push-action@v4
       with:
         context: .
         push: true
-        tags: registry.artux.net/pdanetwork:${{github.run_number}}
+        tags: ${{ steps.meta.outputs.tags }}
 
   deploy:
     needs: build
@@ -64,7 +77,7 @@ jobs:
           
           docker compose -f "./docker/compose.dev.yml" pull backend
           docker compose -f "./docker/compose.dev.yml" down
-          docker compose -f "./docker/compose.dev.yml" up
+          docker compose -d -f "./docker/compose.dev.yml" up 
           docker system prune -a -f
         
 
