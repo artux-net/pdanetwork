@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.service.util.ValuesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,6 +23,7 @@ public class EmailServiceIml implements EmailService {
 
     private final JavaMailSender mailSender;
     private final ValuesService valuesService;
+    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     private static final String mailTemplateReg;
     private static final String mailTemplateCon;
@@ -51,7 +54,7 @@ public class EmailServiceIml implements EmailService {
 
             helper.setText(text, true);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            logger.error("Sent error", e);
         }
         mailSender.send(mimeMessage);
     }
@@ -73,6 +76,7 @@ public class EmailServiceIml implements EmailService {
     public void sendConfirmLetter(RegisterUserDto user, String token) {
         sendSimpleMessage(user.getEmail(), "Подтвердите регистрацию", mailTemplateCon
                 .replace("${link}", valuesService.getAddress() + "/confirmation/register?t=" + token));
+        logger.info("Ссылка подтверждения аккаунта: " + valuesService.getAddress() + "/confirmation/register?t=" + token);
     }
 
 
