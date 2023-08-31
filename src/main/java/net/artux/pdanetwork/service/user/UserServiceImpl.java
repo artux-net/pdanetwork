@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
     private final Environment environment;
     private final RandomString randomString = new RandomString();
 
+    private boolean emailConfirmation = false;
 
     @Override
     public Status registerUser(RegisterUserDto newUser) {
@@ -64,8 +65,15 @@ public class UserServiceImpl implements UserService {
         if (status.isSuccess()) {
             if (!registerUserMap.containsValue(newUser))
                 try {
-                    emailService.sendConfirmLetter(newUser, generateToken(newUser));
-                    status = new Status(true, "Проверьте почту.");
+                    String token = generateToken(newUser);
+                    if (emailConfirmation) {
+                        emailService.sendConfirmLetter(newUser, token);
+                        status = new Status(true, "Проверьте почту.");
+                    }else {
+                        handleConfirmation(token);
+                        status = new Status(true, "Учетная запись зарегистрирована.");
+                    }
+
                 } catch (Exception e) {
                     logger.error("Registration", e);
                     status = new Status(false, "Не удалось отправить письмо на " + newUser.getEmail());
