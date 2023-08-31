@@ -46,9 +46,9 @@ public class UserEntity extends BaseEntity {
     private Integer xp;
     private Integer money;
     @Column(columnDefinition = "boolean default false")
-    private Boolean chatBan;
+    private Boolean chatBan = false;
     @Column(columnDefinition = "boolean default true")
-    private Boolean receiveEmails;
+    private Boolean receiveEmails = true;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -231,5 +231,11 @@ public class UserEntity extends BaseEntity {
     public void addAchievement(Optional<AchievementEntity> byId) {
         if (byId.isPresent())
             achievements.add(byId.get());
+    }
+
+    public void setChatBan(Boolean chatBan) {
+        if (chatBan == null)
+            chatBan = false;
+        this.chatBan = chatBan;
     }
 }
