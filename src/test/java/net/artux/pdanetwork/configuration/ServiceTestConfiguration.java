@@ -25,37 +25,4 @@ public class ServiceTestConfiguration {
     private Logger logger;
     private MockMvc mockMvc;
 
-    @Bean
-    @Primary
-    public EmailService emailService() {
-        this.mockMvc = MockMvcBuilders
-                .webAppContextSetup(applicationContext)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-
-        return new EmailService() {
-            @Override
-            public void askForPassword(UserEntity user, String token) {
-
-            }
-
-            @Override
-            public void sendRegisterLetter(RegisterUserDto user, Long pdaId) {
-                logger.info("sendRegisterLetter");
-            }
-
-            @Override
-            public void sendConfirmLetter(RegisterUserDto user, String token) {
-                logger.info("Registration token handled");
-                try {
-                    mockMvc.perform(get("/confirmation/register?t=" + token))
-                            .andDo(print())
-                            .andReturn();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            // implement methods
-        };
-    }
 }
