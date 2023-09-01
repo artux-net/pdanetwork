@@ -10,6 +10,8 @@ import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -45,4 +47,8 @@ public interface UserService {
     boolean changeEmailSetting(UUID id);
 
     UserEntity saveUser(RegisterUserDto registerUserDto, Role role);
+
+    List<UserEntity> getUsersByIds(Collection<UUID> ids);
+    List<UserEntity> getUsersByLogins(Collection<String> logins);
+
 }

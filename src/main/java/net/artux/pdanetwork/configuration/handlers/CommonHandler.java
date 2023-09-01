@@ -36,6 +36,7 @@ public abstract class CommonHandler extends SocketHandler {
         this.valuesService = valuesService;
         this.banService = banService;
         this.userMapper = userMapper;
+
         lastMessages = new LimitedLinkedList<>(100);
     }
 
@@ -124,6 +125,6 @@ public abstract class CommonHandler extends SocketHandler {
     }
 
     public ChatStatistic getStatistic() {
-        return new ChatStatistic(userMapper.info(getSessions().stream().map(this::getMember).collect(Collectors.toList())), banService.getCurrentBans());
+        return new ChatStatistic(userMapper.info(getActiveUsers()), banService.getCurrentBans());
     }
 }

@@ -18,8 +18,13 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public abstract class SocketHandler implements WebSocketHandler {
@@ -27,7 +32,7 @@ public abstract class SocketHandler implements WebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(SocketHandler.class);
 
     private final UserService userService;
-    private final List<WebSocketSession> sessionList = new LinkedList<>();
+    private final HashMap<UUID, WebSocketSession> sessionMap = new HashMap<>();
     private final ObjectMapper objectMapper;
     protected final MessageMapper messageMapper;
 
@@ -39,28 +44,31 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     protected void accept(WebSocketSession userSession) {
-        sessionList.add(userSession);
-        logger.debug("{}: User {} connected to chat.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
+        UserEntity user = getMember(userSession);
+        if (sessionMap.containsKey(user.getId()))
+            reject(sessionMap.get(user.getId()), "Another client connected");
+
+        sessionMap.put(user.getId(), userSession);
+        logger.info("{}: User {} connected to chat.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
     }
 
     protected void reject(WebSocketSession userSession, String message) {
+        UserEntity user = getMember(userSession);
         if (userSession.isOpen()) {
             try {
-                if (!message.isBlank())
+                if (message != null && !message.isBlank())
                     sendSystemMessage(userSession, message);
                 userSession.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
-        sessionList.remove(userSession);
-        logger.debug("User {} disconnected.", this.getClass().getSimpleName(), getMember(userSession).getLogin());
+        sessionMap.remove(user.getId());
+        logger.info("User {} disconnected.", this.getClass().getSimpleName(), user.getLogin());
         if (message != null && !message.isBlank())
-            logger.info("{}: Disconnect reason for {}: ", this.getClass().getSimpleName(), getMember(userSession).getLogin(), message);
+            logger.info("{}: Disconnect reason for {}: ", this.getClass().getSimpleName(), user.getLogin(), message);
     }
 
-    protected List<WebSocketSession> getSessions() {
-        return sessionList;
+    protected Collection<WebSocketSession> getSessions() {
+        return sessionMap.values();
     }
 
     public void sendAllUpdate(ChatUpdate update) {
@@ -73,6 +81,8 @@ public abstract class SocketHandler implements WebSocketHandler {
     }
 
     protected UserEntity getMember(WebSocketSession userSession) {
+        if (userSession == null)
+            return null;
         if (userSession.getAttributes().containsKey(USER))
             return (UserEntity) userSession.getAttributes().get(USER);
         Principal principal = userSession.getPrincipal();
@@ -84,6 +94,10 @@ public abstract class SocketHandler implements WebSocketHandler {
             reject(userSession, "Авторизация не пройдена");
             throw new RuntimeException("Авторизация не пройдена");
         }
+    }
+
+    protected List<UserEntity> getActiveUsers(){
+        return userService.getUsersByIds(sessionMap.keySet());
     }
 
     protected void sendUpdate(WebSocketSession userSession, ChatUpdate update) {

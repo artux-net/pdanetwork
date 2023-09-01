@@ -52,6 +52,9 @@ public class ValuesService {
     @Value("${postman.invite.link}")
     private String postmanInviteLink;
 
+    @Value("${registration.confirmation.enabled}")
+    private boolean emailConfirmationEnabled;
+
     public String getAddress() {
         return getDomain() + getContextPath();
     }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,7 +26,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findMemberByEmail(String email);
 
-    Set<UserEntity> findAllByIdIn(List<UUID> list);
+    List<UserEntity> findAllByIdIn(List<UUID> list);
+
+    List<UserEntity> findAllByLoginIn(Collection<String> logins);
 
     @Query(value = "select res from (select id, row_number()  over(order by xp desc) as res from pda_user pu) a where a.id = :id", nativeQuery = true)
     long ratingPosition(UUID id);

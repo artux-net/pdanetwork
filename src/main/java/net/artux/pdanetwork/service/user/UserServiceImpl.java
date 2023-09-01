@@ -12,6 +12,7 @@ import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.email.EmailService;
+import net.artux.pdanetwork.service.util.ValuesService;
 import net.artux.pdanetwork.utills.RandomString;
 import net.artux.pdanetwork.utills.security.AdminAccess;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final ValuesService valuesService;
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -57,17 +60,23 @@ public class UserServiceImpl implements UserService {
     private final Environment environment;
     private final RandomString randomString = new RandomString();
 
-
-
     @Override
     public Status registerUser(RegisterUserDto newUser) {
         Status status = userValidator.checkUser(newUser);
         if (status.isSuccess()) {
-            if (!registerUserMap.containsKey(newUser.getEmail()))
+            if (!registerUserMap.containsValue(newUser))
                 try {
-                    emailService.sendConfirmLetter(newUser, generateToken(newUser));
-                    status = new Status(true, "Проверьте почту.");
+                    String token = generateToken(newUser);
+                    if (valuesService.isEmailConfirmationEnabled()) {
+                        emailService.sendConfirmLetter(newUser, token);
+                        status = new Status(true, "Проверьте почту.");
+                    }else {
+                        handleConfirmation(token);
+                        status = new Status(false, "Учетная запись зарегистрирована. Выполните вход на предыдущей странице.");
+                    }
+
                 } catch (Exception e) {
+                    logger.error("Registration", e);
                     status = new Status(false, "Не удалось отправить письмо на " + newUser.getEmail());
                 }
             else
@@ -80,6 +89,7 @@ public class UserServiceImpl implements UserService {
     private String generateToken(RegisterUserDto user) {
         String token = randomString.nextString();
         logger.info("Пользователь {} добавлен в лист ожидания регистрации с токеном {}, токен возможно использовать через сваггер.", user.getEmail(), token);
+        logger.info("Ссылка подтверждения аккаунта: " + valuesService.getAddress() + "/confirmation/register?t=" + token);
         registerUserMap.put(token, user);
         timer.schedule(new TimerTask() {
             @Override
@@ -93,14 +103,20 @@ public class UserServiceImpl implements UserService {
     public Status handleConfirmation(String token) {
         if (registerUserMap.containsKey(token)) {
             RegisterUserDto regDto = registerUserMap.get(token);
+            Status currentStatus = userValidator.checkUser(regDto);
+            registerUserMap.remove(token);
+            if (!currentStatus.isSuccess())
+                return currentStatus;
+
             UserEntity member = saveUser(regDto, Role.USER);
             long pdaId = member.getPdaId();
             logger.info("Пользователь {} ({} {}) зарегистрирован.", member.getLogin(), member.getName(), member.getNickname());
-            registerUserMap.remove(token);
             try {
-                emailService.sendRegisterLetter(regDto, pdaId);
+                if (valuesService.isEmailConfirmationEnabled())
+                    emailService.sendRegisterLetter(regDto, pdaId);
                 return new Status(true, pdaId + " - Это ваш pdaId, мы вас зарегистрировали, спасибо!");
             } catch (Exception e) {
+                logger.error("Handle confirmation", e);
                 return new Status(true, "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!");
             }
         } else return new Status(false, "Ссылка устарела или не существует");
@@ -108,6 +124,11 @@ public class UserServiceImpl implements UserService {
 
     public UserEntity saveUser(RegisterUserDto registerUserDto, Role role) {
         return userRepository.save(new UserEntity(registerUserDto, passwordEncoder, role));
+    }
+
+    @Override
+    public List<UserEntity> getUsersByIds(Collection<UUID> ids) {
+        return userRepository.findAllById(ids);
     }
 
     public UUID getCurrentId() {
@@ -151,6 +172,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserEntity> getUsersByLogins(Collection<String> logins) {
+        return userRepository.findAllByLoginIn(logins);
+    }
+
+    @Override
     @AdminAccess
     public AdminUserDto updateUser(UUID id, AdminEditUserDto adminEditUserDto) {
         UserEntity user = getUserById(id);
@@ -179,23 +205,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Status editUser(RegisterUserDto user) {
         UserEntity userEntity = getUserById();
-        Status status = userValidator.checkUser(user);
-        if (status.isSuccess()) {
-            userEntity.setName(user.getName());
-            userEntity.setNickname(user.getNickname());
-            userEntity.setLogin(user.getLogin());
-            //TODO добавить через модуль подтверждения почту
-            userEntity.setEmail(user.getEmail());
-            userEntity.setAvatar(user.getAvatar());
-            userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(userEntity);
+        userEntity.setName(user.getName());
+        userEntity.setNickname(user.getNickname());
+        //userEntity.setLogin(user.getLogin());
+        //TODO добавить через модуль подтверждения почту
+        //userEntity.setEmail(user.getEmail());
+        userEntity.setAvatar(user.getAvatar());
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(userEntity);
 
-            String message = "Обновлен пользователь " + user.getLogin();
-            status.setDescription(message);
-            return status;
-        }
-
-        return status;
+        String message = "Обновлен пользователь " + user.getLogin();
+        return new Status(true, message);
     }
 
     @Override
