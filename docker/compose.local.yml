@@ -32,7 +32,7 @@ services:
     ports:
       - "8080:8080"
   frontend:
-    image: registry.artux.net/pda-admin-web:main
+    image: registry.artux.net/pda-admin-web:dev
     container_name: pdanet_admin_panel
     pull_policy: always
     restart: unless-stopped
