@@ -38,6 +38,10 @@ public enum ServerCommand implements EnumGetter {
         return commands;
     }
 
+    public String getCommand() {
+        return commands.iterator().next();
+    }
+
     public static ServerCommand of(String c) {
         for (ServerCommand cmd : values()) {
             if (cmd.commands.contains(c)) return cmd;

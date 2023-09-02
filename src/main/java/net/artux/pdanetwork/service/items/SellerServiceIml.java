@@ -24,11 +24,14 @@ import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -129,7 +132,7 @@ public class SellerServiceIml implements SellerService {
 
             return new Status(true, "Ok.", storyData);
         } else
-            return new Status(true, "Недостаточно средств.");
+            return new Status(false, "Недостаточно средств.");
     }
 
     @Override
