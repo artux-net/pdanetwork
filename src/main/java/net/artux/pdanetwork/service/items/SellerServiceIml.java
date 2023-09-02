@@ -232,7 +232,23 @@ public class SellerServiceIml implements SellerService {
 
                 ItemEntity item = itemService.getItem(id);
                 item.setQuantity(quantity);
-                sellerEntity.addItem(itemRepository.save(item));
+
+                ItemEntity stackTarget = null;
+                if (item.getBase().getType().isCountable()) {
+                    List<ItemEntity> sellerItems = sellerEntity.getAllItems();
+                    Optional<ItemEntity> sameTypeItem = sellerItems
+                            .stream()
+                            .filter(itemEntity -> itemEntity.getBasedId() == id)
+                            .findAny();
+                    if (sameTypeItem.isPresent()) {
+                        stackTarget = sameTypeItem.get();
+                    }
+                }
+                if (stackTarget != null) {
+                    stackTarget.setQuantity(stackTarget.getQuantity() + quantity);
+                } else {
+                    sellerEntity.addItem(itemRepository.save(item));
+                }
             } catch (Exception ignored) {
             }
         }

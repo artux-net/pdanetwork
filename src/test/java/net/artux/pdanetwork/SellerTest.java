@@ -32,7 +32,7 @@ public class SellerTest {
 
     @Test
     @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
-    public void addItemsToSeller(){
+    public void addCountableItemsToSeller(){
         long sellerId = 1;
         sellerService.addSellerItems(sellerId, List.of("29:50", "29:50"));
         ItemDto itemDto = sellerService.getSeller(sellerId).getBullets()
@@ -40,6 +40,13 @@ public class SellerTest {
                 .filter(dto -> dto.getBaseId() == 29)
                 .findFirst().get();
         Assertions.assertEquals(100, itemDto.getQuantity());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
+    public void addUncountableItemsToSeller(){
+        //TODO: unique type chests for uncountable items
+        Assertions.assertTrue(false);
     }
 
     @Test
