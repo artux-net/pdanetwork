@@ -27,7 +27,7 @@ public class UserValidator {
     private final UserRepository userRepository;
 
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-    private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z0-9-_.]+$";
+    private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z][a-zA-Z0-9-_.]+$";
     private static final String NAME_VALIDATION_REGEX = "^[A-Za-z\u0400-\u052F']*$";
     private static final String PASSWORD_VALIDATION_REGEX = "^[A-Za-z\\d!@#$%^&*()_+№\";:?><\\[\\]{}]*$";
     private String blockedNicknames;
