@@ -75,7 +75,7 @@ public class SellerServiceIml implements SellerService {
                 .collect(Collectors.toList());
     }
 
-    @Scheduled(cron = "0 5 * * * *")
+    @Scheduled(fixedRate = 5 * 60 * 1000)
     @Transactional
     public void fixSellersItems() {
         List<SellerEntity> sellerEntities = sellerRepository.findAll();
@@ -107,7 +107,7 @@ public class SellerServiceIml implements SellerService {
             });
         });
         sellerRepository.saveAll(sellerEntities);
-
+        logger.info("Обновлен ассортимент продавцов", sellerEntities.size());
     }
 
     @Override
