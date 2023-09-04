@@ -27,4 +27,5 @@ public interface SellerService {
 
     void deleteSeller(Long id);
 
+    void fixSellersItems();
 }

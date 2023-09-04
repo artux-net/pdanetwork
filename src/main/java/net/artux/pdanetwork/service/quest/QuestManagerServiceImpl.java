@@ -47,8 +47,11 @@ public class QuestManagerServiceImpl implements QuestManagerService {
 
     @PostConstruct
     public void init() {
-        if (!readFromR2().isSuccess())
-            readFromGit();
+        if (valuesService.isInitStoriesEnabled()){
+            Status r2Status = readFromR2();
+            if (r2Status.isFailure())
+                readFromGit();
+        }
     }
 
     public Status readFromR2() {

@@ -33,4 +33,8 @@ public class Status {
         this.success = success;
     }
 
+    public boolean isFailure() {
+        return !success;
+    }
+
 }

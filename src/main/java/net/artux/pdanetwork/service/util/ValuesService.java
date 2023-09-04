@@ -55,6 +55,9 @@ public class ValuesService {
     @Value("${registration.confirmation.enabled}")
     private boolean emailConfirmationEnabled;
 
+    @Value("${quest.stories.init.enabled}")
+    private boolean initStoriesEnabled;
+
     public String getAddress() {
         return getDomain() + getContextPath();
     }

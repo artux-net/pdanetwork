@@ -11,7 +11,6 @@ import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.seller.Seller;
 import net.artux.pdanetwork.models.seller.SellerAdminDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.models.seller.SellerMapper;
@@ -22,16 +21,17 @@ import net.artux.pdanetwork.repository.items.SellerRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,23 +51,63 @@ public class SellerServiceIml implements SellerService {
     private final SellerMapper sellerMapper;
     private final UserService userService;
     private final ObjectMapper mapper;
+    private final Logger logger = LoggerFactory.getLogger(SellerService.class);
+
+    private List<SellerAdminDto> initialSellers;
 
     @PostConstruct
     void init() throws IOException {
-        List<SellerEntity> sellers = readSellers();
-        for (SellerEntity seller : sellers) {
+        initialSellers = readSellers();
+        logger.info("Прочитан список продавцов, продавцы:");
+        for (SellerAdminDto seller : initialSellers)
+            logger.info("{}, покупка: {}, продажа: {}", seller.getName(), seller.getBuyCoefficient(), seller.getSellCoefficient());
+
+        for (SellerAdminDto seller : initialSellers)
             if (!sellerRepository.existsById(seller.getId()))
-                sellerRepository.save(seller);
-        }
+                sellerRepository.save(sellerMapper.entity(seller));
     }
 
-    private List<SellerEntity> readSellers() throws IOException {
+    private List<SellerAdminDto> readSellers() throws IOException {
         Resource resource = new ClassPathResource("static/base/sellers/info.json");
-
-        Seller[] arr = mapper.readValue(resource.getInputStream(), Seller[].class);
+        logger.info("Чтение списка продавцов");
+        SellerAdminDto[] arr = mapper.readValue(resource.getInputStream(), SellerAdminDto[].class);
         return Arrays.stream(arr)
-                .map(sellerMapper::entity)
                 .collect(Collectors.toList());
+    }
+
+    @Scheduled(cron = "0 5 * * * *")
+    @Transactional
+    public void fixSellersItems() {
+        List<SellerEntity> sellerEntities = sellerRepository.findAll();
+        logger.info("Обновление ассортимента продавцов", sellerEntities.size());
+        sellerEntities.forEach(seller -> {
+            Optional<SellerEntity> optional = initialSellers.stream()
+                    .filter(initialSeller -> initialSeller.getId() == seller.getId())
+                    .map(sellerMapper::entity)
+                    .findFirst();
+            if (optional.isEmpty())
+                return;
+
+            SellerEntity initialSeller = optional.get();
+            initialSeller.getAllItems().forEach(initialItem -> {
+                long basedId = initialItem.getBasedId();
+                ItemEntity sellerItem = seller.findItem(basedId);
+                if (sellerItem == null) {
+                    seller.addItem(initialItem);
+                    logger.info("{}: отсутствует предмет {} ({}), добавление.",
+                            seller.getName(), initialItem.getBase().getTitle(), basedId);
+                } else {
+                    int basedQuantity = initialItem.getQuantity();
+                    if (sellerItem.getQuantity() < basedQuantity) {
+                        sellerItem.setQuantity(basedQuantity);
+                        logger.info("{}: обновление количества {} ({})",
+                                seller.getName(), initialItem.getBase().getTitle(), basedId);
+                    }
+                }
+            });
+        });
+        sellerRepository.saveAll(sellerEntities);
+
     }
 
     @Override
@@ -99,9 +139,9 @@ public class SellerServiceIml implements SellerService {
         if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
+                sellerRepository.save(sellerEntity);
                 if (optionalUserItem.isEmpty() || !type.isCountable()) {
                     sellerItem.setOwner(userEntity);
-                    sellerRepository.save(sellerEntity);
                     itemRepository.save(sellerItem);
                 } else {
                     ItemEntity userItem = optionalUserItem.get();
@@ -195,6 +235,7 @@ public class SellerServiceIml implements SellerService {
 
     @ModeratorAccess
     public SellerDto createSeller(SellerAdminDto dto) {
+        UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = new SellerEntity();
         sellerEntity.setId(dto.getId());
         sellerEntity.setName(dto.getName());
@@ -202,12 +243,19 @@ public class SellerServiceIml implements SellerService {
         sellerEntity.setImage(dto.getImage());
         sellerEntity.setBuyCoefficient(dto.getBuyCoefficient());
         sellerEntity.setSellCoefficient(dto.getSellCoefficient());
+        sellerEntity = sellerRepository.save(sellerEntity);
+        initialSellers.add(sellerMapper.adminDto(sellerEntity));
+        logger.info("Создание продавца {} ({}) пользователем {}", sellerEntity.getName(), sellerEntity.getId(), userEntity.getLogin());
 
-        return sellerMapper.dto(sellerRepository.save(sellerEntity));
+        return sellerMapper.dto(sellerEntity);
     }
 
     @ModeratorAccess
     public SellerDto updateSeller(Long id, SellerAdminDto dto) {
+        dto.setId(id);
+        initialSellers.removeIf(s -> s.getId() == id);
+        initialSellers.add(dto);
+
         SellerEntity sellerEntity = sellerRepository.findById(id).orElseThrow();
         sellerEntity.setName(dto.getName());
         sellerEntity.setIcon(dto.getIcon());
@@ -257,18 +305,25 @@ public class SellerServiceIml implements SellerService {
     }
 
     @ModeratorAccess
+    @Transactional
     public SellerDto deleteSellerItems(Long sellerId, List<UUID> ids) {
-        SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
-        List<UUID> sellerItemIds = sellerEntity.getAllItems()
-                .stream()
-                .map(ItemEntity::getId)
-                .collect(Collectors.toList());
-        ids.removeIf(id -> !sellerItemIds.contains(id));
+        List<UUID> finalIds = new LinkedList<>(ids);
 
-        for (UUID itemId : ids) {
-            itemRepository.deleteById(itemId);
-        }
-        return sellerMapper.dto(sellerEntity);
+        SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
+        List<UUID> sellerItemIds = new LinkedList<>();
+        sellerEntity.getAllItems()
+                .stream()
+                .filter(entity -> finalIds.contains(entity.getId()))
+                .forEach(item -> {
+                    sellerItemIds.add(item.getId());
+                    sellerEntity.removeItem(item);
+                });
+
+        finalIds.removeIf(id -> !sellerItemIds.contains(id));
+        SellerDto dto = sellerMapper.dto(sellerRepository.save(sellerEntity));
+        itemRepository.deleteAllById(finalIds);
+
+        return dto;
     }
 
     @ModeratorAccess
