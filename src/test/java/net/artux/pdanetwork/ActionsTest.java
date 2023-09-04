@@ -6,7 +6,12 @@ import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.user.UserService;
 import org.junit.Assert;
+import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -15,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Order(1)
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
 public class ActionsTest {
 
