@@ -36,6 +36,7 @@ public abstract class SellerMapper {
         sellerEntity.setBuyCoefficient(sellerAdminDto.getBuyCoefficient());
         sellerEntity.setSellCoefficient(sellerAdminDto.getSellCoefficient());
         items(sellerEntity, sellerAdminDto.getItems());
+
         return sellerEntity;
     }
 
