@@ -27,7 +27,7 @@ public class UserValidator {
     private final UserRepository userRepository;
 
     private static final String EMAIL_VALIDATION_REGEX = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-    private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z][a-zA-Z0-9-_.]+$";
+    private static final String LOGIN_VALIDATION_REGEX = "^[a-zA-Z0-9-_.]+$";
     private static final String NAME_VALIDATION_REGEX = "^[A-Za-z\u0400-\u052F']*$";
     private static final String PASSWORD_VALIDATION_REGEX = "^[A-Za-z\\d!@#$%^&*()_+№\";:?><\\[\\]{}]*$";
     private String blockedNicknames;
@@ -53,6 +53,9 @@ public class UserValidator {
     private Status checkLogin(String login) {
         if (!StringUtils.hasText(login)) {
             return new Status(false, "Логин не может быть пустым.");
+        }
+        if (!Character.isLetter(login.charAt(0))) {
+            return new Status(false, "Логин должен начинаться с буквы.");
         }
         Collection<String> defectSymbols = checkStringSymbolsByRegexp(login, LOGIN_VALIDATION_REGEX);
         if (!defectSymbols.isEmpty()) {

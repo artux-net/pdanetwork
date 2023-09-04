@@ -38,7 +38,8 @@ public class UserTest {
     @Test
     public void registerUser() {
         Status status = userService.registerUser(getRegisterUser());
-        System.out.println(status);
+        System.out.println(status.getDescription());
+        //Assertions.assertTrue(status.isSuccess());
     }
 
     @Test
