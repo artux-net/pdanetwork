@@ -6,6 +6,7 @@ import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.user.UserService;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -45,9 +46,10 @@ public class ActionsTest {
     @WithMockUser(username = "admin", roles = "ADMIN")
     public void addMoney() {
         UserEntity user = userService.getUserByLogin("admin");
+        int money = user.getMoney();
         actionService.applyCommands(user.getId(), Map.of("money", List.of("1000")));
         user = userService.getUserByLogin("admin");
-        Assert.assertTrue(1500 == user.getMoney());
+        Assertions.assertEquals(money + 1000, (int) user.getMoney());
     }
 
     @Test
