@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Order(1)
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@Order(9)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
 public class ActionsTest {
 
