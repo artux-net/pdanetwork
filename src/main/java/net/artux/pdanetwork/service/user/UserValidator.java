@@ -66,7 +66,7 @@ public class UserValidator {
         if (login.length() < 4 || login.length() > 16) {
             return new Status(false, "Логин должен содержать не менее 4 и не более 16 символов.");
         }
-        if (userRepository.getMemberByLogin(login).isPresent()) {
+        if (userRepository.findByLogin(login).isPresent()) {
             return new Status(false, "Пользователь с таким логином уже существует.");
         }
         return new Status(true);

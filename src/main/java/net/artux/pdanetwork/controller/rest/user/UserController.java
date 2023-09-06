@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -54,8 +53,8 @@ public class UserController {
 
     @PutMapping("/reset/pass")
     @Operation(summary = "Запрос на сброс пароля")
-    public Status sendLetter(@RequestParam("email") String email) {
-        return resetService.sendLetter(email);
+    public Status sendResetPasswordLetter(@RequestParam("email") String email) {
+        return resetService.sendResetPasswordLetter(email);
     }
 
     @Operation(summary = "Выполнение действий")

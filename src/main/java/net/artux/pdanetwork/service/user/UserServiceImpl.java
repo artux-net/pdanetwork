@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByLogin(String login) {
-        return userRepository.getMemberByLogin(login).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
+        return userRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Пользователя не существует"));
     }
 
     @Override

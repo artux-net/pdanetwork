@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<SimpleUser> getByLogin(String login);
 
-    Optional<UserEntity> getMemberByLogin(String login);
+    Optional<UserEntity> findByLogin(String login);
 
     Optional<UserEntity> findMemberByEmail(String email);
 

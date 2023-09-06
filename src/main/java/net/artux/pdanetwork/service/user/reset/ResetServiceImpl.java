@@ -38,7 +38,7 @@ public class ResetServiceImpl implements ResetService {
     private final HashMap<String, String> requests = new HashMap<>();
 
     @Override
-    public Status sendLetter(String email) {
+    public Status sendResetPasswordLetter(String email) {
         UserEntity userEntity = userService.getUserByEmail(email);
         //TODO
         if (!requests.containsValue(userEntity.getEmail())) {
