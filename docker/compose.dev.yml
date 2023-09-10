@@ -16,8 +16,6 @@ services:
       - "9999:5432"
     labels:
       io.portainer.accesscontrol.teams: dev,prod
-    networks:
-      - pdanetwork
 
   backend:
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
@@ -52,5 +50,3 @@ services:
       - "8001:3000"
     labels:
       io.portainer.accesscontrol.teams: dev,prod
-    networks:
-      - pdanetwork

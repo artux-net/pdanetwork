@@ -13,8 +13,6 @@ services:
       - POSTGRES_PASSWORD=pass
     ports:
       - "9999:5432"
-    networks:
-      - pdanetwork
 
   backend:
     build:
@@ -33,5 +31,3 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
-    networks:
-      - pdanetwork
