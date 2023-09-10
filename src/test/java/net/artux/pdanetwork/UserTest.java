@@ -27,7 +27,7 @@ public class UserTest {
     public RegisterUserDto getRegisterUser() {
         return RegisterUserDto.builder()
                 .login("test")
-                .email("test@gmail.com")
+                .email("prygunovmaksim@yandex.ru")
                 .avatar("0")
                 .name("test")
                 .nickname("test")
