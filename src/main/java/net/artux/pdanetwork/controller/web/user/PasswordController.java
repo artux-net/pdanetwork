@@ -23,7 +23,7 @@ public class PasswordController {
   @GetMapping
   public String passwordPage(Model model, @RequestParam("t") String token){
     model.addAttribute("token",token);
-    return "resetPassword";
+    return "public/user/resetPassword";
   }
 
   @PostMapping

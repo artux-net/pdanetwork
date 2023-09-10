@@ -23,7 +23,7 @@ public class SecurityService {
 
     public boolean isPasswordCorrect(String login, String password) {
         UserEntity entity = userRepository.findByLogin(login).orElseThrow();
-        return entity.getPassword().equals(passwordEncoder.encode(password));
+        return passwordEncoder.matches(password, entity.getPassword());
     }
 
 }
