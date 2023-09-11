@@ -15,7 +15,6 @@ final public class TestingTools {
             return false;
         }
         Field[] classFields = objects[0].getClass().getDeclaredFields();
-        Arrays.sort(classFields);
         for (Field classField : classFields) {
             if (!Arrays.stream(objects).allMatch(classField::canAccess)) {
                 classField.setAccessible(true);
