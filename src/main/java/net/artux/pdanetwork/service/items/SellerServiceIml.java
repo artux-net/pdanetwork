@@ -280,6 +280,7 @@ public class SellerServiceIml implements SellerService {
 
                 ItemEntity item = itemService.getItem(id);
                 item.setQuantity(quantity);
+
                 /*
                 TODO надо чтобы там всегда 1 была, другие сервисы ожидают что там 1,
                 соответственно надо навый объект делать, а там свои проблемы..

@@ -85,6 +85,7 @@ public class ResetServiceImpl implements ResetService {
         userEntity.setPassword(passwordEncoder.encode(password));
         userEntity = userRepository.save(userEntity);
 
+        requests.remove(token);
         logger.info("Хэш нового пароля: {}", userEntity.getPassword());
 
         return new Status(true, "Пароль успешно изменен");

@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.models.items;
 
+import jakarta.annotation.Nullable;
 import net.artux.pdanetwork.entity.items.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,13 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ItemMapper {
 
-    @Mapping(target = "weight", source = "entity.base.weight")
-    @Mapping(target = "type", source = "entity.base.type")
-    @Mapping(target = "title", source = "entity.base.title")
-    @Mapping(target = "price", source = "entity.base.price")
-    @Mapping(target = "icon", source = "entity.base.icon")
-    @Mapping(target = "baseId", source = "entity.base.id")
-    ItemDto usualItem(BulletEntity entity);
+
 
     @Mapping(target = "weight", source = "entity.base.weight")
     @Mapping(target = "type", source = "entity.base.type")
@@ -23,7 +18,15 @@ public interface ItemMapper {
     @Mapping(target = "price", source = "entity.base.price")
     @Mapping(target = "icon", source = "entity.base.icon")
     @Mapping(target = "baseId", source = "entity.base.id")
-    ItemDto usualItem(UsualItemEntity entity);
+    ItemDto simpleItem(BulletEntity entity);
+
+    @Mapping(target = "weight", source = "entity.base.weight")
+    @Mapping(target = "type", source = "entity.base.type")
+    @Mapping(target = "title", source = "entity.base.title")
+    @Mapping(target = "price", source = "entity.base.price")
+    @Mapping(target = "icon", source = "entity.base.icon")
+    @Mapping(target = "baseId", source = "entity.base.id")
+    ItemDto simpleItem(UsualItemEntity entity);
 
     List<ItemDto> usualItems(List<UsualItemEntity> itemEntities);
     List<ItemDto> items(List<BulletEntity> itemEntities);
@@ -83,15 +86,19 @@ public interface ItemMapper {
 
     List<MedicineDto> medicines(List<MedicineEntity> itemEntities);
 
+    @Nullable
     default ItemDto any(ItemEntity entity1) {
+        if (entity1 == null) {
+            return null;
+        }
         return switch (entity1.getBase().getType()) {
             case ARMOR -> armor((ArmorEntity) entity1);
             case PISTOL, RIFLE -> weapon((WeaponEntity) entity1);
             case MEDICINE -> medicine((MedicineEntity) entity1);
             case ARTIFACT -> artifact((ArtifactEntity) entity1);
             case DETECTOR -> detector((DetectorEntity) entity1);
-            case BULLET -> usualItem((BulletEntity) entity1);
-            case ITEM -> usualItem((UsualItemEntity) entity1);
+            case BULLET -> simpleItem((BulletEntity) entity1);
+            case ITEM -> simpleItem((UsualItemEntity) entity1);
         };
     }
 

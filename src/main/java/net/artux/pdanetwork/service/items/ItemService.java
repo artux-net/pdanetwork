@@ -2,6 +2,8 @@ package net.artux.pdanetwork.service.items;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Nullable;
+import net.artux.pdanetwork.entity.CloningMapper;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ArtifactEntity;
 import net.artux.pdanetwork.entity.items.BulletEntity;
@@ -41,17 +43,19 @@ public class ItemService {
     private final ObjectMapper objectMapper;
     private final ItemMapper itemMapper;
     private final BaseItemService baseItemService;
+    private final CloningMapper cloningMapper;
 
     private final UserService userService;
     private final UserRepository userRepository;
 
     public <T extends ItemEntity> ItemService(Logger logger, ObjectMapper objectMapper, ItemMapper itemMapper,
                                               BaseItemService baseItemService,
-                                              UserService userService, UserRepository userRepository) {
+                                              CloningMapper cloningMapper, UserService userService, UserRepository userRepository) {
         this.logger = logger;
         this.objectMapper = objectMapper;
         this.itemMapper = itemMapper;
         this.baseItemService = baseItemService;
+        this.cloningMapper = cloningMapper;
         this.userService = userService;
         this.userRepository = userRepository;
 
@@ -95,8 +99,9 @@ public class ItemService {
         return list;
     }
 
+    @Nullable
     public ItemEntity getItem(long baseId) {
-        return itemsMap.get(baseId);
+        return cloningMapper.itemEntity(itemsMap.get(baseId));
     }
 
     public ItemDto getItemDto(long baseId) {
