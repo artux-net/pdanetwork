@@ -6,9 +6,7 @@ import net.artux.pdanetwork.models.achievement.AchCategoryDto;
 import net.artux.pdanetwork.models.achievement.AchDto;
 import net.artux.pdanetwork.models.achievement.AchievementCreateDto;
 import net.artux.pdanetwork.service.achievement.AchievementService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -18,44 +16,50 @@ import java.util.HashSet;
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AchievementTest {
 
     @Autowired
     private AchievementService achievementService;
-    private String testCategoryName;
 
     @Test
     @Order(1)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createCategory() {
-        AchCategoryCreateDto achCategoryCreateDto = new AchCategoryCreateDto(
-                "title test",
-                "name test",
-                "description test",
-                "image test"
-        );
+        AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto();
         AchCategoryDto categoryDTO = achievementService.createCategory(achCategoryCreateDto);
-        Assertions.assertNotNull(categoryDTO.id());
-        testCategoryName = categoryDTO.name();
+        Assertions.assertNotNull(categoryDTO.name());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createAchievement() {
-        Map<String, HashSet<String>> condition = constructTestCondition();
-        AchievementCreateDto achievementCreateDto = new AchievementCreateDto(
+        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto();
+        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto().name(), achievementCreateDto);
+        Assertions.assertNotNull(achievementDTO.name());
+    }
+
+    private static AchCategoryCreateDto getTemplateCategoryCreateDto() {
+        return new AchCategoryCreateDto(
+                "title test",
+                "name test",
+                "description test",
+                "image test"
+        );
+    }
+
+    private static AchievementCreateDto getTemplateAchievementCreateDto() {
+        return new AchievementCreateDto(
                 "title test",
                 "name test",
                 "description test",
                 "image test",
                 AchievementGroup.ACTIVITY,
-                condition);
-        AchDto achievementDTO = achievementService.createAchievement(testCategoryName, achievementCreateDto);
-        Assertions.assertNotNull(achievementDTO.id());
+                getTemplateCondition());
     }
 
-    private static Map<String, HashSet<String>> constructTestCondition() {
+    private static Map<String, HashSet<String>> getTemplateCondition() {
         Map<String, HashSet<String>> condition = new HashMap<>();
         {
             HashSet<String> attrValues = new HashSet<>();
