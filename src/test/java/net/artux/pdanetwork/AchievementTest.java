@@ -5,6 +5,8 @@ import net.artux.pdanetwork.models.achievement.AchCategoryCreateDto;
 import net.artux.pdanetwork.models.achievement.AchCategoryDto;
 import net.artux.pdanetwork.models.achievement.AchDto;
 import net.artux.pdanetwork.models.achievement.AchievementCreateDto;
+import net.artux.pdanetwork.repository.achievement.AchievementCategoryRepository;
+import net.artux.pdanetwork.repository.achievement.AchievementRepository;
 import net.artux.pdanetwork.service.achievement.AchievementService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,56 +24,64 @@ public class AchievementTest {
     @Autowired
     private AchievementService achievementService;
 
+    @Autowired
+    private AchievementCategoryRepository achievementCategoryRepository;
+
+    @Autowired
+    private AchievementRepository achievementRepository;
+
     @Test
     @Order(1)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createCategory() {
-        AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto();
+        AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto(1);
         AchCategoryDto categoryDTO = achievementService.createCategory(achCategoryCreateDto);
         Assertions.assertNotNull(categoryDTO.name());
+        Assertions.assertTrue(achievementCategoryRepository.findById(achCategoryCreateDto.name()).isPresent());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createAchievement() {
-        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto();
-        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto().name(), achievementCreateDto);
+        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
+        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto(1).name(), achievementCreateDto);
         Assertions.assertNotNull(achievementDTO.name());
+        Assertions.assertTrue(achievementRepository.findById(achievementCreateDto.name()).isPresent());
     }
 
-    private static AchCategoryCreateDto getTemplateCategoryCreateDto() {
+    private static AchCategoryCreateDto getTemplateCategoryCreateDto(int postfix) {
         return new AchCategoryCreateDto(
-                "title test",
-                "name test",
-                "description test",
-                "image test"
+                "title test" + postfix,
+                "name test" + postfix,
+                "description test" + postfix,
+                "image test" + postfix
         );
     }
 
-    private static AchievementCreateDto getTemplateAchievementCreateDto() {
+    private static AchievementCreateDto getTemplateAchievementCreateDto(int postfix) {
         return new AchievementCreateDto(
-                "title test",
-                "name test",
-                "description test",
-                "image test",
+                "title test" + postfix,
+                "name test" + postfix,
+                "description test" + postfix,
+                "image test" + postfix,
                 AchievementGroup.ACTIVITY,
-                getTemplateCondition());
+                getTemplateCondition(postfix));
     }
 
-    private static Map<String, HashSet<String>> getTemplateCondition() {
+    private static Map<String, HashSet<String>> getTemplateCondition(int postfix) {
         Map<String, HashSet<String>> condition = new HashMap<>();
         {
             HashSet<String> attrValues = new HashSet<>();
-            attrValues.add("attribute1 value1");
-            attrValues.add("attribute1 value2");
-            condition.put("attribute1", attrValues);
+            attrValues.add("attribute1 value1 test" + postfix);
+            attrValues.add("attribute1 value2 test" + postfix);
+            condition.put("attribute1 test" + postfix, attrValues);
         }
         {
             HashSet<String> attrValues = new HashSet<>();
-            attrValues.add("attribute2 value1");
-            attrValues.add("attribute2 value2");
-            condition.put("attribute2", attrValues);
+            attrValues.add("attribute2 value1 test" + postfix);
+            attrValues.add("attribute2 value2 test" + postfix);
+            condition.put("attribute2 test" + postfix, attrValues);
         }
         return condition;
     }
