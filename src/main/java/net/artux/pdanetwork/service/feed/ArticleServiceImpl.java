@@ -41,7 +41,8 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDto getArticle(UUID id) {
         ArticleEntity article = articleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
-        return feedMapper.fullDto(article);
+        article.setViews(article.getViews() + 1);
+        return feedMapper.fullDto(articleRepository.save(article));
     }
 
     @Override
@@ -66,10 +67,10 @@ public class ArticleServiceImpl implements ArticleService {
         Page<ArticleEntity> page;
         if(tags == null || tags.isEmpty())
             page = articleRepository.findAll(pageService.getPageable(queryPage));
-       else
+        else {
             page = articleRepository
                     .findAllByTagsIn(tags, pageService.getPageable(queryPage));
-
+        }
         return pageService.mapDataPageToResponsePage(page, feedMapper.dto(page.getContent()));
     }
 

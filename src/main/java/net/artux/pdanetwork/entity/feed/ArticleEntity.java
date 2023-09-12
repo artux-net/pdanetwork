@@ -58,6 +58,8 @@ public class ArticleEntity extends CommentableEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<UserEntity> likes;
 
+    private Integer views = 0;
+
     public ArticleEntity() {
         setPublished(Instant.now());
         likes = new HashSet<>();

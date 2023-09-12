@@ -13,6 +13,7 @@ public record ArticleDto(UUID id,
                          String content,
                          int likes,
                          int comments,
+                         int views,
                          Instant published) {
 
 }

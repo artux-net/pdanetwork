@@ -30,9 +30,10 @@ public class FeedController {
         ArticleDto article = articleService.getArticle(id);
         model.addAttribute("title", article.title());
         model.addAttribute("content", article.content());
-        //model.addAttribute("tags", article.getTags());
+        model.addAttribute("tags", article.tags());
         model.addAttribute("date", df.format(article.published()));
-        model.addAttribute("comments", 0);
+        model.addAttribute("comments", article.comments());
+        model.addAttribute("likes", article.likes());
         return "article";
     }
 

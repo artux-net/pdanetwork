@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.feed;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
@@ -7,7 +8,6 @@ import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.feed.ArticleService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -48,6 +48,16 @@ public class ArticleTest {
         ArticleSimpleDto dto = articleService.createArticle(getTestDto());
         testId = dto.getId();
         Assertions.assertEquals(dto.getDescription(), getTestDto().getDescription());
+    }
+
+    @Test
+    public void removeArticle() {
+        ArticleSimpleDto dto = articleService.createArticle(getTestDto());
+        testId = dto.getId();
+        articleService.deleteArticle(testId);
+        Assertions.assertThrows(EntityNotFoundException.class, () ->{
+            articleService.getArticle(testId);
+        });
     }
 
     @Test
@@ -122,16 +132,22 @@ public class ArticleTest {
 
     @Test
     @Order(7)
-    public void checkGetPageByTags() {
+    public void checkGetPageByTag() {
         Assertions.assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1")).getContent().size());
     }
 
     @Test
     @Order(8)
-    @Disabled
-    public void checkEmptyGetPageByTags() {
-        //TODO
-        Assertions.assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag3", "tag2")).getContent().size());
+    public void checkGetPageByTags() {
+        Assertions.assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1", "tag3")).getContent().size());
+    }
+
+    @Test
+    @Order(9)
+    public void checkEmptyPageByTags() {
+        System.out.println(articleService.getTags());
+        System.out.println("Current:" + articleService.getPageArticles(new QueryPage(), Set.of()).getContent().get(0).getTags());
+        Assertions.assertEquals(0, articleService.getPageArticles(new QueryPage(), Set.of("tag3", "tag2")).getContent().size());
     }
 
 }
