@@ -51,6 +51,14 @@ public class ArticleTest {
     }
 
     @Test
+    @Order(2)
+    public void getArticle() {
+        Assertions.assertDoesNotThrow(() ->{
+            articleService.getArticle(testId);
+        });
+    }
+
+    @Test
     public void removeArticle() {
         ArticleSimpleDto dto = articleService.createArticle(getTestDto());
         testId = dto.getId();

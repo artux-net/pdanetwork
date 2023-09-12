@@ -32,7 +32,6 @@ public class ArticleEntity extends CommentableEntity {
     private String title;
     private String image;
 
-
     @NotBlank(message = "Описание не может быть пустым")
     @Size(max = 250, message = "Описание слишком большое")
     private String description;
@@ -77,5 +76,11 @@ public class ArticleEntity extends CommentableEntity {
 
     public void setTags(Set<TagEntity> tags) {
         this.tags = tags;
+    }
+
+    public Integer getViews() {
+        if (views == null)
+            return 0;
+        return views;
     }
 }
