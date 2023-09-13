@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import net.artux.pdanetwork.entity.MediaItem;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "base_item")
-public class BaseItemEntity {
+public class BaseItemEntity implements MediaItem {
 
     @Id
     protected Long id;

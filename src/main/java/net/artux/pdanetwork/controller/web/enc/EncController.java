@@ -29,9 +29,17 @@ public class EncController {
     }
 
     @GetMapping("/{type}")
-    public String getTypeList(Model model, @PathVariable ItemType type) {
-        model.addAttribute("items", baseItemService.getTypeItems(type));
-        return "enc/list";
+    public String getTypeList(Model model, @PathVariable String type) {
+        try{
+            model.addAttribute("items", baseItemService.getTypeItems(ItemType.valueOf(type)));
+            return "enc/list";
+        }catch (Exception e){
+            //todo
+            //model.addAttribute("items", );
+            return "enc/list";
+        }
+
+
     }
 
     @GetMapping("/item/{id}")

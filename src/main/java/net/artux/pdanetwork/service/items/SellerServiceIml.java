@@ -3,11 +3,7 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.ArmorEntity;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.items.ItemType;
-import net.artux.pdanetwork.entity.items.WeaponEntity;
-import net.artux.pdanetwork.entity.items.WearableEntity;
+import net.artux.pdanetwork.entity.items.*;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -30,11 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -132,11 +124,17 @@ public class SellerServiceIml implements SellerService {
         long baseId = sellerItem.getBasedId();
         ItemType type = sellerItem.getBasedType();
 
+        int price = getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity);
+
         Optional<? extends ItemEntity> optionalUserItem = userEntity.findItem(baseId);
+        logger.info(userEntity.getLogin() + " покупает " + sellerItem.getBase().getTitle()
+                + " (" + sellerItem.getId() + ") в количестве " + quantity
+                + " у " + sellerEntity.getName()
+                + " за " + price + "RU, имеет: " + userEntity.getMoney() + "RU");
 
         if (!sellerItem.getBase().getType().isCountable())
             quantity = 1;
-        if (quantity > 0 && userEntity.canBuy(getPrice(sellerItem, sellerEntity.getBuyCoefficient(), quantity))) {
+        if (quantity > 0 && userEntity.canBuy(price)) {
             if (quantity == sellerItem.getQuantity()) {
                 sellerEntity.removeItem(sellerItem);
                 sellerRepository.save(sellerEntity);
@@ -168,6 +166,7 @@ public class SellerServiceIml implements SellerService {
             } else
                 return new Status(false, "У продавца столько нет.");
 
+            userEntity.getStatistic().boughtItems++;
             StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
 
             return new Status(true, "Ok.", storyData);
@@ -181,6 +180,12 @@ public class SellerServiceIml implements SellerService {
         UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         ItemEntity item = itemRepository.findById(id).orElseThrow();
+        int price = getPrice(item, sellerEntity.getSellCoefficient(), quantity);
+
+        logger.info(userEntity.getLogin() + " продает " + item.getBase().getTitle()
+                + " (" + item.getId() + ") в количестве " + quantity
+                + ":" + sellerEntity.getName()
+                + " за " + price + "RU");
 
         if (!item.getBase().getType().isCountable())
             quantity = 1;
@@ -216,7 +221,8 @@ public class SellerServiceIml implements SellerService {
                 sellerRepository.save(sellerEntity);
             }
         }
-        userEntity.setMoney(userEntity.getMoney() + getPrice(item, sellerEntity.getSellCoefficient(), quantity));
+        userEntity.setMoney(userEntity.getMoney() + price);
+        userEntity.getStatistic().soldItems++;
 
         StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
         return new Status(true, "Ok.", storyData);

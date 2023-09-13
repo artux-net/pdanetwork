@@ -89,7 +89,7 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsualItemEntity> items = new HashSet<>();
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private StatisticEntity statistic;
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
