@@ -166,7 +166,7 @@ public class SellerServiceIml implements SellerService {
             } else
                 return new Status(false, "У продавца столько нет.");
 
-            userEntity.getStatistic().boughtItems++;
+            userEntity.getStatistic().setBoughtItems(userEntity.getStatistic().getBoughtItems()+1);
             StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
 
             return new Status(true, "Ok.", storyData);
@@ -222,7 +222,7 @@ public class SellerServiceIml implements SellerService {
             }
         }
         userEntity.setMoney(userEntity.getMoney() + price);
-        userEntity.getStatistic().soldItems++;
+        userEntity.getStatistic().setSoldItems(userEntity.getStatistic().getSoldItems() + 1);
 
         StoryData storyData = storyMapper.storyData(userRepository.save(userEntity));
         return new Status(true, "Ok.", storyData);

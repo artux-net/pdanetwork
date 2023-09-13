@@ -238,4 +238,10 @@ public class UserEntity extends BaseEntity {
             chatBan = false;
         this.chatBan = chatBan;
     }
+
+    public StatisticEntity getStatistic() {
+        if (statistic == null)
+            return new StatisticEntity();
+        return statistic;
+    }
 }
