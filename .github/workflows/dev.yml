@@ -63,7 +63,7 @@ jobs:
 
       - name: Run services
         env:
-          IMAGE_TAG: ${{github.run_number}}
+          IMAGE_TAG: dev
 
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
