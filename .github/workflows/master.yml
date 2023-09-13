@@ -1,8 +1,9 @@
-name: CI/CD
+name: CI/CD Master
 
 on:
   push:
-    branches: [ "master"]
+    branches:
+      - master
 
 jobs:
   test:
@@ -29,8 +30,9 @@ jobs:
         run: mvn clean package
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
+          name: pdanetwork
           path: target/*.jar
 
       - name: Login to Artux registry
@@ -45,11 +47,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          # list of Docker images to use as base name for tags
           images: |
             registry.artux.net/pdanetwork
-          # generate Docker tags based on the following events/attributes
           tags: |
+            type=raw,value=${{github.run_number}}
             type=ref,event=branch
 
       - name: Build and push docker image
