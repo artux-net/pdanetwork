@@ -17,14 +17,16 @@ jobs:
     - name: Postgres Dump Backup
       uses: tj-actions/pg-dump@v3
       with:
-        database_url: ${{secrets.DATABASE_URL}}
-        postgresql_version: "15"
+        database_url: ${{secrets.PDA_DATABASE_URL}}
+        postgresql_version: 14
         path: "backups/backup.sql"
         options: "-O"
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
+      env: 
+        NOW: $NOW
       with:
-        name: $NOW
+        name: "$NOW"
         path: backups/backup.sql
 
