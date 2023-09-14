@@ -63,7 +63,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
 
   deploy:
-    needs: build
+    needs: 
+     - build
+     - backupdb
     name: 'Deploy Compose on server'
     runs-on: self-hosted
     steps:
