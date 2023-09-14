@@ -11,6 +11,7 @@ import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Getter
@@ -20,6 +21,7 @@ import java.util.List;
 public class AchievementCategoryEntity {
 
     @Id
+    private UUID id;
     private String name;
     private String title;
     private String image;

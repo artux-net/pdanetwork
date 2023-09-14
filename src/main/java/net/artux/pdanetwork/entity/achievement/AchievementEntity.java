@@ -22,6 +22,7 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Entity
@@ -31,6 +32,7 @@ import java.util.Map;
 public class AchievementEntity{
 
     @Id
+    private UUID id;
     private String name;
     private String title;
     private String image;
@@ -41,7 +43,7 @@ public class AchievementEntity{
 
     @ElementCollection
     @CollectionTable(name = "achievement_condition",
-            joinColumns = {@JoinColumn(name = "achievement_name", referencedColumnName = "name")})
+            joinColumns = {@JoinColumn(name = "achievement_id", referencedColumnName = "id")})
     @MapKeyColumn(name = "key")
     @Column(name = "value")
     private Map<String, HashSet<String>> condition;
