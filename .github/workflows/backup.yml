@@ -20,7 +20,7 @@ jobs:
         database_url: ${{secrets.PDA_DATABASE_URL}}
         postgresql_version: 14
         path: "backups/backup.sql"
-        options: "-O"
+        options: "--no-owner --no-privileges"
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
