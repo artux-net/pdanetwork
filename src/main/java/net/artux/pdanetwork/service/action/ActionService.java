@@ -202,9 +202,14 @@ public class ActionService {
                 Map<UUID, Integer> quantityMap = new HashMap<>();
                 for (String pass : params) {
                     String[] key = pass.split(":");
-                    UUID id = UUID.fromString(key[0]);
                     int quantity = Integer.parseInt(key[1]);
-                    quantityMap.put(id, quantity);
+                    if (!isNumber(key[0])) {
+                        UUID id = UUID.fromString(key[0]);
+                        quantityMap.put(id, quantity);
+                    }else {
+                        int baseId = Integer.parseInt(key[0]);
+                        itemsService.addItem(userEntity, baseId, quantity);
+                    }
                 }
                 if (quantityMap.size() > 0) {
                     items.forEach((Consumer<ItemEntity>) itemEntity -> {
