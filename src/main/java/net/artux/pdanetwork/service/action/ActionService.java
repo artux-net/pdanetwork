@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ConditionalEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
@@ -38,10 +39,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ActionService {
-
-    private final Logger logger;
 
     private final ItemService itemsService;
     private final QuestService questService;
@@ -68,7 +68,7 @@ public class ActionService {
     protected void operateActions(Map<String, List<String>> actions, UserEntity userEntity) {
         if (actions == null || actions.isEmpty())
             return;
-        logger.info("Commands for {} : {}", userEntity.getLogin(), actions);
+        log.info("Commands for {} : {}", userEntity.getLogin(), actions);
         for (String command : actions.keySet()) {
             try {
                 List<String> params = actions.get(command);
@@ -85,7 +85,7 @@ public class ActionService {
                 } else
                     doCommand(command, params, userEntity);
             } catch (Exception e) {
-                logger.error("Error executing command {} for user {}", e, userEntity.getLogin());
+                log.error("Error executing command {} for user {}", e, userEntity.getLogin());
             }
         }
     }
@@ -93,7 +93,7 @@ public class ActionService {
     public void doCommand(String command, List<String> params, UserEntity userEntity) {
         ServerCommand enumServerCommand = ServerCommand.of(command);
         if (enumServerCommand == null){
-            logger.error("Unknown command: " + command + ", value: " + params);
+            log.warn("Unknown command: {}, value: {}", command, params);
             return;
         }
         switch (enumServerCommand) {
@@ -120,31 +120,6 @@ public class ActionService {
                     }
                 }
             }
-
-            //@Deprecated
-            /*case "add_param":
-                for (String value : params) {
-                    addKey(userEntity, value);
-                }
-                break;
-                //@Deprecated
-            case "add_value":
-                for (String value : params) {
-                    String[] values = value.split(":");
-                    addValue(userEntity, values[0], Integer.valueOf(values[1]));
-                }
-                break;
-                //@Deprecated
-            case "add_items":
-                for (String value : params) {
-                    String[] values = value.split(":");
-                    if (values.length == 2) {
-                        long baseId = Long.parseLong(values[0]);
-                        int quantity = Integer.parseInt(values[1]);
-                        itemsService.addItem(userEntity, baseId, quantity);
-                    }
-                }
-                break;*/
             case REMOVE -> {
                 for (String pass : params) {
                     String[] values = pass.split(":");
@@ -173,20 +148,6 @@ public class ActionService {
                     setValue(userEntity, values[0], Integer.valueOf(values[1]));
                 }
             }
-            //@Deprecated, use remove
-            /*case "-":
-                for (String pass : params) {
-                    String[] values = pass.split(":");
-                    if (values[0].contains("relation")) {
-                        int group = Integer.parseInt(values[0].split("_")[1]);
-                        GangRelationEntity gangRelation = userEntity.getGangRelation();
-                        Gang gang = Gang.getById(group);
-                        if (gang != null)
-                            gangRelation.addRelation(gang, -Integer.parseInt(values[1]));
-                    } else
-                        addValue(userEntity, values[0], -Integer.parseInt(values[1]));
-                }
-                break;*/
             case MULTIPLY_VALUE -> {
                 for (String pass : params) {
                     String[] values = pass.split(":");
@@ -211,11 +172,11 @@ public class ActionService {
                         itemsService.addItem(userEntity, baseId, quantity);
                     }
                 }
-                if (quantityMap.size() > 0) {
+                if (!quantityMap.isEmpty()) {
                     items.forEach((Consumer<ItemEntity>) itemEntity -> {
                         if (quantityMap.containsKey(itemEntity.getId())) {
                             itemEntity.setQuantity(quantityMap.get(itemEntity.getId()));
-                            logger.debug("Set quantity for " +
+                            log.debug("Set quantity for " +
                                     itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
                         }
                     });
@@ -229,13 +190,13 @@ public class ActionService {
                     float quantity = Float.parseFloat(key[1]);
                     conditionMap.put(id, quantity);
                 }
-                if (conditionMap.size() > 0) {
+                if (!conditionMap.isEmpty()) {
                     Set<? extends ConditionalEntity> items = userEntity.getArmors();
 
                     items.forEach((Consumer<ConditionalEntity>) itemEntity -> {
                         if (conditionMap.containsKey(itemEntity.getId())) {
                             itemEntity.setCondition(conditionMap.get(itemEntity.getId()));
-                            logger.debug("Set condition for " +
+                            log.debug("Set condition for " +
                                     itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
                         }
                     });
@@ -244,7 +205,7 @@ public class ActionService {
                     items.forEach((Consumer<ConditionalEntity>) itemEntity -> {
                         if (conditionMap.containsKey(itemEntity.getId())) {
                             itemEntity.setCondition(conditionMap.get(itemEntity.getId()));
-                            logger.debug("Set condition for " +
+                            log.debug("Set condition for " +
                                     itemEntity.getId().toString() + ", " + itemEntity.getQuantity());
                         }
                     });
@@ -288,7 +249,7 @@ public class ActionService {
                         .setRelation(Gang.valueOf(gang), Integer.parseInt(relation));
             }
             case RESET -> {
-                if (params.size() == 0) {
+                if (params.isEmpty()) {
                     userEntity.reset();
                 } else {
                     for (String pass : params)
@@ -367,7 +328,7 @@ public class ActionService {
                             storyStateEntity.setChapterId(chapter);
                             storyStateEntity.setStageId(stage);
 
-                            logger.info("Process actions for {},{},{}", story, chapter, stage);
+                            log.debug("Process actions for {},{},{}", story, chapter, stage);
                             operateActions(questService.getActionsOfStage(story, chapter, stage), userEntity);
                         }
                     }
@@ -384,11 +345,11 @@ public class ActionService {
                         userEntity.getParameters()
                                 .removeIf(parameterEntity -> parameterEntity.getKey().equals(param));
                     } else
-                        logger.error("Check failed, param " + param + " is not within any of missions");
+                        log.error("Check failed, param " + param + " is not within any of missions");
                 }
             }
             break;*/
-            default -> logger.error("Unsupported command: " + command + ", value: " + params);
+            default -> log.error("Unsupported command: " + command + ", value: " + params);
         }
     }
 

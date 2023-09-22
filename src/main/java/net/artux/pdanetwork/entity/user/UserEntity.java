@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.entity.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 import net.artux.pdanetwork.models.user.gang.Gang;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
@@ -89,25 +91,32 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UsualItemEntity> items = new HashSet<>();
 
+    @NotNull
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private StatisticEntity statistic;
+    @PrimaryKeyJoinColumn
+    private StatisticEntity statistic = new StatisticEntity();
 
-    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
+    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
         name = registerUser.getName();
         nickname = registerUser.getNickname();
         avatar = registerUser.getAvatar();
-        this.role = role;
+        role = Role.USER;
         gang = Gang.LONERS;
         chatBan = false;
-        gangRelation = new GangRelationEntity(this);
         receiveEmails = true;
         xp = 0;
         money = 500;
         lastLoginAt = registration = Instant.now();
-        statistic = new StatisticEntity();
+        gangRelation = new GangRelationEntity(this);
+        statistic = new StatisticEntity(this);
+    }
+
+    public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
+        this(registerUser, passwordEncoder);
+        this.role = role;
     }
 
     public long getPdaId() {
@@ -240,8 +249,6 @@ public class UserEntity extends BaseEntity {
     }
 
     public StatisticEntity getStatistic() {
-        if (statistic == null)
-            return new StatisticEntity();
         return statistic;
     }
 }
