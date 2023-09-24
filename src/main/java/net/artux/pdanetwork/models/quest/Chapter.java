@@ -17,6 +17,8 @@ public class Chapter {
 
     private long id;
     private String title;
+    private String catalog;
+    private String _comment;
     private Collection<Stage> stages = new HashSet<>();
     private Map<Long, List<Point>> points = new HashMap<>();
     private Map<Long, List<Spawn>> spawns = new HashMap<>();
