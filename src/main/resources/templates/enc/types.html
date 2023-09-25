@@ -9,17 +9,6 @@
 <main>
     <div class="container">
         <!-- Блок -->
-        <div class="columns col-gapless">
-            <div class="column hero-sm hero-index">
-                <a th:href="@{'/enc'}">
-                    <div class="hero-body">
-                        <h2 class="index-h2">Назад</h2>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-
         <th:block th:each="i : ${types}">
             <div class="columns col-gapless">
                 <div class="column hero-sm hero-index">

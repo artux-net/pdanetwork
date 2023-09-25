@@ -37,7 +37,12 @@ public class UserDetailService implements UserDetailsService {
         if (username.isBlank())
             throw new UsernameNotFoundException("Access denied.");
 
-        Optional<SimpleUser> userOptional = userRepository.getByLogin(username);
+        Optional<SimpleUser> userOptional;
+        if (username.contains("@")) {
+            userOptional = userRepository.getByEmail(username);
+        } else
+            userOptional = userRepository.getByLogin(username);
+
         if (userOptional.isPresent()) {
             SimpleUser simpleUser = userOptional.get();
             UserDetails userDetails = User.builder()

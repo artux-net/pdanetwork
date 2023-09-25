@@ -8,6 +8,15 @@
 <body>
 <main>
     <div class="container item-container">
+        <div class="columns col-gapless">
+            <div class="column hero-sm hero-index">
+                <a th:href="@{'/enc/'  + ${base.type}}">
+                    <div class="hero-body">
+                        <h2 class="index-h2">Назад</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
         <p class="p-header">
             <b th:text="${base.title}"></b>
         </p>

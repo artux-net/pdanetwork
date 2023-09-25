@@ -55,4 +55,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     int countAllByLastLoginAtAfter(Instant afterTime);
 
     int countAllByRegistrationAfter(Instant afterTime);
+
+    Optional<SimpleUser> getByEmail(String email);
 }
