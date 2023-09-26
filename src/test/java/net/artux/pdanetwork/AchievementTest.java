@@ -36,18 +36,19 @@ public class AchievementTest {
     public void createCategory() {
         AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto(1);
         AchCategoryDto categoryDTO = achievementService.createCategory(achCategoryCreateDto);
-        Assertions.assertNotNull(categoryDTO.name());
-        Assertions.assertTrue(achievementCategoryRepository.findById(achCategoryCreateDto.name()).isPresent());
+        Assertions.assertNotNull(categoryDTO);
+        Assertions.assertTrue(achievementCategoryRepository.findById(categoryDTO.id()).isPresent());
     }
 
     @Test
     @Order(2)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createAchievement() {
-        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
-        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto(1).name(), achievementCreateDto);
-        Assertions.assertNotNull(achievementDTO.name());
-        Assertions.assertTrue(achievementRepository.findById(achievementCreateDto.name()).isPresent());
+        Assertions.assertTrue(false);
+//        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
+//        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto(1).name(), achievementCreateDto);
+//        Assertions.assertNotNull(achievementDTO.name());
+//        Assertions.assertTrue(achievementRepository.findById(achievementCreateDto.name()).isPresent());
     }
 
     private static AchCategoryCreateDto getTemplateCategoryCreateDto(int postfix) {

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Tag(name = "Достижения", description = "Доступен с роли админа")
@@ -42,34 +43,34 @@ public class AdminAchievementController {
         return achievementService.createCategory(createDto);
     }
 
-    @PutMapping("/category/{name}")
+    @PutMapping("/category/{id}")
     @Operation(description = "Редактирование категории")
-    public AchCategoryDto updateCategory(@PathVariable String name, @Valid @RequestBody AchCategoryCreateDto createDto) {
-        return achievementService.updateCategory(name, createDto);
+    public AchCategoryDto updateCategory(@PathVariable UUID id, @Valid @RequestBody AchCategoryCreateDto createDto) {
+        return achievementService.updateCategory(id, createDto);
     }
 
-    @DeleteMapping("/category/{name}")
+    @DeleteMapping("/category/{id}")
     @Operation(description = "Удаление категории")
-    public boolean deleteCategory(@PathVariable String name) {
-        return achievementService.deleteCategory(name);
+    public boolean deleteCategory(@PathVariable UUID id) {
+        return achievementService.deleteCategory(id);
     }
 
-    @PostMapping("/{name}")
+    @PostMapping("/{id}")
     @Operation(description = "Создание достижения в категории")
-    public AchDto createAchievement(@Valid @RequestBody AchievementCreateDto createDto, @PathVariable String name) {
-        return achievementService.createAchievement(name, createDto);
+    public AchDto createAchievement(@Valid @RequestBody AchievementCreateDto createDto, @PathVariable UUID id) {
+        return achievementService.createAchievement(id, createDto);
     }
 
-    @PutMapping("/{name}")
+    @PutMapping("/{id}")
     @Operation(description = "Редактирование достижения")
-    public AchDto updateAchievement(@PathVariable String name, @Valid @RequestBody AchievementCreateDto createDto) {
-        return achievementService.updateAchievement(name, createDto);
+    public AchDto updateAchievement(@PathVariable UUID id, @Valid @RequestBody AchievementCreateDto createDto) {
+        return achievementService.updateAchievement(id, createDto);
     }
 
-    @DeleteMapping("/{name}")
+    @DeleteMapping("/{id}")
     @Operation(description = "Удаление достижения")
-    public boolean deleteAchievement(@PathVariable String name) {
-        return achievementService.deleteAchievement(name);
+    public boolean deleteAchievement(@PathVariable UUID id) {
+        return achievementService.deleteAchievement(id);
     }
 
 }

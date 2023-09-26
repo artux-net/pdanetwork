@@ -19,6 +19,7 @@ public interface AchMapper {
     AchievementEntity toEntity(AchievementCreateDto dto, AchievementCategoryEntity category);
 
     @Mapping(target = "achievements", ignore = true)
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")  // not a very good idea
     AchievementCategoryEntity toEntity(AchCategoryCreateDto createDto);
 
     AchCategoryDto dto(AchievementCategoryEntity entity);

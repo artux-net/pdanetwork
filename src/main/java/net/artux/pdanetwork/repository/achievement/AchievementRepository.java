@@ -6,12 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public interface AchievementRepository extends JpaRepository<AchievementEntity, String> {
+public interface AchievementRepository extends JpaRepository<AchievementEntity, UUID> {
 
     @Query("select a, (?1 member of a.users) as enabled from AchievementEntity a ")
     List<AchievementEntity> findAll();
 
+    Optional<AchievementEntity> findAchievementEntityByName(String name);
 }

@@ -51,8 +51,8 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
-    public AchCategoryDto updateCategory(String name, AchCategoryCreateDto createDto) {
-        AchievementCategoryEntity category = categoryRepository.findById(name).orElseThrow();
+    public AchCategoryDto updateCategory(UUID id, AchCategoryCreateDto createDto) {
+        AchievementCategoryEntity category = categoryRepository.findById(id).orElseThrow();
         category.setName(createDto.name());
         category.setDescription(createDto.description());
         category.setImage(createDto.image());
@@ -63,15 +63,15 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
-    public boolean deleteCategory(String name) {
-        categoryRepository.deleteById(name);
+    public boolean deleteCategory(UUID id) {
+        categoryRepository.deleteById(id);
         return true;
     }
 
     @Override
     @ModeratorAccess
-    public AchDto createAchievement(String categoryName, AchievementCreateDto createDto) {
-        AchievementCategoryEntity category = categoryRepository.findById(categoryName).orElseThrow();
+    public AchDto createAchievement(UUID categoryId, AchievementCreateDto createDto) {
+        AchievementCategoryEntity category = categoryRepository.findById(categoryId).orElseThrow();
         AchievementEntity achievementEntity = mapper.toEntity(createDto, category);
 
         return mapper.dto(achievementRepository.save(achievementEntity));
@@ -79,8 +79,8 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
-    public AchDto updateAchievement(String name, AchievementCreateDto createDto) {
-        AchievementEntity entity = achievementRepository.findById(name).orElseThrow();
+    public AchDto updateAchievement(UUID id, AchievementCreateDto createDto) {
+        AchievementEntity entity = achievementRepository.findById(id).orElseThrow();
         entity.setCondition(createDto.condition());
         entity.setName(createDto.name());
         entity.setTitle(createDto.title());
@@ -93,8 +93,8 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
-    public boolean deleteAchievement(String name) {
-        achievementRepository.deleteById(name);
+    public boolean deleteAchievement(UUID id) {
+        achievementRepository.deleteById(id);
         return true;
     }
 }

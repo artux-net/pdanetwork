@@ -231,7 +231,7 @@ public class ActionService {
             }
             case ACHIEVE -> {
                 for (String pass : params)
-                    userEntity.addAchievement(achievementRepository.findById(pass));
+                    userEntity.addAchievement(achievementRepository.findAchievementEntityByName(pass));
             }
             case SET_RELATION -> {
                 String gang;
