@@ -32,6 +32,7 @@ public class AchievementTest {
     private AchievementRepository achievementRepository;
 
     private static UUID categoryId;
+    private static UUID achievementId;
 
     @Test
     @Order(1)
@@ -50,8 +51,45 @@ public class AchievementTest {
     public void createAchievement() {
         AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
         AchDto achievementDto = achievementService.createAchievement(categoryId, achievementCreateDto);
-        Assertions.assertNotNull(achievementDto.name());
+        achievementId = achievementDto.id();
+        Assertions.assertNotNull(achievementDto);
         Assertions.assertTrue(achievementRepository.findById(achievementDto.id()).isPresent());
+    }
+
+    @Test
+    @Order(3)
+    @WithMockUser(username = "admin", roles = "MODERATOR")
+    public void updateCategory() {
+        AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto(2);
+        AchCategoryDto categoryDTO = achievementService.updateCategory(categoryId, achCategoryCreateDto);
+        Assertions.assertNotNull(categoryDTO);
+        Assertions.assertTrue(achievementCategoryRepository.findById(categoryDTO.id()).isPresent());
+    }
+
+    @Test
+    @Order(4)
+    @WithMockUser(username = "admin", roles = "MODERATOR")
+    public void updateAchievement() {
+        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(2);
+        AchDto achievementDto = achievementService.updateAchievement(achievementId, achievementCreateDto);
+        Assertions.assertNotNull(achievementDto);
+        Assertions.assertTrue(achievementRepository.findById(achievementDto.id()).isPresent());
+    }
+
+    @Test
+    @Order(5)
+    @WithMockUser(username = "admin", roles = "MODERATOR")
+    public void deleteAchievement() {
+        achievementService.deleteAchievement(achievementId);
+        Assertions.assertFalse(achievementRepository.findById(achievementId).isPresent());
+    }
+
+    @Test
+    @Order(6)
+    @WithMockUser(username = "admin", roles = "MODERATOR")
+    public void deleteCategory() {
+        achievementService.deleteCategory(categoryId);
+        Assertions.assertFalse(achievementCategoryRepository.findById(categoryId).isPresent());
     }
 
     private static AchCategoryCreateDto getTemplateCategoryCreateDto(int postfix) {
