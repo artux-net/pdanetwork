@@ -16,6 +16,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -30,6 +31,8 @@ public class AchievementTest {
     @Autowired
     private AchievementRepository achievementRepository;
 
+    private static UUID categoryId;
+
     @Test
     @Order(1)
     @WithMockUser(username = "admin", roles = "MODERATOR")
@@ -37,6 +40,7 @@ public class AchievementTest {
         AchCategoryCreateDto achCategoryCreateDto = getTemplateCategoryCreateDto(1);
         AchCategoryDto categoryDTO = achievementService.createCategory(achCategoryCreateDto);
         Assertions.assertNotNull(categoryDTO);
+        categoryId = categoryDTO.id();
         Assertions.assertTrue(achievementCategoryRepository.findById(categoryDTO.id()).isPresent());
     }
 
@@ -44,11 +48,10 @@ public class AchievementTest {
     @Order(2)
     @WithMockUser(username = "admin", roles = "MODERATOR")
     public void createAchievement() {
-        Assertions.assertTrue(false);
-//        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
-//        AchDto achievementDTO = achievementService.createAchievement(getTemplateAchievementCreateDto(1).name(), achievementCreateDto);
-//        Assertions.assertNotNull(achievementDTO.name());
-//        Assertions.assertTrue(achievementRepository.findById(achievementCreateDto.name()).isPresent());
+        AchievementCreateDto achievementCreateDto = getTemplateAchievementCreateDto(1);
+        AchDto achievementDto = achievementService.createAchievement(categoryId, achievementCreateDto);
+        Assertions.assertNotNull(achievementDto.name());
+        Assertions.assertTrue(achievementRepository.findById(achievementDto.id()).isPresent());
     }
 
     private static AchCategoryCreateDto getTemplateCategoryCreateDto(int postfix) {

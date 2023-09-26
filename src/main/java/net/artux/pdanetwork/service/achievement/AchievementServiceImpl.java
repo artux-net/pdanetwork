@@ -46,7 +46,8 @@ public class AchievementServiceImpl implements AchievementService {
     @ModeratorAccess
     public AchCategoryDto createCategory(AchCategoryCreateDto createDto) {
         AchievementCategoryEntity category = mapper.toEntity(createDto);
-        return mapper.dto(categoryRepository.save(category));
+        var t = categoryRepository.save(category);
+        return mapper.dto(t);
     }
 
     @Override

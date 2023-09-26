@@ -1,10 +1,6 @@
 package net.artux.pdanetwork.entity.achievement;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +17,7 @@ import java.util.UUID;
 public class AchievementCategoryEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID, generator = "UUID")
     private UUID id;
     private String name;
     private String title;

@@ -23,7 +23,7 @@ public interface AchievementService {
 
     boolean deleteCategory(UUID id);
 
-    AchDto createAchievement(UUID id, AchievementCreateDto createDto);
+    AchDto createAchievement(UUID categoryId, AchievementCreateDto createDto);
 
     AchDto updateAchievement(UUID id, AchievementCreateDto createDto);
 
