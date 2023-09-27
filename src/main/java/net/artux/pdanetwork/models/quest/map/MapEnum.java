@@ -4,8 +4,8 @@ public enum MapEnum implements MapEnumGetter {
     CH4(0, "ch4.tmx", "map_ch_4.png", "Ч-4"),
     KORDON(1, "kordon.tmx", "map_escape.png", "Кордон"),
     GARBAGE(2, "garbage.tmx", "map_garbage.png", "Свалка"),
-    BAR(3, "bar.tmx", "map_bar.png", "Бар"),
-    DIKIY_BAR(4, "bar.tmx", "map_bar.png", "Дикий бар"),
+    BAR(3, "bar.tmx", "map_bar.png", "Бар", new Position(1800, 1400)),
+    DIKIY_BAR(4, "bar.tmx", "map_bar.png", "Дикий бар", new Position(1150, 860)),
     DARK_VALLEY(5, "darkvalley.tmx", "map_darkvalley.png", "Тёмная долина"),
     YANTAR(6, "yantar.tmx", "map_yantar.png", "Янтарь"),
     MILITARY(7, "military.tmx", "map_military.png", "Военные склады"),
@@ -17,7 +17,7 @@ public enum MapEnum implements MapEnumGetter {
     private final String tmx;
     private final String background;
     private final String title;
-    private final Position defaultPosition;
+    private Position defaultPosition;
 
     MapEnum(int id, String tmx, String background, String title) {
         this.id = id;
@@ -28,10 +28,7 @@ public enum MapEnum implements MapEnumGetter {
     }
 
     MapEnum(int id, String tmx, String background, String title, Position defaultPosition) {
-        this.id = id;
-        this.tmx = tmx;
-        this.background = background;
-        this.title = title;
+        this(id, tmx, background, title);
         this.defaultPosition = defaultPosition;
     }
 

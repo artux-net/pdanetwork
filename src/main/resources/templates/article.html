@@ -26,20 +26,6 @@
 </head>
 
 <body>
-<table border="0" cellpadding="1" cellspacing="1" style="width: 100%">
-    <tbody>
-    <tr>
-        <td style="width: 12px;"><img alt="" height="12" src="https://files.artux.net/static/images/news/icons/category.png" width="12"></td>
-        <td th:text="${tags}"/>
-        <td style="width: 12px;"><img alt="" src="https://files.artux.net/static/images/news/icons/date.png"></td>
-        <td th:text="${date}"/>
-        <td style="width: 12px;"><img alt="" height="12" src="https://files.artux.net/static/images/news/icons/comments.png" width="12"></td>
-        <td th:text="${comments}"/>
-        <td style="width: 12px;"><img alt="" height="12" src="https://files.artux.net/static/images/news/icons/thumb.png" width="12"></td>
-        <td th:text="${likes}"/>
-    </tr>
-    </tbody>
-</table>
 <br>
 <div th:utext="${content}"></div>
 <script>

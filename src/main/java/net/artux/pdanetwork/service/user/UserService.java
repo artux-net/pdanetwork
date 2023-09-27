@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
@@ -30,7 +31,7 @@ public interface UserService {
 
     UUID getCurrentId();
 
-    UserEntity getUserByEmail(String email);
+    Optional<UserEntity> getUserByEmail(String email);
 
     UserEntity getUserByLogin(String login);
 

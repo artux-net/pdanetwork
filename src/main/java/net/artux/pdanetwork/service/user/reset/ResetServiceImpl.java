@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +41,11 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     public Status sendResetPasswordLetter(String email) {
-        UserEntity userEntity = userService.getUserByEmail(email);
+        Optional<UserEntity> optionalUser = userService.getUserByEmail(email);
+        if (optionalUser.isEmpty())
+            return new Status(false, "Такого пользователя не существует, либо письмо уже отправлено");
+
+        UserEntity userEntity = optionalUser.get();
         if (!requests.containsValue(userEntity.getEmail())) {
             String token = randomString.nextString();
             logger.info("Ссылка для сброса пароля {} для пользователя: {}",
@@ -77,8 +82,11 @@ public class ResetServiceImpl implements ResetService {
         if (email == null)
             return new Status(false, "Токен не найден");
 
-        UserEntity userEntity = userService.getUserByEmail(email);
+        Optional<UserEntity> userOptional = userService.getUserByEmail(email);
+        if (userOptional.isEmpty())
+            return new Status(false, "Пользователь не найден");
 
+        UserEntity userEntity = userOptional.get();
         logger.info("Изменение пароля для пользователя: {}", userEntity.getLogin());
         logger.info("Хэш старого пароля: {}", userEntity.getPassword());
 
