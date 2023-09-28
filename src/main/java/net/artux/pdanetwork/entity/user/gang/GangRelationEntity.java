@@ -40,6 +40,7 @@ public class GangRelationEntity extends BaseEntity {
                 break;
             case BANDITS:
                 bandits += value;
+                break;
             case MILITARY:
                 military += value;
                 break;
@@ -71,6 +72,7 @@ public class GangRelationEntity extends BaseEntity {
                 break;
             case BANDITS:
                 bandits = value;
+                break;
             case MILITARY:
                 military = value;
                 break;
@@ -95,16 +97,24 @@ public class GangRelationEntity extends BaseEntity {
         }
     }
 
+    public int getRelation(Gang gang) {
+        return switch (gang) {
+            case LONERS -> loners;
+            case BANDITS -> bandits;
+            case MILITARY -> military;
+            case LIBERTY -> liberty;
+            case DUTY -> duty;
+            case MERCENARIES -> mercenaries;
+            case MONOLITH -> monolith;
+            case SCIENTISTS -> scientists;
+            case CLEAR_SKY -> clearSky;
+        };
+    }
+
     public void resetAll(){
-        loners = 0;
-        bandits = 0;
-        military = 0;
-        liberty = 0;
-        duty = 0;
-        monolith = 0;
-        mercenaries = 0;
-        scientists = 0;
-        clearSky = 0;
+        for (Gang gang : Gang.values()) {
+            setRelation(gang, 0);
+        }
     }
 
 
