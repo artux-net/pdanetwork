@@ -103,7 +103,6 @@ public class SellerServiceIml implements SellerService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public SellerDto getSeller(long id) {
         return sellerRepository.findById(id).map(sellerMapper::dto).orElseThrow();
     }
