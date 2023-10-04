@@ -13,6 +13,13 @@ jobs:
     steps:
     - name: Set current date as env variable
       run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      
+    - name: Set outputs
+      id: vars
+      run: echo ::set-output name=time::${NOW}
+      
+    - name: Test set output
+      run: echo ${{ steps.vars.outputs.time }}
 
     - name: Postgres Dump Backup
       uses: tj-actions/pg-dump@v3
@@ -24,9 +31,7 @@ jobs:
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
-      env: 
-        NOW: $NOW
       with:
-        name: ${{NOW}}
+        name: ${{ steps.vars.outputs.time }}
         path: backups/backup.sql
 
