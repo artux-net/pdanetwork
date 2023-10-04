@@ -17,16 +17,12 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
     
     - name: Postgres Dump Backup
-      uses: tj-actions/pg-dump@v3
-      with:
-        database_url: ${{secrets.PDA_DATABASE_URL}}
-        postgresql_version: 16
-        path: "backups/backup.sql"
-        options: "--no-owner --no-privileges"
+      run: |
+        pg_dump -U pdanet -f backup.sql --no-owner --no-privileges
       
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.date.outputs.date }}
-        path: backups/backup.sql
+        path: backup.sql
 
