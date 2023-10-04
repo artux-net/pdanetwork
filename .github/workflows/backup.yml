@@ -11,16 +11,11 @@ jobs:
     runs-on: self-hosted
     name: 'Dump Backup'
     steps:
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
-      
-    - name: Set outputs
-      id: vars
-      run: echo ::set-output name=time::${NOW}
-      
-    - name: Test set output
-      run: echo ${{ steps.vars.outputs.time }}
 
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%dT%H:%M:%S')"
+    
     - name: Postgres Dump Backup
       uses: tj-actions/pg-dump@v3
       with:
@@ -32,6 +27,6 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ steps.vars.outputs.time }}
+        name: ${{ steps.date.outputs.date }}
         path: backups/backup.sql
 
