@@ -36,6 +36,7 @@ import java.util.UUID;
 
 import static com.amazonaws.services.simpleworkflow.flow.junit.AsyncAssert.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +55,12 @@ public class SellerTest {
     private ItemRepository itemRepository;
 
     private final long sellerId = 1;
+
+    @Test
+    @Order(0)
+    public void getSeller(){
+        Assertions.assertNotNull(sellerService.getSeller(sellerId));
+    }
 
     @Test
     @Order(1)

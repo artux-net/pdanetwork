@@ -1,7 +1,9 @@
 package net.artux.pdanetwork.service.items;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.Cacheable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.artux.pdanetwork.entity.items.BaseItemEntity;
 import net.artux.pdanetwork.entity.items.ItemType;
 import net.artux.pdanetwork.repository.items.BaseItemRepository;
@@ -17,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-@Transactional
+@Slf4j
 @RequiredArgsConstructor
 public class BaseItemService {
 
@@ -34,17 +36,17 @@ public class BaseItemService {
             Resource resource = new ClassPathResource("static/base/items/" + "base.json");
             return Arrays.stream(objectMapper.readValue(resource.getInputStream(), BaseItemEntity[].class)).toList();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("Can not read base items", e);
         }
         return Collections.emptyList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BaseItemEntity getBaseItem(long baseId) {
         return repository.findById(baseId).orElseThrow();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<BaseItemEntity> getTypeItems(ItemType type) {
         return repository.findAllByType(type);
     }

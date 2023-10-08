@@ -39,11 +39,11 @@ public class BaseItemEntity implements MediaItem {
     @Column(columnDefinition = "TEXT")
     protected String content;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @ElementCollection(fetch = FetchType.LAZY)
     protected List<String> advantages;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @LazyCollection(LazyCollectionOption.TRUE)
     @ElementCollection(fetch = FetchType.LAZY)
     protected List<String> disadvantages;
 

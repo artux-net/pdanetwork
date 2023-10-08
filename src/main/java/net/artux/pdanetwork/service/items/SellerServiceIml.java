@@ -98,12 +98,14 @@ public class SellerServiceIml implements SellerService {
                 }
             });
         });
-        sellerRepository.saveAll(sellerEntities);
+        sellerRepository.saveAllAndFlush(sellerEntities);
         logger.info("Обновлен ассортимент продавцов", sellerEntities.size());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public SellerDto getSeller(long id) {
+        logger.debug("Getting seller {}", id);
         return sellerRepository.findById(id).map(sellerMapper::dto).orElseThrow();
     }
 
