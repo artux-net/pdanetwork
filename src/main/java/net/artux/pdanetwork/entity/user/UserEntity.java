@@ -94,7 +94,7 @@ public class UserEntity extends BaseEntity {
     @NotNull
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
-    private StatisticEntity statistic = new StatisticEntity();
+    private StatisticEntity statistic;
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
         login = registerUser.getLogin();
@@ -248,7 +248,4 @@ public class UserEntity extends BaseEntity {
         this.chatBan = chatBan;
     }
 
-    public StatisticEntity getStatistic() {
-        return statistic;
-    }
 }

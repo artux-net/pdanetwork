@@ -1,7 +1,9 @@
 package net.artux.pdanetwork.service.util;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Data
 @Getter
 @Mapper
+@Slf4j
 public class ValuesService {
 
     @Value("${server.servlet.contextPath}")
@@ -71,4 +74,8 @@ public class ValuesService {
         return getAddress() + "/feed/" + id;
     }
 
+    @PostConstruct
+    public void init() {
+        log.info("Link to swagger: " + getAddress() + "/swagger-ui/index.html");
+    }
 }

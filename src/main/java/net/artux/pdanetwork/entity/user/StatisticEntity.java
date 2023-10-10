@@ -26,9 +26,9 @@ public class StatisticEntity {
     @Column(name = "user_id")
     private UUID id;
 
-    @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
     @Column(columnDefinition = "integer default 0")

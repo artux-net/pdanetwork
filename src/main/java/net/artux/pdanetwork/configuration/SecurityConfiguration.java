@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.configuration;
 
+import lombok.Getter;
 import net.artux.pdanetwork.models.user.enums.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class SecurityConfiguration {
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
+
+    @Getter
     private String roleHierarchy;
 
     @Bean
@@ -94,7 +97,4 @@ public class SecurityConfiguration {
         return roleHierarchy;
     }
 
-    public String getRoleHierarchy() {
-        return roleHierarchy;
-    }
 }

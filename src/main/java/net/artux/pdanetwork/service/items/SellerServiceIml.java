@@ -3,7 +3,11 @@ package net.artux.pdanetwork.service.items;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.items.*;
+import net.artux.pdanetwork.entity.items.ArmorEntity;
+import net.artux.pdanetwork.entity.items.ItemEntity;
+import net.artux.pdanetwork.entity.items.ItemType;
+import net.artux.pdanetwork.entity.items.WeaponEntity;
+import net.artux.pdanetwork.entity.items.WearableEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.Status;
@@ -14,11 +18,14 @@ import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.SellerRepository;
+import net.artux.pdanetwork.repository.user.BanRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +33,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -80,6 +92,7 @@ public class SellerServiceIml implements SellerService {
             if (optional.isEmpty())
                 return;
 
+            // add new items
             SellerEntity initialSeller = optional.get();
             initialSeller.getAllItems().forEach(initialItem -> {
                 long basedId = initialItem.getBasedId();
@@ -97,6 +110,24 @@ public class SellerServiceIml implements SellerService {
                     }
                 }
             });
+
+            HashMap<Long, Integer> basedCount = new HashMap<>();
+
+            seller.getAllItems().forEach(item -> {
+                long basedId = item.getBasedId();
+
+                if (!basedCount.containsKey(basedId)) {
+                    basedCount.put(basedId, 1);
+                    return;
+                }
+
+                int previousCount = basedCount.get(basedId);
+                if (previousCount > 1) {
+                    seller.removeItem(item);
+                } else {
+                    basedCount.put(basedId, previousCount + 1);
+                }
+            });
         });
         sellerRepository.saveAllAndFlush(sellerEntities);
         logger.info("Обновлен ассортимент продавцов", sellerEntities.size());
@@ -104,6 +135,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "sellers", key = "#id")
     public SellerDto getSeller(long id) {
         logger.debug("Getting seller {}", id);
         return sellerRepository.findById(id).map(sellerMapper::dto).orElseThrow();
@@ -117,6 +149,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "sellers", key = "#sellerId")
     public Status buy(long sellerId, UUID id, int quantity) {
         UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
@@ -177,6 +210,7 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "sellers", key = "#sellerId")
     public Status sell(long sellerId, UUID id, int quantity) {
         UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
@@ -288,10 +322,6 @@ public class SellerServiceIml implements SellerService {
                 ItemEntity item = itemService.getItem(id);
                 item.setQuantity(quantity);
 
-                /*
-                TODO надо чтобы там всегда 1 была, другие сервисы ожидают что там 1,
-                соответственно надо навый объект делать, а там свои проблемы..
-                 */
                 ItemEntity stackTarget = null;
                 if (item.getBase().getType().isCountable()) {
                     List<ItemEntity> sellerItems = sellerEntity.getAllItems();
@@ -309,8 +339,6 @@ public class SellerServiceIml implements SellerService {
                 } else {
                     sellerEntity.addItem(itemRepository.save(item));
                 }
-
-                item.setQuantity(1); //TODO самый настоящий костыль
             } catch (Exception ignored) {
             }
         }
@@ -324,12 +352,14 @@ public class SellerServiceIml implements SellerService {
         List<UUID> finalIds = new LinkedList<>(ids);
 
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
+        logger.info("Удаление предметов у {}", sellerEntity.getName());
         List<UUID> sellerItemIds = new LinkedList<>();
         sellerEntity.getAllItems()
                 .stream()
                 .filter(entity -> finalIds.contains(entity.getId()))
                 .forEach(item -> {
                     sellerItemIds.add(item.getId());
+                    logger.info("Удаление {} у {}", item.getId(), sellerEntity.getName());
                     sellerEntity.removeItem(item);
                 });
 

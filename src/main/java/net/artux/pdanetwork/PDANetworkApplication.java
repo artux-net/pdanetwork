@@ -1,5 +1,6 @@
 package net.artux.pdanetwork;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +11,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Slf4j
 @SpringBootApplication
 @EnableScheduling
 @EnableConfigurationProperties
 public class PDANetworkApplication {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(PDANetworkApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(PDANetworkApplication.class, args);

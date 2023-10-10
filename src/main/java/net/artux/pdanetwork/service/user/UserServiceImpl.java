@@ -47,6 +47,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    public static final Role INITAL_ROLE = Role.USER;
     private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
@@ -58,7 +59,6 @@ public class UserServiceImpl implements UserService {
 
     private final Map<String, RegisterUserDto> registerUserMap = new HashMap<>();
     private final Timer timer = new Timer();
-    private final Environment environment;
     private final RandomString randomString = new RandomString();
 
     @Override
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
             if (!currentStatus.isSuccess())
                 return currentStatus;
 
-            UserEntity member = saveUser(regDto, Role.USER);
+            UserEntity member = saveUser(regDto, INITAL_ROLE);
             long pdaId = member.getPdaId();
             logger.info("Пользователь {} ({} {}) зарегистрирован.", member.getLogin(), member.getName(), member.getNickname());
             try {
