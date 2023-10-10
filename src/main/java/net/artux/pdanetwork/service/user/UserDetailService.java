@@ -75,10 +75,10 @@ public class UserDetailService implements UserDetailsService {
                 .avatar("1")
                 .build();
 
-        if (userRepository.findByLogin(login).isEmpty()) {
+        if (userRepository.count() < 1) {
             userRepository.save(new UserEntity(registerUserDto, passwordEncoder, Role.ADMIN));
             logger.info("""
-                    There are no admin user, a user with a admin role created.\s
+                    There are no users, a user with a admin role created.\s
                      Email: {}\s
                      Login: {}\s
                      Password: {}\s
