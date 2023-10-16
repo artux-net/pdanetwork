@@ -12,15 +12,9 @@ jobs:
     name: 'Test artifact'
     steps:   
     - uses: actions/checkout@v3
-    
+
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '20'
-        cache: 'gradle'
-      
     - name: Test with Gradle
       run: ./gradlew test
