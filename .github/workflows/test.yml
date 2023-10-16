@@ -10,11 +10,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: 'Test artifact'
-    steps:
-    - name: Setup Maven Action
-      uses: s4u/setup-maven-action@v1.9.0
-    
+    steps:   
     - uses: actions/checkout@v3
     
-    - name: Test with Maven
-      run: mvn clean test
+    - name: Test with Gradle
+      run: ./gradlew test
