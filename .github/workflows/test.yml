@@ -13,5 +13,8 @@ jobs:
     steps:   
     - uses: actions/checkout@v3
     
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+      
     - name: Test with Gradle
       run: ./gradlew test
