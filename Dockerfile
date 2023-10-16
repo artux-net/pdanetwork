@@ -1,5 +1,7 @@
-FROM gradle:8.4 AS BUILD
-RUN gradle build -x test
+FROM --platform=$TARGETPLATFORM gradle:8.4.0-jdk21-alpine AS BUILD
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon -x test
 
 FROM --platform=$TARGETPLATFORM bellsoft/liberica-openjdk-alpine:21
 ARG JAR_FILE=build/libs/*.jar
