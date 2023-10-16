@@ -2,6 +2,8 @@ package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.feed.CommentEntity;
+import net.artux.pdanetwork.entity.feed.CommentLikeEntity;
+import net.artux.pdanetwork.entity.feed.LikeCommentId;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.feed.CommentCreateDto;
 import net.artux.pdanetwork.models.feed.CommentDto;
@@ -10,6 +12,7 @@ import net.artux.pdanetwork.models.feed.FeedMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.feed.ArticleRepository;
+import net.artux.pdanetwork.repository.feed.CommentLikeRepository;
 import net.artux.pdanetwork.repository.feed.CommentRepository;
 import net.artux.pdanetwork.repository.feed.PostRepository;
 import net.artux.pdanetwork.service.user.UserService;
@@ -26,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final ArticleRepository articleRepository;
     private final PostRepository postRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository repository;
     private final UserService userService;
     private final FeedMapper feedMapper;
@@ -42,9 +46,16 @@ public class CommentServiceImpl implements CommentService {
     public boolean likeComment(UUID id) {
         UserEntity user = userService.getUserById();
         CommentEntity commentEntity = repository.findById(id).orElseThrow();
-        boolean result = commentEntity.like(user);
-        repository.save(commentEntity);
-        return result;
+
+        LikeCommentId articleId = new LikeCommentId(user.getId(), id);
+
+        if (commentLikeRepository.existsById(articleId)) {
+            commentLikeRepository.deleteById(articleId);
+            return false;
+        } else {
+            commentLikeRepository.save(new CommentLikeEntity(user, commentEntity));
+            return true;
+        }
     }
 
     @Override

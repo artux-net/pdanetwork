@@ -58,10 +58,10 @@ public class UserEntity extends BaseEntity {
     private Instant registration;
     private Instant lastLoginAt;
 
-    @OneToMany(mappedBy = "author", orphanRemoval = true)
+    @OneToMany(mappedBy = "author", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<NoteEntity> notes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<AchievementEntity> achievements;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

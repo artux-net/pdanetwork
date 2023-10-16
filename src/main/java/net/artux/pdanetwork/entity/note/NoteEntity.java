@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.entity.note;
 
+import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,7 +24,8 @@ public class NoteEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
     private Instant time;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity author;
 
     public NoteEntity(String title) {

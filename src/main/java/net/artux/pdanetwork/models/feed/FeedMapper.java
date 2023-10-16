@@ -23,7 +23,6 @@ public interface FeedMapper {
     ArticleSimpleDto dto(ArticleEntity entity);
 
     @Mapping(target = "url", source = "id", qualifiedByName = "articleUrl")
-    @Mapping(target = "s", ignore = true)
     @Mapping(target = "likes", expression = "java(entity.getLikes().size())")
     @Mapping(target = "comments", expression = "java(entity.getComments().size())")
     ArticleDto fullDto(ArticleEntity entity);

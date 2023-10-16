@@ -14,11 +14,8 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "achievement_category")
-public class AchievementCategoryEntity {
+public class AchievementCategoryEntity extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID, generator = "UUID")
-    private UUID id;
     private String name;
     private String title;
     private String image;

@@ -1,12 +1,16 @@
 package net.artux.pdanetwork.service.feed;
 
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.feed.LikePostId;
 import net.artux.pdanetwork.entity.feed.PostEntity;
+import net.artux.pdanetwork.entity.feed.PostLikeEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.feed.FeedMapper;
 import net.artux.pdanetwork.models.feed.PostCreateDto;
 import net.artux.pdanetwork.models.feed.PostDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
+import net.artux.pdanetwork.repository.feed.PostLikeRepository;
 import net.artux.pdanetwork.repository.feed.PostRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
@@ -23,6 +27,7 @@ public class PostServiceImpl implements PostService {
 
     private final UserService userService;
     private final PostRepository repository;
+    private final PostLikeRepository postLikeRepository;
     private final FeedMapper feedMapper;
     private final PageService pageService;
 
@@ -61,9 +66,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public boolean likePost(UUID id) {
+        UserEntity user = userService.getUserById();
         PostEntity postEntity = repository.findById(id).orElseThrow();
-        boolean result = postEntity.like(userService.getUserById());
-        repository.save(postEntity);
-        return result;
+        LikePostId articleId = new LikePostId(user.getId(), postEntity.getId());
+
+        if (postLikeRepository.existsById(articleId)) {
+            postLikeRepository.deleteById(articleId);
+            return false;
+        } else {
+            postLikeRepository.save(new PostLikeEntity(user, postEntity));
+            return true;
+        }
     }
 }

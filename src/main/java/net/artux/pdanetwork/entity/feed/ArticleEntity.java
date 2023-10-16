@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.artux.pdanetwork.entity.CommentableEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -50,12 +50,8 @@ public class ArticleEntity extends CommentableEntity {
     private Set<TagEntity> tags;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "article_like",
-            joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserEntity> likes;
+    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+    private Set<ArticleLikeEntity> likes;
 
     private Integer views = 0;
 
@@ -64,14 +60,6 @@ public class ArticleEntity extends CommentableEntity {
         likes = new HashSet<>();
         comments = new HashSet<>();
         tags = new HashSet<>();
-    }
-
-    public boolean like(UserEntity user) {
-        if (!likes.add(user)) {
-            likes.remove(user);
-            return false;
-        }
-        return true;
     }
 
     public void setTags(Set<TagEntity> tags) {

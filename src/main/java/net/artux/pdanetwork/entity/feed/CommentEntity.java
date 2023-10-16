@@ -31,15 +31,12 @@ public class CommentEntity extends BaseEntity {
     @NotBlank(message = "Содержимое не может быть пустым")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity author;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "comment_like",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserEntity> likes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "comment", fetch = FetchType.EAGER)
+    private Set<CommentLikeEntity> likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(
@@ -60,14 +57,5 @@ public class CommentEntity extends BaseEntity {
         setPublished(Instant.now());
         likes = new HashSet<>();
     }
-
-    public boolean like(UserEntity user) {
-        if (!likes.add(user)) {
-            likes.remove(user);
-            return false;
-        }
-        return true;
-    }
-
 
 }

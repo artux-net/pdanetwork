@@ -3,6 +3,8 @@ package net.artux.pdanetwork.service.feed;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
+import net.artux.pdanetwork.entity.feed.LikeArticleId;
+import net.artux.pdanetwork.entity.feed.ArticleLikeEntity;
 import net.artux.pdanetwork.entity.feed.TagEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
@@ -12,6 +14,7 @@ import net.artux.pdanetwork.models.feed.FeedMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.feed.ArticleRepository;
+import net.artux.pdanetwork.repository.feed.ArticleLikeRepository;
 import net.artux.pdanetwork.repository.feed.TagRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
@@ -33,6 +36,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final UserService userService;
     private final ArticleRepository articleRepository;
+    private final ArticleLikeRepository articleLikeRepository;
     private final TagRepository tagRepository;
     private final PageService pageService;
     private final FeedMapper feedMapper;
@@ -98,9 +102,15 @@ public class ArticleServiceImpl implements ArticleService {
         UserEntity user = userService.getUserById();
         ArticleEntity article = articleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
-        boolean result = article.like(user);
-        articleRepository.save(article);
-        return result;
+        LikeArticleId articleId = new LikeArticleId(user.getId(), id);
+
+        if (articleLikeRepository.existsById(articleId)) {
+            articleLikeRepository.deleteById(articleId);
+            return false;
+        } else {
+            articleLikeRepository.save(new ArticleLikeEntity(user, article));
+            return true;
+        }
     }
 
     @Override

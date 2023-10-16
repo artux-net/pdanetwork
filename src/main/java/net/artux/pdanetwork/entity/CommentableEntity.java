@@ -25,7 +25,7 @@ import java.util.Set;
 public abstract class CommentableEntity extends BaseEntity {
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "article_comment",
             joinColumns = @JoinColumn(name = "article_id"),

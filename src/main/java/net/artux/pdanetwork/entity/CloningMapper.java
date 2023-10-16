@@ -28,24 +28,38 @@ public interface CloningMapper {
     }
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     WeaponEntity weaponEntity(WeaponEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     ArmorEntity armorEntity(ArmorEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     ArtifactEntity artifactEntity(ArtifactEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     DetectorEntity detectorEntity(DetectorEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     UsualItemEntity usualItemEntity(UsualItemEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     MedicineEntity medicineEntity(MedicineEntity entity);
 
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "base.advantages", ignore = true)
+    @Mapping(target = "base.disadvantages", ignore = true)
     BulletEntity bulletEntity(BulletEntity entity);
 
 }

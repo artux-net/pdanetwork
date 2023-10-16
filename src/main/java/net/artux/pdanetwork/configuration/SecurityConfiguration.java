@@ -12,6 +12,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Arrays;
@@ -57,7 +59,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(MODERATOR_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
@@ -65,7 +67,7 @@ public class SecurityConfiguration {
                         .requestMatchers(WHITE_LIST).permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .formLogin().disable()
+                .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 

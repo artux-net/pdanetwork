@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.entity.feed;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -7,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -37,24 +39,13 @@ public class PostEntity extends CommentableEntity {
     @ManyToOne
     private UserEntity author;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "post_like",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<UserEntity> likes;
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private Set<PostLikeEntity> likes;
 
     public PostEntity() {
         super();
         likes = new HashSet<>();
         setPublished(Instant.now());
-    }
-
-    public boolean like(UserEntity user) {
-        if (!likes.add(user)) {
-            likes.remove(user);
-            return false;
-        }
-        return true;
     }
 }

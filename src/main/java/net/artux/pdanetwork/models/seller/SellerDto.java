@@ -26,5 +26,4 @@ public class SellerDto {
     private float buyCoefficient;
     private float sellCoefficient;
 
-
 }

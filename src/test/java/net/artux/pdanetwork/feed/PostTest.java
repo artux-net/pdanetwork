@@ -1,13 +1,13 @@
 package net.artux.pdanetwork.feed;
 
-import net.artux.pdanetwork.models.feed.ArticleCreateDto;
-import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.feed.CommentCreateDto;
 import net.artux.pdanetwork.models.feed.CommentDto;
 import net.artux.pdanetwork.models.feed.CommentType;
+import net.artux.pdanetwork.models.feed.PostCreateDto;
+import net.artux.pdanetwork.models.feed.PostDto;
 import net.artux.pdanetwork.models.page.QueryPage;
-import net.artux.pdanetwork.service.feed.ArticleService;
 import net.artux.pdanetwork.service.feed.CommentService;
+import net.artux.pdanetwork.service.feed.PostService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -24,41 +24,39 @@ import java.util.UUID;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
-public class CommentTest {
+public class PostTest {
 
     @Autowired
-    private ArticleService articleService;
+    private PostService postService;
     @Autowired
     private CommentService commentService;
-    private UUID articleId;
+    private UUID postId;
     private UUID commentId;
 
-    private static ArticleCreateDto getTestDto() {
-        ArticleCreateDto createDto = new ArticleCreateDto();
+    private static PostCreateDto getTestDto() {
+        PostCreateDto createDto = new PostCreateDto();
         createDto.setTitle("test title");
-        createDto.setImage("https://klike.net/uploads/posts/2020-04/1587719791_1.jpg");
-        createDto.setDescription("desc");
         createDto.setContent("123123");
         return createDto;
     }
 
     @Test
     @Order(1)
-    public void createArticle() {
-        ArticleSimpleDto dto = articleService.createArticle(getTestDto());
-        articleId = dto.getId();
-        Assertions.assertEquals(dto.getDescription(), getTestDto().getDescription());
+    public void createPost() {
+        PostDto dto = postService.createPost(getTestDto());
+        postId = dto.getId();
+        Assertions.assertEquals(dto.getContent(), getTestDto().getContent());
     }
 
 
     @Test
     @Order(2)
-    public void commentArticle() {
+    public void commentPost() {
         CommentCreateDto createDto = new CommentCreateDto();
         createDto.setContent("test");
-        CommentDto dto = commentService.comment(CommentType.ARTICLE, articleId, createDto);
+        CommentDto dto = commentService.comment(CommentType.POST, postId, createDto);
         commentId = dto.getId();
-        Assertions.assertEquals(1, commentService.getComments(CommentType.ARTICLE, articleId, new QueryPage()).getContent().size());
+        Assertions.assertEquals(1, commentService.getComments(CommentType.POST, postId, new QueryPage()).getContent().size());
     }
 
     @Test

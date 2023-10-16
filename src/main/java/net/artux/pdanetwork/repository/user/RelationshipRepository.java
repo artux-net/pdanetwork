@@ -12,8 +12,6 @@ import java.util.UUID;
 @Component
 public interface RelationshipRepository extends JpaRepository<RelationshipEntity, UUID> {
 
-    List<RelationshipEntity> getAllByUser1_IdOrUser2_Id(Long uuid, Long uuid1);
-
     Optional<RelationshipEntity> getByUser1AndUser2(UserEntity user1, UserEntity user2);
 
 }

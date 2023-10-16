@@ -3,3 +3,6 @@
 /out
 *.iml
 /logs
+/.jpb/
+/.gradle/
+/build/

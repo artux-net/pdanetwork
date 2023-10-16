@@ -7,7 +7,6 @@ services:
     image: postgres:16
     container_name: pdanetwork_db
     restart: unless-stopped
-
     environment:
       - POSTGRES_USER=pdanet
       - POSTGRES_PASSWORD=pass
