@@ -70,6 +70,7 @@ jobs:
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
           SERVER_HOST: app.artux.net
+          IMAGE_TAG: master
 
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}
