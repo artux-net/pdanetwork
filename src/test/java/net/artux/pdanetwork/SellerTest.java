@@ -1,44 +1,24 @@
 package net.artux.pdanetwork;
 
 import net.artux.pdanetwork.configuration.ServiceTestConfiguration;
-import net.artux.pdanetwork.entity.items.ItemEntity;
-import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.models.Status;
-import net.artux.pdanetwork.models.command.ServerCommand;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.WeaponDto;
-import net.artux.pdanetwork.models.seller.SellerDto;
-import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
-import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.service.action.ActionService;
 import net.artux.pdanetwork.service.items.SellerService;
-import net.artux.pdanetwork.service.user.UserService;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import static com.amazonaws.services.simpleworkflow.flow.junit.AsyncAssert.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 @Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

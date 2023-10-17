@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.models.seller;
 
-import com.amazonaws.services.dynamodbv2.xspec.S;
 import net.artux.pdanetwork.entity.items.ItemEntity;
 import net.artux.pdanetwork.entity.seller.SellerEntity;
 import net.artux.pdanetwork.models.items.ItemMapper;
@@ -14,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {ItemMapper.class, ItemService.class})
 public abstract class SellerMapper {

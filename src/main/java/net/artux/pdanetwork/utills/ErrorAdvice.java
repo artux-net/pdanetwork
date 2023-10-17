@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.error.ErrorMapper;
 import org.slf4j.Logger;
@@ -36,12 +35,6 @@ public class ErrorAdvice extends ResponseEntityExceptionHandler implements Authe
         logger.error("Error request", ex);
         return new ResponseEntity<>(errorMapper.of(ex, "Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<Object> handleUserNotFoundException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>(errorMapper.of(ex, "Content not found"), HttpStatus.NOT_FOUND);
-    }
-
 
     @Override
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {

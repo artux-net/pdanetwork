@@ -2,7 +2,6 @@ package net.artux.pdanetwork;
 
 import net.artux.pdanetwork.controller.rest.admin.quest.AdminQuestsController;
 import net.artux.pdanetwork.models.quest.map.GameMapDto;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class CheckHTTPResponse {
     public void isEncWorks() {
         ResponseEntity<String> response = restTemplate.getForEntity("/enc",
                 String.class);
-        Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
+        Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
@@ -35,7 +34,7 @@ public class CheckHTTPResponse {
     public void isCommandsWorks() {
         ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/commands/server",
                 String.class);
-        Assert.assertTrue(response.getStatusCode().is2xxSuccessful());
+        Assertions.assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
