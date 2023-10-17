@@ -1,8 +1,10 @@
 FROM --platform=$TARGETPLATFORM bellsoft/liberica-openjdk-alpine:21
 FROM --platform=$TARGETPLATFORM gradle:8.4.0-jdk21 as build
-COPY --chown=gradle:gradle . /home/gradle/src
+
+COPY . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon -x test
+
+RUN gradle build -x test
 
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
