@@ -1,12 +1,14 @@
 package net.artux.pdanetwork.entity.feed;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -16,6 +18,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import net.artux.pdanetwork.entity.CommentableEntity;
+import org.hibernate.annotations.Type;
+import org.springframework.context.annotation.Bean;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -38,11 +42,11 @@ public class ArticleEntity extends CommentableEntity {
     private Instant published;
 
     @NotBlank(message = "Содержимое не может быть пустым")
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "clob")
     private String content;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL, CascadeType.MERGE})
     @JoinTable(
             name = "article_tag",
             joinColumns = @JoinColumn(name = "article_id"),
@@ -50,8 +54,8 @@ public class ArticleEntity extends CommentableEntity {
     private Set<TagEntity> tags;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
-    private Set<ArticleLikeEntity> likes;
+    @OneToMany(mappedBy = "article", fetch = FetchType.LAZY, orphanRemoval = true)
+    public Set<ArticleLikeEntity> likes;
 
     private Integer views = 0;
 
@@ -62,13 +66,4 @@ public class ArticleEntity extends CommentableEntity {
         tags = new HashSet<>();
     }
 
-    public void setTags(Set<TagEntity> tags) {
-        this.tags = tags;
-    }
-
-    public Integer getViews() {
-        if (views == null)
-            return 0;
-        return views;
-    }
 }

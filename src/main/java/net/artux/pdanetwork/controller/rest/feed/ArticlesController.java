@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,7 +46,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/tags")
-    public Set<String> getTags() {
+    public Collection<String> getTags() {
         return articleService.getTags();
     }
 

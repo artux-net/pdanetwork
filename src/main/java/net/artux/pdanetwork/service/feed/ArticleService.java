@@ -6,6 +6,7 @@ import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,6 +24,9 @@ public interface ArticleService {
 
     boolean likeArticle(UUID id);
 
-    Set<String> getTags();
+    Collection<String> getTags();
 
+    Collection<String> getTagsByArticleId(UUID articleId);
+
+    ArticleSimpleDto getSimpleArticle(UUID testId);
 }

@@ -11,17 +11,18 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
 import java.util.Set;
 
-@ToString(callSuper = true)
 @Getter
 @Setter
 @Entity
 @Table(name = "tag")
+@NoArgsConstructor
 public class TagEntity {
 
     @Id
@@ -37,6 +38,10 @@ public class TagEntity {
             inverseJoinColumns = @JoinColumn(name = "article_id"))
     private Set<ArticleEntity> articles;
 
+    public TagEntity(String title){
+        this.title = title;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,5 +55,10 @@ public class TagEntity {
     @Override
     public int hashCode() {
         return title != null ? title.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }

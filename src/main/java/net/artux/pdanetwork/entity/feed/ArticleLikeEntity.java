@@ -3,6 +3,7 @@ package net.artux.pdanetwork.entity.feed;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
+import java.util.Objects;
+
 @Getter
 @Setter
 @Entity
@@ -19,6 +22,7 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 @NoArgsConstructor
 public class ArticleLikeEntity {
 
+    @Id
     @EmbeddedId
     private LikeArticleId id;
 
@@ -36,5 +40,20 @@ public class ArticleLikeEntity {
         id = new LikeArticleId(user.getId(), article.getId());
         this.user = user;
         this.article = article;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ArticleLikeEntity that = (ArticleLikeEntity) o;
+
+        return !Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

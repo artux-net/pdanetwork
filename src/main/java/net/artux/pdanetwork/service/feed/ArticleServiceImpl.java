@@ -1,10 +1,11 @@
 package net.artux.pdanetwork.service.feed;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.feed.ArticleEntity;
-import net.artux.pdanetwork.entity.feed.LikeArticleId;
 import net.artux.pdanetwork.entity.feed.ArticleLikeEntity;
+import net.artux.pdanetwork.entity.feed.LikeArticleId;
 import net.artux.pdanetwork.entity.feed.TagEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
@@ -13,8 +14,8 @@ import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.feed.FeedMapper;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.repository.feed.ArticleRepository;
 import net.artux.pdanetwork.repository.feed.ArticleLikeRepository;
+import net.artux.pdanetwork.repository.feed.ArticleRepository;
 import net.artux.pdanetwork.repository.feed.TagRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
@@ -23,10 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,22 +43,28 @@ public class ArticleServiceImpl implements ArticleService {
     private final TagRepository tagRepository;
     private final PageService pageService;
     private final FeedMapper feedMapper;
+    private final EntityManager entityManager;
 
     @Override
     public ArticleDto getArticle(UUID id) {
         ArticleEntity article = articleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
+
         article.setViews(article.getViews() + 1);
-        return feedMapper.fullDto(articleRepository.save(article));
+        articleRepository.save(article);
+
+        return articleRepository.findArticleDtoById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
     }
 
     @Override
     @ModeratorAccess
     public ArticleSimpleDto createArticle(ArticleCreateDto createDto) {
         ArticleEntity article = feedMapper.entity(createDto);
-        article = articleRepository.save(article);
-        logger.info("Статья \"{}\" ({}) создана пользователем {}", article.getTitle(), article.getId(), userService.getUserById().getLogin());
-        return feedMapper.dto(article);
+        article = articleRepository.saveAndFlush(article);
+        logger.info("Статья \"{}\" ({}) создана пользователем {}",
+                article.getTitle(), article.getId(), userService.getUserById().getLogin());
+        return articleRepository.findSimpleArticleDtoById(article.getId());
     }
 
     @Override
@@ -68,14 +77,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage queryPage, Set<String> tags) {
-        Page<ArticleEntity> page;
+        Page<ArticleSimpleDto> page;
         if(tags == null || tags.isEmpty())
-            page = articleRepository.findAll(pageService.getPageable(queryPage));
+            page = articleRepository.findAllSimple(pageService.getPageable(queryPage));
         else {
             page = articleRepository
                     .findAllByTagsIn(tags, pageService.getPageable(queryPage));
         }
-        return pageService.mapDataPageToResponsePage(page, feedMapper.dto(page.getContent()));
+        return pageService.mapDataPageToResponsePage(page, page.getContent());
     }
 
     @Override
@@ -89,15 +98,16 @@ public class ArticleServiceImpl implements ArticleService {
         article.setContent(createDto.getContent());
         article.setDescription(createDto.getDescription());
         Set<TagEntity> tags = tagRepository.findAllByTitleIn(createDto.getTags());
-        tags.addAll(feedMapper.tag(createDto.getTags()));
+        tags.addAll(feedMapper.tags(createDto.getTags()));
         article.setTags(tags);
 
         logger.info("Статья \"{}\" ({}) изменена модератором {}", article.getTitle(), article.getId(), userService.getUserById().getLogin());
-
-        return feedMapper.dto(articleRepository.save(article));
+        articleRepository.save(article);
+        return articleRepository.findSimpleArticleDtoById(id);
     }
 
     @Override
+    @Transactional
     public boolean likeArticle(UUID id) {
         UserEntity user = userService.getUserById();
         ArticleEntity article = articleRepository.findById(id)
@@ -114,8 +124,20 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Set<String> getTags() {
-        return tagRepository.findAll().stream().map(TagEntity::getTitle).collect(Collectors.toSet());
+    public Collection<String> getTags() {
+        return tagRepository.findAll().stream()
+                .map(TagEntity::getTitle)
+                .toList();
+    }
+
+    @Override
+    public Collection<String> getTagsByArticleId(UUID articleId) {
+        return tagRepository.findAllByArticleId(articleId);
+    }
+
+    @Override
+    public ArticleSimpleDto getSimpleArticle(UUID testId) {
+        return articleRepository.findSimpleArticleDtoById(testId);
     }
 
 }

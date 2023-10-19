@@ -46,8 +46,8 @@ public class CommentTest {
     @Order(1)
     public void createArticle() {
         ArticleSimpleDto dto = articleService.createArticle(getTestDto());
-        articleId = dto.getId();
-        Assertions.assertEquals(dto.getDescription(), getTestDto().getDescription());
+        articleId = dto.id();
+        Assertions.assertEquals(dto.description(), getTestDto().getDescription());
     }
 
 

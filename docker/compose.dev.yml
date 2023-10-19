@@ -18,7 +18,7 @@ services:
       io.portainer.accesscontrol.teams: dev,prod
 
   backend:
-    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    image: registry.artux.net/pdanetwork:bkb
     container_name: pdanetwork_backend
     pull_policy: always
     restart: unless-stopped
@@ -44,8 +44,8 @@ services:
     depends_on:
       - backend
     environment:
-      - BASE_PATH=/panel
-      - API_URL=https://dev.artux.net/pdanetwork/:path*
+      - BASE_PATH=panel
+      - API_URL=https://dev.artux.net/pdanetwork
     ports:
       - "8001:3000"
     labels:

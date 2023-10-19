@@ -1,24 +1,31 @@
 package net.artux.pdanetwork.models.feed;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.feed.ArticleEntity;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
-@Data
-@RequiredArgsConstructor
-public class ArticleSimpleDto {
+public record ArticleSimpleDto(UUID id,
+                               String title,
+                               String image,
+                               String description,
+                               Integer views,
+                               Long likes,
+                               Long comments,
+                               Instant published) {
 
-    private UUID id;
-    private String title;
-    private String image;
-    private List<String> tags;
-    private String description;
-    private String url;
-    private int likes;
-    private int comments;
-    private Instant published;
+    public ArticleSimpleDto(ArticleEntity article, Long likes, Long comments) {
+        this(article.getId(),
+                article.getTitle(),
+                article.getImage(),
+                article.getDescription(),
+                article.getViews(),
+                likes,
+                comments,
+                article.getPublished());
+    }
 
+    public String getUrl() {
+        return "/feed/" + id;
+    }
 }

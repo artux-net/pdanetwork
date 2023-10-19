@@ -28,8 +28,8 @@ services:
     depends_on:
       - backend_master
     environment:
-      - BASE_PATH=/panel
-      - API_URL=https://app.artux.net/pdanetwork/:path*
+      - BASE_PATH=panel
+      - API_URL=https://app.artux.net/pdanetwork
     ports:
       - "9001:3000"
     labels:

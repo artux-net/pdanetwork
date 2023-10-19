@@ -25,7 +25,7 @@ import java.util.Set;
 public abstract class CommentableEntity extends BaseEntity {
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "article_comment",
             joinColumns = @JoinColumn(name = "article_id"),
@@ -34,10 +34,6 @@ public abstract class CommentableEntity extends BaseEntity {
 
     protected CommentableEntity() {
         comments = new HashSet<>();
-    }
-
-    public void addComment(CommentEntity commentEntity) {
-        comments.add(commentEntity);
     }
 
 }
