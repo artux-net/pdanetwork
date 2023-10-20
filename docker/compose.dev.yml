@@ -18,7 +18,7 @@ services:
       io.portainer.accesscontrol.teams: dev,prod
 
   backend:
-    image: registry.artux.net/pdanetwork:bkb
+    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     container_name: pdanetwork_backend
     pull_policy: always
     restart: unless-stopped
