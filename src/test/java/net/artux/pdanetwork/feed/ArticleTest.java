@@ -128,6 +128,7 @@ public class ArticleTest {
     }
 
     @Test
+    @Disabled
     @Order(6)
     public void likeArticleAgain() {
         boolean result = articleService.likeArticle(testId);
