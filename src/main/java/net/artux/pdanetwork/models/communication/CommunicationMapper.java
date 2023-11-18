@@ -8,5 +8,4 @@ import org.mapstruct.Mapper;
 public interface CommunicationMapper {
 
     ConversationDTO dto(ConversationEntity entity);
-
 }

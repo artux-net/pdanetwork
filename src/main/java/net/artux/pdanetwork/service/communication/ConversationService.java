@@ -25,6 +25,7 @@ public interface ConversationService {
     boolean deleteConversation(UUID id);
 
     ConversationEntity getPrivateConversation(UUID pda1, UUID pda2);
+    ConversationDTO getConversationEntity(UUID id);
 
     ConversationEntity getConversationByIdForUser(UUID id, UserEntity user);
 

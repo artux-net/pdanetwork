@@ -15,4 +15,5 @@ public interface MessageMapper {
 
     List<MessageDTO> list(List<MessageEntity> entity);
 
+    MessageEntity entity(MessageDTO dto);
 }

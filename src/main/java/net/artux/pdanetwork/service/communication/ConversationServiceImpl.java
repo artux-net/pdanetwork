@@ -96,6 +96,11 @@ public class ConversationServiceImpl implements ConversationService {
         return null; // TODO
     }
 
+    @Override
+    public ConversationDTO getConversationEntity(UUID id) {
+        return mapper.dto(repository.findById(id).orElse(null));
+    }
+
     public ConversationEntity getConversationByIdForUser(UUID id, UserEntity user) {
         return repository.findByIdAndMembersContains(id, user).orElseThrow();
     }

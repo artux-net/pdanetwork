@@ -21,14 +21,16 @@ public class ConversationEntity extends BaseEntity {
 
     private String title;
     private String icon;
-    @ManyToMany
+
+    @OneToMany(fetch = FetchType.LAZY)
     private List<MessageEntity> messages;
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.LAZY)
     private Set<UserEntity> members = new HashSet<>();
-    @OneToOne
-    private MessageEntity lastMessage;
-    @OneToOne
+
+    @OneToOne(fetch = FetchType.LAZY)
     private UserEntity owner;
+
     private Instant time;
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -37,5 +39,4 @@ public class ConversationEntity extends BaseEntity {
         GROUP,
         PRIVATE
     }
-
 }
