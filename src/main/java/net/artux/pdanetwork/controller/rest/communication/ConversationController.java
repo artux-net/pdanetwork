@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.communication.ConversationService;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class ConversationController {
 
     @GetMapping
     @Operation(summary = "Все беседы с участием пользователя")
-    public Slice<ConversationDTO> getConversations(QueryPage queryPage){
+    public ResponsePage<ConversationDTO> getConversations(QueryPage queryPage){
         return conversationService.getConversations(queryPage);
     }
 

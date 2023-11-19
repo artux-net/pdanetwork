@@ -7,12 +7,13 @@ import net.artux.pdanetwork.models.communication.CommunicationMapper;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.page.QueryPage;
+import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.comminication.ConversationRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +42,7 @@ public class ConversationServiceImpl implements ConversationService {
         conversationEntity.setTitle(createDTO.getTitle());
         conversationEntity.setIcon(createDTO.getIcon());
         conversationEntity.setOwner(userService.getUserById());
-        conversationEntity.setType(ConversationEntity.Type.GROUP);
+        conversationEntity.setType(createDTO.getType());
         conversationEntity.setTime(Instant.now());
         return mapper.dto(repository.save(conversationEntity));
     }
@@ -54,6 +55,7 @@ public class ConversationServiceImpl implements ConversationService {
         conversationEntity.getMembers().add(userService.getUserById());
         conversationEntity.setTitle(createDTO.getTitle());
         conversationEntity.setIcon(createDTO.getIcon());
+        conversationEntity.setType(createDTO.getType());
         conversationEntity.setTime(Instant.now());
         //todo messages about creation and edition
         return mapper.dto(repository.save(conversationEntity));
@@ -65,15 +67,16 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public Slice<ConversationDTO> getConversations(Pageable queryPage) {
-        //repository.findByMembersContains(userService.getCurrentId(), queryPage).map(mapper::dto)
-        //TODO
-        return null;
+    public Page<ConversationDTO> getConversations(Pageable queryPage) {
+        UserEntity user = userService.getUserById();
+
+        return repository.findAllByMembersContains(user, queryPage).map(mapper::dto);
     }
 
     @Override
-    public Slice<ConversationDTO> getConversations(QueryPage queryPage) {
-        return getConversations(pageService.getPageable(queryPage));
+    public ResponsePage<ConversationDTO> getConversations(QueryPage queryPage) {
+        Page<ConversationDTO> conversationEntityPage = getConversations(pageService.getPageable(queryPage));
+        return pageService.mapDataPageToResponsePage(conversationEntityPage, conversationEntityPage.getContent());
     }
 
     @Override

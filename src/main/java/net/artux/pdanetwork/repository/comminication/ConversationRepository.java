@@ -2,16 +2,15 @@ package net.artux.pdanetwork.repository.comminication;
 
 import net.artux.pdanetwork.entity.communication.ConversationEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Component
+@Repository
 public interface ConversationRepository extends JpaRepository<ConversationEntity, UUID> {
 
    /* @Query(value = "select c from ConversationEntity c where ?2 in c.members and c.type = ?1")
@@ -19,6 +18,8 @@ public interface ConversationRepository extends JpaRepository<ConversationEntity
 
     @Query(value = "select c from ConversationEntity c where :ids in c.members")
     Slice<ConversationEntity> findByMembersContains(UUID ids, Pageable pageable);*/
+
+    Page<ConversationEntity> findAllByMembersContains(UserEntity user, Pageable pageable);
 
     Optional<ConversationEntity> findByIdAndMembersContains(UUID id, UserEntity entity);
 
