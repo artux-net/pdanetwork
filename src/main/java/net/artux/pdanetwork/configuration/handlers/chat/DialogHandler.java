@@ -57,13 +57,18 @@ public class DialogHandler extends BaseHandler {
 
         UserEntity user = getMember(session);
         String message = getTextMessage(webSocketMessage);
-        UserDto userDto = userMapper.dto(user);
-        MessageDTO messageDTO = new MessageDTO(userDto, message);
 
-        ChatUpdate chatUpdate = new ChatUpdate(List.of(messageDTO), List.of());
-        applyUpdate(conversation.getId(), chatUpdate);
+        if (!message.isBlank()) {
+            UserDto userDto = userMapper.dto(user);
+            MessageDTO messageDTO = new MessageDTO(userDto, message);
 
-        messagingService.saveMessageToConversation(messageDTO, conversation, user);
+            ChatUpdate chatUpdate = new ChatUpdate(List.of(messageDTO), List.of());
+            applyUpdate(conversation.getId(), chatUpdate);
+
+            messagingService.saveMessageToConversation(messageDTO, conversation, user);
+        } else {
+            sendUpdate(session, EMPTY_UPDATE);
+        }
     }
 
     @Override

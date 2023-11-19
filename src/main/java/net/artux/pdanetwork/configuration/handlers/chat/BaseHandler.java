@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuperBuilder
 @RequiredArgsConstructor
 public abstract class BaseHandler implements WebSocketHandler {
-    private final static ChatUpdate EMPTY_UPDATE = ChatUpdate.empty();
+    protected final static ChatUpdate EMPTY_UPDATE = ChatUpdate.empty();
     private static final String USER = "user";
 
     private final Logger logger = LoggerFactory.getLogger(BaseHandler.class);
