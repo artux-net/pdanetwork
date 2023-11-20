@@ -1,7 +1,5 @@
 package net.artux.pdanetwork.service.communication;
 
-import net.artux.pdanetwork.entity.communication.ConversationEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ConversationCreateDTO;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.page.QueryPage;
@@ -18,6 +16,7 @@ public interface ConversationService {
     ConversationDTO editConversation(UUID id, ConversationCreateDTO createDTO);
 
     ConversationDTO getConversation(UUID id);
+    ConversationDTO getConversationWithUser(UUID userId);
 
     Page<ConversationDTO> getConversations(Pageable queryPage);
 
@@ -25,10 +24,5 @@ public interface ConversationService {
 
     boolean deleteConversation(UUID id);
 
-    ConversationEntity getPrivateConversation(UUID pda1, UUID pda2);
     ConversationDTO getConversationEntity(UUID id);
-
-    ConversationEntity getConversationByIdForUser(UUID id, UserEntity user);
-
-    ConversationEntity createPrivateConversation(UUID pdaId, UUID id);
 }

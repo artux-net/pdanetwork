@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,18 +36,7 @@ public class ConversationServiceImpl implements ConversationService {
     public ConversationDTO createConversation(ConversationCreateDTO createDTO) {
         ConversationEntity conversationEntity = new ConversationEntity();
 
-        if(createDTO.getType() == ConversationEntity.Type.PRIVATE && createDTO.getUsers().size() != 1) {
-            throw new RuntimeException("Необходимо указать id собеседника");
-        }
-
-        conversationEntity.setMembers(userRepository.findAllByIdIn(createDTO.getUsers()));
-        conversationEntity.getMembers().add(userService.getUserById());
-
-        conversationEntity.setTitle(createDTO.getTitle());
-        conversationEntity.setIcon(createDTO.getIcon());
-        conversationEntity.setOwner(userService.getUserById());
-        conversationEntity.setType(createDTO.getType());
-        conversationEntity.setTime(Instant.now());
+        validateConversation(createDTO, conversationEntity);
 
         return mapper.dto(repository.save(conversationEntity));
     }
@@ -58,17 +45,7 @@ public class ConversationServiceImpl implements ConversationService {
     public ConversationDTO editConversation(UUID id, ConversationCreateDTO createDTO) {
         ConversationEntity conversationEntity = repository.findByIdAndOwner(id, userService.getUserById()).orElseThrow();
 
-        if(createDTO.getType() == ConversationEntity.Type.PRIVATE && createDTO.getUsers().size() != 1) {
-            throw new RuntimeException("Необходимо указать id собеседника");
-        }
-
-        conversationEntity.setMembers(userRepository.findAllByIdIn(createDTO.getUsers()));
-        conversationEntity.getMembers().add(userService.getUserById());
-
-        conversationEntity.setTitle(createDTO.getTitle());
-        conversationEntity.setIcon(createDTO.getIcon());
-        conversationEntity.setType(createDTO.getType());
-        conversationEntity.setTime(Instant.now());
+        validateConversation(createDTO, conversationEntity);
 
         return mapper.dto(repository.save(conversationEntity));
     }
@@ -76,6 +53,11 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public ConversationDTO getConversation(UUID id) {
         return repository.findByIdAndMembersContains(id, userService.getUserById()).map(mapper::dto).orElseThrow();
+    }
+
+    @Override
+    public ConversationDTO getConversationWithUser(UUID userId)  {
+        return mapper.dto(repository.findByTypeAndMembers(ConversationEntity.Type.PRIVATE, Set.of(userService.getUserById(), userService.getUserById(userId))).orElseThrow());
     }
 
     @Override
@@ -116,37 +98,26 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public ConversationEntity getPrivateConversation(UUID pda1, UUID pda2) {
-        //Optional<ConversationEntity> conversation = repository.findByMembersContainsAndType(ConversationEntity.Type.PRIVATE, pda1, pda2);
-        return null; // TODO
-    }
-
-    @Override
     public ConversationDTO getConversationEntity(UUID id) {
         return mapper.dto(repository.findById(id).orElse(null));
     }
 
-    public ConversationEntity getConversationByIdForUser(UUID id, UserEntity user) {
-        return repository.findByIdAndMembersContains(id, user).orElseThrow();
-    }
-
-    @Override
-    public ConversationEntity createPrivateConversation(UUID pdaId, UUID id) {
-        ConversationEntity conversationEntity = new ConversationEntity();
-        List<UUID> list = new LinkedList<>();
-        list.add(pdaId);
-        list.add(id);
-        conversationEntity.setMembers(userRepository.findAllByIdIn(list));
-        conversationEntity.setTitle("");
-        conversationEntity.setIcon("");
-        conversationEntity.setOwner(userService.getUserById());
-        conversationEntity.setType(ConversationEntity.Type.PRIVATE);
-        conversationEntity.setTime(Instant.now());
-        return repository.save(conversationEntity);
-    }
-
-
     private UserEntity getUniqueUser(UUID userId, Set<UserEntity> users) {
         return users.stream().filter(user -> !user.getId().equals(userId)).findFirst().orElse(null);
+    }
+
+    private void validateConversation(ConversationCreateDTO createDTO, ConversationEntity conversationEntity) {
+        if(createDTO.getType() == ConversationEntity.Type.PRIVATE && createDTO.getUsers().size() != 1) {
+            throw new RuntimeException("Необходимо указать id собеседника");
+        }
+
+        conversationEntity.setMembers(userRepository.findAllByIdIn(createDTO.getUsers()));
+        conversationEntity.getMembers().add(userService.getUserById());
+
+        conversationEntity.setTitle(createDTO.getTitle());
+        conversationEntity.setIcon(createDTO.getIcon());
+        conversationEntity.setOwner(userService.getUserById());
+        conversationEntity.setType(createDTO.getType());
+        conversationEntity.setTime(Instant.now());
     }
 }

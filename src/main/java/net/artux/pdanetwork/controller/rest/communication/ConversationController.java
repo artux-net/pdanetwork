@@ -28,13 +28,13 @@ public class ConversationController {
 
     @PostMapping("/create")
     @Operation(summary = "Создание беседы")
-    public ConversationDTO createConversation(ConversationCreateDTO createDTO) {
+    public ConversationDTO createConversation(@RequestBody ConversationCreateDTO createDTO) {
         return conversationService.createConversation(createDTO);
     }
 
     @PostMapping("/{id}/edit")
     @Operation(summary = "Изменение беседы")
-    public ConversationDTO editConversation(@PathVariable UUID id, ConversationCreateDTO createDTO) {
+    public ConversationDTO editConversation(@PathVariable UUID id, @RequestBody ConversationCreateDTO createDTO) {
         return conversationService.editConversation(id, createDTO);
     }
 
@@ -44,10 +44,15 @@ public class ConversationController {
         return conversationService.getConversation(id);
     }
 
+    @GetMapping("/private/{userId}")
+    @Operation(summary = "Информация о приватной беседе с пользователем")
+    public ConversationDTO getPrivateConversation(@PathVariable UUID userId) {
+        return conversationService.getConversationWithUser(userId);
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление беседы")
     public boolean deleteConversation(@PathVariable UUID id) {
         return conversationService.deleteConversation(id);
     }
-
 }
