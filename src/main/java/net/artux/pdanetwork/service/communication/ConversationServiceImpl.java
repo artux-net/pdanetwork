@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -36,28 +37,39 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public ConversationDTO createConversation(ConversationCreateDTO createDTO) {
         ConversationEntity conversationEntity = new ConversationEntity();
-        //todo check if friends
+
+        if(createDTO.getType() == ConversationEntity.Type.PRIVATE && createDTO.getUsers().size() != 1) {
+            throw new RuntimeException("Необходимо указать id собеседника");
+        }
+
         conversationEntity.setMembers(userRepository.findAllByIdIn(createDTO.getUsers()));
         conversationEntity.getMembers().add(userService.getUserById());
+
         conversationEntity.setTitle(createDTO.getTitle());
         conversationEntity.setIcon(createDTO.getIcon());
         conversationEntity.setOwner(userService.getUserById());
         conversationEntity.setType(createDTO.getType());
         conversationEntity.setTime(Instant.now());
+
         return mapper.dto(repository.save(conversationEntity));
     }
 
     @Override
     public ConversationDTO editConversation(UUID id, ConversationCreateDTO createDTO) {
         ConversationEntity conversationEntity = repository.findByIdAndOwner(id, userService.getUserById()).orElseThrow();
-        //todo check if friends
+
+        if(createDTO.getType() == ConversationEntity.Type.PRIVATE && createDTO.getUsers().size() != 1) {
+            throw new RuntimeException("Необходимо указать id собеседника");
+        }
+
         conversationEntity.setMembers(userRepository.findAllByIdIn(createDTO.getUsers()));
         conversationEntity.getMembers().add(userService.getUserById());
+
         conversationEntity.setTitle(createDTO.getTitle());
         conversationEntity.setIcon(createDTO.getIcon());
         conversationEntity.setType(createDTO.getType());
         conversationEntity.setTime(Instant.now());
-        //todo messages about creation and edition
+
         return mapper.dto(repository.save(conversationEntity));
     }
 
@@ -69,8 +81,18 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public Page<ConversationDTO> getConversations(Pageable queryPage) {
         UserEntity user = userService.getUserById();
+        Page<ConversationEntity> conversationEntityPage = repository.findAllByMembersContains(user, queryPage);
 
-        return repository.findAllByMembersContains(user, queryPage).map(mapper::dto);
+        conversationEntityPage.map(conversation -> {
+            if(conversation.getType() == ConversationEntity.Type.PRIVATE) {
+                UserEntity companion = getUniqueUser(userService.getCurrentId(), conversation.getMembers());
+                conversation.setTitle(companion.getName() + " " + companion.getNickname());
+                conversation.setIcon(companion.getAvatar());
+            }
+            return conversation;
+        });
+
+        return conversationEntityPage.map(mapper::dto);
     }
 
     @Override
@@ -121,5 +143,10 @@ public class ConversationServiceImpl implements ConversationService {
         conversationEntity.setType(ConversationEntity.Type.PRIVATE);
         conversationEntity.setTime(Instant.now());
         return repository.save(conversationEntity);
+    }
+
+
+    private UserEntity getUniqueUser(UUID userId, Set<UserEntity> users) {
+        return users.stream().filter(user -> !user.getId().equals(userId)).findFirst().orElse(null);
     }
 }
