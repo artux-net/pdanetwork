@@ -1,12 +1,12 @@
 package net.artux.pdanetwork.entity.communication;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
@@ -22,13 +22,13 @@ public class ConversationEntity extends BaseEntity {
     private String title;
     private String icon;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<MessageEntity> messages;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<UserEntity> members = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity owner;
 
     private Instant time;

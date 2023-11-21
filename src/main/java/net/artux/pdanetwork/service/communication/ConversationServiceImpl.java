@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,8 +57,15 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public ConversationDTO getConversationWithUser(UUID userId)  {
-        return mapper.dto(repository.findByTypeAndMembers(ConversationEntity.Type.PRIVATE, Set.of(userService.getUserById(), userService.getUserById(userId))).orElseThrow());
+    public List<ConversationDTO> getConversationWithUser(UUID userId)  {
+        // TODO сделать через sql запрос
+        List<ConversationEntity> conversations = repository.findAllByTypeAndMembers_Id(ConversationEntity.Type.PRIVATE, userService.getCurrentId());
+        return conversations.stream().filter(conversation -> {
+            if(conversation.getType() == ConversationEntity.Type.PRIVATE) {
+                return conversation.getMembers().contains(userService.getUserById(userId));
+            }
+            return false;
+        }).map(mapper::dto).toList();
     }
 
     @Override

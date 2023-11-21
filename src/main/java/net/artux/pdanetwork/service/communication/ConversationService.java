@@ -7,6 +7,7 @@ import net.artux.pdanetwork.models.page.ResponsePage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ConversationService {
@@ -16,7 +17,7 @@ public interface ConversationService {
     ConversationDTO editConversation(UUID id, ConversationCreateDTO createDTO);
 
     ConversationDTO getConversation(UUID id);
-    ConversationDTO getConversationWithUser(UUID userId);
+    List<ConversationDTO> getConversationWithUser(UUID userId);
 
     Page<ConversationDTO> getConversations(Pageable queryPage);
 

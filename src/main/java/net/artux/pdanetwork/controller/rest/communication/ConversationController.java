@@ -10,6 +10,7 @@ import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.service.communication.ConversationService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Беседы")
@@ -46,7 +47,7 @@ public class ConversationController {
 
     @GetMapping("/private/{userId}")
     @Operation(summary = "Информация о приватной беседе с пользователем")
-    public ConversationDTO getPrivateConversation(@PathVariable UUID userId) {
+    public List<ConversationDTO> getPrivateConversation(@PathVariable UUID userId) {
         return conversationService.getConversationWithUser(userId);
     }
 
