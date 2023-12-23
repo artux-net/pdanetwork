@@ -22,7 +22,7 @@ public class ConversationEntity extends BaseEntity {
     private String title;
     private String icon;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY)
     private List<MessageEntity> messages;
 
     @ManyToMany(fetch = FetchType.LAZY)

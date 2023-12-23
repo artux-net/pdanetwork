@@ -14,4 +14,5 @@ import java.util.UUID;
 public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
     Slice<MessageEntity> findByConversation(ConversationEntity conversation, Pageable pageable);
     List<MessageEntity> findAllByConversation(ConversationEntity conversation);
+    void deleteAllByConversation(ConversationEntity conversation);
 }

@@ -9,6 +9,7 @@ import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.models.page.ResponsePage;
 import net.artux.pdanetwork.repository.comminication.ConversationRepository;
+import net.artux.pdanetwork.repository.comminication.MessageRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
@@ -29,6 +30,7 @@ public class ConversationServiceImpl implements ConversationService {
 
     private final CommunicationMapper mapper;
     private final ConversationRepository repository;
+    private final MessageRepository messageRepository;
     private final UserService userService;
     private final UserRepository userRepository;
     private final PageService pageService;
@@ -95,10 +97,13 @@ public class ConversationServiceImpl implements ConversationService {
     public boolean deleteConversation(UUID id) {
         ConversationEntity entity = repository.findById(id).orElseThrow();
         UserEntity user = userService.getUserById();
+
         if (entity.getType().equals(ConversationEntity.Type.PRIVATE) && entity.getMembers().contains(user)) {
+            messageRepository.deleteAllByConversation(entity);
             repository.delete(entity);
             return true;
         } else if (entity.getOwner().equals(user)) {
+            messageRepository.deleteAllByConversation(entity);
             repository.delete(entity);
             return true;
         }

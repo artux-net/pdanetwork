@@ -2,7 +2,6 @@ package net.artux.pdanetwork.controller.rest.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.configuration.handlers.*;
 import net.artux.pdanetwork.models.communication.ChatEvent;
@@ -26,13 +25,13 @@ public class ChatController {
 
     @PostMapping("/event")
     @Operation(description = "Добавление события в чат")
-    public ChatUpdate addEvent(@Valid @RequestBody ChatEvent event, @RequestParam("type") ChatType type) {
-        SocketHandler socketHandler;
-        switch (type) {
-            case RP -> socketHandler = rpHandler;
-            case GROUP -> socketHandler = groupsHandler;
-            default -> socketHandler = chatHandler;
-        }
+    public ChatUpdate addEvent(@RequestParam("type") ChatType type, @RequestBody ChatEvent event) {
+        SocketHandler socketHandler = switch (type) {
+            case RP -> rpHandler;
+            case GROUP -> groupsHandler;
+            default -> chatHandler;
+        };
+
         ChatUpdate update = ChatUpdate.event(event.getContent());
         socketHandler.sendAllUpdate(update);
         return update;
