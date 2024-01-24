@@ -21,6 +21,11 @@ import java.util.List;
         type = SecuritySchemeType.HTTP,
         scheme = "basic"
 )
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer"
+)
 @RequiredArgsConstructor
 public class SwaggerConfig {
 

@@ -43,7 +43,7 @@ public class EmailServiceIml implements EmailService {
         }
     }
 
-    private void sendSimpleMessage(String to, String subject, String text) {
+    public void sendSimpleMessage(String to, String subject, String text) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
         try {
