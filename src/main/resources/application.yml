@@ -39,6 +39,13 @@ logging:
     file:
         name: logs/logfile.log
 management:
+    prometheus:
+        metrics:
+            export:
+                enabled=true
+    metrics:
+        distribution:
+            percentiles-histogram.[http.server.requests]=true
     endpoints:
         web:
             exposure:
