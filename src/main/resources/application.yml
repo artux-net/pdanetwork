@@ -61,7 +61,7 @@ quest:
             enabled: true
 registration:
     confirmation:
-        enabled: true
+        enabled: false
 server:
     error:
         include-binding-errors: on_param

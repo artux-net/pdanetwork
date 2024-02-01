@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 return new Status(true, "Проверьте почту.");
             } else {
                 handleConfirmation(token);
-                return new Status(true, "Учетная запись зарегистрирована. Выполните вход.");
+                return new Status(true, "Учетная запись зарегистрирована. Письмо не отправлено. Выполните вход.");
             }
 
         } catch (Exception e) {
