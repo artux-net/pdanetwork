@@ -2,6 +2,7 @@ package net.artux.pdanetwork.service.action;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import net.artux.pdanetwork.entity.items.ArmorEntity;
 import net.artux.pdanetwork.entity.items.ConditionalEntity;
 import net.artux.pdanetwork.entity.items.ItemEntity;
@@ -247,6 +248,15 @@ public class ActionService {
                     return;
                 userEntity.getGangRelation()
                         .setRelation(Gang.valueOf(gang), Integer.parseInt(relation));
+            }
+            case SET_GROUP -> {
+                var key = params.get(0);
+
+                if (isNumber(key)){
+                    userEntity.setGang(Gang.getById(Integer.parseInt(key)));
+                }else{
+                    userEntity.setGang(Gang.valueOf(key));
+                }
             }
             case RESET -> {
                 if (params.isEmpty()) {

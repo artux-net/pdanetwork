@@ -21,6 +21,7 @@ public enum ServerCommand implements EnumGetter {
     ACHIEVE("Добавить достижение", Stream.of("achieve")),
     RESET("Сброс", Stream.of("reset")),
     SET_RELATION("Установка отношения", Stream.of("relation", "setRelation")),
+    SET_GROUP("Установка группировки (параметр - название или номер)", Stream.of("group", "setGroup")),
     ADD_RELATION("Добавление отношения", Stream.of("addRelation", "calculateRelation")),
     EXIT_STORY("Выйти из истории", Stream.of("exitStory")),
     FINISH_STORY("Закончить историю", Stream.of("finishStory")),
