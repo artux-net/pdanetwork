@@ -1,8 +1,8 @@
 [
   {
     "precision": 5,
-    "speed": 15,
-    "damage": 3,
+    "speed": 13.33,
+    "damage": 4,
     "condition": 100,
     "bulletBaseId": 31,
     "bulletQuantity": 30,
@@ -10,7 +10,7 @@
   },
   {
     "precision": 7,
-    "speed": "12",
+    "speed": "9.17",
     "damage": 4,
     "condition": 100,
     "bulletBaseId": 38,
@@ -19,7 +19,7 @@
   },
   {
     "precision": 10,
-    "speed": "12",
+    "speed": "10",
     "damage": 4,
     "condition": 100,
     "bulletBaseId": 38,
@@ -28,7 +28,7 @@
   },
   {
     "precision": 15,
-    "speed": 15,
+    "speed": 10,
     "damage": 6,
     "condition": 100,
     "bulletBaseId": 38,
@@ -37,7 +37,7 @@
   },
   {
     "precision": 13,
-    "speed": 13,
+    "speed": 10.83,
     "damage": 6,
     "condition": 100,
     "bulletBaseId": 40,
@@ -45,9 +45,9 @@
     "baseId": 14
   },
   {
-    "precision": 25,
-    "speed": 13,
-    "damage": 10,
+    "precision": 20,
+    "speed": 13.33,
+    "damage": 8,
     "condition": 100,
     "bulletBaseId": 42,
     "bulletQuantity": 20,
@@ -55,7 +55,7 @@
   },
   {
     "precision": 15,
-    "speed": 20,
+    "speed": 12.5,
     "damage": 7,
     "condition": 100,
     "bulletBaseId": 42,
@@ -64,7 +64,7 @@
   },
   {
     "precision": "13.5",
-    "speed": "14.5",
+    "speed": "10",
     "damage": 8,
     "condition": 100,
     "bulletBaseId": 38,
@@ -73,7 +73,7 @@
   },
   {
     "precision": "14.5",
-    "speed": "16.5",
+    "speed": "11.67",
     "damage": "7.5",
     "condition": 100,
     "bulletBaseId": 38,
@@ -82,7 +82,7 @@
   },
   {
     "precision": "12.5",
-    "speed": 20,
+    "speed": 14.17,
     "damage": "8",
     "condition": 100,
     "bulletBaseId": 38,
@@ -91,7 +91,7 @@
   },
   {
     "precision": "13.5",
-    "speed": 20,
+    "speed": 15,
     "damage": 10,
     "condition": 100,
     "bulletBaseId": 38,
@@ -100,7 +100,7 @@
   },
   {
     "precision": "4.5",
-    "speed": "8",
+    "speed": "0.5",
     "damage": 44,
     "condition": 100,
     "bulletBaseId": 35,
@@ -109,7 +109,7 @@
   },
   {
     "precision": "7",
-    "speed": "8",
+    "speed": "1",
     "damage": "25",
     "condition": 100,
     "bulletBaseId": 35,
@@ -118,7 +118,7 @@
   },
   {
     "precision": "5",
-    "speed": "2.5",
+    "speed": "1.67",
     "damage": "17.5",
     "condition": 100,
     "bulletBaseId": 35,
@@ -127,7 +127,7 @@
   },
   {
     "precision": "1.5",
-    "speed": "3.5",
+    "speed": "2.5",
     "damage": "16.5",
     "condition": 100,
     "bulletBaseId": 35,
@@ -136,8 +136,8 @@
   },
   {
     "precision": "24.5",
-    "speed": "15.5",
-    "damage": "12.5",
+    "speed": "15",
+    "damage": "9",
     "condition": 100,
     "bulletBaseId": 42,
     "bulletQuantity": 10,
@@ -145,8 +145,8 @@
   },
   {
     "precision": 40,
-    "speed": 3,
-    "damage": 23,
+    "speed": 0.5,
+    "damage": 25,
     "condition": 100,
     "bulletBaseId": 44,
     "bulletQuantity": 10,
@@ -154,7 +154,7 @@
   },
   {
     "precision": 30,
-    "speed": 2,
+    "speed": 0.5,
     "damage": 20,
     "condition": 100,
     "bulletBaseId": 44,
@@ -163,7 +163,7 @@
   },
   {
     "precision": 40,
-    "speed": "0.5",
+    "speed": "0.17",
     "damage": 120,
     "condition": 100,
     "bulletBaseId": 46,
