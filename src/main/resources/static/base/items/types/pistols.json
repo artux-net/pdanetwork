@@ -1,12 +1,15 @@
 [
   {
-    "precision": "3.5",
-    "speed": "0.5",
-    "damage": "2.5",
-    "condition": 100,
+	"baseId": 0,
+	"condition": 100,
+    "precision": 3.5,
+    "speed": 0.5,
+    "damage": 2.5,
+    "reloading": 2.63,
+	"distance": 50,
+	"penetration": 0,
     "bulletBaseId": 29,
-    "bulletQuantity": 8,
-    "baseId": 0
+    "bulletQuantity": 8
   },
   {
     "precision": "4.5",
