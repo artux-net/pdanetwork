@@ -1,16 +1,13 @@
 [
   {
-	"weaponName": "ПМм",
-	"baseId": 0,
-	"condition": 100,
-    "precision": 3.5,
+	"precision": 3.5,
     "speed": 0.5,
     "damage": 2.5,
-    "reloading": 2.63,
-	"distance": 50,
-	"penetration": 0,
+    "condition": 100,
     "bulletBaseId": 29,
-    "bulletQuantity": 8
+    "bulletQuantity": 8,
+	"distance": 50.0,
+    "baseId": 0
   },
   {
     "precision": "4.5",
@@ -19,6 +16,7 @@
     "condition": 100,
     "bulletBaseId": 29,
     "bulletQuantity": 8,
+	"distance": 50.0,
     "baseId": 1
   },
   {
@@ -28,6 +26,7 @@
     "condition": 100,
     "bulletBaseId": 29,
     "bulletQuantity": 8,
+	"distance": 50.0,
     "baseId": 2
   },
   {
@@ -37,6 +36,7 @@
     "condition": 100,
     "bulletBaseId": 31,
     "bulletQuantity": 12,
+	"distance": 50.0,
     "baseId": 3
   },
   {
@@ -46,6 +46,7 @@
     "condition": 100,
     "bulletBaseId": 33,
     "bulletQuantity": 7,
+	"distance": 50.0,
     "baseId": 4
   },
   {
@@ -55,6 +56,7 @@
     "condition": 100,
     "bulletBaseId": 33,
     "bulletQuantity": 8,
+	"distance": 50.0,
     "baseId": 5
   },
   {
@@ -64,6 +66,7 @@
     "condition": 100,
     "bulletBaseId": 33,
     "bulletQuantity": 8,
+	"distance": 50.0,
     "baseId": 6
   },
   {
@@ -73,6 +76,7 @@
     "condition": 100,
     "bulletBaseId": 33,
     "bulletQuantity": 7,
+	"distance": 50.0,
     "baseId": 7
   },
   {
@@ -82,6 +86,7 @@
     "condition": 100,
     "bulletBaseId": 31,
     "bulletQuantity": 7,
+	"distance": 50.0,
     "baseId": 8
   },
   {
@@ -91,6 +96,7 @@
     "condition": 100,
     "bulletBaseId": 31,
     "bulletQuantity": 13,
+	"distance": 50.0,
     "baseId": 9
   }
 ]
