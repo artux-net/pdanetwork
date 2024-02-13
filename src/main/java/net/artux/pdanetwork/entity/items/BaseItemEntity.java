@@ -1,24 +1,12 @@
 package net.artux.pdanetwork.entity.items;
 
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
 import net.artux.pdanetwork.entity.MediaItem;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.List;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "base_item")
 public class BaseItemEntity implements MediaItem {
@@ -39,12 +27,9 @@ public class BaseItemEntity implements MediaItem {
     @Column(columnDefinition = "TEXT")
     protected String content;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     protected List<String> advantages;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     protected List<String> disadvantages;
-
 }
