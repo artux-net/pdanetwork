@@ -60,6 +60,7 @@ public interface ItemMapper {
     @Mapping(target = "price", source = "entity.base.price")
     @Mapping(target = "icon", source = "entity.base.icon")
     @Mapping(target = "baseId", source = "entity.base.id")
+	@Mapping(target = "distance", source = "entity.base.distance")
     @Mapping(target = "equipped", expression = "java(entity.isEquipped())")
     WeaponDto weapon(WeaponEntity entity);
 
