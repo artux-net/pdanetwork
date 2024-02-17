@@ -14,6 +14,7 @@ public class WeaponDto extends WearableDto {
     private float condition;
     private int bulletQuantity;
     private int bulletId;
+	private float distance;
     private WeaponSound sounds;
 
 }
