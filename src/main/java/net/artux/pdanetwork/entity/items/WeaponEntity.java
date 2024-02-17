@@ -16,5 +16,5 @@ public class WeaponEntity extends ConditionalEntity {
     private float damage;
     private int bulletQuantity;
     private int bulletBaseId;
-
+	private float distance;
 }
