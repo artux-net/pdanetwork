@@ -6,6 +6,7 @@
     "condition": 100,
     "bulletBaseId": 31,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 10
   },
   {
@@ -15,6 +16,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 11
   },
   {
@@ -24,6 +26,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 12
   },
   {
@@ -33,6 +36,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 13
   },
   {
@@ -42,6 +46,7 @@
     "condition": 100,
     "bulletBaseId": 40,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 14
   },
   {
@@ -51,6 +56,7 @@
     "condition": 100,
     "bulletBaseId": 42,
     "bulletQuantity": 20,
+	"distance": 200.0,
     "baseId": 15
   },
   {
@@ -60,6 +66,7 @@
     "condition": 100,
     "bulletBaseId": 42,
     "bulletQuantity": 20,
+	"distance": 100.0,
     "baseId": 16
   },
   {
@@ -69,6 +76,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 17
   },
   {
@@ -78,6 +86,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 18
   },
   {
@@ -87,6 +96,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 100.0,
     "baseId": 19
   },
   {
@@ -96,6 +106,7 @@
     "condition": 100,
     "bulletBaseId": 38,
     "bulletQuantity": 30,
+	"distance": 150.0,
     "baseId": 20
   },
   {
@@ -105,6 +116,7 @@
     "condition": 100,
     "bulletBaseId": 35,
     "bulletQuantity": 2,
+	"distance": 80.0,
     "baseId": 21
   },
   {
@@ -114,6 +126,7 @@
     "condition": 100,
     "bulletBaseId": 35,
     "bulletQuantity": 2,
+	"distance": 80.0,
     "baseId": 22
   },
   {
@@ -123,6 +136,7 @@
     "condition": 100,
     "bulletBaseId": 35,
     "bulletQuantity": 6,
+	"distance": 80.0,
     "baseId": 23
   },
   {
@@ -132,6 +146,7 @@
     "condition": 100,
     "bulletBaseId": 35,
     "bulletQuantity": 7,
+	"distance": 80.0,
     "baseId": 24
   },
   {
@@ -141,6 +156,7 @@
     "condition": 100,
     "bulletBaseId": 42,
     "bulletQuantity": 10,
+	"distance": 200.0,
     "baseId": 25
   },
   {
@@ -150,6 +166,7 @@
     "condition": 100,
     "bulletBaseId": 44,
     "bulletQuantity": 10,
+	"distance": 300.0,
     "baseId": 26
   },
   {
@@ -159,6 +176,7 @@
     "condition": 100,
     "bulletBaseId": 44,
     "bulletQuantity": 10,
+	"distance": 300.0,
     "baseId": 27
   },
   {
@@ -168,6 +186,7 @@
     "condition": 100,
     "bulletBaseId": 46,
     "bulletQuantity": 10,
+	"distance": 400.0,
     "baseId": 28
   }
 ]
