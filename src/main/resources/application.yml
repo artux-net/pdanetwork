@@ -18,14 +18,14 @@ spring:
         show-sql: false
     mail:
         host: mail.artux.net
+        username: noreply@artux.net
         password: pass
         port: 587
         properties:
-            mail:
-                smtp:
-                    auth: true
+            mail.smtp.starttls.enable: true
+            mail.smtp.auth: true
         protocol: smtp
-        username: noreply@artux.net
+
     mvc:
         hiddenmethod:
             filter:
