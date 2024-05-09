@@ -76,7 +76,6 @@ services:
 
   frontend: &frontend
     image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
-    container_name: pdanet_admin_panel
     pull_policy: always
     restart: unless-stopped
     profiles: [ none ]
@@ -93,7 +92,6 @@ services:
       - "8001:3000"
 
   frontend-prod:
-    image: registry.artux.net/pda-admin-web:main
     <<: *frontend
     <<: *prod
     depends_on:
