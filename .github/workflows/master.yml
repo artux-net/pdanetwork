@@ -5,13 +5,14 @@ on:
     inputs:
       tag:
         type: string
-        description: Tag of docker image to deploy (if empty image will be build and 'master' used)
+        description: Tag of docker image to deploy (use 'master' to build new)
         default: master
 
 jobs:
   test:
-    name: Testing
+    name: Test
     uses: ./.github/workflows/test.yml
+
   backupdb:
     name: Backup DB
     uses: ./.github/workflows/backup.yml
@@ -69,7 +70,7 @@ jobs:
      - build
      - backupdb
      
-    name: 'Deploy Compose on server'
+    name: 'Deploy on server'
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
