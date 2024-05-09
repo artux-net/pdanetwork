@@ -20,16 +20,16 @@ services:
     pull_policy: always
     restart: always
     profiles: [ none ]
+
+  backend-prod:
+    <<: *backend
+    <<: *prod
     healthcheck:
       test: wget --spider --quiet 'http://localhost:8080/pdanetwork/actuator/health' || exit 1
       retries: 3
       interval: 5s
       timeout: 5s
       start_period: 45s
-
-  backend-prod:
-    <<: *backend
-    <<: *prod
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - SERVER_PROTOCOL=https
@@ -43,6 +43,12 @@ services:
   backend-dev:
     <<: *backend
     <<: *dev
+    healthcheck:
+      test: wget --spider --quiet 'http://localhost:8002/pdanetwork/actuator/health' || exit 1
+      retries: 3
+      interval: 5s
+      timeout: 5s
+      start_period: 45s
     environment:
       - SERVER_HOST=dev.artux.net
       - SERVER_PROTOCOL=https
