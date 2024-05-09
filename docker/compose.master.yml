@@ -1,6 +1,6 @@
 version: '3.9'
 
-name: pdanetwork
+name: ${STACK_NAME}
 
 x-dev: &dev
   profiles:
@@ -17,7 +17,6 @@ x-prod: &prod
 services:
   backend: &backend
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
-    container_name: pdanetwork_backend_master
     pull_policy: always
     restart: always
     profiles: [ none ]
