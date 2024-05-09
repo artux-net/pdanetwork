@@ -20,7 +20,7 @@ jobs:
     needs: test
     runs-on: self-hosted
     name: 'Build and upload artifact'
-    if: github.event.inputs.tag == master
+    if: github.event.inputs.tag == 'master'
     steps:
       - uses: actions/checkout@v4
 
