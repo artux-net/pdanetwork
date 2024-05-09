@@ -19,7 +19,6 @@ import org.springframework.web.socket.WebSocketSession;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 public abstract class CommonHandler extends SocketHandler {
@@ -80,7 +79,7 @@ public abstract class CommonHandler extends SocketHandler {
                 return;
             }
 
-            if (BadWordsFilter.contains(message)) {
+            if (BadWordsDictionary.contains(message)) {
                 sendSystemMessage(userSession, "Мат в общих чатах запрещен. На вас наложен временный бан.");
                 banService.applySystemBan(author.getId(), "Автоматический бан за использование плохих слов.", message, 60 * 15);
                 update = ChatUpdate.event(author.getName() + " " + author.getNickname() + " временно заблокирован за нарушение правил.");

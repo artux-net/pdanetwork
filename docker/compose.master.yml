@@ -1,13 +1,36 @@
 version: '3.9'
 
-name: pdanetwork_master
+name: pdanetwork
+
+x-dev: &dev
+  profiles:
+    - dev
+  labels:
+    io.portainer.accesscontrol.teams: dev,prod
+
+x-prod: &prod
+  profiles:
+    - prod
+  labels:
+    io.portainer.accesscontrol.teams: prod
 
 services:
-  backend_master:
+  backend: &backend
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     container_name: pdanetwork_backend_master
     pull_policy: always
-    restart: unless-stopped
+    restart: always
+    profiles: [ none ]
+    healthcheck:
+      test: curl --fail http://localhost:8080/pdanetwork/actuator/health || exit 1
+      retries: 3
+      interval: 5s
+      timeout: 5s
+      start_period: 10s
+
+  backend-prod:
+    <<: *backend
+    <<: *prod
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - SERVER_PROTOCOL=https
@@ -17,21 +40,69 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     network_mode: host
-    labels:
-      io.portainer.accesscontrol.teams: prod
 
-  frontend_master:
-    image: registry.artux.net/pda-admin-web:main
-    container_name: pdanet_admin_panel_master
+  backend-dev:
+    <<: *backend
+    <<: *dev
+    environment:
+      - SERVER_HOST=dev.artux.net
+      - SERVER_PROTOCOL=https
+      - SERVER_WEBSOCKET_PROTOCOL=wss
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
+      - SPRING_DATASOURCE_USERNAME=pdanetwork
+      - SPRING_DATASOURCE_PASSWORD=pass
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8002:8080"
+    depends_on:
+      - db
+  db:
+    <<: *dev
+    image: postgres:15
+    container_name: pdanetwork_db
+    restart: unless-stopped
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=pdanetwork
+      - POSTGRES_PASSWORD=pass
+    ports:
+      - "9999:5432"
+
+  frontend: &frontend
+    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
+    container_name: pdanet_admin_panel
     pull_policy: always
     restart: unless-stopped
+    profiles: [ none ]
+
+  frontend-dev:
+    <<: *frontend
+    <<: *dev
     depends_on:
-      - backend_master
+      - backend-dev
+    environment:
+      - BASE_PATH=panel
+      - API_URL=https://dev.artux.net/pdanetwork
+    ports:
+      - "8001:3000"
+
+  frontend-prod:
+    image: registry.artux.net/pda-admin-web:main
+    <<: *frontend
+    <<: *prod
+    depends_on:
+      - backend-prod
     environment:
       - BASE_PATH=panel
       - API_URL=https://app.artux.net/pdanetwork
     ports:
       - "9001:3000"
-    labels:
-      io.portainer.accesscontrol.teams: prod
 
+  autoheal: # restarts unhealthy containers
+    restart: always
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

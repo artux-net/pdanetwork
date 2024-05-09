@@ -62,7 +62,8 @@ public class SecurityConfiguration {
             "/css/**",
             "/base/**",
             "/images/**",
-            "/rules"
+            "/rules",
+            "/actuator/health",
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
@@ -77,8 +78,8 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(MODERATOR_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
-                        .requestMatchers(TESTER_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name(), Role.TESTER.name())
                         .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers(TESTER_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name(), Role.TESTER.name())
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)

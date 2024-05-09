@@ -8,15 +8,14 @@ services:
     container_name: pdanetwork_db
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=pdanet
-      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=pda
+      - POSTGRES_PASSWORD=pda
     ports:
       - "5432:5432"
 
   backend:
     build:
       context: .
-
     container_name: pdanetwork_back
     restart: unless-stopped
     depends_on:
@@ -24,9 +23,9 @@ services:
     environment:
       - SERVER_PROTOCOL=http
       - SERVER_HOST=localhost:8080
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanet
-      - SPRING_DATASOURCE_USERNAME=pdanet
-      - SPRING_DATASOURCE_PASSWORD=pass
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pda
+      - SPRING_DATASOURCE_USERNAME=pda
+      - SPRING_DATASOURCE_PASSWORD=pda
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8080:8080"
@@ -43,5 +42,3 @@ services:
       - API_URL=http://localhost:8080/pdanetwork
     ports:
       - "3000:3000"
-    labels:
-      io.portainer.accesscontrol.teams: dev,prod

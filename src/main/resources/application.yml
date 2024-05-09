@@ -4,9 +4,9 @@ spring:
     datasource:
         hikari:
             auto-commit: false
-        password: 'pass'
-        url: jdbc:postgresql://localhost:5432/pdanet
-        username: pdanet
+        url: jdbc:postgresql://localhost:5432/pda
+        username: pda
+        password: pda
     jpa:
         hibernate:
             ddl-auto: update
