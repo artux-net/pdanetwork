@@ -21,7 +21,7 @@ services:
     restart: always
     profiles: [ none ]
     healthcheck:
-      test: curl --fail http://localhost:8080/pdanetwork/actuator/health || exit 1
+      test: wget --spider --quiet 'http://localhost:8080/pdanetwork/actuator/health/' || exit 1
       retries: 3
       interval: 5s
       timeout: 5s
