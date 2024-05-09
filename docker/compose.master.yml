@@ -25,7 +25,7 @@ services:
       retries: 3
       interval: 5s
       timeout: 5s
-      start_period: 10s
+      start_period: 45s
 
   backend-prod:
     <<: *backend
