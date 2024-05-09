@@ -44,7 +44,6 @@ public class SecurityConfiguration {
     private static final String[] TESTER_LIST = {
             "/v3/api-docs/*",
             "/swagger-ui/**",
-            "/actuator/**",
             "/webjars/**"
     };
 
@@ -63,7 +62,7 @@ public class SecurityConfiguration {
             "/base/**",
             "/images/**",
             "/rules",
-            "/actuator/health",
+            "/actuator/**",
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
