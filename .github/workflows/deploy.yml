@@ -1,0 +1,38 @@
+name: Deploy specific version
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: Tag of docker image to deploy (if empty image will be build and 'master' used)
+        default: master
+      profile:
+        type: string
+        description: Profile to deploy (prod/dev)
+        default: prod
+
+jobs:
+  deploy:
+    name: 'Deploy Compose on server'
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: 'docker'
+
+      - name: Run compose services
+        env:
+          DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
+          DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
+          DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
+          SERVER_HOST: app.artux.net
+          IMAGE_TAG: ${{ github.event.inputs.tag }}
+          WEB_IMAGE_TAG: main
+          STACK_NAME: pdanetwork_master
+        run: |          
+          docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}   
+          docker compose -f "./docker/compose.master.yml" pull
+          docker compose -f "./docker/compose.master.yml" down --remove-orphans
+          docker system prune -a -f
+          docker compose -f "./docker/compose.master.yml" --profile ${{ github.event.inputs.profile }} up -d
