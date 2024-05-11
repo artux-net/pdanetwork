@@ -1,143 +1,134 @@
-package net.artux.pdanetwork.service.feed;
+package net.artux.pdanetwork.service.feed
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import net.artux.pdanetwork.entity.feed.ArticleEntity;
-import net.artux.pdanetwork.entity.feed.ArticleLikeEntity;
-import net.artux.pdanetwork.entity.feed.LikeArticleId;
-import net.artux.pdanetwork.entity.feed.TagEntity;
-import net.artux.pdanetwork.entity.user.UserEntity;
-import net.artux.pdanetwork.models.feed.ArticleCreateDto;
-import net.artux.pdanetwork.models.feed.ArticleDto;
-import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
-import net.artux.pdanetwork.models.feed.FeedMapper;
-import net.artux.pdanetwork.models.page.QueryPage;
-import net.artux.pdanetwork.models.page.ResponsePage;
-import net.artux.pdanetwork.repository.feed.ArticleLikeRepository;
-import net.artux.pdanetwork.repository.feed.ArticleRepository;
-import net.artux.pdanetwork.repository.feed.TagRepository;
-import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.service.util.PageService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import jakarta.persistence.EntityNotFoundException
+import lombok.RequiredArgsConstructor
+import net.artux.pdanetwork.entity.feed.ArticleLikeEntity
+import net.artux.pdanetwork.entity.feed.LikeArticleId
+import net.artux.pdanetwork.entity.feed.TagEntity
+import net.artux.pdanetwork.models.feed.ArticleCreateDto
+import net.artux.pdanetwork.models.feed.ArticleDto
+import net.artux.pdanetwork.models.feed.ArticleSimpleDto
+import net.artux.pdanetwork.models.feed.FeedMapper
+import net.artux.pdanetwork.models.page.QueryPage
+import net.artux.pdanetwork.models.page.ResponsePage
+import net.artux.pdanetwork.repository.feed.ArticleLikeRepository
+import net.artux.pdanetwork.repository.feed.ArticleRepository
+import net.artux.pdanetwork.repository.feed.TagRepository
+import net.artux.pdanetwork.service.user.UserService
+import net.artux.pdanetwork.service.util.PageService
+import net.artux.pdanetwork.utills.security.ModeratorAccess
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Service
 @RequiredArgsConstructor
-public class ArticleServiceImpl implements ArticleService {
+open class ArticleServiceImpl(
+    private val userService: UserService,
+    private val articleRepository: ArticleRepository,
+    private val articleLikeRepository: ArticleLikeRepository,
+    private val tagRepository: TagRepository,
+    private val pageService: PageService,
+    private val feedMapper: FeedMapper,
+) : ArticleService {
+    private val logger: Logger = LoggerFactory.getLogger(ArticleServiceImpl::class.java)
 
-    private final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
-
-    private final UserService userService;
-    private final ArticleRepository articleRepository;
-    private final ArticleLikeRepository articleLikeRepository;
-    private final TagRepository tagRepository;
-    private final PageService pageService;
-    private final FeedMapper feedMapper;
-    private final EntityManager entityManager;
-
-    @Override
-    public ArticleDto getArticle(UUID id) {
-        ArticleEntity article = articleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
-
-        article.setViews(article.getViews() + 1);
-        articleRepository.save(article);
+    override fun getArticle(id: UUID): ArticleDto {
+        val article = articleRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Can not find article") }
+        article.views += 1
+        articleRepository.save(article)
 
         return articleRepository.findArticleDtoById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
+            .orElseThrow { EntityNotFoundException("Can not find article") }
     }
 
-    @Override
     @ModeratorAccess
-    public ArticleSimpleDto createArticle(ArticleCreateDto createDto) {
-        ArticleEntity article = feedMapper.entity(createDto);
-        article = articleRepository.saveAndFlush(article);
-        logger.info("Статья \"{}\" ({}) создана пользователем {}",
-                article.getTitle(), article.getId(), userService.getUserById().getLogin());
-        return articleRepository.findSimpleArticleDtoById(article.getId());
+    @CacheEvict(CACHE_KEY)
+    override fun createArticle(createDto: ArticleCreateDto): ArticleSimpleDto {
+        var article = feedMapper.entity(createDto)
+        article = articleRepository.saveAndFlush(article)
+        logger.info("Статья \"${article.title}\" (${article.id}) создана пользователем ${userService.userById.login}")
+        return articleRepository.findSimpleArticleDtoById(article.id)
     }
 
-    @Override
     @ModeratorAccess
-    public boolean deleteArticle(UUID id) {
-        logger.info("Статья \"{}\" ({}) удалена пользователем {}", getArticle(id).title(), id, userService.getUserById().getLogin());
-        articleRepository.deleteById(id);
-        return true;
+    override fun deleteArticle(id: UUID): Boolean {
+        logger.info("Статья \"${getArticle(id).title}\" (${id}) удалена пользователем ${userService.userById.login}")
+        articleRepository.deleteById(id)
+        return true
     }
 
-    @Override
-    public ResponsePage<ArticleSimpleDto> getPageArticles(QueryPage queryPage, Set<String> tags) {
-        Page<ArticleSimpleDto> page;
-        if(tags == null || tags.isEmpty())
-            page = articleRepository.findAllSimple(pageService.getPageable(queryPage));
-        else {
-            page = articleRepository
-                    .findAllByTagsIn(tags, pageService.getPageable(queryPage));
+    @Cacheable(CACHE_KEY)
+    override fun getPageArticles(queryPage: QueryPage, tags: Set<String>): ResponsePage<ArticleSimpleDto> {
+        val page = if (tags.isEmpty()) {
+            articleRepository.findAllSimple(pageService.getPageable(queryPage))
+        } else {
+            articleRepository.findAllByTagsIn(tags, pageService.getPageable(queryPage))
         }
-        return pageService.mapDataPageToResponsePage(page, page.getContent());
+        return pageService.mapDataPageToResponsePage(page, page.content)
     }
 
-    @Override
     @ModeratorAccess
-    public ArticleSimpleDto editArticle(UUID id, ArticleCreateDto createDto) {
-        ArticleEntity article = articleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
+    override fun editArticle(id: UUID, createDto: ArticleCreateDto): ArticleSimpleDto {
+        val article = articleRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Can not find article") }
 
-        article.setTitle(createDto.getTitle());
-        article.setImage(createDto.getImage());
-        article.setContent(createDto.getContent());
-        article.setDescription(createDto.getDescription());
-        Set<TagEntity> tags = tagRepository.findAllByTitleIn(createDto.getTags());
-        tags.addAll(feedMapper.tags(createDto.getTags()));
-        article.setTags(tags);
+        article.title = createDto.title
+        article.image = createDto.image
+        article.content = createDto.content
+        article.description = createDto.description
+        val tags = tagRepository.findAllByTitleIn(createDto.tags)
+        tags.addAll(feedMapper.tags(createDto.tags))
+        article.tags = tags
 
-        logger.info("Статья \"{}\" ({}) изменена модератором {}", article.getTitle(), article.getId(), userService.getUserById().getLogin());
-        articleRepository.save(article);
-        return articleRepository.findSimpleArticleDtoById(id);
+        logger.info("Статья \"${article.title}\" (${article.id}) изменена модератором ${userService.userById.login}")
+        articleRepository.save(article)
+        return articleRepository.findSimpleArticleDtoById(id)
     }
 
-    @Override
     @Transactional
-    public boolean likeArticle(UUID id) {
-        UserEntity user = userService.getUserById();
-        ArticleEntity article = articleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Can not find article"));
-        LikeArticleId articleId = new LikeArticleId(user.getId(), id);
+    override fun likeArticle(id: UUID): Boolean {
+        val user = userService.userById
+        val article = articleRepository.findById(id)
+            .orElseThrow { EntityNotFoundException("Can not find article") }
+        val articleId = LikeArticleId(user.id, id)
 
         if (articleLikeRepository.existsById(articleId)) {
-            articleLikeRepository.deleteById(articleId);
-            return false;
+            articleLikeRepository.deleteById(articleId)
+            return false
         } else {
-            articleLikeRepository.save(new ArticleLikeEntity(user, article));
-            return true;
+            articleLikeRepository.save(ArticleLikeEntity(user, article))
+            return true
         }
     }
 
-    @Override
-    public Collection<String> getTags() {
+    override fun getTags(): Collection<String> {
         return tagRepository.findAll().stream()
-                .map(TagEntity::getTitle)
-                .toList();
+            .map { obj: TagEntity -> obj.title }
+            .toList()
     }
 
-    @Override
-    public Collection<String> getTagsByArticleId(UUID articleId) {
-        return tagRepository.findAllByArticleId(articleId);
+    override fun getTagsByArticleId(articleId: UUID): Collection<String> {
+        return tagRepository.findAllByArticleId(articleId)
     }
 
-    @Override
-    public ArticleSimpleDto getSimpleArticle(UUID testId) {
-        return articleRepository.findSimpleArticleDtoById(testId);
+    override fun getSimpleArticle(testId: UUID): ArticleSimpleDto {
+        return articleRepository.findSimpleArticleDtoById(testId)
     }
 
+    @Scheduled(cron = "0 * * * * *")
+    @CacheEvict(CACHE_KEY)
+    open fun evictCache() {
+    }
+
+    companion object {
+        private const val CACHE_KEY = "FEED_CACHE"
+    }
 }

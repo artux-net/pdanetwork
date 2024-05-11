@@ -56,4 +56,8 @@ public interface FeedMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "published", expression = "java(java.time.Instant.now())")
     PostEntity entity(PostCreateDto createDto, UserEntity author);
+
+    @Mapping(target = "likes", expression = "java((long) entity.getLikes().size())")
+    @Mapping(target = "comments", expression = "java((long) entity.getComments().size())")
+    ArticleDto of(ArticleEntity entity);
 }

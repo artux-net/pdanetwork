@@ -9,6 +9,7 @@ import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.models.page.QueryPage;
 import net.artux.pdanetwork.service.feed.ArticleService;
 import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -48,9 +49,15 @@ public class ArticleTest {
     @Test
     @Order(1)
     public void createArticle() {
-        ArticleSimpleDto dto = articleService.createArticle(getTestDto());
-        testId = dto.id();
-        Assertions.assertEquals(dto.description(), getTestDto().getDescription());
+        ArticleCreateDto createDto = getTestDto();
+        ArticleSimpleDto createdDto = articleService.createArticle(createDto);
+        testId = createdDto.id();
+
+        ArticleDto dto = articleService.getArticle(testId);
+        assertEquals(dto.description(), createDto.getDescription());
+        assertEquals(dto.image(), createDto.getImage());
+        assertEquals(dto.title(), createDto.getTitle());
+        assertEquals(dto.content(), createDto.getContent());
     }
 
     @Test
@@ -112,7 +119,7 @@ public class ArticleTest {
     public void likeArticle() {
         boolean result = articleService.likeArticle(testId);
         Assertions.assertTrue(result);
-        Assertions.assertEquals(1, articleService.getArticle(testId).likes());
+        assertEquals(1, articleService.getArticle(testId).likes());
     }
 
     @Test
@@ -124,7 +131,7 @@ public class ArticleTest {
         boolean result = articleService.likeArticle(testId);
         Assertions.assertFalse(result);
         articleService.getArticle(testId).likes();
-        Assertions.assertEquals(before - 1, articleService.getArticle(testId).likes());
+        assertEquals(before - 1, articleService.getArticle(testId).likes());
     }
 
     @Test
@@ -133,7 +140,7 @@ public class ArticleTest {
     public void likeArticleAgain() {
         boolean result = articleService.likeArticle(testId);
         Assertions.assertTrue(result);
-        Assertions.assertEquals(1, articleService.getArticle(testId).likes());
+        assertEquals(1, articleService.getArticle(testId).likes());
     }
 
     @Test
@@ -166,13 +173,13 @@ public class ArticleTest {
     @Test
     @Order(9)
     public void checkGetPageByTag() {
-        Assertions.assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1")).getContent().size());
+        assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1")).getContent().size());
     }
 
     @Test
     @Order(10)
     public void checkGetPageByTags() {
-        Assertions.assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1", "tag3")).getContent().size());
+        assertEquals(1, articleService.getPageArticles(new QueryPage(), Set.of("tag1", "tag3")).getContent().size());
     }
 
     @Test
@@ -180,7 +187,16 @@ public class ArticleTest {
     public void checkEmptyPageByTags() {
         System.out.println(articleService.getTags());
         System.out.println("Current:" + articleService.getPageArticles(new QueryPage(), Set.of()).getContent().get(0));
-        Assertions.assertEquals(0, articleService.getPageArticles(new QueryPage(), Set.of("tag3", "tag2")).getContent().size());
+        assertEquals(0, articleService.getPageArticles(new QueryPage(), Set.of("tag3", "tag2")).getContent().size());
+    }
+
+    @Test
+    @Order(12)
+    public void cacheCheck() {
+        var articles1 = articleService.getPageArticles(new QueryPage(), Set.of()).getContent();
+        var articles2 = articleService.getPageArticles(new QueryPage(), Set.of()).getContent();
+
+        Assertions.assertSame(articles1, articles2);
     }
 
 }

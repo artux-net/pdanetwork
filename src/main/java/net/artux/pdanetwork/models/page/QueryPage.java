@@ -2,12 +2,14 @@ package net.artux.pdanetwork.models.page;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Sort;
 
 import jakarta.validation.constraints.Min;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class QueryPage {
   @Min(value = 1, message = "{queryPage.numberPage.lessThan}")
   private int number = 1;
