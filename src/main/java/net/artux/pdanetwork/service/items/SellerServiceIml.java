@@ -18,18 +18,15 @@ import net.artux.pdanetwork.models.story.StoryMapper;
 import net.artux.pdanetwork.models.user.dto.StoryData;
 import net.artux.pdanetwork.repository.items.ItemRepository;
 import net.artux.pdanetwork.repository.items.SellerRepository;
-import net.artux.pdanetwork.repository.user.BanRepository;
 import net.artux.pdanetwork.repository.user.UserRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.utills.security.ModeratorAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -41,7 +38,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 @Transactional
 @RequiredArgsConstructor
 public class SellerServiceIml implements SellerService {
@@ -135,7 +132,6 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "sellers", key = "#id")
     public SellerDto getSeller(long id) {
         logger.debug("Getting seller {}", id);
         return sellerRepository.findById(id).map(sellerMapper::dto).orElseThrow();
@@ -149,7 +145,6 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "sellers", key = "#sellerId")
     public Status buy(long sellerId, UUID id, int quantity) {
         UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
@@ -210,7 +205,6 @@ public class SellerServiceIml implements SellerService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "sellers", key = "#sellerId")
     public Status sell(long sellerId, UUID id, int quantity) {
         UserEntity userEntity = userService.getUserById();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
