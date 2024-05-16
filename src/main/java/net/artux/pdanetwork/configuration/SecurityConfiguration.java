@@ -1,16 +1,9 @@
 package net.artux.pdanetwork.configuration;
 
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 import lombok.Getter;
 import net.artux.pdanetwork.models.user.enums.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -20,14 +13,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,25 +97,6 @@ public class SecurityConfiguration {
         this.roleHierarchy = hierarchy;
         roleHierarchy.setHierarchy(this.roleHierarchy);
         return roleHierarchy;
-    }
-
-
-    @Value("${jwt.public.key}")
-    RSAPublicKey key;
-
-    @Value("${jwt.private.key}")
-    RSAPrivateKey priv;
-
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(this.key).build();
-    }
-
-    @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(this.key).privateKey(this.priv).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
     }
 
 }

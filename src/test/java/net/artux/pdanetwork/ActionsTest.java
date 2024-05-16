@@ -1,7 +1,6 @@
 package net.artux.pdanetwork;
 
 import lombok.extern.slf4j.Slf4j;
-import net.artux.pdanetwork.configuration.ServiceTestConfiguration;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.gang.Gang;
 import net.artux.pdanetwork.service.action.ActionService;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Order(10)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Slf4j

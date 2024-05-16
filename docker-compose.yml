@@ -8,37 +8,7 @@ services:
     container_name: pdanetwork_db
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=pda
-      - POSTGRES_PASSWORD=pda
+      - POSTGRES_USER=pdanet
+      - POSTGRES_PASSWORD=pdanet
     ports:
       - "5432:5432"
-
-  backend:
-    build:
-      context: .
-    container_name: pdanetwork_back
-    restart: unless-stopped
-    depends_on:
-      - db
-    environment:
-      - SERVER_PROTOCOL=http
-      - SERVER_HOST=localhost:8080
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pda
-      - SPRING_DATASOURCE_USERNAME=pda
-      - SPRING_DATASOURCE_PASSWORD=pda
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    ports:
-      - "8080:8080"
-
-  frontend:
-    image: registry.artux.net/pda-admin-web:dev
-    container_name: pdanet_admin_panel
-    pull_policy: always
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      - BASE_PATH=panel
-      - API_URL=http://localhost:8080/pdanetwork
-    ports:
-      - "3000:3000"

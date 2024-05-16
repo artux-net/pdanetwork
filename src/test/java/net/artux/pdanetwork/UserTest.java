@@ -1,7 +1,6 @@
 package net.artux.pdanetwork;
 
 import lombok.extern.slf4j.Slf4j;
-import net.artux.pdanetwork.configuration.ServiceTestConfiguration;
 import net.artux.pdanetwork.controller.rest.user.UserController;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
@@ -18,12 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserTest {
 
     @Autowired

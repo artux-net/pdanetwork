@@ -1,6 +1,5 @@
 package net.artux.pdanetwork;
 
-import net.artux.pdanetwork.configuration.ServiceTestConfiguration;
 import net.artux.pdanetwork.models.Status;
 import net.artux.pdanetwork.models.items.ItemDto;
 import net.artux.pdanetwork.models.items.WeaponDto;
@@ -22,7 +21,7 @@ import java.util.UUID;
 
 @Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = ServiceTestConfiguration.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SellerTest {
 
     @Autowired

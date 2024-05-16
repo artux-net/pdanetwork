@@ -1,12 +1,18 @@
+server:
+    host: localhost:8080
+    protocol: http
+    servlet:
+        contextPath: /pdanetwork
+    websocket:
+        protocol: ws
+    error:
+        include-binding-errors: on_param
+        include-exception: true
+        include-message: always
+
 spring:
-    config:
-        import: startup.yml
-    datasource:
-        hikari:
-            auto-commit: false
-        url: jdbc:postgresql://localhost:5432/pda
-        username: pda
-        password: pda
+    profiles:
+        active: default, dev
     jpa:
         hibernate:
             ddl-auto: update
@@ -16,78 +22,27 @@ spring:
                 enable_lazy_load_no_trans: false
                 format_sql: true
         show-sql: false
-    mail:
-        host: mail.artux.net
-        username: noreply@artux.net
-        password: pass
-        port: 587
-        properties:
-            mail.smtp.starttls.enable: true
-            mail.smtp.auth: true
-        protocol: smtp
-
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
     mvc:
         hiddenmethod:
             filter:
                 enabled: true
 
-admin:
-    address: https://admin.artux.net/
-cdn:
-    address: https://cdn.artux.net/
-logging:
-    file:
-        name: logs/logfile.log
 management:
     prometheus:
         metrics:
             export:
                 enabled=true
-    #metrics:
-        #distribution:
-         #   percentiles-histogram.[http.server.requests]=true
     endpoints:
         web:
             exposure:
                 include: '*'
-postman:
-    invite:
-        link: https://app.getpostman.com/join-team?invite_code=7314a144fdf6276193f426844376200b
-    team:
-        link: https://pdanet.postman.co/workspaces
+
 quest:
     stories:
         init:
             enabled: true
+
 registration:
     confirmation:
         enabled: false
-server:
-    error:
-        include-binding-errors: on_param
-        include-exception: true
-        include-message: always
-    host: localhost:8080
-    protocol: http
-    servlet:
-        contextPath: /pdanetwork
-    websocket:
-        protocol: ws
-
-springdoc:
-    api-docs:
-        enabled: true
-    show-actuator: false
-    swagger-ui:
-        enabled: true
-stories:
-    directory: /srv/pda
-    github:
-        address: https://api.github.com/repos/artux-net/pda-quests/zipball
-        token: pass
-
-jwt:
-    private:
-        key: classpath:app.key
-    public:
-        key: classpath:app.pub

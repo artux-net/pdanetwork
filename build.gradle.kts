@@ -32,8 +32,6 @@ dependencies {
     implementation("net.lingala.zip4j:zip4j:2.11.5")
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.566")
 
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
@@ -49,6 +47,8 @@ dependencies {
     implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
     implementation("org.postgresql:postgresql:*")
 
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test:*")
     testImplementation("org.springframework.security:spring-security-test:*")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
@@ -58,7 +58,6 @@ dependencies {
     }
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.h2database:h2:*")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 
 tasks.test {

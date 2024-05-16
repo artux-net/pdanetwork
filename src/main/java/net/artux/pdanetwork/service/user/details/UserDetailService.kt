@@ -27,13 +27,14 @@ open class UserDetailService(
 ) : UserDetailsService {
     private val logger: Logger = LoggerFactory.getLogger(UserDetailService::class.java)
 
-    @Cacheable(value = ["userDetails"])
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
         if (username.isBlank()) throw UsernameNotFoundException("Access denied.")
         val userOptional = if (username.contains("@")) {
             userRepository.getByEmail(username)
-        } else userRepository.getByLogin(username)
+        } else {
+            userRepository.getByLogin(username)
+        }
 
         if (userOptional.isPresent) {
             val simpleUser = userOptional.get()

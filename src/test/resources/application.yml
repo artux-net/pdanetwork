@@ -83,8 +83,3 @@ stories:
     github:
         address: https://api.github.com/repos/artux-net/pda-quests/zipball
         token: pass
-jwt:
-    private:
-        key: classpath:app.key
-    public:
-        key: classpath:app.pub
