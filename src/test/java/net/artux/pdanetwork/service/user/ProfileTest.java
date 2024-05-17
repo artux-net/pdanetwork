@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import net.artux.pdanetwork.controller.rest.admin.AdminUserController;

@@ -49,6 +49,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    testImplementation(kotlin("test"))
     testImplementation("org.springframework.boot:spring-boot-starter-test:*")
     testImplementation("org.springframework.security:spring-security-test:*")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
@@ -58,6 +59,12 @@ dependencies {
     }
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("com.h2database:h2:*")
+
+    // Test containers
+    testImplementation("org.testcontainers:testcontainers:1.19.8")
+    testImplementation(platform("org.testcontainers:testcontainers-bom:1.19.8"))
+    testImplementation("org.testcontainers:postgresql:1.19.8")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.8")
 }
 
 tasks.test {

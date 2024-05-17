@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.achievement;
 
 import net.artux.pdanetwork.entity.achievement.AchievementGroup;
 import net.artux.pdanetwork.models.achievement.AchCategoryCreateDto;

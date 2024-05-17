@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.actions;
 
 import net.artux.pdanetwork.controller.rest.admin.quest.AdminQuestsController;
 import net.artux.pdanetwork.controller.rest.quest.QuestController;

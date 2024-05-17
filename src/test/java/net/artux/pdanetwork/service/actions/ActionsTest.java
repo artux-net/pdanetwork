@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.actions;
 
 import lombok.extern.slf4j.Slf4j;
 import net.artux.pdanetwork.entity.user.UserEntity;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Map;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Slf4j
+@ActiveProfiles(profiles = {"default","dev", "test"})
 public class ActionsTest {
 
     @Autowired

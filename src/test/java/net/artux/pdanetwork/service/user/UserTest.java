@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import net.artux.pdanetwork.controller.rest.user.UserController;
@@ -24,15 +24,17 @@ import java.util.Collections;
 public class UserTest {
 
     @Autowired
-    private UserController userController;
-    @Autowired
     private SecurityService securityService;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private ActionService actionService;
+
     @Autowired
     private ResetService resetService;
+
     private RandomString randomString = new RandomString();
 
     public RegisterUserDto getRegisterUser() {
@@ -80,6 +82,5 @@ public class UserTest {
         StoryData data = actionService.applyCommands(Collections.emptyMap());
         Assertions.assertEquals("admin", data.getLogin());
     }
-
 
 }

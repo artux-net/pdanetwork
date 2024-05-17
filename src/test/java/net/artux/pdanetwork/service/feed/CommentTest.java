@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.feed;
+package net.artux.pdanetwork.service.feed;
 
 import net.artux.pdanetwork.models.feed.ArticleCreateDto;
 import net.artux.pdanetwork.models.feed.ArticleSimpleDto;

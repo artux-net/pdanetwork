@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.feed;
+package net.artux.pdanetwork.service.feed;
 
 import net.artux.pdanetwork.models.feed.CommentCreateDto;
 import net.artux.pdanetwork.models.feed.CommentDto;

@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.service.user;
 
 import net.artux.pdanetwork.configuration.SecurityConfiguration;
 import net.artux.pdanetwork.controller.rest.admin.StatisticController;

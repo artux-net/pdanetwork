@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.feed;
+package net.artux.pdanetwork.service.feed;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
@@ -19,6 +19,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
+@ActiveProfiles(profiles = {"default","dev", "test"})
 public class ArticleTest {
 
     @Autowired

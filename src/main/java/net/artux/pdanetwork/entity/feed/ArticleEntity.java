@@ -42,7 +42,7 @@ public class ArticleEntity extends CommentableEntity {
     private Instant published;
 
     @NotBlank(message = "Содержимое не может быть пустым")
-    @Column(columnDefinition = "clob")
+    @Column(columnDefinition = "text")
     private String content;
 
     @JsonIgnore

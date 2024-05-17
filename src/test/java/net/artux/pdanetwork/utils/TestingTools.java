@@ -1,4 +1,4 @@
-package net.artux.pdanetwork;
+package net.artux.pdanetwork.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
