@@ -1,0 +1,58 @@
+package net.artux.pdanetwork.controller.web.enc;
+
+import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.entity.items.BaseItemEntity;
+import net.artux.pdanetwork.models.items.ItemType;
+import net.artux.pdanetwork.models.items.ItemDto;
+import net.artux.pdanetwork.models.items.WeaponDto;
+import net.artux.pdanetwork.service.items.BaseItemService;
+import net.artux.pdanetwork.service.items.ItemService;
+import org.hibernate.Hibernate;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/enc")
+@RequiredArgsConstructor
+public class EncController {
+
+    private final ItemService itemService;
+    private final BaseItemService baseItemService;
+
+    @GetMapping
+    public String getMainPage(Model model) {
+        model.addAttribute("types", ItemType.values());
+        return "enc/types";
+    }
+
+    @GetMapping("/{type}")
+    public String getTypeList(Model model, @PathVariable String type) {
+        try{
+            model.addAttribute("items", baseItemService.getTypeItems(ItemType.valueOf(type)));
+            return "enc/list";
+        }catch (Exception e){
+            //todo
+            //model.addAttribute("items", );
+            return "enc/list";
+        }
+
+
+    }
+
+    @GetMapping("/item/{id}")
+    public String getItemPage(Model model, @PathVariable int id) {
+        ItemDto dto = itemService.getItemDto(id);
+        model.addAttribute("item", dto);
+        BaseItemEntity baseItemEntity = baseItemService.getBaseItem(id);
+        Hibernate.initialize(baseItemEntity);
+        model.addAttribute("base", baseItemEntity);
+        if (dto instanceof WeaponDto weaponDto) {
+            model.addAttribute("bullet", itemService.getItemDto(weaponDto.getBulletId()));
+        }
+        return "enc/item";
+    }
+
+}

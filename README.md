@@ -1,119 +1,53 @@
 # PDA Network
-### Groups
+![Deploy prod](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
+![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/dev.yml/badge.svg)
+![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
+![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
 
-`0` - Одиночки
+Монолитный бэкенд пда, отвечает за авторизацию, новости, чаты, энциклопедию, рейтинг, сюжетные истории и обрабатывает сюжетные действия
 
-`1` - Бандиты
+## Services
 
-`2` - Военные
+### dev среда
+<a href="https://dev.artux.net/pdanetwork/swagger-ui/index.html">
+    <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white" />
+</a>
+<a href="https://grafana.artux.net/d/twqdYjziz/micrometer-spring-throughput?orgId=1&var-application=&var-instance=dev.artux.net:80">
+    <img src="https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9" />
+</a>
 
-`3` - Свобода
+- данные для входа в тестовый аккаунт через BasicAuth 
+    ```yaml
+    login: `maxxx`
+    pass: `12345678`
+    ```
+- данные для входа в Grafana
+    ```yaml
+    login: `admin`
+    pass: `9uT46ZkE`
+    ```
+ - панель управления пользователями по адресу https://dev.artux.net/panel
 
-`4` - Долг
+### prod среда
 
-`5` - Монолит
+<a href="https://app.artux.net/pdanetwork/swagger-ui/index.html">
+    <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white" />
+</a>
+<a href="https://grafana.artux.net/d/twqdYjziz/micrometer-spring-throughput?orgId=1&var-application=&var-instance=app.artux.net:80">
+    <img src="https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9" />
+</a>
 
-`6` - Наёмники
+- для доступа к Swagger UI необходима регистрация и роль пользователя начиная от TESTER включительно, от Grafana данные те же
+- панель управления пользователями по адресу https://app.artux.net/panel
 
-### Rangs
-0-500 = отмычка 
+Менеджмент сервисов происходит через [Portainer](https://portainer.artux.net/#!/2/docker/stacks)
 
-500-1500 = новичок
+## Локальный запуск
+Для локального пуска запустить базу данных через pdanet/docker-compose.yml
 
-1500-3500 = сталкер
+Затем уже точка входа `PDANetworkApplication.main()`
 
-3500-6000 = опытный
-
-6000-9000 = ветеран
-
-9000-12000 = мастер
-
-12000-22000 = легенда
+# Работа с квестами
+Осуществляется через консоль https://story.artux.net/, использовать пароль от DEV среды
 
 
-# Документация по работе квестов
-## Введение
-Важная часть пда это квесты, квестовый движок был разработан еще в 2019 году и не сильно с того времени модифицировался.
-Поэтому, надо понимать что любые предложения по улучшению структуры файлов и работы движка только приветствуются.
-
-## Основные понятия
-### История (Story)
-Представляет собой набор глав, который может отображаться в начальном меню ПДА.
-Полноценной загрузки истории на устройство не происходит, загрузка истории начинается с 1 главы, 0 стадии и далее история следует в необходимом порядке.
-
-### Глава (Chapter)
-Глава представляет собой набор стадий и ссылок на музыку
-
-### Стадия, экран, сцена
-Стадия самое малое звено всей цепи. Содержит в себе всю необходимую информацию для отображения в ПДА.  
-А именно:
-- заголовок
-- тип
-- фон
-- сообщение и его тип
-- отображаемый на экран текст (с условием)
-- переходы (с названием, след. стадией  и условием отображения)
-- действия которые необходимо выполнить при прохождении этой стадии
-
-Пример стадии
-```json
-{
-  "id": 2,
-  "type_stage": 0,
-  "background_url": "story/prologue/screen/chapter_0_0.jpg",
-  "title": "Как играть?",
-  "message": "",
-  "type_message": 0,
-  "texts": [
-    {
-      "text": "Каждый сюжет состоит из двух элементов: текстовые действия и действия на карте. Текстовые действия будут происходить аналогично тем, которые ты видишь сейчас. В текстовых действиях тебе будет даваться на выбор несколько вариантов развития событий, дальнейшие события в игре будут зависеть от твоих ответов. События на карте ты увидешь позже.",
-      "condition": {}
-    },
-    {
-      "text": "",
-      "condition": {}
-    }
-  ],
-  "transfers": [
-    {
-      "text": "Далее",
-      "stage_id": "3",
-      "condition": {}
-    }
-  ],
-  "actions": {
-    "-": [
-      "relation_2:3",
-      "relation_5:5",
-      "relation_1:3",
-      "relation_3:3",
-      "relation_6:2"
-    ]
-  }
-}
-```
-Пустые поля, которые не используются можно опустить. В примере это "condition":{}, второй текст без условия, message и type_message 
-
-Типы стадий:
-
-`0` - обычная сцена
-
-`1` - сцена разговора
-
-`4` - переход на карту
-
-`5` - загрузка другой главы
-
-`6` - переход на продавца
-
-В тексте могут использоваться placeholders по типу
-"@name"
-"@nickname"
-"@money"
-"@xp"
-"@login"
-"@location"
-"@gang"
-"@pdaId"
-
-Загрузив самую первую стадию, приложение будет ждать выбора ответа.
