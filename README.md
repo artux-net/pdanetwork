@@ -3,6 +3,8 @@
 ![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/dev.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
+[![Coverage](.github/badges/jacoco.svg)](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml)
+
 
 Монолитный бэкенд пда, отвечает за авторизацию, новости, чаты, энциклопедию, рейтинг, сюжетные истории и обрабатывает сюжетные действия
 
