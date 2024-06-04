@@ -24,9 +24,6 @@ admin:
     address: https://admin.artux.net/
 cdn:
     address: https://cdn.artux.net/
-logging:
-    file:
-        name: logs/logfile.log
 quest:
     stories:
         init:

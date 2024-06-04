@@ -5,10 +5,12 @@ import net.artux.pdanetwork.models.items.ItemDto
 import net.artux.pdanetwork.models.items.WeaponDto
 import net.artux.pdanetwork.repository.items.ItemRepository
 import net.artux.pdanetwork.service.action.ActionService
+import net.artux.pdanetwork.service.items.ItemService
 import net.artux.pdanetwork.service.items.SellerService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.context.support.WithUserDetails
 import java.util.*
 import java.util.List
@@ -20,19 +22,24 @@ import java.util.function.Consumer
 class SellerTest : AbstractTest() {
 
     @Autowired
-    private val sellerService: SellerService? = null
+    lateinit var sellerService: SellerService
 
     @Autowired
-    private val actionService: ActionService? = null
+    lateinit var actionService: ActionService
 
     @Autowired
-    private val itemRepository: ItemRepository? = null
+    lateinit var itemRepository: ItemRepository
+
+    @Autowired
+    lateinit var itemService: ItemService
+
     private val sellerId: Long = 1
 
     @Order(0)
     @Test
+    @WithMockUser(roles = ["ADMIN"])
     fun testGetSeller() {
-        Assertions.assertNotNull(sellerService!!.getSeller(sellerId))
+        Assertions.assertNotNull(sellerService.getSeller(sellerId))
     }
 
     @Test
@@ -117,4 +124,20 @@ class SellerTest : AbstractTest() {
                 .get()
         Assertions.assertEquals(200, dto.quantity)
     }
+
+    @Order(12)
+    @Test
+    @WithMockUser(roles = ["ADMIN"])
+    fun testGetHeavySeller() {
+        val random = Random()
+        val items = itemService.allItems.map {
+            val quantity = random.nextLong(3) + 1
+            val item = itemService.getItem(it.basedId)
+            "${item.base.id}:$quantity"
+        }
+        sellerService.addSellerItems(sellerId, items)
+
+        Assertions.assertNotNull(sellerService.getSeller(sellerId))
+    }
+
 }

@@ -65,8 +65,8 @@ open class ArticleServiceImpl(
     }
 
     @Cacheable(CACHE_KEY)
-    override fun getPageArticles(queryPage: QueryPage, tags: Set<String>): ResponsePage<ArticleSimpleDto> {
-        val page = if (tags.isEmpty()) {
+    override fun getPageArticles(queryPage: QueryPage, tags: Set<String>?): ResponsePage<ArticleSimpleDto> {
+        val page = if (tags.isNullOrEmpty()) {
             articleRepository.findAllSimple(pageService.getPageable(queryPage))
         } else {
             articleRepository.findAllByTagsIn(tags, pageService.getPageable(queryPage))

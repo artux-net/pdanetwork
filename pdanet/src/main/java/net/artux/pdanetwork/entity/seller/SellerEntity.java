@@ -21,6 +21,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,41 +43,41 @@ public class SellerEntity {
     private float buyCoefficient;
     private float sellCoefficient;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_bullet",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "bullet_id"))
-    private Set<BulletEntity> bullets = new HashSet<>();
+    private List<BulletEntity> bullets = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_armor",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "armor_id"))
-    private Set<ArmorEntity> armors = new HashSet<>();
+    private List<ArmorEntity> armors = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_weapon",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "weapon_id"))
-    private Set<WeaponEntity> weapons = new HashSet<>();
+    private List<WeaponEntity> weapons = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_medicine",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "medicine_id"))
-    private Set<MedicineEntity> medicines = new HashSet<>();
+    private List<MedicineEntity> medicines = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_artifact",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "artifact_id"))
-    private Set<ArtifactEntity> artifacts = new HashSet<>();
+    private List<ArtifactEntity> artifacts = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "seller_detector",
             joinColumns = @JoinColumn(name = "seller_id"),
             inverseJoinColumns = @JoinColumn(name = "detector_id"))
-    private Set<DetectorEntity> detectors = new HashSet<>();
+    private List<DetectorEntity> detectors = new ArrayList<>();
 
     @Nullable
     public ItemEntity findItem(long baseId) {

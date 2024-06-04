@@ -25,7 +25,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDto> getNotes() {
-        return noteMapper.list(noteRepository.findAllByAuthor());
+        return noteMapper.list(noteRepository.findAllByAuthor(userService.getUserById()));
     }
 
 
@@ -38,6 +38,9 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public NoteDto editNote(UUID id, NoteCreateDto note) {
         NoteEntity noteEntity = noteRepository.findById(id).orElseThrow();
+        if (!noteEntity.getAuthor().getId().equals(userService.getCurrentId())){
+            throw new IllegalArgumentException("You don't have permission to edit this note");
+        }
         noteEntity.setContent(note.getContent());
         noteEntity.setTitle(note.getTitle());
 
@@ -47,6 +50,9 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Status deleteNote(UUID id) {
         NoteEntity noteEntity = noteRepository.findById(id).orElseThrow();
+        if (noteEntity.getAuthor().getId() != userService.getCurrentId()){
+            throw new IllegalArgumentException("You don't have permission to edit this note");
+        }
         noteRepository.delete(noteEntity);
         return new Status(true);
     }

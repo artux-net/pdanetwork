@@ -30,7 +30,8 @@ public class SecurityConfiguration {
     private static final String[] TESTER_LIST = {
             "/v3/api-docs/*",
             "/swagger-ui/**",
-            "/webjars/**"
+            "/webjars/**",
+            "/actuator/**"
     };
 
     private static final String[] WHITE_LIST = {
@@ -47,8 +48,7 @@ public class SecurityConfiguration {
             "/css/**",
             "/base/**",
             "/images/**",
-            "/rules",
-            "/actuator/**",
+            "/rules"
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);

@@ -20,6 +20,12 @@ services:
     pull_policy: always
     restart: always
     profiles: [ none ]
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+        reservations:
+          memory: 2G
 
   backend-prod:
     <<: *backend

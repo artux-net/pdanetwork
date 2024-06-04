@@ -30,7 +30,6 @@ public class ProfileServiceIml implements ProfileService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final AchievementServiceImpl achievementServiceImpl;
     private final PageService pageService;
 
     @Override

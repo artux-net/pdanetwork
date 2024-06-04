@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.24"
     id("io.freefair.lombok") version "8.1.0"
     kotlin("plugin.lombok") version "1.9.24"
+    jacoco
 }
 
 version = "1.0.0"
@@ -54,12 +55,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test:*")
     testImplementation("org.springframework.security:spring-security-test:*")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
-    testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude("org.junit.vintage", module = "junit-vintage-engine")
     }
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("com.h2database:h2:*")
 
     // Test containers
     testImplementation("org.testcontainers:testcontainers:1.19.8")
@@ -70,4 +69,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.jacocoTestReport {
+    reports {
+        csv.required = true
+    }
+    dependsOn(tasks.test) // tests are required to run before generating the report
 }

@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -104,6 +105,10 @@ public class ItemService {
     @Nullable
     public ItemEntity getItem(long baseId) {
         return cloningMapper.itemEntity(itemsMap.get(baseId));
+    }
+
+    public Collection<? extends ItemEntity> getAllItems() {
+        return itemsMap.values();
     }
 
     public ItemDto getItemDto(long baseId) {

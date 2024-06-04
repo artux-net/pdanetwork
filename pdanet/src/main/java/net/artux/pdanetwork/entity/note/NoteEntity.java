@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -30,6 +31,13 @@ public class NoteEntity extends BaseEntity {
 
     public NoteEntity(String title) {
         this.title = title;
+        time = Instant.now();
+    }
+
+    public NoteEntity(UUID id, String title, String content) {
+        super(id);
+        this.title = title;
+        this.content = content;
         time = Instant.now();
     }
 
