@@ -82,7 +82,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
 
     @Transactional
     public StoryBackupDto saveStory(Story story, String comment) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         StoryType type = StoryType.PRIVATE;
         int hashcode = story.hashCode();
 
@@ -102,7 +102,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
         backup.setStoryId(story.getId());
         backup.setTitle(story.getTitle());
         backup.setIcon(story.getIcon());
-        backup.setAuthor(userService.getUserById());
+        backup.setAuthor(userService.getCurrentUser());
         backup.setMessage(comment);
         backup.setNeeds(story.getNeeds());
         backup.setAccess(story.getAccess());
@@ -117,7 +117,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
     }
 
     public ResponsePage<StoryBackupDto> getUserBackups(Long id, QueryPage queryPage, boolean archive) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         Pageable pageable = pageService.getPageable(queryPage);
         if (id == null)
             return ResponsePage.of(questRepository.findAllByAuthorAndArchive(user, archive, pageable)
@@ -144,7 +144,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
 
     private boolean isUserCanManipulateStory(UUID id) {
         StoryBackup backup = questRepository.findById(id).orElseThrow();
-        UserEntity currentUser = userService.getUserById();
+        UserEntity currentUser = userService.getCurrentUser();
         boolean usersStory = backup.getAuthor().getId() == currentUser.getId();
         if (usersStory)
             return true;
@@ -184,7 +184,7 @@ public class QuestBackupService extends SimpleS3Service<Story> {
     @CreatorAccess
     public StoryBackupDto makeArchive(UUID id, boolean archive) {
         StoryBackup backup = questRepository.findById(id).orElseThrow();
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         StoryType type = backup.getType();
         int hashcode = backup.getHashcode();
         if (isUserCanManipulateStory(id)) {

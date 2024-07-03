@@ -27,4 +27,6 @@ public interface ConversationRepository extends JpaRepository<ConversationEntity
     Optional<ConversationEntity> findByIdAndMembersContains(UUID id, UserEntity entity);
 
     Optional<ConversationEntity> findByIdAndOwner(UUID id, UserEntity entity);
+
+    long deleteAllByMembersContainsAndTypeEquals(UserEntity user, ConversationEntity.Type type);
 }

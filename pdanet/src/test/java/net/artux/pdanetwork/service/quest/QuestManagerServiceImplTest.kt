@@ -9,10 +9,10 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
 @ActiveProfiles(profiles = ["default", "dev", "test"])
-internal class QuestManagerServiceImplTest : AbstractTest() {
+class QuestManagerServiceImplTest : AbstractTest() {
 
     @Autowired
-    protected var questManagerService: QuestManagerService? = null
+    private var questManagerService: QuestManagerService? = null
 
     @Test
     @WithMockUser(roles = ["ADMIN"])

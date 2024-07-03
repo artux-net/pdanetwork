@@ -6,6 +6,7 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
 
+@Suppress("UtilityClassWithPublicConstructor")
 @ActiveProfiles(profiles = ["default", "dev", "test"])
 open class AbstractTest {
 
@@ -31,5 +32,4 @@ open class AbstractTest {
             registry.add("spring.datasource.password", db::getPassword)
         }
     }
-
 }

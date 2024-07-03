@@ -66,20 +66,14 @@ public class EmailServiceIml implements EmailService {
 
     }
 
-    public void sendRegisterLetter(RegisterUserDto user, Long pdaId) {
+    public void sendRegisterLetter(UserEntity user) {
         sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
-                .replace("${login}", user.getLogin())
-                .replace("${pass}", user.getPassword())
-                .replace("${pdaId}", String.valueOf(pdaId)));
+                .replace("${email}", user.getEmail())
+                .replace("${pdaId}", String.valueOf(user.getPdaId())));
     }
 
     public void sendConfirmLetter(RegisterUserDto user, String token) {
         String confirmLink = valuesService.getAddress() + "/confirmation/register?t=" + token;
-        logger.info("Ссылка подтверждения аккаунта: " + confirmLink);
-
-        if (!valuesService.isEmailConfirmationEnabled())
-            return;
-
         sendSimpleMessage(user.getEmail(), "Подтвердите регистрацию", mailTemplateCon
                 .replace("${link}", confirmLink));
     }

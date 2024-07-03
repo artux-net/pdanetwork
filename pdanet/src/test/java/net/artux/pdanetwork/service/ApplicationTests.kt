@@ -9,6 +9,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 internal class ApplicationTests : AbstractTest() {
 
     @Test
-    fun applicationContextLoads() {}
-
+    @Suppress("EmptyFunctionBlock")
+    fun applicationContextLoads() {
+    }
 }

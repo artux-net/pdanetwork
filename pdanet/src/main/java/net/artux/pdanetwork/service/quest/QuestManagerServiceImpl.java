@@ -180,7 +180,7 @@ public class QuestManagerServiceImpl implements QuestManagerService {
 
     @Override
     public Status uploadStories(MultipartFile storiesArchive) {
-        if (userService.getUserById().getRole() != Role.ADMIN)
+        if (userService.getCurrentUser().getRole() != Role.ADMIN)
             return new Status(false, "Wrong role.");
 
         try {

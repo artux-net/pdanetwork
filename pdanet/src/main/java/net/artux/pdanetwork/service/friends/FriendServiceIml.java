@@ -42,7 +42,7 @@ public class FriendServiceIml implements FriendService {
 
     @Override
     public Status relateUser(UUID pdaId) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         UserEntity another = userRepository.findById(pdaId).orElseThrow();
         Optional<RelationshipEntity> relationship = relationshipRepository.getByUser1AndUser2(user, another);
         if (relationship.isPresent()) {

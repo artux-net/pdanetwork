@@ -29,7 +29,7 @@ public class MessagingServiceImpl implements MessagingService {
     @Override
     public MessageDTO saveToConversation(String content, ConversationEntity conversationEntity) {
         MessageEntity messageEntity = new MessageEntity();
-        messageEntity.setAuthor(userService.getUserById());
+        messageEntity.setAuthor(userService.getCurrentUser());
         messageEntity.setContent(content);
         messageEntity.setTimestamp(Instant.now());
         return messageMapper.dto(messageRepository.save(messageEntity));

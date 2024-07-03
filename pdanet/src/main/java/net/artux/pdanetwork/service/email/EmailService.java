@@ -6,7 +6,7 @@ import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 public interface EmailService {
 
   void askForPassword(UserEntity user, String token);
-  void sendRegisterLetter(RegisterUserDto user, Long pdaId);
+  void sendRegisterLetter(UserEntity user);
   void sendConfirmLetter(RegisterUserDto user, String token);
 
 }

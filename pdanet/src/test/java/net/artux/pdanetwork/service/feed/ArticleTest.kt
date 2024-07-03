@@ -4,12 +4,18 @@ import jakarta.validation.Validator
 import net.artux.pdanetwork.AbstractTest
 import net.artux.pdanetwork.dto.page.QueryPage
 import net.artux.pdanetwork.models.feed.ArticleCreateDto
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.context.ActiveProfiles
-import java.util.*
+import java.util.UUID
 import java.util.stream.Stream
 
 @TestMethodOrder(
@@ -17,7 +23,7 @@ import java.util.stream.Stream
 )
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
-@WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
+@WithUserDetails(value = "admin@artux.net")
 @ActiveProfiles(profiles = ["default", "dev", "test"])
 class ArticleTest : AbstractTest() {
 
@@ -103,7 +109,7 @@ class ArticleTest : AbstractTest() {
     @Disabled
     @Order(5)
     fun dislikeArticle() {
-        //TODO
+        // TODO
         val before = articleService!!.getArticle(testId).likes
         val result = articleService.likeArticle(testId)
         Assertions.assertFalse(result)

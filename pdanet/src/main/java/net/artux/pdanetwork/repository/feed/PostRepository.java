@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.repository.feed;
 
 import net.artux.pdanetwork.entity.feed.PostEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,6 @@ public interface PostRepository extends JpaRepository<PostEntity, UUID> {
 
     @Override
     Page<PostEntity> findAll(Pageable pageable);
+
+    long deleteAllByAuthor(UserEntity user);
 }

@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.repository.feed;
 
 import net.artux.pdanetwork.entity.feed.CommentEntity;
+import net.artux.pdanetwork.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, UUID> {
 
     @Query("select c from CommentEntity c where c.post.id = ?1")
     Page<CommentEntity> findAllByPost(UUID postId, Pageable page);
+
+    long deleteAllByAuthor(UserEntity author);
 
 }

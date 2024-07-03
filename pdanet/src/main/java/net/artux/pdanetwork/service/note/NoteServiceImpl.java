@@ -25,14 +25,14 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDto> getNotes() {
-        return noteMapper.list(noteRepository.findAllByAuthor(userService.getUserById()));
+        return noteMapper.list(noteRepository.findAllByAuthor(userService.getCurrentUser()));
     }
 
 
     @Override
     public NoteDto createNote(NoteCreateDto dto) {
         return noteMapper.to(noteRepository.save(
-                noteMapper.entity(dto, userService.getUserById())));
+                noteMapper.entity(dto, userService.getCurrentUser())));
     }
 
     @Override

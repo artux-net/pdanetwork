@@ -10,7 +10,6 @@ import net.artux.pdanetwork.entity.mappers.UserMapper;
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.repository.user.UserRepository;
-import net.artux.pdanetwork.service.achievement.AchievementServiceImpl;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
 import org.springframework.data.domain.Example;
@@ -34,21 +33,21 @@ public class ProfileServiceIml implements ProfileService {
 
     @Override
     public Profile getProfile(UUID uuid) {
-        Profile profile = userMapper.profile(userService.getUserById(uuid), userService.getUserById());
+        Profile profile = userMapper.profile(userService.getCurrentUser(uuid), userService.getCurrentUser());
         profile.setRatingPosition(userRepository.ratingPosition(profile.getId()));
         return profile;
     }
 
     @Override
     public Profile getProfile() {
-        Profile profile = userMapper.profile(userService.getUserById());
+        Profile profile = userMapper.profile(userService.getCurrentUser());
         profile.setRatingPosition(userRepository.ratingPosition(profile.getId()));
         return profile;
     }
 
     @Override
     public List<AchievementEntity> getAchievements(UUID pdaId) {
-        UserEntity userEntity = userService.getUserById(pdaId);
+        UserEntity userEntity = userService.getCurrentUser(pdaId);
         return null; // TODO
     }
 

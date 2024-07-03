@@ -1,4 +1,4 @@
 databaseChangeLog:
   - includeAll:
-      path: /2023
+      path: /2024
       relativeToChangelogFile: true

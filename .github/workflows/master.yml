@@ -82,6 +82,11 @@ jobs:
           DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
+
+          MAIL_HOST: mail.artux.net
+          MAIL_USERNAME: noreply@artux.net
+          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
+
           SERVER_HOST: app.artux.net
           IMAGE_TAG: ${{ github.event.inputs.tag }}
           WEB_IMAGE_TAG: main

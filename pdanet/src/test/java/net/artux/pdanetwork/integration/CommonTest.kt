@@ -57,6 +57,4 @@ class CommonTest : AbstractTest() {
         val maps = questController!!.maps
         println(maps.contentToString())
     }
-
-
 }

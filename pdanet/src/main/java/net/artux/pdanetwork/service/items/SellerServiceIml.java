@@ -146,7 +146,7 @@ public class SellerServiceIml implements SellerService {
     @Override
     @Transactional
     public Status buy(long sellerId, UUID id, int quantity) {
-        UserEntity userEntity = userService.getUserById();
+        UserEntity userEntity = userService.getCurrentUser();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         //todo check if seller does not have item
         ItemEntity sellerItem = itemRepository.findById(id).orElseThrow();
@@ -206,7 +206,7 @@ public class SellerServiceIml implements SellerService {
     @Override
     @Transactional
     public Status sell(long sellerId, UUID id, int quantity) {
-        UserEntity userEntity = userService.getUserById();
+        UserEntity userEntity = userService.getCurrentUser();
         SellerEntity sellerEntity = sellerRepository.findById(sellerId).orElseThrow();
         ItemEntity item = itemRepository.findById(id).orElseThrow();
         int price = getPrice(item, sellerEntity.getSellCoefficient(), quantity);
@@ -270,7 +270,7 @@ public class SellerServiceIml implements SellerService {
 
     @ModeratorAccess
     public SellerDto createSeller(SellerAdminDto dto) {
-        UserEntity userEntity = userService.getUserById();
+        UserEntity userEntity = userService.getCurrentUser();
         SellerEntity sellerEntity = new SellerEntity();
         sellerEntity.setId(dto.getId());
         sellerEntity.setName(dto.getName());

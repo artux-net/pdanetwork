@@ -1,8 +1,8 @@
 package net.artux.pdanetwork.service.user.details
 
 import jakarta.annotation.PostConstruct
-import net.artux.pdanetwork.entity.user.UserEntity
 import net.artux.pdanetwork.entity.security.SecurityUser
+import net.artux.pdanetwork.entity.user.UserEntity
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto
 import net.artux.pdanetwork.models.user.enums.Role
 import net.artux.pdanetwork.repository.user.UserRepository
@@ -49,19 +49,16 @@ open class UserDetailService(
         }
     }
 
+    @Suppress("UnusedPrivateMember")
     @PostConstruct
     private fun registerFirstUsers() {
         val email = environment.getProperty("administrator.email")
-        val login = environment.getProperty("administrator.login")
-        val name = environment.getProperty("administrator.name")
         val nickname = environment.getProperty("administrator.nickname")
 
         val password = randomString.nextString()
 
         val registerUserDto = RegisterUserDto.builder()
             .email(email)
-            .login(login)
-            .name(name)
             .password(password)
             .nickname(nickname)
             .avatar("1")
@@ -79,10 +76,10 @@ open class UserDetailService(
                 """
                     There are no users, a user with a admin role created. 
                      Email: {} 
-                     Login: {} 
-                     Password: {} 
-                    
-                    """.trimIndent(), email, login, password
+                     Password: {}                  
+                """.trimIndent(),
+                email,
+                password
             )
         }
     }

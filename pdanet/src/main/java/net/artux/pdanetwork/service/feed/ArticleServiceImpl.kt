@@ -1,16 +1,15 @@
 package net.artux.pdanetwork.service.feed
 
-import jakarta.persistence.EntityNotFoundException
 import lombok.RequiredArgsConstructor
+import net.artux.pdanetwork.dto.page.QueryPage
+import net.artux.pdanetwork.dto.page.ResponsePage
 import net.artux.pdanetwork.entity.feed.ArticleLikeEntity
 import net.artux.pdanetwork.entity.feed.LikeArticleId
 import net.artux.pdanetwork.entity.feed.TagEntity
+import net.artux.pdanetwork.entity.mappers.FeedMapper
 import net.artux.pdanetwork.models.feed.ArticleCreateDto
 import net.artux.pdanetwork.models.feed.ArticleDto
 import net.artux.pdanetwork.models.feed.ArticleSimpleDto
-import net.artux.pdanetwork.entity.mappers.FeedMapper
-import net.artux.pdanetwork.dto.page.QueryPage
-import net.artux.pdanetwork.dto.page.ResponsePage
 import net.artux.pdanetwork.repository.feed.ArticleLikeRepository
 import net.artux.pdanetwork.repository.feed.ArticleRepository
 import net.artux.pdanetwork.repository.feed.TagRepository
@@ -44,8 +43,10 @@ open class ArticleServiceImpl(
         article.views += 1
         articleRepository.save(article)
 
-        return feedMapper.of(articleRepository.findArticleDtoById(id)
-            .orElseThrow { Exception("Can not find article") })
+        return feedMapper.of(
+            articleRepository.findArticleDtoById(id)
+                .orElseThrow { Exception("Can not find article") }
+        )
     }
 
     @ModeratorAccess
@@ -53,13 +54,17 @@ open class ArticleServiceImpl(
     override fun createArticle(createDto: ArticleCreateDto): ArticleSimpleDto {
         var article = feedMapper.entity(createDto)
         article = articleRepository.saveAndFlush(article)
-        logger.info("Статья \"${article.title}\" (${article.id}) создана пользователем ${userService.userById.login}")
+        logger.info(
+            "Статья \"${article.title}\" (${article.id}) создана пользователем ${userService.getCurrentUser().login}"
+        )
         return feedMapper.of(articleRepository.findSimpleArticleDtoById(article.id))
     }
 
     @ModeratorAccess
     override fun deleteArticle(id: UUID): Boolean {
-        logger.info("Статья \"${getArticle(id).title}\" (${id}) удалена пользователем ${userService.userById.login}")
+        logger.info(
+            "Статья \"${getArticle(id).title}\" ($id) удалена пользователем ${userService.getCurrentUser().login}"
+        )
         articleRepository.deleteById(id)
         return true
     }
@@ -88,14 +93,16 @@ open class ArticleServiceImpl(
         tags.addAll(feedMapper.tags(createDto.tags))
         article.tags = tags
 
-        logger.info("Статья \"${article.title}\" (${article.id}) изменена модератором ${userService.userById.login}")
+        logger.info(
+            "Статья \"${article.title}\" (${article.id}) изменена модератором ${userService.getCurrentUser().login}"
+        )
         articleRepository.save(article)
         return feedMapper.of(articleRepository.findSimpleArticleDtoById(id))
     }
 
     @Transactional
     override fun likeArticle(id: UUID): Boolean {
-        val user = userService.userById
+        val user = userService.getCurrentUser()
         val article = articleRepository.findById(id)
             .orElseThrow { Exception("Can not find article") }
         val articleId = LikeArticleId(user.id, id)

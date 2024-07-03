@@ -55,9 +55,6 @@ public class ValuesService {
     @Value("${postman.invite.link}")
     private String postmanInviteLink;
 
-    @Value("${registration.confirmation.enabled}")
-    private boolean emailConfirmationEnabled;
-
     @Value("${quest.stories.init.enabled}")
     private boolean initStoriesEnabled;
 

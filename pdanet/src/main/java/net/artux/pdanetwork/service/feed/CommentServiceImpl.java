@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean likeComment(UUID id) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         CommentEntity commentEntity = repository.findById(id).orElseThrow();
 
         LikeCommentId articleId = new LikeCommentId(user.getId(), id);
@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto comment(CommentType type, UUID id, CommentCreateDto comment) {
-        CommentEntity commentEntity = feedMapper.entity(comment, userService.getUserById());
+        CommentEntity commentEntity = feedMapper.entity(comment, userService.getCurrentUser());
         if (type == CommentType.POST)
             commentEntity.setPost(postRepository.findById(id).orElseThrow());
         else

@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto createPost(PostCreateDto createDto) {
-        PostEntity postEntity = feedMapper.entity(createDto, userService.getUserById());
+        PostEntity postEntity = feedMapper.entity(createDto, userService.getCurrentUser());
         return feedMapper.dto(repository.save(postEntity));
     }
 
@@ -66,7 +66,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public boolean likePost(UUID id) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         PostEntity postEntity = repository.findById(id).orElseThrow();
         LikePostId articleId = new LikePostId(user.getId(), postEntity.getId());
 

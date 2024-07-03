@@ -30,7 +30,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public List<RepositoryAchCategoryDto> getUserAchievements(UUID userId) {
-        return categoryRepository.findAllByUser(userService.getUserById(userId));
+        return categoryRepository.findAllByUser(userService.getCurrentUser(userId));
     }
 
     @Override

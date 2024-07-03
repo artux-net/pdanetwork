@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      author: m.prygunov
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      id: 1
+      changes:
+        - sqlFile:
+            path: init.sql
+            relativeToChangelogFile: true

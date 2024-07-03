@@ -90,7 +90,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public StoryDto getStory(long storyId) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         StoryDto story = stories.get(storyId);
         if (story == null)
             story = usersStories.get(user.getId());
@@ -134,7 +134,7 @@ public class QuestServiceImpl implements QuestService {
 
     @Override
     public Collection<StoryInfo> getPublicStories() {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         Collection<StoryInfo> storiesInfo = questMapper.info(getStories(user));
         StoryInfo userStory = questMapper.info(usersStories.get(user.getId()));
         if (userStory != null) storiesInfo.add(userStory);

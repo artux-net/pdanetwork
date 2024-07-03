@@ -17,6 +17,7 @@ import lombok.ToString;
 import net.artux.pdanetwork.entity.CommentableEntity;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,7 +58,7 @@ public class ArticleEntity extends CommentableEntity {
     public ArticleEntity() {
         setPublished(Instant.now());
         likes = new HashSet<>();
-        comments = new HashSet<>();
+        comments = new ArrayList<>();
         tags = new HashSet<>();
     }
 

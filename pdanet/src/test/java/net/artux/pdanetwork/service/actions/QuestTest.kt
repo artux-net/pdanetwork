@@ -2,7 +2,6 @@ package net.artux.pdanetwork.service.actions
 
 import net.artux.pdanetwork.AbstractTest
 import net.artux.pdanetwork.controller.rest.admin.quest.AdminQuestsController
-import net.artux.pdanetwork.controller.rest.quest.QuestController
 import net.artux.pdanetwork.models.quest.Chapter
 import net.artux.pdanetwork.models.quest.Story
 import net.artux.pdanetwork.models.quest.map.Point
@@ -18,9 +17,6 @@ import java.util.Map
 class QuestTest : AbstractTest() {
 
     @Autowired
-    private val questController: QuestController? = null
-
-    @Autowired
     private val adminQuestsController: AdminQuestsController? = null
 
     @Test
@@ -32,16 +28,16 @@ class QuestTest : AbstractTest() {
     @WithMockUser(username = "admin", roles = ["MODERATOR"])
     @Test
     fun isStatisticClosed() {
-            val story = Story()
-            story.id = 1L
-            story.title = "title"
-            val chapter = Chapter()
-            chapter.id = 1L
-            chapter.points = Map.of(
-                1L,
-                listOf(Point())
-            )
-        }
+        val story = Story()
+        story.id = 1L
+        story.title = "title"
+        val chapter = Chapter()
+        chapter.id = 1L
+        chapter.points = Map.of(
+            1L,
+            listOf(Point())
+        )
+    }
 
     /**
      * this method is testing adding new story with two chapters of ten stages and two points in each chapter *
@@ -86,11 +82,7 @@ class QuestTest : AbstractTest() {
                 listOf()
             )
         story.chapters = List.of(chapter1, chapter2, chapter3, chapter4, chapter5)
-        //adminQuestsController.uploadPublicStory(story);
-        //System.out.println(adminQuestsController.getStory(1L).getChapters().stream().findFirst().get().getPoints().size());
     }
-
-    var pointId = 0
 
     /**
      * @return random point with random information

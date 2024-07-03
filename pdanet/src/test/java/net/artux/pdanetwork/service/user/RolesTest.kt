@@ -37,5 +37,4 @@ class RolesTest : AbstractTest() {
     fun printHierarchy() {
         println(securityConfiguration!!.roleHierarchy)
     }
-
 }

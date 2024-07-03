@@ -6,12 +6,16 @@ import net.artux.pdanetwork.models.achievement.AchievementCreateDto
 import net.artux.pdanetwork.models.achievement.AchievementGroup
 import net.artux.pdanetwork.repository.achievement.AchievementCategoryRepository
 import net.artux.pdanetwork.repository.achievement.AchievementRepository
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ActiveProfiles
-import java.util.*
+import java.util.UUID
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)

@@ -197,7 +197,7 @@ public class ItemService {
     }
 
     public Status setWearableItemById(UUID id) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         Status status = setWearableItemById(user, id);
         if (status.isSuccess())
             userRepository.save(user);

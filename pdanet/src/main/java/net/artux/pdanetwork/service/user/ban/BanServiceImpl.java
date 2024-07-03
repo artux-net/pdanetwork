@@ -50,7 +50,7 @@ public class BanServiceImpl implements BanService {
     }
 
     private BanDto banUser(UUID userId, String reason, String message, int secs, BanEntity banEntity) {
-        UserEntity user = userService.getUserById(userId);
+        UserEntity user = userService.getCurrentUser(userId);
         banEntity.setUser(user);
         banEntity.setReason(reason);
         banEntity.setMessage(message);
@@ -70,7 +70,7 @@ public class BanServiceImpl implements BanService {
     @Override
     @ModeratorAccess
     public BanDto applyBan(UUID userId, String reason, String message, int secs) {
-        UserEntity user = userService.getUserById();
+        UserEntity user = userService.getCurrentUser();
         BanEntity banEntity = new BanEntity();
         banEntity.setBy(user);
         return banUser(userId, reason, message, secs, banEntity);

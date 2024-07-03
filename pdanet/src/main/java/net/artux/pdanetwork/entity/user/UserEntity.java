@@ -51,6 +51,7 @@ public class UserEntity extends BaseEntity {
     private Boolean chatBan = false;
     @Column(columnDefinition = "boolean default true")
     private Boolean receiveEmails = true;
+    private Boolean isConfirmed = false;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -97,10 +98,10 @@ public class UserEntity extends BaseEntity {
     private StatisticEntity statistic;
 
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder) {
-        login = registerUser.getLogin();
+        login = registerUser.getEmail();
         password = passwordEncoder.encode(registerUser.getPassword());
         email = registerUser.getEmail();
-        name = registerUser.getName();
+        name = "";
         nickname = registerUser.getNickname();
         avatar = registerUser.getAvatar();
         role = Role.USER;

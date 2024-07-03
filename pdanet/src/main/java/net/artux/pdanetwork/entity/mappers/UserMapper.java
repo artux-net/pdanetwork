@@ -6,7 +6,6 @@ import net.artux.pdanetwork.entity.user.gang.GangRelationEntity;
 import net.artux.pdanetwork.models.user.Profile;
 import net.artux.pdanetwork.models.user.UserStatisticDto;
 import net.artux.pdanetwork.models.user.dto.AdminUserDto;
-import net.artux.pdanetwork.models.user.dto.RegisterUserDto;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.models.user.gang.GangRelationDto;
@@ -21,10 +20,10 @@ public interface UserMapper {
     @Mapping(target = "achievements", expression = "java(user.getAchievements().size())")
     SimpleUserDto info(UserEntity user);
 
+    @Mapping(target = "login", source = "nickname")
     List<SimpleUserDto> info(List<UserEntity> users);
 
-    RegisterUserDto regUser(UserEntity user);
-
+    @Mapping(target = "login", source = "nickname")
     UserDto dto(UserEntity user);
     AdminUserDto adminDto(UserEntity user);
 
@@ -34,6 +33,7 @@ public interface UserMapper {
     @Mapping(target = "subs", ignore = true)
     @Mapping(target = "achievements", expression = "java(user.getAchievements().size())")
     @Mapping(target = "relations", expression = "java(mapRelation(user.getGangRelation()))")
+    @Mapping(target = "login", source = "nickname")
     Profile profile(UserEntity user);
 
     default Profile profile(UserEntity user, UserEntity by) {

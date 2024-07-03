@@ -8,11 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 public class RegisterUserDto {
 
-    //TODO validation
-    private String login;
-    private String password;
     private String email;
-    private String name;
+    private String password;
     private String nickname;
     private String avatar;
 }

@@ -1,3 +1,5 @@
+val detektVersion = "1.23.6"
+
 plugins {
     java
     id("org.springframework.boot") version "3.1.4"
@@ -5,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.24"
     id("io.freefair.lombok") version "8.1.0"
     kotlin("plugin.lombok") version "1.9.24"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
     jacoco
 }
 
@@ -16,7 +19,7 @@ repositories {
 
 dependencies {
     implementation(project(":pdanet-model"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.1.4"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.3.0"))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-security:*")
 
@@ -33,6 +36,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     implementation("net.lingala.zip4j:zip4j:2.11.5")
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.566")
+    testImplementation("org.testng:testng:7.1.0")
 
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.30")
@@ -48,6 +52,7 @@ dependencies {
 
     implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
     implementation("org.postgresql:postgresql:*")
+    implementation("org.liquibase:liquibase-core")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
@@ -65,6 +70,8 @@ dependencies {
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.19.8"))
     testImplementation("org.testcontainers:postgresql:1.19.8")
     testImplementation("org.testcontainers:junit-jupiter:1.19.8")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
 }
 
 tasks.test {
@@ -77,4 +84,8 @@ tasks.jacocoTestReport {
         csv.required = true
     }
     dependsOn(tasks.test) // tests are required to run before generating the report
+}
+
+detekt{
+    autoCorrect = true
 }

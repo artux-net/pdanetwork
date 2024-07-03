@@ -7,18 +7,21 @@ import net.artux.pdanetwork.repository.items.ItemRepository
 import net.artux.pdanetwork.service.action.ActionService
 import net.artux.pdanetwork.service.items.ItemService
 import net.artux.pdanetwork.service.items.SellerService
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.context.support.WithUserDetails
-import java.util.*
-import java.util.List
 import java.util.function.Consumer
+import kotlin.random.Random
 
-@Order(10)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WithUserDetails(value = "admin@artux.net")
 class SellerTest : AbstractTest() {
 
     @Autowired
@@ -44,9 +47,8 @@ class SellerTest : AbstractTest() {
 
     @Test
     @Order(1)
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
     fun addCountableItemsToSeller() {
-        sellerService!!.addSellerItems(sellerId, listOf("29:50", "29:50"))
+        sellerService.addSellerItems(sellerId, listOf("29:50", "29:50"))
         val itemDto = sellerService.getSeller(sellerId).bullets
             .stream()
             .filter { dto: ItemDto -> dto.baseId == 29 }
@@ -56,37 +58,42 @@ class SellerTest : AbstractTest() {
 
     @Test
     @Order(8)
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
     fun addUncountableItemsToSeller() {
-        //TODO: unique type chests for uncountable items
+        // unique type chests for uncountable items
     }
 
     @Test
     @Order(9)
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
     fun testBuy() {
-        actionService!!.applyCommands(Collections.singletonMap("money", listOf("10000")))
+        actionService.applyCommands(mapOf("money" to listOf("10000")))
         actionService.applyCommands(emptyMap()).weapons.forEach(
-            Consumer { x: WeaponDto? -> println(x) })
-        val weaponDto = sellerService!!.getSeller(sellerId).weapons.stream().findFirst().get()
+            Consumer { x: WeaponDto? -> println(x) }
+        )
+        val weaponDto = sellerService.getSeller(sellerId).weapons.stream().findFirst().get()
         val status = sellerService.buy(sellerId, weaponDto.id, 1)
         actionService.applyCommands(emptyMap()).weapons.forEach(
-            Consumer { x: WeaponDto? -> println(x) })
+            Consumer { x: WeaponDto? -> println(x) }
+        )
         Assertions.assertTrue(status.isSuccess)
     }
 
     @Test
     @Order(10)
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
     fun testDeleteSellerItems() {
-        sellerService!!.fixSellersItems()
-        val weaponDto =
-            sellerService.getSeller(sellerId).weapons.stream().filter { itemDto1: WeaponDto -> itemDto1.baseId == 10 }
-                .findFirst().get()
-        val itemDto =
-            sellerService.getSeller(sellerId).bullets.stream().filter { itemDto1: ItemDto -> itemDto1.baseId == 29 }
-                .findFirst().get()
-        val itemIds = List.of(itemDto.id, weaponDto.id)
+        sellerService.fixSellersItems()
+        val weaponDto = sellerService.getSeller(sellerId).weapons
+            .stream()
+            .filter { itemDto1: WeaponDto -> itemDto1.baseId == 10 }
+            .findFirst()
+            .get()
+
+        val itemDto = sellerService.getSeller(sellerId).bullets
+            .stream()
+            .filter { itemDto1: ItemDto -> itemDto1.baseId == 29 }
+            .findFirst()
+            .get()
+
+        val itemIds = listOf(itemDto.id, weaponDto.id)
         println(weaponDto.baseId)
         println(itemDto.baseId)
         sellerService.deleteSellerItems(sellerId, itemIds)
@@ -95,28 +102,32 @@ class SellerTest : AbstractTest() {
                 .stream()
                 .filter { item: WeaponDto -> item.id == weaponDto.id }
                 .findFirst()
-                .isEmpty)
+                .isEmpty
+        )
         Assertions.assertTrue(
             sellerService.getSeller(sellerId).bullets
                 .stream()
                 .filter { item: ItemDto -> item.id == itemDto.id }
                 .findFirst()
-                .isEmpty)
-        for (id in itemIds) Assertions.assertTrue(itemRepository!!.findById(id).isEmpty)
+                .isEmpty
+        )
+        for (id in itemIds) Assertions.assertTrue(itemRepository.findById(id).isEmpty)
     }
 
     @Test
     @Order(11)
-    @WithUserDetails(value = "admin", userDetailsServiceBeanName = "userDetailService")
     fun testFixSellersItems() {
-        sellerService!!.fixSellersItems()
+        sellerService.fixSellersItems()
         Assertions.assertTrue(
-            sellerService.getSeller(sellerId).bullets.stream().anyMatch { item: ItemDto -> item.baseId == 29 })
+            sellerService.getSeller(sellerId).bullets.stream().anyMatch { item: ItemDto -> item.baseId == 29 }
+        )
         Assertions.assertTrue(
-            sellerService.getSeller(sellerId).weapons.stream().anyMatch { item: WeaponDto -> item.baseId == 10 })
-        var dto =
-            sellerService.getSeller(sellerId).bullets.stream().filter { item: ItemDto -> item.baseId == 29 }.findFirst()
-                .get()
+            sellerService.getSeller(sellerId).weapons.stream().anyMatch { item: WeaponDto -> item.baseId == 10 }
+        )
+        var dto = sellerService.getSeller(
+            sellerId
+        ).bullets.stream().filter { item: ItemDto -> item.baseId == 29 }.findFirst()
+            .get()
         sellerService.buy(sellerId, dto.id, 180)
         sellerService.fixSellersItems()
         dto =
@@ -129,9 +140,8 @@ class SellerTest : AbstractTest() {
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun testGetHeavySeller() {
-        val random = Random()
         val items = itemService.allItems.map {
-            val quantity = random.nextLong(3) + 1
+            val quantity = Random.nextLong(3) + 1
             val item = itemService.getItem(it.basedId)
             "${item.base.id}:$quantity"
         }
@@ -139,5 +149,4 @@ class SellerTest : AbstractTest() {
 
         Assertions.assertNotNull(sellerService.getSeller(sellerId))
     }
-
 }

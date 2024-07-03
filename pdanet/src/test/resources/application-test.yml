@@ -2,3 +2,8 @@ spring:
     jpa:
         hibernate:
             ddl-auto: create
+administrator:
+    email: admin@artux.net
+    login: admin
+    name: admin
+    nickname: system

@@ -16,7 +16,7 @@ public class StateService {
     private final UserService userService;
 
     public StoryData getStoryData() {
-        return storyMapper.storyData(userService.getUserById());
+        return storyMapper.storyData(userService.getCurrentUser());
     }
 
 }

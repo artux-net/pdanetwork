@@ -68,6 +68,7 @@ jobs:
           IMAGE_TAG: dev
           WEB_IMAGE_TAG: dev
           STACK_NAME: pdanetwork
+          MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
         run: |
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}     
           docker compose -f "./docker/compose.master.yml" pull
