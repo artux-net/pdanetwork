@@ -2,6 +2,7 @@ package net.artux.pdanetwork.repository.feed;
 
 import net.artux.pdanetwork.entity.feed.CommentEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
+import net.artux.pdanetwork.models.feed.CommentDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

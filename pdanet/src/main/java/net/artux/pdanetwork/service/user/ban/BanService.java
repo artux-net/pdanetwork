@@ -14,9 +14,9 @@ public interface BanService {
 
     boolean setChatBan(UUID userId);
 
-    BanDto applySystemBan(UUID userId, String reason, String message, int secs);
+    BanDto applySystemBan(UUID userId, String reason, String message, long secs);
 
-    BanDto applyBan(UUID userId, String reason, String message, int secs);
+    BanDto applyBan(UUID userId, String reason, String message, long secs);
 
     BanDto getCurrentBan(UUID userId);
 

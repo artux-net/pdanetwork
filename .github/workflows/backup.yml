@@ -20,7 +20,7 @@ jobs:
         pg_dump -U pdanet -f backup.sql --no-owner --no-privileges
       
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.date.outputs.date }}
         path: backup.sql

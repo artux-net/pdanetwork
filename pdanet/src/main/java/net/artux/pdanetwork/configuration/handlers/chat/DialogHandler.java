@@ -1,11 +1,11 @@
 package net.artux.pdanetwork.configuration.handlers.chat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.artux.pdanetwork.entity.mappers.UserMapper;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
 import net.artux.pdanetwork.models.communication.ConversationDTO;
 import net.artux.pdanetwork.models.communication.MessageDTO;
-import net.artux.pdanetwork.entity.mappers.UserMapper;
 import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.service.communication.ConversationService;
@@ -136,9 +136,7 @@ public class DialogHandler extends BaseHandler {
         UserEntity user = getMember(session);
         ConversationDTO conversation = conversationService.getConversationEntity(conversationId);
 
-        if (conversation == null) {
-            throw new Exception("not found conversation");
-        } else if (!conversation.getMembers().stream().map(SimpleUserDto::getId).toList().contains(user.getId())) {
+        if (!conversation.getMembers().stream().map(SimpleUserDto::id).toList().contains(user.getId())) {
             throw new Exception("user is not in the conversation");
         }
 

@@ -64,7 +64,7 @@ class UserController(
     @get:GetMapping("/quest/info")
     @get:Operation(summary = "Информация о прохождении")
     val currentStoryData: StoryData
-        get() = actionService.applyCommands(null)
+        get() = actionService.applyCommands(emptyMap())
 
     @GetMapping("/quest/reset")
     @Operation(summary = "Сброс информации о прохождении")

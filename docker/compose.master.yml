@@ -31,9 +31,9 @@ services:
     <<: *backend
     <<: *prod
     healthcheck:
-      test: wget --spider --quiet 'https://app.artux.net/pdanetwork/actuator/info' || exit 1
-      retries: 3
-      interval: 5s
+      test: wget --spider --quiet 'https://app.artux.net/pdanetwork/actuator/health' || exit 1
+      retries: 5
+      interval: 15s
       timeout: 5s
       start_period: 45s
     environment:
@@ -53,10 +53,10 @@ services:
     <<: *backend
     <<: *dev
     healthcheck:
-      test: wget --spider --quiet 'https://dev.artux.net/pdanetwork/actuator/info' || exit 1
+      test: wget --spider --quiet 'https://dev.artux.net/pdanetwork/actuator/health' || exit 1
       retries: 3
-      interval: 5s
-      timeout: 5s
+      interval: 15s
+      timeout: 10s
       start_period: 45s
     environment:
       - SERVER_HOST=dev.artux.net
@@ -116,5 +116,6 @@ services:
     image: willfarrell/autoheal
     environment:
       - AUTOHEAL_CONTAINER_LABEL=all
+      - AUTOHEAL_INTERVAL=30
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

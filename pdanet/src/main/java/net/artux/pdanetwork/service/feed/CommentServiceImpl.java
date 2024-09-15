@@ -1,16 +1,17 @@
 package net.artux.pdanetwork.service.feed;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import net.artux.pdanetwork.dto.page.QueryPage;
+import net.artux.pdanetwork.dto.page.ResponsePage;
 import net.artux.pdanetwork.entity.feed.CommentEntity;
 import net.artux.pdanetwork.entity.feed.CommentLikeEntity;
 import net.artux.pdanetwork.entity.feed.LikeCommentId;
+import net.artux.pdanetwork.entity.mappers.FeedMapper;
 import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.feed.CommentCreateDto;
 import net.artux.pdanetwork.models.feed.CommentDto;
 import net.artux.pdanetwork.models.feed.CommentType;
-import net.artux.pdanetwork.entity.mappers.FeedMapper;
-import net.artux.pdanetwork.dto.page.QueryPage;
-import net.artux.pdanetwork.dto.page.ResponsePage;
 import net.artux.pdanetwork.repository.feed.ArticleRepository;
 import net.artux.pdanetwork.repository.feed.CommentLikeRepository;
 import net.artux.pdanetwork.repository.feed.CommentRepository;
@@ -34,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserService userService;
     private final FeedMapper feedMapper;
     private final PageService pageService;
+    private final EntityManager entityManager;
 
     @Override
     @ModeratorAccess
@@ -44,16 +46,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean likeComment(UUID id) {
-        UserEntity user = userService.getCurrentUser();
+        var userId = userService.getCurrentId();
         CommentEntity commentEntity = repository.findById(id).orElseThrow();
 
-        LikeCommentId articleId = new LikeCommentId(user.getId(), id);
+        LikeCommentId articleId = new LikeCommentId(userId, id);
+        //LikeCommentId articleId = new LikeCommentId(user.getId(), id);
 
         if (commentLikeRepository.existsById(articleId)) {
             commentLikeRepository.deleteById(articleId);
             return false;
         } else {
-            commentLikeRepository.save(new CommentLikeEntity(user, commentEntity));
+            commentLikeRepository.save(new CommentLikeEntity(entityManager.getReference(UserEntity.class, userId), commentEntity));
             return true;
         }
     }

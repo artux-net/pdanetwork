@@ -19,14 +19,15 @@ repositories {
 
 dependencies {
     implementation(project(":pdanet-model"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.3.0"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.3.2"))
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-security:*")
+    implementation("org.springframework.boot:spring-boot-starter-security")
 
-    implementation("org.springframework.boot:spring-boot-starter-websocket:*")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:*")
-    implementation("io.micrometer:micrometer-registry-prometheus:*")
-    implementation("org.springframework.boot:spring-boot-starter-web:*")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
     implementation("org.springframework.boot:spring-boot-starter-mail:*")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf:*")
@@ -35,8 +36,11 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     implementation("net.lingala.zip4j:zip4j:2.11.5")
-    implementation("com.amazonaws:aws-java-sdk-s3:1.12.566")
-    testImplementation("org.testng:testng:7.1.0")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.729")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+
+    // logging
+    implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.30")
@@ -89,3 +93,4 @@ tasks.jacocoTestReport {
 detekt{
     autoCorrect = true
 }
+

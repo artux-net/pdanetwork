@@ -11,6 +11,8 @@ server:
         include-message: always
 
 spring:
+    main:
+        banner-mode: off
     profiles:
         active: default, dev
     jpa:

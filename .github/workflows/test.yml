@@ -19,7 +19,7 @@ jobs:
         cache: 'gradle'
 
     - name: Test with Gradle
-      run: ./gradlew test
+      run: ./gradlew detekt test
       env:
         MAIL_PASSWORD: ${{secrets.MAIL_PASSWORD}}
 
@@ -44,7 +44,7 @@ jobs:
         echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
     - name: Upload JaCoCo coverage report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: jacoco-report
         path: pdanet/build/reports/jacoco/

@@ -10,5 +10,7 @@ services:
     environment:
       - POSTGRES_USER=pdanet
       - POSTGRES_PASSWORD=pdanet
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
