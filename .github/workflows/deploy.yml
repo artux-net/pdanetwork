@@ -1,36 +1,66 @@
-name: Deploy specific version
+name: Deploy service
 
 on:
   workflow_dispatch:
     inputs:
       tag:
         type: string
-        description: Tag of docker image to deploy (if empty image will be build and 'master' used)
+        description: Docker image to deploy (if empty, 'master' used)
         default: master
       profile:
-        type: string
-        description: Profile to deploy (prod/dev)
+        type: choice
+        description: Profile to deploy
         default: prod
+        options:
+          - prod
+          - dev
 
 jobs:
   deploy:
-    name: 'Deploy Compose on server'
+    name: 'Deploy сompose'
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
         with:
           sparse-checkout: 'docker'
 
+      - name: Setup profile env
+        env:
+          DEV_SERVER_HOST: dev.artux.net
+          DEV_STACK_NAME: pdanetwork
+          DEV_WEB_PANEL_IMAGE_TAG: dev
+
+          PROD_SERVER_HOST: app.artux.net
+          PROD_STACK_NAME: pdanetwork_master
+          PROD_WEB_PANEL_IMAGE_TAG: main
+        run: |
+          if [ ${{github.event.inputs.profile }} == 'prod' ];  then
+            echo "stack_name=$PROD_STACK_NAME" >> $GITHUB_ENV
+            echo "web_panel_image_tag=$PROD_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
+            echo "server_host=$PROD_SERVER_HOST" >> $GITHUB_ENV
+          else
+            echo "stack_name=$DEV_STACK_NAME" >> $GITHUB_ENV
+            echo "web_panel_image_tag=$DEV_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
+            echo "server_host=$DEV_SERVER_HOST" >> $GITHUB_ENV
+          fi
+
       - name: Run compose services
         env:
           DATASOURCE_USERNAME: ${{secrets.DATASOURCE_USERNAME}}
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
-          SERVER_HOST: app.artux.net
+
+          STACK_NAME: ${{ env.stack_name }}
           IMAGE_TAG: ${{ github.event.inputs.tag }}
-          WEB_IMAGE_TAG: main
-          STACK_NAME: pdanetwork_master
-        run: |          
+          WEB_IMAGE_TAG: ${{ env.web_panel_image_tag }}
+
+          SERVER_HOST: ${{ env.server_host }}
+
+          MAIL_HOST: mail.artux.net
+          MAIL_USERNAME: noreply@artux.net
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+        run: |
+          docker compose -f "./docker/compose.master.yml" config
           docker login registry.artux.net -u ${{secrets.REGISTRY_USERNAME}} -p ${{secrets.REGISTRY_PASSWORD}}   
           docker compose -f "./docker/compose.master.yml" pull
           docker compose -f "./docker/compose.master.yml" down --remove-orphans

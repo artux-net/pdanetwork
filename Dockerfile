@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM bellsoft/liberica-openjdk-alpine:latest-aarch64
+FROM bellsoft/liberica-openjdk-alpine:latest-aarch64
 ARG JAR_FILE=pdanet/build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
