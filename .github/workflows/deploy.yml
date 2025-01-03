@@ -7,10 +7,12 @@ on:
         type: string
         description: Docker image to deploy (if empty, 'master' used)
         default: master
+        required: true
       profile:
         type: choice
         description: Profile to deploy
         default: prod
+        required: true
         options:
           - prod
           - dev

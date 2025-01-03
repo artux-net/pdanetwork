@@ -1,6 +1,5 @@
 # PDA Network
-![Deploy prod](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
-![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/dev.yml/badge.svg)
+![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
 
