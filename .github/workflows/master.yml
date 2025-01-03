@@ -38,5 +38,5 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
-      tag: $GITHUB_REF
+      tag: ${{ github.ref_name }}
       profile: ${{ github.event.inputs.profile }}
