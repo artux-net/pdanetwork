@@ -20,7 +20,7 @@ jobs:
             type=sha
 
       - name: Login to Artux registry to push image
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: registry.artux.net
           username: ${{ secrets.REGISTRY_USERNAME }}
