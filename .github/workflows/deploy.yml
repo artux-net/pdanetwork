@@ -85,6 +85,6 @@ jobs:
           docker compose -f "compose.master.yml" pull
           docker compose -f "compose.master.yml" \
                          --profile ${{ github.event.inputs.profile }} \
-                         up --detach  
+                         up -d  
 
           docker system prune -a -f
