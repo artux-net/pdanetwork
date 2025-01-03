@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy specific version
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
       profile:
         type: choice
         description: Profile to deploy
-        default: prod
+        default: dev
         required: true
         options:
           - prod
@@ -83,8 +83,8 @@ jobs:
           
           docker compose config -f "compose.master.yml" 
           docker compose pull -f "compose.master.yml" 
-          docker compose -f "compose.master.yml" up \
+          docker compose --file "compose.master.yml" \
                          --profile ${{ github.event.inputs.profile }} \
-                         --detach  
+                         up --detach  
 
           docker system prune -a -f

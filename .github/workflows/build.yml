@@ -32,7 +32,7 @@ jobs:
       - name: Check if Docker image exists
         id: check_image
         run: |
-          IMAGE_TAG=$(echo "${GITHUB_REF}" | sed -e 's,.*/,,')
+          IMAGE_TAG=$(echo "${GITHUB_SHA}" | sed -e 's,.*/,,')
           IMAGE="registry.artux.net/pdanetwork:${IMAGE_TAG}"
           
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
