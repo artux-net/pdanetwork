@@ -1,8 +1,8 @@
-name: Deploy service
+name: Deploy
 
 on:
   workflow_dispatch:
-    inputs:
+    inputs: &job-inputs
       tag:
         type: string
         description: Docker image to deploy (if empty, 'master' used)
@@ -14,6 +14,10 @@ on:
         options:
           - prod
           - dev
+
+  workflow_call:
+    inputs:
+      <<: *job-inputs
 
 jobs:
   deploy:

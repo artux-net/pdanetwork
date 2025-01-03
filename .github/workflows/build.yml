@@ -1,7 +1,7 @@
-name: Deploy dev
+name: Build artifact
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
