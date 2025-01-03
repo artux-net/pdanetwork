@@ -83,7 +83,7 @@ jobs:
           
           docker compose config -f "compose.master.yml" 
           docker compose pull -f "compose.master.yml" 
-          docker compose up -f "compose.master.yml" \
+          docker compose -f "compose.master.yml" up \
                          --profile ${{ github.event.inputs.profile }} \
                          --detach  
 

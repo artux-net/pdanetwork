@@ -10,6 +10,7 @@ on:
         type: choice
         description: Profile to deploy
         default: dev
+        required: true
         options:
           - prod
           - dev
@@ -38,5 +39,5 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
-      tag: ${{ github.ref_name }}
+      tag: ${{ github.run_number }}
       profile: ${{ github.event.inputs.profile }}
