@@ -46,13 +46,13 @@ jobs:
           PROD_WEB_PANEL_IMAGE_TAG: main
         run: |
           if [ ${{github.event.inputs.profile }} == 'prod' ];  then
-            echo "stack_name=$PROD_STACK_NAME" >> $GITHUB_ENV
-            echo "web_panel_image_tag=$PROD_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
-            echo "server_host=$PROD_SERVER_HOST" >> $GITHUB_ENV
+            echo "STACK_NAME=$PROD_STACK_NAME" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=$PROD_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
+            echo "SERVER_HOST=$PROD_SERVER_HOST" >> $GITHUB_ENV
           else
-            echo "stack_name=$DEV_STACK_NAME" >> $GITHUB_ENV
-            echo "web_panel_image_tag=$DEV_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
-            echo "server_host=$DEV_SERVER_HOST" >> $GITHUB_ENV
+            echo "STACK_NAME=$DEV_STACK_NAME" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=$DEV_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
+            echo "SERVER_HOST=$DEV_SERVER_HOST" >> $GITHUB_ENV
           fi
 
       - name: Run compose services
@@ -61,11 +61,7 @@ jobs:
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
 
-          STACK_NAME: ${{ env.stack_name }}
           IMAGE_TAG: ${{ github.event.inputs.tag }}
-          WEB_IMAGE_TAG: ${{ env.web_panel_image_tag }}
-
-          SERVER_HOST: ${{ env.server_host }}
 
           MAIL_HOST: mail.artux.net
           MAIL_USERNAME: noreply@artux.net
