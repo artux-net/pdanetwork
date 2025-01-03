@@ -22,12 +22,9 @@ on:
         description: Docker image to deploy (if empty, 'master' used)
         default: master
       profile:
-        type: choice
-        description: Profile to deploy
-        default: prod
-        options:
-          - prod
-          - dev
+        type: string
+        description: Profile to deploy (only dev/prod)
+        default: dev
 
 jobs:
   deploy:
