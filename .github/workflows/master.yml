@@ -41,6 +41,7 @@ jobs:
 
     name: 'Deploy on server'
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     with:
       tag: ${{ github.event.inputs.tag }}
       profile: ${{ github.event.inputs.profile }}
