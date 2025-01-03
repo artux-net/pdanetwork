@@ -2,15 +2,6 @@ name: Build artifact
 
 on:
   workflow_call:
-    inputs:
-      username:
-        type: string
-        description: Docker registry username
-        required: true
-      password:
-        type: string
-        description: Docker registry token or password
-        required: true
 
 jobs:
   build:
