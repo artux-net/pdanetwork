@@ -28,8 +28,9 @@ services:
           memory: 2G
 
   backend-prod:
-    <<: *backend
-    <<: *prod-profile
+    <<:
+      - *backend
+      - *prod-profile
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - SERVER_PROTOCOL=https
@@ -44,8 +45,9 @@ services:
     network_mode: host
 
   backend-dev:
-    <<: *backend
-    <<: *dev-profile
+    <<:
+      - *backend
+      - *dev-profile
     environment:
       - SERVER_HOST=dev.artux.net
       - SERVER_PROTOCOL=https
@@ -78,8 +80,9 @@ services:
     profiles: [ none ]
 
   frontend-dev:
-    <<: *frontend
-    <<: *dev-profile
+    <<:
+      - *frontend
+      - *dev-profile
     depends_on:
       - backend-dev
     environment:
@@ -89,8 +92,9 @@ services:
       - "8001:3000"
 
   frontend-prod:
-    <<: *frontend
-    <<: *prod-profile
+    <<:
+      - *frontend
+      - *prod-profile
     depends_on:
       - backend-prod
     environment:
