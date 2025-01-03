@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   workflow_dispatch:
-    inputs: &job-inputs
+    inputs:
       tag:
         type: string
         description: Docker image to deploy (if empty, 'master' used)
@@ -17,7 +17,17 @@ on:
 
   workflow_call:
     inputs:
-      <<: *job-inputs
+      tag:
+        type: string
+        description: Docker image to deploy (if empty, 'master' used)
+        default: master
+      profile:
+        type: choice
+        description: Profile to deploy
+        default: prod
+        options:
+          - prod
+          - dev
 
 jobs:
   deploy:
