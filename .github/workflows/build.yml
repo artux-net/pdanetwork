@@ -8,6 +8,8 @@ jobs:
     runs-on: self-hosted
     name: 'Build and upload artifact'
     steps:
+      - uses: actions/checkout@v4
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -38,9 +40,6 @@ jobs:
           else
             echo "exists=false" >> $GITHUB_ENV
           fi
-
-      - uses: actions/checkout@v4
-        if: env.exists == 'false'
 
       - name: Setup java
         if: env.exists == 'false'
