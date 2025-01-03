@@ -2,13 +2,13 @@ version: '3.9'
 
 name: ${STACK_NAME}
 
-x-dev: &dev
+x-dev: &dev-profile
   profiles:
     - dev
   labels:
     io.portainer.accesscontrol.teams: dev,prod
 
-x-prod: &prod
+x-prod: &prod-profile
   profiles:
     - prod
   labels:
@@ -18,7 +18,7 @@ services:
   backend: &backend
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     pull_policy: always
-    restart: always
+    restart: unless-stopped
     profiles: [ none ]
     deploy:
       resources:
@@ -29,13 +29,7 @@ services:
 
   backend-prod:
     <<: *backend
-    <<: *prod
-    healthcheck:
-      test: wget --spider --quiet 'https://app.artux.net/pdanetwork/actuator/health' || exit 1
-      retries: 5
-      interval: 15s
-      timeout: 5s
-      start_period: 45s
+    <<: *prod-profile
     environment:
       - SERVER_HOST=${SERVER_HOST}
       - SERVER_PROTOCOL=https
@@ -51,13 +45,7 @@ services:
 
   backend-dev:
     <<: *backend
-    <<: *dev
-    healthcheck:
-      test: wget --spider --quiet 'https://dev.artux.net/pdanetwork/actuator/health' || exit 1
-      retries: 3
-      interval: 15s
-      timeout: 10s
-      start_period: 45s
+    <<: *dev-profile
     environment:
       - SERVER_HOST=dev.artux.net
       - SERVER_PROTOCOL=https
@@ -71,7 +59,7 @@ services:
     depends_on:
       - db
   db:
-    <<: *dev
+    <<: *dev-profile
     image: postgres:15
     container_name: pdanetwork_db
     restart: unless-stopped
@@ -91,7 +79,7 @@ services:
 
   frontend-dev:
     <<: *frontend
-    <<: *dev
+    <<: *dev-profile
     depends_on:
       - backend-dev
     environment:
@@ -102,7 +90,7 @@ services:
 
   frontend-prod:
     <<: *frontend
-    <<: *prod
+    <<: *prod-profile
     depends_on:
       - backend-prod
     environment:
@@ -110,12 +98,3 @@ services:
       - API_URL=https://app.artux.net/pdanetwork
     ports:
       - "9001:3000"
-
-  autoheal: # restarts unhealthy containers
-    restart: always
-    image: willfarrell/autoheal
-    environment:
-      - AUTOHEAL_CONTAINER_LABEL=all
-      - AUTOHEAL_INTERVAL=30
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock

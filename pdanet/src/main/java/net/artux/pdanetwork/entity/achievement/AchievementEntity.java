@@ -7,6 +7,7 @@ import lombok.Setter;
 import net.artux.pdanetwork.entity.BaseEntity;
 import net.artux.pdanetwork.entity.user.UserEntity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,9 @@ public class AchievementEntity extends BaseEntity{
     private Map<String, HashSet<String>> condition;
 
     @Enumerated(EnumType.STRING)
-    private AchievementGroup type;
+    private AchievementGroup type = AchievementGroup.QUEST;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<UserEntity> users;
+    private List<UserEntity> users = new ArrayList<>();
 
 }

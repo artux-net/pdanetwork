@@ -26,40 +26,41 @@ import java.util.UUID
 @RequestMapping("/api/v1/feed/comment")
 @Suppress("UnusedParameter")
 @RequiredArgsConstructor
-class CommentController {
-    private val commentService: CommentService? = null
+class CommentController(
+    private val commentService: CommentService
+) {
 
     @PostMapping("/{type}/{id}")
     @Operation(summary = "Комментирование поста или статьи")
     fun commentPost(
-        @PathVariable type: CommentType?,
-        @PathVariable id: UUID?,
-        @RequestBody comment: CommentCreateDto?
+        @PathVariable type: CommentType,
+        @PathVariable id: UUID,
+        @RequestBody comment: CommentCreateDto
     ): CommentDto {
-        return commentService!!.comment(type, id, comment)
+        return commentService.comment(type, id, comment)
     }
 
     @GetMapping("/{type}/{id}/all")
     @Operation(summary = "Комментарии поста или статьи")
     fun getComments(
-        @PathVariable type: CommentType?,
-        @PathVariable id: UUID?,
-        @ParameterObject page: @Valid QueryPage?
+        @PathVariable type: CommentType,
+        @PathVariable id: UUID,
+        @ParameterObject page: @Valid QueryPage
     ): ResponsePage<CommentDto> = ResponsePage.of(Page.empty())
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удаление коммента")
-    fun deleteComment(@PathVariable id: UUID?): Boolean {
-        return commentService!!.delete(id)
+    fun deleteComment(@PathVariable id: UUID): Boolean {
+        return commentService.delete(id)
     }
 
     @GetMapping("/{id}/like")
     @Operation(summary = "Лайк коммента")
     fun likeComment(@PathVariable id: UUID?): Boolean {
-        return commentService!!.likeComment(id)
+        return commentService.likeComment(id)
     }
 
-    @get:GetMapping("/types")
-    val types: Array<CommentType>
-        get() = CommentType.entries.toTypedArray()
+    @GetMapping("/types")
+    @Operation(summary = "Типы комментариев")
+    fun getTypes(): Array<CommentType> = CommentType.entries.toTypedArray()
 }

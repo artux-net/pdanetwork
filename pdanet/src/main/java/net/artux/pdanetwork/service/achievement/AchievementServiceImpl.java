@@ -1,5 +1,6 @@
 package net.artux.pdanetwork.service.achievement;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.achievement.AchievementCategoryEntity;
 import net.artux.pdanetwork.entity.achievement.AchievementEntity;
@@ -45,6 +46,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public AchCategoryDto createCategory(AchCategoryCreateDto createDto) {
         AchievementCategoryEntity category = mapper.toEntity(createDto);
         var t = categoryRepository.save(category);
@@ -53,6 +55,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public AchCategoryDto updateCategory(UUID id, AchCategoryCreateDto createDto) {
         AchievementCategoryEntity category = categoryRepository.findById(id).orElseThrow();
         category.setName(createDto.name());
@@ -65,6 +68,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public boolean deleteCategory(UUID id) {
         categoryRepository.deleteById(id);
         return true;
@@ -72,6 +76,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public AchDto createAchievement(UUID categoryId, AchievementCreateDto createDto) {
         AchievementCategoryEntity category = categoryRepository.findById(categoryId).orElseThrow();
         AchievementEntity achievementEntity = mapper.toEntity(createDto, category);
@@ -81,6 +86,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public AchDto updateAchievement(UUID id, AchievementCreateDto createDto) {
         AchievementEntity entity = achievementRepository.findById(id).orElseThrow();
         entity.setCondition(createDto.condition());
@@ -95,6 +101,7 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     @ModeratorAccess
+    @Transactional
     public boolean deleteAchievement(UUID id) {
         achievementRepository.deleteById(id);
         return true;

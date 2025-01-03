@@ -50,7 +50,7 @@ public class SecurityConfiguration {
             "/base/**",
             "/images/**",
             "/rules",
-            "/actuator/**", // /info must be always open
+            "/actuator/health", // must be always open
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);

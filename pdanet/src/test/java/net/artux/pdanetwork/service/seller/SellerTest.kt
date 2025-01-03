@@ -65,22 +65,24 @@ class SellerTest : AbstractTest() {
     @Test
     @Order(9)
     fun testBuy() {
+        val weaponDto = sellerService.getSeller(sellerId).weapons.stream().findFirst().get()
+
         actionService.applyCommands(mapOf("money" to listOf("10000")))
         actionService.applyCommands(emptyMap()).weapons.forEach(
             Consumer { x: WeaponDto? -> println(x) }
         )
-        val weaponDto = sellerService.getSeller(sellerId).weapons.stream().findFirst().get()
         val status = sellerService.buy(sellerId, weaponDto.id, 1)
         actionService.applyCommands(emptyMap()).weapons.forEach(
             Consumer { x: WeaponDto? -> println(x) }
         )
+
         Assertions.assertTrue(status.isSuccess)
     }
 
     @Test
     @Order(10)
     fun testDeleteSellerItems() {
-        sellerService.fixSellersItems()
+        sellerService.restoreSellersItems()
         val weaponDto = sellerService.getSeller(sellerId).weapons
             .stream()
             .filter { itemDto1: WeaponDto -> itemDto1.baseId == 10 }
@@ -117,22 +119,27 @@ class SellerTest : AbstractTest() {
     @Test
     @Order(11)
     fun testFixSellersItems() {
-        sellerService.fixSellersItems()
+        sellerService.restoreSellersItems()
         Assertions.assertTrue(
-            sellerService.getSeller(sellerId).bullets.stream().anyMatch { item: ItemDto -> item.baseId == 29 }
+            sellerService.getSeller(sellerId).bullets.stream()
+                .anyMatch { item -> item.baseId == 29 }
         )
         Assertions.assertTrue(
-            sellerService.getSeller(sellerId).weapons.stream().anyMatch { item: WeaponDto -> item.baseId == 10 }
+            sellerService.getSeller(sellerId).weapons.stream()
+                .anyMatch { item -> item.baseId == 10 }
         )
-        var dto = sellerService.getSeller(
-            sellerId
-        ).bullets.stream().filter { item: ItemDto -> item.baseId == 29 }.findFirst()
+
+        var dto = sellerService.getSeller(sellerId)
+            .bullets.stream()
+            .filter { item -> item.baseId == 29 }
+            .findFirst()
             .get()
+
         sellerService.buy(sellerId, dto.id, 180)
-        sellerService.fixSellersItems()
-        dto =
-            sellerService.getSeller(sellerId).bullets.stream().filter { item: ItemDto -> item.baseId == 29 }.findFirst()
-                .get()
+        sellerService.restoreSellersItems()
+        dto = sellerService.getSeller(sellerId).bullets.stream().filter { item -> item.baseId == 29 }.findFirst()
+            .get()
+
         Assertions.assertEquals(200, dto.quantity)
     }
 

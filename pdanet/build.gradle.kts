@@ -3,7 +3,7 @@ val detektVersion = "1.23.6"
 plugins {
     java
     id("org.springframework.boot") version "3.1.4"
-    id("org.hibernate.orm") version "6.3.1.Final"
+    id("org.hibernate.orm") version "6.6.4.Final"
     id("org.jetbrains.kotlin.jvm") version "1.9.24"
     id("io.freefair.lombok") version "8.1.0"
     kotlin("plugin.lombok") version "1.9.24"
@@ -54,7 +54,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
 
-    implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
+    implementation("org.hibernate.orm:hibernate-core:6.6.4.Final")
     implementation("org.postgresql:postgresql:*")
     implementation("org.liquibase:liquibase-core")
 

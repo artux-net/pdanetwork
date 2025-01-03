@@ -2,12 +2,11 @@ package net.artux.pdanetwork.controller.web.enc;
 
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.entity.items.BaseItemEntity;
-import net.artux.pdanetwork.models.items.ItemType;
 import net.artux.pdanetwork.models.items.ItemDto;
+import net.artux.pdanetwork.models.items.ItemType;
 import net.artux.pdanetwork.models.items.WeaponDto;
 import net.artux.pdanetwork.service.items.BaseItemService;
 import net.artux.pdanetwork.service.items.ItemService;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +46,6 @@ public class EncController {
         ItemDto dto = itemService.getItemDto(id);
         model.addAttribute("item", dto);
         BaseItemEntity baseItemEntity = baseItemService.getBaseItem(id);
-        Hibernate.initialize(baseItemEntity);
         model.addAttribute("base", baseItemEntity);
         if (dto instanceof WeaponDto weaponDto) {
             model.addAttribute("bullet", itemService.getItemDto(weaponDto.getBulletId()));
