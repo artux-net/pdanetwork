@@ -1,5 +1,3 @@
-version: '3.9'
-
 name: ${STACK_NAME}
 
 x-dev: &dev-profile

@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy profile
 
 on:
   push:
@@ -6,11 +6,6 @@ on:
       - master
   workflow_dispatch:
     inputs:
-      tag:
-        type: string
-        description: Tag of docker image to deploy (use 'master' to build new)
-        default: master
-        required: true
       profile:
         type: choice
         description: Profile to deploy
@@ -43,5 +38,5 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
-      tag: ${{ github.event.inputs.tag }}
+      tag: ${{ env.GITHUB_REF }}
       profile: ${{ github.event.inputs.profile }}
