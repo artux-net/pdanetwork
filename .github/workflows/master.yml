@@ -40,4 +40,4 @@ jobs:
     secrets: inherit
     with:
       tag: ${{ github.sha }}
-      profile: ${{ github.event.inputs.profile }}
+      profile: ${{ github.event.inputs.profile || 'dev' }}
