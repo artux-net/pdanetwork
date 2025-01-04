@@ -1,22 +1,6 @@
 name: Deploy specific version
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        type: string
-        description: Docker image to deploy (if empty, 'master' used)
-        default: master
-        required: true
-      profile:
-        type: choice
-        description: Profile to deploy
-        default: dev
-        required: true
-        options:
-          - prod
-          - dev
-
   workflow_call:
     inputs:
       tag:
@@ -73,13 +57,13 @@ jobs:
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
 
-          IMAGE_TAG: ${{ github.event.inputs.tag }}
+          IMAGE_TAG: ${{ inputs.tag }}
 
           MAIL_HOST: mail.artux.net
           MAIL_USERNAME: noreply@artux.net
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
-          PROFILE: ${{ github.event.inputs.profile }}
+          PROFILE: ${{ inputs.profile }}
         run: |
           cd ./docker
           
