@@ -68,7 +68,6 @@ jobs:
           cd ./docker
           
           docker compose -f "compose.master.yml" config
-          docker compose -f "compose.master.yml" pull
-          docker compose -f "compose.master.yml" --profile $PROFILE up -d
+          docker compose -f "compose.master.yml" --profile $PROFILE up -d --pull missing --wait
 
           docker system prune -a -f

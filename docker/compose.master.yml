@@ -12,19 +12,23 @@ x-prod: &prod-profile
   labels:
     io.portainer.accesscontrol.teams: prod
 
-services:
-  backend: &backend
-    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
-    pull_policy: always
-    restart: unless-stopped
-    profiles: [ none ]
-    deploy:
-      resources:
-        limits:
-          memory: 3G
-        reservations:
-          memory: 2G
+x-backend-template: &backend
+  image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+  pull_policy: always
+  restart: unless-stopped
+  deploy:
+    resources:
+      limits:
+        memory: 3G
+      reservations:
+        memory: 2G
 
+x-frontend-template: &frontend
+  image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
+  pull_policy: always
+  restart: unless-stopped
+
+services:
   backend-prod:
     <<:
       - *backend
@@ -39,13 +43,14 @@ services:
       - SPRING_MAIL_HOST=${MAIL_HOST}
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     network_mode: host
 
   backend-dev:
     <<:
       - *backend
       - *dev-profile
+    depends_on:
+      - db
     environment:
       - SERVER_HOST=dev.artux.net
       - SERVER_PROTOCOL=https
@@ -53,11 +58,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
       - SPRING_DATASOURCE_USERNAME=pdanetwork
       - SPRING_DATASOURCE_PASSWORD=pass
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
       - "8002:8080"
-    depends_on:
-      - db
+
   db:
     <<: *dev-profile
     image: postgres:15
@@ -70,12 +73,6 @@ services:
       - POSTGRES_PASSWORD=pass
     ports:
       - "9999:5432"
-
-  frontend: &frontend
-    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
-    pull_policy: always
-    restart: unless-stopped
-    profiles: [ none ]
 
   frontend-dev:
     <<:

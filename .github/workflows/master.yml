@@ -22,6 +22,7 @@ jobs:
 
   backup-db:
     name: Backup DB
+    if: ${{ github.event.inputs.profile == 'prod' }}
     uses: ./.github/workflows/backup.yml
 
   build:
@@ -33,9 +34,8 @@ jobs:
   deploy:
     needs:
       - build
-      - backup-db
 
-    name: 'Deploy on server'
+    name: Deploy on server ${{ github.event.inputs.profile || 'dev' }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
