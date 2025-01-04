@@ -78,12 +78,13 @@ jobs:
           MAIL_HOST: mail.artux.net
           MAIL_USERNAME: noreply@artux.net
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+
+          PROFILE: ${{ github.event.inputs.profile }}
         run: |
           cd ./docker
           
           docker compose -f "compose.master.yml" config
           docker compose -f "compose.master.yml" pull
-          docker compose -f "compose.master.yml" \
-                         --profile ${{ github.event.inputs.profile }} up -d
+          docker compose -f "compose.master.yml" --profile $PROFILE up -d
 
           docker system prune -a -f
