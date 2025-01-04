@@ -1,7 +1,7 @@
-name: Publish model to GitHub Packages
+name: 🚀Publish model to GitHub Packages
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   publish:

@@ -1,4 +1,4 @@
-name: Deploy profile
+name: 🚀Deploy to server
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
     needs:
       - build
 
-    name: Deploy on server ${{ github.event.inputs.profile || 'dev' }}
+    name: Deploy to server ${{ github.event.inputs.profile || 'dev' }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:

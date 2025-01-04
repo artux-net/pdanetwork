@@ -1,0 +1,27 @@
+name: 🚀️Deploy to server specific version
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: Docker image to deploy (if empty, 'master' used)
+        default: master
+        required: true
+      profile:
+        type: choice
+        description: Profile to deploy
+        default: dev
+        required: true
+        options:
+          - prod
+          - dev
+
+jobs:
+  deploy:
+    name: Deploy on server ${{ github.event.inputs.profile || 'dev' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      tag: ${{ github.event.inputs.tag }}
+      profile: ${{ github.event.inputs.profile || 'dev' }}

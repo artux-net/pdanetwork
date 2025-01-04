@@ -1,4 +1,4 @@
-name: Deploy specific version
+name: ⚙️Deploy Docker compose
 
 on:
   workflow_call:
@@ -57,13 +57,12 @@ jobs:
           DATASOURCE_PASSWORD: ${{secrets.DATASOURCE_PASSWORD}}
           DATASOURCE_DB_NAME: ${{secrets.DATASOURCE_DB_NAME}}
 
-          IMAGE_TAG: ${{ inputs.tag }}
-
           MAIL_HOST: mail.artux.net
           MAIL_USERNAME: noreply@artux.net
           MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
           PROFILE: ${{ inputs.profile }}
+          IMAGE_TAG: ${{ inputs.tag }}
         run: |
           cd ./docker
           
