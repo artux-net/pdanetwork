@@ -6,7 +6,6 @@ import net.artux.pdanetwork.models.user.dto.AdminEditUserDto
 import net.artux.pdanetwork.models.user.dto.AdminUserDto
 import net.artux.pdanetwork.models.user.dto.RegisterUserDto
 import net.artux.pdanetwork.models.user.dto.UserDto
-import net.artux.pdanetwork.models.user.enums.Role
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.util.UUID
@@ -14,6 +13,7 @@ import java.util.UUID
 @Suppress("TooManyFunctions")
 interface UserService {
     fun registerUser(registerUser: RegisterUserDto): Status
+
     fun handleConfirmation(token: String): Status
 
     fun getCurrentUser(): UserEntity
@@ -32,7 +32,6 @@ interface UserService {
     @Throws(IOException::class)
     fun exportMailContacts(): ByteArrayInputStream
     fun changeEmailSetting(id: UUID): Boolean
-    fun saveUser(registerUserDto: RegisterUserDto, role: Role): UserEntity
     fun getUsersByIds(ids: Collection<UUID>): List<UserEntity>
     fun getUsersByLogins(logins: Collection<String>): List<UserEntity>
 }

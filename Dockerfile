@@ -7,4 +7,7 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=45s --retries=5 \
 
 EXPOSE 8080
 
+# Default flags for the JVM. These can be replaced at the runtime.
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0"
+
 ENTRYPOINT ["java","-jar","/app.jar", "net.artux.pdanetwork.PDANetworkApplication"]

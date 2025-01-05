@@ -21,16 +21,22 @@ public class ResponsePage<T> {
     private String sortBy;
 
     public static <T> ResponsePage<T> of(Page<T> page) {
-        return ResponsePage
+        var pageBuilder = ResponsePage
                 .<T>builder()
                 .lastPage(page.getTotalPages())
                 .content(page.getContent())
                 .contentSize(page.getContent().size())
                 .totalSize(page.getTotalElements())
                 .number(page.getNumber() + 1) // +1 так как отсчет идет от 0
-                .size(page.getSize())
-                .sortBy(page.getSort().stream().iterator().next().getProperty())
-                .sortDirection(page.getSort().stream().iterator().next().getDirection())
-                .build();
+                .size(page.getSize());
+
+        var sortIterator = page.getSort().stream().iterator();
+        if (sortIterator.hasNext()) {
+            var nextItem = sortIterator.next();
+            pageBuilder.sortBy(nextItem.getProperty())
+                    .sortDirection(nextItem.getDirection());
+        }
+
+        return pageBuilder.build();
     }
 }

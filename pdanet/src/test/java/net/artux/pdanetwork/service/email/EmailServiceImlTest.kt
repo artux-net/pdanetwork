@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 internal class EmailServiceImlTest : AbstractTest() {
+
     @Autowired
-    var emailServiceIml: EmailServiceIml? = null
+    private lateinit var emailService: EmailService
 
     @Disabled
     @Test
     fun sendSimpleMessage() {
-        emailServiceIml!!.sendSimpleMessage("maksim.prygunov@gmail.com", "test", "test")
+        emailService
+        // emailService.sendSimpleMessage("maksim.prygunov@gmail.com", "test", "test")
     }
 }

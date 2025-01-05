@@ -12,12 +12,12 @@ import org.springframework.test.context.ActiveProfiles
 class QuestManagerServiceImplTest : AbstractTest() {
 
     @Autowired
-    private var questManagerService: QuestManagerService? = null
+    private lateinit var questManagerService: QuestManagerService
 
     @Test
     @WithMockUser(roles = ["ADMIN"])
     fun readFromGit() {
-        val status = questManagerService!!.readFromGit()
+        val status = questManagerService.readFromGit()
         println(status.description)
     }
 }

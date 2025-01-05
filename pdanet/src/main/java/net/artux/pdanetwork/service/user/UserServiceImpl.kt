@@ -5,6 +5,7 @@ import net.artux.pdanetwork.entity.mappers.UserMapper
 import net.artux.pdanetwork.entity.security.SecurityUser
 import net.artux.pdanetwork.entity.user.UserConfirmationEntity
 import net.artux.pdanetwork.entity.user.UserEntity
+import net.artux.pdanetwork.exception.UserNotFoundException
 import net.artux.pdanetwork.models.Status
 import net.artux.pdanetwork.models.user.dto.AdminEditUserDto
 import net.artux.pdanetwork.models.user.dto.AdminUserDto
@@ -48,18 +49,22 @@ open class UserServiceImpl(
     private val logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
     private val randomString = RandomString()
 
+    @Transactional
     override fun registerUser(registerUser: RegisterUserDto): Status {
         val status = userValidator.checkUser(registerUser)
-        if (!status.isSuccess) return status
+        if (!status.isSuccess) {
+            return status
+        }
         return try {
             val createdUserEntity = saveUser(registerUser, INITIAL_ROLE)
             val token = generateConfirmationToken(createdUserEntity)
+
             emailService.sendConfirmLetter(registerUser, token)
             Status(
                 true,
                 """
-                        Учетная запись зарегистрирована, но лучше ее подтвердить переходом по ссылке из письма,
-                        которое было отравлено на ${registerUser.email}. Можете выполнить вход по этому email.
+                    Учетная запись зарегистрирована, но лучше ее подтвердить переходом по ссылке из письма,
+                    которое было отравлено на ${registerUser.email}. Можете выполнить вход по этому email.
                 """.trimIndent()
             )
         } catch (e: MessagingException) {
@@ -71,12 +76,11 @@ open class UserServiceImpl(
     private fun generateConfirmationToken(user: UserEntity): String {
         val token = randomString.nextString()
         logger.info(
-            "Пользователь {} добавлен в базу" +
-                " с токеном подтверждения {}," +
-                " токен возможно использовать через сваггер.",
+            "Пользователь {} добавлен в базу с токеном подтверждения {}",
             user.email,
             token
         )
+
         logger.info("Ссылка подтверждения аккаунта: " + valuesService.address + "/confirmation/register?t=" + token)
         userConfirmationRepository.save(
             UserConfirmationEntity().apply {
@@ -87,6 +91,7 @@ open class UserServiceImpl(
         return token
     }
 
+    @Transactional
     override fun handleConfirmation(token: String): Status {
         val confirmationEntity = userConfirmationRepository.findByToken(token)
         return if (confirmationEntity.isPresent) {
@@ -111,7 +116,7 @@ open class UserServiceImpl(
         }
     }
 
-    override fun saveUser(registerUserDto: RegisterUserDto, role: Role): UserEntity {
+    private fun saveUser(registerUserDto: RegisterUserDto, role: Role): UserEntity {
         return userRepository.save(UserEntity(registerUserDto, passwordEncoder, role))
     }
 
@@ -120,22 +125,27 @@ open class UserServiceImpl(
     }
 
     override fun getCurrentId(): UUID {
-        return (
-            SecurityContextHolder.getContext()
-                .authentication.principal as SecurityUser
-            ).id
+        val securityUser = SecurityContextHolder.getContext().authentication.principal as SecurityUser
+        return securityUser.id
     }
 
     override fun getCurrentUser(): UserEntity {
-        val userEntity = userRepository.findById(
-            getCurrentId()
-        ).orElseThrow { RuntimeException("Пользователь не найден") }
-        return if (userEntity.lastLoginAt.plus(UPDATE_ONLINE_DURATION).isBefore(Instant.now())) {
-            userEntity.lastLoginAt = Instant.now()
-            userRepository.save(userEntity)
+        val userEntity = userRepository.findById(getCurrentId()).orElseThrow {
+            UserNotFoundException("Пользователь не найден")
+        }
+
+        val lastOnlineAt = userEntity.lastLoginAt.plus(UPDATE_ONLINE_DURATION)
+        return if (lastOnlineAt.isBefore(Instant.now())) {
+            updateLastLoginAt(userEntity)
         } else {
             userEntity
         }
+    }
+
+    @Transactional
+    open fun updateLastLoginAt(userEntity: UserEntity): UserEntity {
+        userEntity.lastLoginAt = Instant.now()
+        return userRepository.save(userEntity)
     }
 
     override fun getUserDto(): UserDto {
