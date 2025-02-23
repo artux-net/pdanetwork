@@ -44,6 +44,7 @@ services:
       - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
       - JAVA_TOOL_OPTIONS=-Xmx3072m
+      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
     network_mode: host
 
   backend-dev:
@@ -59,6 +60,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
       - SPRING_DATASOURCE_USERNAME=pdanetwork
       - SPRING_DATASOURCE_PASSWORD=pass
+      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
     ports:
       - "8002:8080"
 
