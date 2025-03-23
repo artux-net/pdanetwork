@@ -34,17 +34,29 @@ services:
       - *backend
       - *prod-profile
     environment:
-      - SERVER_HOST=${SERVER_HOST}
-      - SERVER_PROTOCOL=https
-      - SERVER_WEBSOCKET_PROTOCOL=wss
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${DATASOURCE_DB_NAME}
-      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASSWORD}
-      - SPRING_MAIL_HOST=${MAIL_HOST}
-      - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
-      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
-      - JAVA_TOOL_OPTIONS=-Xmx3072m
-      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
+      SERVER_HOST: ${SERVER_HOST}
+      SERVER_PROTOCOL: https
+      SERVER_WEBSOCKET_PROTOCOL: wss
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/${DATASOURCE_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      SPRING_MAIL_HOST: ${MAIL_HOST}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JAVA_TOOL_OPTIONS: >-
+        -Xms512m 
+        -Xmx2048m
+        -XX:MaxGCPauseMillis=150
+        -XX:+PrintGCDetails
+        -Xlog:gc*:file=/tmp/gc.log:time
+        -XX:+HeapDumpOnOutOfMemoryError 
+        -XX:HeapDumpPath=/tmp/heapdumps
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+UseStringDeduplication
+        -XX:+AlwaysActAsServerClassMachine
+        -XX:+UseG1GC
+        -Duser.timezone=Europe/Moscow
     network_mode: host
 
   backend-dev:
