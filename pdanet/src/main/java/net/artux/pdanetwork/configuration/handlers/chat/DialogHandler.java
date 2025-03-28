@@ -11,7 +11,7 @@ import net.artux.pdanetwork.models.user.dto.UserDto;
 import net.artux.pdanetwork.service.communication.ConversationService;
 import net.artux.pdanetwork.service.communication.MessagingService;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.ServletHelper;
+import net.artux.pdanetwork.utils.ServletHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

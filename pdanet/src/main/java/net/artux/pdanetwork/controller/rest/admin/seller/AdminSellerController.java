@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.seller.SellerAdminDto;
 import net.artux.pdanetwork.models.seller.SellerDto;
 import net.artux.pdanetwork.service.items.SellerService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

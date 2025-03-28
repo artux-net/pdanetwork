@@ -10,6 +10,7 @@ import net.artux.pdanetwork.entity.user.UserEntity;
 import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.time.Instant;
+import java.util.Locale;
 
 @Setter
 @Getter
@@ -31,6 +32,8 @@ public class StoryBackup extends BaseEntity {
     private Instant timestamp;
     @ManyToOne
     private UserEntity author;
+
+    private Locale locale;
 
     public StoryBackup() {
         archive = false;

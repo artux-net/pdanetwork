@@ -18,7 +18,7 @@ import net.artux.pdanetwork.repository.feed.CommentRepository;
 import net.artux.pdanetwork.repository.feed.PostRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

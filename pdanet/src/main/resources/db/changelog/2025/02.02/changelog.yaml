@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      author: zethange
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      id: 2
+      changes:
+        - sqlFile:
+            path: init.sql
+            relativeToChangelogFile: true

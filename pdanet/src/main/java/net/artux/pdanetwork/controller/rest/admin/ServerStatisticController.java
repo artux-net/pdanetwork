@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.artux.pdanetwork.models.statistic.StatisticDto;
 import net.artux.pdanetwork.service.statistic.ServerStatisticService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

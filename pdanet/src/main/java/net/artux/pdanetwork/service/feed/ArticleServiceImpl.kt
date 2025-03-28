@@ -15,7 +15,7 @@ import net.artux.pdanetwork.repository.feed.ArticleRepository
 import net.artux.pdanetwork.repository.feed.TagRepository
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.service.util.PageService
-import net.artux.pdanetwork.utills.security.ModeratorAccess
+import net.artux.pdanetwork.utils.security.ModeratorAccess
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict

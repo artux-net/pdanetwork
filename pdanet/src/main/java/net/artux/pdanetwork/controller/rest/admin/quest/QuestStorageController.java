@@ -11,7 +11,7 @@ import net.artux.pdanetwork.models.quest.Story;
 import net.artux.pdanetwork.models.quest.StoryBackupDto;
 import net.artux.pdanetwork.models.quest.StoryBackupEditDto;
 import net.artux.pdanetwork.service.quest.QuestBackupService;
-import net.artux.pdanetwork.utills.security.CreatorAccess;
+import net.artux.pdanetwork.utils.security.CreatorAccess;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

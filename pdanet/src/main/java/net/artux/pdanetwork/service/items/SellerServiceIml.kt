@@ -17,7 +17,7 @@ import net.artux.pdanetwork.repository.items.ItemRepository
 import net.artux.pdanetwork.repository.items.SellerRepository
 import net.artux.pdanetwork.repository.user.UserRepository
 import net.artux.pdanetwork.service.user.UserService
-import net.artux.pdanetwork.utills.security.ModeratorAccess
+import net.artux.pdanetwork.utils.security.ModeratorAccess
 import org.springframework.core.io.ClassPathResource
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -63,7 +63,6 @@ open class SellerServiceIml(
 
     @Throws(IOException::class)
     private fun readSellers(): MutableList<SellerAdminDto> {
-        logger.info("Чтение списка продавцов")
         val resource = ClassPathResource("static/base/sellers/info.json")
         val arr = mapper.readValue(resource.inputStream, Array<SellerAdminDto>::class.java)
         return Arrays.stream(arr).collect(Collectors.toList())

@@ -7,7 +7,7 @@ import net.artux.pdanetwork.configuration.handlers.*;
 import net.artux.pdanetwork.models.communication.ChatEvent;
 import net.artux.pdanetwork.models.communication.ChatStatistic;
 import net.artux.pdanetwork.models.communication.ChatUpdate;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;

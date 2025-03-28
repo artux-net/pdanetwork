@@ -12,7 +12,7 @@ import net.artux.pdanetwork.models.quest.workflow.Trigger
 import net.artux.pdanetwork.models.user.enums.Role
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.service.util.ValuesService
-import net.artux.pdanetwork.utills.security.AdminAccess
+import net.artux.pdanetwork.utils.security.AdminAccess
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.compress.utils.IOUtils
 import org.springframework.http.HttpEntity

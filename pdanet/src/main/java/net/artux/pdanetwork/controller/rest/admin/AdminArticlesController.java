@@ -10,7 +10,7 @@ import net.artux.pdanetwork.models.feed.ArticleSimpleDto;
 import net.artux.pdanetwork.dto.page.QueryPage;
 import net.artux.pdanetwork.dto.page.ResponsePage;
 import net.artux.pdanetwork.service.feed.ArticleService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

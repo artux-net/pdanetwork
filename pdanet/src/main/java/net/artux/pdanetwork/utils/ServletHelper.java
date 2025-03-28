@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.utills;
+package net.artux.pdanetwork.utils;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;

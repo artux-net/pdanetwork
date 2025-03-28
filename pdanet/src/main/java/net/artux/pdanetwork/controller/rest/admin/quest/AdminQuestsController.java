@@ -11,7 +11,7 @@ import net.artux.pdanetwork.entity.mappers.GameMapEnumMapper;
 import net.artux.pdanetwork.models.quest.map.MapEnum;
 import net.artux.pdanetwork.service.quest.QuestManagerService;
 import net.artux.pdanetwork.service.quest.QuestService;
-import net.artux.pdanetwork.utills.security.CreatorAccess;
+import net.artux.pdanetwork.utils.security.CreatorAccess;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

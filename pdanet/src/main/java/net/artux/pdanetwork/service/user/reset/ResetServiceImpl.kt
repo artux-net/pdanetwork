@@ -16,7 +16,7 @@ import net.artux.pdanetwork.repository.user.UserRepository
 import net.artux.pdanetwork.service.email.EmailService
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.service.util.ValuesService
-import net.artux.pdanetwork.utills.RandomString
+import net.artux.pdanetwork.utils.RandomString
 import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -106,6 +106,7 @@ open class ResetServiceImpl(
 
     @Transactional
     override fun resetData(): StoryData {
+        logger.info("Сброс истории прохождения")
         val userEntity = userService.getCurrentUser()
         userEntity.reset()
         userEntity.storyStates.clear()
@@ -118,6 +119,7 @@ open class ResetServiceImpl(
 
     @Transactional
     override fun deleteAccount(): Boolean {
+        logger.info("Удаление аккаунта")
         val user = userService.getCurrentUser()
         user.reset()
         userRepository.save(user)

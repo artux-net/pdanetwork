@@ -9,10 +9,7 @@ import net.artux.pdanetwork.models.quest.StoryInfo;
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus;
 import net.artux.pdanetwork.models.quest.stage.Stage;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public interface QuestService {
 
@@ -28,9 +25,9 @@ public interface QuestService {
 
     Status reloadPublicStories(Collection<Story> stories);
 
-    Collection<StoryInfo> getPublicStories();
+    Collection<StoryInfo> getPublicStories(Locale language);
 
-    Collection<StoryInfo> getCommunityStories();
+    Collection<StoryInfo> getCommunityStories(Locale language);
 
     StoriesStatus getStatus();
 

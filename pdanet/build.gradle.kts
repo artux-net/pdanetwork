@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     implementation(project(":pdanet-model"))
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.3.2"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.4"))
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-security")
 

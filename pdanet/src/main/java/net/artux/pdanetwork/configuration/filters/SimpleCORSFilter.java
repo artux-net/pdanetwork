@@ -1,6 +1,5 @@
-package net.artux.pdanetwork.configuration;
+package net.artux.pdanetwork.configuration.filters;
 
-import java.io.IOException;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -11,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -26,7 +27,5 @@ public class SimpleCORSFilter implements Filter {
 	}
 
 	public void init(FilterConfig filterConfig) {}
-
-	public void destroy() {}
 
 }

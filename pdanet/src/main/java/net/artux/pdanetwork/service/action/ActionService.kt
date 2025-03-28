@@ -58,8 +58,11 @@ open class ActionService(
 
     @Suppress("TooGenericExceptionCaught")
     private fun operateActions(actions: Map<String, List<String>>, userEntity: UserEntity) {
-        if (actions.isEmpty()) return
-        logger.info("Commands for {} : {}", userEntity.login, actions)
+        if (actions.isEmpty()) {
+            return
+        }
+
+        logger.info("Evaluate commands: {}", actions)
         for (command in actions.keys) {
             try {
                 val params = actions[command]!!.toMutableList()

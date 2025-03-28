@@ -14,7 +14,7 @@ import net.artux.pdanetwork.repository.achievement.AchievementCategoryRepository
 import net.artux.pdanetwork.repository.achievement.AchievementRepository;
 import net.artux.pdanetwork.repository.achievement.RepositoryAchCategoryDto;
 import net.artux.pdanetwork.service.user.UserService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

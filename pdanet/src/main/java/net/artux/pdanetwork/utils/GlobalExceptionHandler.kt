@@ -1,4 +1,4 @@
-package net.artux.pdanetwork.utills
+package net.artux.pdanetwork.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.ServletException
@@ -30,7 +30,7 @@ class GlobalExceptionHandler(
 
     @ExceptionHandler(Exception::class)
     fun handleAllExceptions(ex: Exception?, request: WebRequest?): ResponseEntity<Any> {
-        logger.error("Error request", ex)
+        logger.error("Got error while ", ex)
         return ResponseEntity(errorMapper.of(ex, "Server Error"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

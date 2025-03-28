@@ -3,6 +3,8 @@ package net.artux.pdanetwork.models.quest;
 import lombok.Data;
 import net.artux.pdanetwork.models.user.enums.Role;
 
+import java.util.Locale;
+
 @Data
 public class StoryInfo {
 
@@ -12,5 +14,6 @@ public class StoryInfo {
     private String icon;
     private int[] needs;
     private Role access = Role.TESTER;
+    private Locale locale = Locale.of("ru", "RU");
 
 }

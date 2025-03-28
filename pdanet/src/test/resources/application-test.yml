@@ -4,6 +4,5 @@ spring:
             ddl-auto: create
 administrator:
     email: admin@artux.net
-    login: admin
-    name: admin
     nickname: system
+    password: pass

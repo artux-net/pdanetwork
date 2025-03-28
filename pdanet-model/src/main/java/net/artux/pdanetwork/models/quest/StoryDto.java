@@ -5,6 +5,7 @@ import net.artux.pdanetwork.models.quest.mission.Mission;
 import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Data
@@ -19,6 +20,7 @@ public class StoryDto {
     private Map<Long, ChapterDto> chapters;
     private Map<Long, GameMap> maps;
     private List<Mission> missions;
+    private Locale locale;
 
     public int stageCount() {
         return getChapters().values().stream().mapToInt(chapter -> chapter.getStages().size()).sum();

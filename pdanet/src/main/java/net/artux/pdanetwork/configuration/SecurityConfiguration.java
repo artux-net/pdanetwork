@@ -78,7 +78,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(8);
     }
 
-
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();

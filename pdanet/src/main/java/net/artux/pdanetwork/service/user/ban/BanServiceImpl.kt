@@ -7,7 +7,7 @@ import net.artux.pdanetwork.entity.user.BanEntity
 import net.artux.pdanetwork.models.user.ban.BanDto
 import net.artux.pdanetwork.repository.user.BanRepository
 import net.artux.pdanetwork.service.user.UserService
-import net.artux.pdanetwork.utills.security.ModeratorAccess
+import net.artux.pdanetwork.utils.security.ModeratorAccess
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Duration

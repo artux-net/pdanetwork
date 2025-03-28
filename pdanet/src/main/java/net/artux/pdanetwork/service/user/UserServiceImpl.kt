@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.service.user
 
 import jakarta.mail.MessagingException
+import mu.KLogging
 import net.artux.pdanetwork.entity.mappers.UserMapper
 import net.artux.pdanetwork.entity.security.SecurityUser
 import net.artux.pdanetwork.entity.user.UserConfirmationEntity
@@ -16,13 +17,13 @@ import net.artux.pdanetwork.repository.user.UserConfirmationRepository
 import net.artux.pdanetwork.repository.user.UserRepository
 import net.artux.pdanetwork.service.email.EmailService
 import net.artux.pdanetwork.service.util.ValuesService
-import net.artux.pdanetwork.utills.RandomString
-import net.artux.pdanetwork.utills.security.AdminAccess
+import net.artux.pdanetwork.utils.RandomString
+import net.artux.pdanetwork.utils.security.AdminAccess
 import org.apache.commons.io.output.ByteArrayOutputStream
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.slf4j.LoggerFactory
+import org.springframework.context.MessageSource
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -31,6 +32,7 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
+import java.util.Locale
 import java.util.UUID
 
 @Service
@@ -44,9 +46,9 @@ open class UserServiceImpl(
     private val userValidator: UserValidator,
     private val passwordEncoder: PasswordEncoder,
     private val userMapper: UserMapper,
+    private val messageSource: MessageSource
 ) : UserService {
 
-    private val logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
     private val randomString = RandomString()
 
     @Transactional
@@ -202,7 +204,8 @@ open class UserServiceImpl(
         userEntity.avatar = user.avatar
         userEntity.password = passwordEncoder.encode(user.password)
         userRepository.save(userEntity)
-        val message = "Обновлен пользователь " + user.email
+
+        val message = messageSource.getMessage("user.updated", null, Locale.of("ru"))
         return Status(true, message)
     }
 
@@ -262,7 +265,7 @@ open class UserServiceImpl(
         return ByteArrayInputStream(outputStream.toByteArray())
     }
 
-    companion object {
+    companion object : KLogging() {
         val INITIAL_ROLE = Role.USER
         val UPDATE_ONLINE_DURATION: Duration = Duration.ofMinutes(5)
     }

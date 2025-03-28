@@ -44,3 +44,8 @@ quest:
     stories:
         init:
             enabled: true
+
+logging:
+  structured:
+      format:
+        console: ecs

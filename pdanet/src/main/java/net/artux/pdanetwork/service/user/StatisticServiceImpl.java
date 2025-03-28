@@ -5,7 +5,7 @@ import net.artux.pdanetwork.entity.user.StatisticEntity;
 import net.artux.pdanetwork.entity.mappers.UserMapper;
 import net.artux.pdanetwork.models.user.UserStatisticDto;
 import net.artux.pdanetwork.repository.user.StatisticRepository;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

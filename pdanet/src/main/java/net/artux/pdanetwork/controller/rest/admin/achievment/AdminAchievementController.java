@@ -10,7 +10,7 @@ import net.artux.pdanetwork.models.achievement.AchDto;
 import net.artux.pdanetwork.models.achievement.AchievementCreateDto;
 import net.artux.pdanetwork.repository.achievement.RepositoryAchCategoryDto;
 import net.artux.pdanetwork.service.achievement.AchievementService;
-import net.artux.pdanetwork.utills.security.AdminAccess;
+import net.artux.pdanetwork.utils.security.AdminAccess;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

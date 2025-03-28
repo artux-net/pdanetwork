@@ -5,6 +5,7 @@ import net.artux.pdanetwork.models.user.dto.SimpleUserDto;
 import net.artux.pdanetwork.models.user.enums.Role;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.UUID;
 
 @Data
@@ -17,6 +18,7 @@ public class StoryBackupDto {
     private String icon;
     private int[] needs;
     private Role access = Role.TESTER;
+    private Locale locale = Locale.of("ru", "RU");
 
     private String message;
     private boolean archive;

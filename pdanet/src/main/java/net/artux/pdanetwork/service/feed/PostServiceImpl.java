@@ -14,7 +14,7 @@ import net.artux.pdanetwork.repository.feed.PostLikeRepository;
 import net.artux.pdanetwork.repository.feed.PostRepository;
 import net.artux.pdanetwork.service.user.UserService;
 import net.artux.pdanetwork.service.util.PageService;
-import net.artux.pdanetwork.utills.security.ModeratorAccess;
+import net.artux.pdanetwork.utils.security.ModeratorAccess;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
