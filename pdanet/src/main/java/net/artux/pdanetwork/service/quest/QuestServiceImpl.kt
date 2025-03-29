@@ -2,6 +2,7 @@ package net.artux.pdanetwork.service.quest
 
 import mu.KLogging
 import net.artux.pdanetwork.entity.mappers.QuestMapper
+import net.artux.pdanetwork.entity.user.UserEntity
 import net.artux.pdanetwork.models.Status
 import net.artux.pdanetwork.models.quest.ChapterDto
 import net.artux.pdanetwork.models.quest.GameMap
@@ -10,11 +11,14 @@ import net.artux.pdanetwork.models.quest.StoryDto
 import net.artux.pdanetwork.models.quest.StoryInfo
 import net.artux.pdanetwork.models.quest.admin.StoriesStatus
 import net.artux.pdanetwork.models.quest.stage.Stage
+import net.artux.pdanetwork.models.user.enums.Role
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.utils.security.AdminAccess
 import net.artux.pdanetwork.utils.security.CreatorAccess
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.util.EnumMap
+import java.util.LinkedList
 import java.util.Locale
 import java.util.UUID
 
@@ -26,7 +30,8 @@ open class QuestServiceImpl(
     private val questBackupService: QuestBackupService
 ) : QuestService {
 
-    private val stories: MutableList<StoryDto> = mutableListOf()
+    private val stories: MutableMap<Long, StoryDto> = HashMap()
+    private val roleStories: MutableMap<Role, List<StoryDto>> = EnumMap(Role::class.java)
     private val usersStories: MutableMap<UUID, StoryDto> = HashMap()
     private var updatedTime: Instant? = null
 
@@ -74,7 +79,7 @@ open class QuestServiceImpl(
 
     override fun getStory(storyId: Long): StoryDto {
         val user = userService.getCurrentUser()
-        val story = stories.find { it.id == storyId }
+        val story = stories[storyId]
             ?: usersStories[user.id]
             ?: questMapper.dto(questBackupService.getCommunityStory(storyId))
 
@@ -94,11 +99,18 @@ open class QuestServiceImpl(
             if (story.id > lastStoryId) {
                 lastStoryId = story.id
             }
-            val index = this.stories.indexOfFirst { it.id == story.id }
-            if (index != -1) {
-                this.stories[index] = questMapper.dto(story)
-            }
+            this.stories[story.id] = questMapper.dto(story)
             counter++
+        }
+
+        for (role in Role.entries) {
+            val roleStories: MutableList<StoryDto> = LinkedList()
+            for (story in this.stories.values) {
+                if (story.access.priority <= role.priority) {
+                    roleStories.add(story)
+                }
+            }
+            this.roleStories[role] = roleStories
         }
 
         updatedTime = Instant.now()
@@ -107,25 +119,33 @@ open class QuestServiceImpl(
         return Status(true, message)
     }
 
+    private fun getStories(user: UserEntity): Collection<StoryDto> {
+        val role = user.role
+        return roleStories[role]!!
+    }
+
     override fun getPublicStories(locale: Locale): Collection<StoryInfo> {
         val user = userService.getCurrentUser()
 
-        val storiesInfo = questMapper.info(stories.filter { it.access.priority <= user.role.priority })
-            .filter { it.locale.language == locale.language }
+        val storiesInfo = getStories(user)
+            .filter { it.locale == null || it.locale.language == locale.language }
             .toMutableList()
+            .also {
+                val userStory = usersStories[user.id]
+                if (userStory != null) {
+                    it.add(userStory)
+                }
+            }
 
-        // пусть истории пользователя не будут отсеиваться по локали (пока)
-        val userStory = questMapper.info(usersStories[user.id])
-        if (userStory != null) {
-            storiesInfo.add(userStory)
-        }
-
-        return storiesInfo
+        return storiesInfo.map { questMapper.info(it) }
     }
 
     override fun getCommunityStories(locale: Locale): Collection<StoryInfo> {
         return questMapper.info(
-            questMapper.dto(questBackupService.communityStories.filter { it.locale.language == locale.language })
+            questMapper.dto(
+                questBackupService.communityStories
+                    .filter { it.locale == null || it.locale.language == locale.language }
+            )
         )
     }
 
@@ -133,7 +153,7 @@ open class QuestServiceImpl(
         return StoriesStatus.builder()
             .readTime(updatedTime)
             .userStories(usersStories.size)
-            .stories(questMapper.adminInfo(stories))
+            .stories(questMapper.adminInfo(stories.values))
             .build()
     }
 
