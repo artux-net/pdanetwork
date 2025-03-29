@@ -1,6 +1,7 @@
 package net.artux.pdanetwork.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.io.IOException
 
 @RestControllerAdvice
+@Hidden
 @Suppress("UnusedParameter")
 class GlobalExceptionHandler(
     private val errorMapper: ErrorMapper,

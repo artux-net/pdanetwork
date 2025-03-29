@@ -34,6 +34,7 @@ services:
       - *backend
       - *prod-profile
     environment:
+      SPRING_PROFILES: default, dev, prod
       SERVER_HOST: ${SERVER_HOST}
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
@@ -43,7 +44,7 @@ services:
       SPRING_MAIL_HOST: ${MAIL_HOST}
       SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
       SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
       JAVA_TOOL_OPTIONS: >-
         -Xms512m 
         -Xmx2048m
@@ -66,13 +67,14 @@ services:
     depends_on:
       - db
     environment:
-      - SERVER_HOST=dev.artux.net
-      - SERVER_PROTOCOL=https
-      - SERVER_WEBSOCKET_PROTOCOL=wss
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pdanetwork
-      - SPRING_DATASOURCE_USERNAME=pdanetwork
-      - SPRING_DATASOURCE_PASSWORD=pass
-      - MANAGEMENT_HEALTH_MAIL_ENABLED=false
+      SPRING_PROFILES: default, dev
+      SERVER_HOST: dev.artux.net
+      SERVER_PROTOCOL: https
+      SERVER_WEBSOCKET_PROTOCOL: wss
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pdanetwork
+      SPRING_DATASOURCE_USERNAME: pdanetwork
+      SPRING_DATASOURCE_PASSWORD: "pass"
+      MANAGEMENT_HEALTH_MAIL_ENABLED: false
     ports:
       - "8002:8080"
 
