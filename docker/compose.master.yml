@@ -93,7 +93,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pdanetwork
       SPRING_DATASOURCE_USERNAME: pdanetwork
       SPRING_DATASOURCE_PASSWORD: "pass"
-      MANAGEMENT_HEALTH_MAIL_ENABLED: false
     ports:
       - "8002:8080"
     networks:
