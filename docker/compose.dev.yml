@@ -20,7 +20,7 @@ services:
       - pda-net-dev
 
   backend:
-    image: registry.artux.net/pdanetwork:master
+    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     deploy:
       replicas: 1
       update_config:
@@ -56,11 +56,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: "pass"
 
   frontend:
-    image: registry.artux.net/pda-admin-web:main
+    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
     networks:
       - pda-net-dev
     depends_on:
-      - backend-dev
+      - backend
     environment:
       BASE_PATH: panel
       API_URL: https://dev.artux.net/pdanetwork

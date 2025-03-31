@@ -62,7 +62,7 @@ services:
     networks:
       - pda-net
     depends_on:
-      - backend-prod
+      - backend
     environment:
       - BASE_PATH=panel
       - API_URL=https://app.artux.net/pdanetwork
