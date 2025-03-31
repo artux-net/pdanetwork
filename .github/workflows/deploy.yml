@@ -70,9 +70,9 @@ jobs:
         run: |
           cd docker
           if [ "${{ inputs.profile }}" == "prod" ]; then
-            docker stack deploy $STACK_NAME -c <(docker compose -f compose.prod.yml config)
+            envsubst < compose.prod.yml | docker stack deploy -c - $STACK_NAME
           else
-            docker stack deploy $STACK_NAME -c <(docker compose -f compose.dev.yml config)
+            envsubst < compose.dev.yml | docker stack deploy -c - $STACK_NAME
           fi
 
       - name: Cleanup unused resources

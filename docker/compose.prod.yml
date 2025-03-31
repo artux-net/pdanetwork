@@ -50,7 +50,10 @@ services:
         -XX:+UseG1GC
         -Duser.timezone=Europe/Moscow
     ports:
-      - "8080:8080"
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: vip
     volumes:
       - /var/lib/backend-tmp:/tmp
 
