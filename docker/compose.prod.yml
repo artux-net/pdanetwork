@@ -54,6 +54,8 @@ services:
         published: 8080
         protocol: tcp
         mode: vip
+    volumes:
+      - /var/lib/backend-tmp:/tmp
 
   frontend:
     image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
