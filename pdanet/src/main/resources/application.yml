@@ -29,6 +29,8 @@ spring:
         hiddenmethod:
             filter:
                 enabled: true
+    application:
+        name: pdanetwork
 
 management:
     prometheus:

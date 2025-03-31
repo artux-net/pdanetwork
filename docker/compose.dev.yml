@@ -1,0 +1,71 @@
+networks:
+  pda-net-dev:
+    driver: overlay
+    attachable: true
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pdanetwork
+      POSTGRES_PASSWORD: "pass"
+    ports:
+      - target: 9999
+        published: 5432
+        protocol: tcp
+        mode: vip
+    networks:
+      - pda-net-dev
+
+  backend:
+    image: registry.artux.net/pdanetwork:master
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.3
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 768mb
+        reservations:
+          memory: 512mb
+      endpoint_mode: vip
+    ports:
+      - target: 8080
+        published: 8002
+        protocol: tcp
+        mode: vip
+    networks:
+      - pda-net-dev
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: default, dev
+      SERVER_HOST: dev.artux.net
+      SERVER_PROTOCOL: https
+      SERVER_WEBSOCKET_PROTOCOL: wss
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pdanetwork
+      SPRING_DATASOURCE_USERNAME: pdanetwork
+      SPRING_DATASOURCE_PASSWORD: "pass"
+
+  frontend:
+    image: registry.artux.net/pda-admin-web:main
+    networks:
+      - pda-net-dev
+    depends_on:
+      - backend-dev
+    environment:
+      BASE_PATH: panel
+      API_URL: https://dev.artux.net/pdanetwork
+    ports:
+      - target: 3000
+        published: 8001
+        protocol: tcp
+        mode: vip

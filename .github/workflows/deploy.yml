@@ -35,11 +35,11 @@ jobs:
       - name: Setup profile and environment
         env:
           DEV_SERVER_HOST: dev.artux.net
-          DEV_STACK_NAME: pdanetwork
+          DEV_STACK_NAME: pdanet-dev
           DEV_WEB_PANEL_IMAGE_TAG: dev
 
           PROD_SERVER_HOST: app.artux.net
-          PROD_STACK_NAME: pdanetwork_master
+          PROD_STACK_NAME: pdanet-prod
           PROD_WEB_PANEL_IMAGE_TAG: main
         run: |
           if [ "${{ inputs.profile }}" == "prod" ]; then
@@ -69,7 +69,11 @@ jobs:
       - name: Deploy stack to Docker Swarm
         run: |
           cd docker
-          docker stack deploy -c compose.master.yml $STACK_NAME
+          if [ "${{ inputs.profile }}" == "prod" ]; then
+            docker stack deploy $STACK_NAME -c compose.prod.yml
+          else
+            docker stack deploy $STACK_NAME -c compose.dev.yml     
+          fi
 
       - name: Cleanup unused resources
         run: docker system prune -af

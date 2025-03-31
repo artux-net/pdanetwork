@@ -1,0 +1,68 @@
+networks:
+  pda-net:
+    driver: overlay
+    attachable: true
+
+services:
+  backend:
+    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    deploy:
+      replicas: 2
+      endpoint_mode: vip
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.3
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 1200mb
+        reservations:
+          memory: 1024mb
+    networks:
+      - pda-net
+    environment:
+      SPRING_PROFILES_ACTIVE: default, dev, prod
+      SERVER_HOST: ${SERVER_HOST}
+      SERVER_PROTOCOL: https
+      SERVER_WEBSOCKET_PROTOCOL: wss
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ip:port/${DATASOURCE_DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
+      SPRING_MAIL_HOST: ${MAIL_HOST}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      JAVA_TOOL_OPTIONS: >-
+        -Xms512m 
+        -Xmx1024m
+        -XX:MaxGCPauseMillis=150
+        -Xlog:gc*:file=/tmp/gc.log:time
+        -XX:+HeapDumpOnOutOfMemoryError 
+        -XX:+HeapDumpBeforeFullGC
+        -XX:HeapDumpPath=/tmp/heapdumps
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+UseStringDeduplication
+        -XX:+AlwaysActAsServerClassMachine
+        -XX:+UseG1GC
+        -Duser.timezone=Europe/Moscow
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: vip
+
+  frontend:
+    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
+    networks:
+      - pda-net
+    depends_on:
+      - backend-prod
+    environment:
+      - BASE_PATH=panel
+      - API_URL=https://app.artux.net/pdanetwork
+    ports:
+      - "9001:3000"
