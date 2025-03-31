@@ -61,8 +61,6 @@ services:
     image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
     networks:
       - pda-net
-    depends_on:
-      - backend
     environment:
       - BASE_PATH=panel
       - API_URL=https://app.artux.net/pdanetwork

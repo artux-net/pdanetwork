@@ -44,8 +44,6 @@ services:
         mode: vip
     networks:
       - pda-net-dev
-    depends_on:
-      - db
     environment:
       SPRING_PROFILES_ACTIVE: default, dev
       SERVER_HOST: dev.artux.net
@@ -59,8 +57,6 @@ services:
     image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
     networks:
       - pda-net-dev
-    depends_on:
-      - backend
     environment:
       BASE_PATH: panel
       API_URL: https://dev.artux.net/pdanetwork
