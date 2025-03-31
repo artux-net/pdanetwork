@@ -25,7 +25,7 @@ jobs:
           images: |
             registry.artux.net/pdanetwork
           tags: |
-            type=raw,value=${{ steps.get-hash.outputs.hash }}
+            type=raw,value=${{ github.sha }}
             type=ref,event=branch
             type=raw,value=latest
 
@@ -40,7 +40,7 @@ jobs:
       - name: Check if Docker image exists
         id: check_image
         run: |
-          IMAGE_TAG=$(echo "${{ steps.get-hash.outputs.hash }}" | sed -e 's,.*/,,')
+          IMAGE_TAG=$(echo "${GITHUB_SHA}" | sed -e 's,.*/,,')
           IMAGE="registry.artux.net/pdanetwork:${IMAGE_TAG}"
           
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
