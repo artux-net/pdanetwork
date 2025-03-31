@@ -38,10 +38,7 @@ services:
           memory: 512mb
       endpoint_mode: vip
     ports:
-      - target: 8080
-        published: 8002
-        protocol: tcp
-        mode: vip
+      - "8002:8080"
     networks:
       - pda-net-dev
     depends_on:
