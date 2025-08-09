@@ -40,6 +40,14 @@ services:
         reservations:
           memory: 512mb
       endpoint_mode: vip
+
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
+        - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
+        - "traefik.http.routers.pdanetwork_dev.tls=true"
+        - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
+        - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
     ports:
       - target: 8080
         published: 8002
@@ -48,13 +56,6 @@ services:
     networks:
       - pda-net-dev
       - traefik_net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
-      - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
-      - "traefik.http.routers.pdanetwork_dev.tls=true"
-      - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
-      - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
     environment:
       SPRING_PROFILES_ACTIVE: default, dev
       SERVER_HOST: dev.artux.net
@@ -72,15 +73,16 @@ services:
     environment:
       BASE_PATH: panel
       API_URL: https://dev.artux.net/pdanetwork
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pdanetwork_admin_dev.rule=Host(`dev.artux.net`)"
-      - "traefik.http.routers.pdanetwork_admin_dev.entrypoints=websecure"
-      - "traefik.http.routers.pdanetwork_admin_dev.tls=true"
-      - "traefik.http.routers.pdanetwork_admin_dev.tls.certresolver=myresolver"
-      - "traefik.http.services.pdanetwork_admin_dev.loadbalancer.server.port=3000"
     ports:
       - target: 3000
         published: 8001
         protocol: tcp
         mode: vip
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pdanetwork_admin_dev.rule=Host(`dev.artux.net`)"
+        - "traefik.http.routers.pdanetwork_admin_dev.entrypoints=websecure"
+        - "traefik.http.routers.pdanetwork_admin_dev.tls=true"
+        - "traefik.http.routers.pdanetwork_admin_dev.tls.certresolver=myresolver"
+        - "traefik.http.services.pdanetwork_admin_dev.loadbalancer.server.port=3000"
