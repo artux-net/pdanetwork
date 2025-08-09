@@ -2,6 +2,8 @@ networks:
   pda-net-dev:
     driver: overlay
     attachable: true
+  traefik_net:
+    external: true
 
 services:
   db:
@@ -45,6 +47,14 @@ services:
         mode: vip
     networks:
       - pda-net-dev
+      - traefik_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
+      - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
+      - "traefik.http.routers.pdanetwork_dev.tls=true"
+      - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
+      - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
     environment:
       SPRING_PROFILES_ACTIVE: default, dev
       SERVER_HOST: dev.artux.net
@@ -58,9 +68,17 @@ services:
     image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
     networks:
       - pda-net-dev
+      - traefik_net
     environment:
       BASE_PATH: panel
       API_URL: https://dev.artux.net/pdanetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pdanetwork_admin_dev.rule=Host(`dev.artux.net`)"
+      - "traefik.http.routers.pdanetwork_admin_dev.entrypoints=websecure"
+      - "traefik.http.routers.pdanetwork_admin_dev.tls=true"
+      - "traefik.http.routers.pdanetwork_admin_dev.tls.certresolver=myresolver"
+      - "traefik.http.services.pdanetwork_admin_dev.loadbalancer.server.port=3000"
     ports:
       - target: 3000
         published: 8001
