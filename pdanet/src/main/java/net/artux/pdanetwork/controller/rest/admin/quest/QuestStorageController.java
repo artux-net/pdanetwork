@@ -35,7 +35,7 @@ public class QuestStorageController {
     private final QuestBackupService backupService;
 
     @PostMapping("/upload")
-    @Operation(summary = "Загрузить историю в хранилище", description = "Предыдущая с этим id станет архивной")
+    @Operation(summary = "Загрузить историю в хранилище", description = "Предыдущая с этим id станет архивной", deprecated = true)
     public StoryBackupDto uploadPublicStory(@Valid @RequestBody Story story, @RequestParam("message") String message) {
         return backupService.saveStory(story, message);
     }
@@ -76,13 +76,13 @@ public class QuestStorageController {
     }
 
     @PutMapping(value = "/{id}")
-    @Operation(summary = "Обновить информацию о истории в хранилище", description = "Модератор может обновить любую, юзер только свои")
+    @Operation(summary = "Обновить информацию о истории в хранилище", description = "Модератор может обновить любую, юзер только свои", deprecated = true)
     public StoryBackupDto updateStory(@PathVariable UUID id, @RequestBody @Valid StoryBackupEditDto dto) {
         return backupService.update(id, dto);
     }
 
     @DeleteMapping(value = "/{id}")
-    @Operation(summary = "Удалить историю", description = "Модератор может удалить любую, писатель только свои")
+    @Operation(summary = "Удалить историю", description = "Модератор может удалить любую, писатель только свои", deprecated = true)
     public boolean deleteStory(@PathVariable UUID id) {
         return backupService.deleteBackup(id);
     }

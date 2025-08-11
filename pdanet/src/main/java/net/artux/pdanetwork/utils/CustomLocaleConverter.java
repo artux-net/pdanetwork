@@ -12,8 +12,8 @@ public class CustomLocaleConverter implements Converter<String, Locale> {
     public Locale convert(String source) {
         String[] parts = source.split("_");
         if (parts.length == 2) {
-            return Locale.of(parts[0], parts[1]);
+            return Locale.forLanguageTag(parts[0]);
         }
-        return Locale.of(source);
+        return Locale.forLanguageTag(source);
     }
 }

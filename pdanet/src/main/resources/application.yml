@@ -1,48 +1,48 @@
 server:
-    host: localhost:8080
-    protocol: http
-    servlet:
-        contextPath: /pdanetwork
-    websocket:
-        protocol: ws
-    error:
-        include-binding-errors: on_param
-        include-exception: true
-        include-message: always
+  host: localhost:8080
+  protocol: http
+  servlet:
+    contextPath: /pdanetwork
+  websocket:
+    protocol: ws
+  error:
+    include-binding-errors: on_param
+    include-exception: true
+    include-message: always
 
 spring:
-    main:
-        banner-mode: off
-    profiles:
-        active: default, dev
-    jpa:
-        hibernate:
-            ddl-auto: none
-        open-in-view: false
-        properties:
-            hibernate:
-                enable_lazy_load_no_trans: false
-                format_sql: true
-        show-sql: false
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
-    mvc:
-        hiddenmethod:
-            filter:
-                enabled: true
-    application:
-        name: pdanetwork
+  main:
+    banner-mode: off
+  profiles:
+    active: default, dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: false
+        format_sql: true
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  application:
+    name: pdanetwork
 
 management:
-    prometheus:
-        metrics:
-            export:
-                enabled=true
-    endpoints:
-        web:
-            exposure:
-                include: '*'
+  prometheus:
+    metrics:
+      export:
+        enabled=true
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus,info
 
 quest:
-    stories:
-        init:
-            enabled: true
+  stories:
+    init:
+      enabled: true

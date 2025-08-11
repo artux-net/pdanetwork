@@ -18,7 +18,7 @@ public class StoryBackupDto {
     private String icon;
     private int[] needs;
     private Role access = Role.TESTER;
-    private Locale locale = Locale.of("ru", "RU");
+    private Locale locale = Locale.forLanguageTag("RU");
 
     private String message;
     private boolean archive;

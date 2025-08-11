@@ -25,16 +25,13 @@ services:
     networks:
       - pda-net
     environment:
+      SPRING_CONFIG_IMPORT: optional:configtree:/run/secrets/
       SPRING_PROFILES_ACTIVE: default, dev, prod
-      SERVER_HOST: ${SERVER_HOST}
+      SERVER_HOST: app.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
       SPRING_DATASOURCE_URL: jdbc:postgresql://ip:port/${DATASOURCE_DB_NAME}
-      SPRING_DATASOURCE_USERNAME: ${DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
-      SPRING_MAIL_HOST: ${MAIL_HOST}
-      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
-      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      SPRING_MAIL_HOST: mail.artux.net
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
       JAVA_TOOL_OPTIONS: >-
         -Xms512m 
@@ -49,11 +46,28 @@ services:
         -XX:+AlwaysActAsServerClassMachine
         -XX:+UseG1GC
         -Duser.timezone=Europe/Moscow
+    secrets:
+      - source: pdanet-db-host
+        target: spring.datasource.url
+      - source: pdanet-db-username
+        target: spring.datasource.username
+      - source: pdanet-db-password
+        target: spring.datasource.password
+      - source: pdanet-mail-host
+        target: spring.mail.host
+      - source: pdanet-mail-username
+        target: spring.mail.username
+      - source: pdanet-mail-password
+        target: spring.mail.password
+      - source: pdanet-s3-access-id
+        target: s3.id
+      - source: pdanet-s3-access-key
+        target: s3.key
     ports:
       - target: 8080
         published: 8080
         protocol: tcp
-        mode: vip
+        # mode: ingress  # для Swarm по умолчанию ingress; vip тут лишний
     volumes:
       - /var/lib/backend-tmp:/tmp
 
@@ -66,3 +80,21 @@ services:
       - API_URL=https://app.artux.net/pdanetwork
     ports:
       - "9001:3000"
+
+secrets:
+  pdanet-db-host:
+    external: true
+  pdanet-db-username:
+    external: true
+  pdanet-db-password:
+    external: true
+  pdanet-mail-host:
+    external: true
+  pdanet-mail-username:
+    external: true
+  pdanet-mail-password:
+    external: true
+  pdanet-s3-access-id:
+    external: true
+  pdanet-s3-access-key:
+    external: true

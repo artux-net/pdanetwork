@@ -17,7 +17,7 @@ open class InternalizationConfig(
     @Bean
     open fun localeResolver(): LocaleResolver {
         return AcceptHeaderLocaleResolver().apply {
-            setDefaultLocale(Locale.of("ru"))
+            setDefaultLocale(Locale.forLanguageTag("ru"))
         }
     }
 

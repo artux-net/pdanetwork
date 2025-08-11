@@ -1,4 +1,4 @@
 logging:
-    structured:
-        format:
-            console: ecs
+  structured:
+    format:
+      console: ecs

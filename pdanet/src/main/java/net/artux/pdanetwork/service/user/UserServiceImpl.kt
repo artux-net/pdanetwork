@@ -205,7 +205,7 @@ open class UserServiceImpl(
         userEntity.password = passwordEncoder.encode(user.password)
         userRepository.save(userEntity)
 
-        val message = messageSource.getMessage("user.updated", null, Locale.of("ru"))
+        val message = messageSource.getMessage("user.updated", null, Locale.forLanguageTag("ru"))
         return Status(true, message)
     }
 

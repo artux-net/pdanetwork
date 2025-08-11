@@ -64,7 +64,6 @@ open class QuestManagerServiceImpl(
     override fun readFromGit(): Status {
         val restTemplate = RestTemplate()
         val headers = HttpHeaders()
-        headers.add("Authorization", "Bearer " + valuesService.webhookToken)
         val builder = UriComponentsBuilder
             .fromHttpUrl(valuesService.storiesWebhookAddress)
         val entity = HttpEntity<Trigger>(headers)

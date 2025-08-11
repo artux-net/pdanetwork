@@ -52,7 +52,7 @@ public class AdminQuestsController {
     }
 
     @PostMapping(value = "/set")
-    @Operation(summary = "Загрузить сюжет как пользовательский")
+    @Operation(summary = "Загрузить сюжет как пользовательский", deprecated = true)
     public Status setPrivateStory(@RequestBody Story story, @RequestParam String message) {
         return questService.setUserStory(story, message);
     }

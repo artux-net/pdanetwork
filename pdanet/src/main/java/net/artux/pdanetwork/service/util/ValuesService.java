@@ -40,9 +40,6 @@ public class ValuesService {
     @Value("${stories.github.address}")
     private String storiesWebhookAddress;
 
-    @Value("${stories.github.token}")
-    private String webhookToken;
-
     @Value("${cdn.address}")
     private String filesAddress;
 

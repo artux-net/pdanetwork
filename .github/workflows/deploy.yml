@@ -33,37 +33,18 @@ jobs:
           logout: false
 
       - name: Setup profile and environment
-        env:
-          DEV_SERVER_HOST: dev.artux.net
-          DEV_STACK_NAME: pdanet-dev
-          DEV_WEB_PANEL_IMAGE_TAG: dev
-
-          PROD_SERVER_HOST: app.artux.net
-          PROD_STACK_NAME: pdanet-prod
-          PROD_WEB_PANEL_IMAGE_TAG: main
         run: |
           if [ "${{ inputs.profile }}" == "prod" ]; then
-            echo "STACK_NAME=$PROD_STACK_NAME" >> $GITHUB_ENV
-            echo "WEB_IMAGE_TAG=$PROD_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
-            echo "SERVER_HOST=$PROD_SERVER_HOST" >> $GITHUB_ENV
+            echo "STACK_NAME=pdanet-prod" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=main" >> $GITHUB_ENV
           else
-            echo "STACK_NAME=$DEV_STACK_NAME" >> $GITHUB_ENV
-            echo "WEB_IMAGE_TAG=$DEV_WEB_PANEL_IMAGE_TAG" >> $GITHUB_ENV
-            echo "SERVER_HOST=$DEV_SERVER_HOST" >> $GITHUB_ENV
+            echo "STACK_NAME=pdanet-dev" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=dev" >> $GITHUB_ENV
           fi
-
-      - name: Generate .env file for stack
-        run: |
+          # Generate .env file for stack
           cat <<EOF > ./docker/.env
           IMAGE_TAG=${{ inputs.tag }}
           WEB_IMAGE_TAG=${{ env.WEB_IMAGE_TAG }}
-          SERVER_HOST=${{ env.SERVER_HOST }}
-          DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USERNAME }}
-          DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASSWORD }}
-          DATASOURCE_DB_NAME=${{ secrets.DATASOURCE_DB_NAME }}
-          MAIL_HOST=mail.artux.net
-          MAIL_USERNAME=noreply@artux.net
-          MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
           EOF
 
       - name: Deploy stack to Docker Swarm

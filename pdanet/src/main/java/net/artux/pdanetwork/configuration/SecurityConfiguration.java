@@ -29,12 +29,6 @@ public class SecurityConfiguration {
     private static final String[] MODERATOR_LIST = {
     };
 
-    private static final String[] TESTER_LIST = {
-            "/v3/api-docs/*",
-            "/swagger-ui/**",
-            "/webjars/**"
-    };
-
     private static final String[] WHITE_LIST = {
             "/api/v1/user/register",
             "/api/v1/commands/**",
@@ -51,6 +45,10 @@ public class SecurityConfiguration {
             "/images/**",
             "/rules",
             "/actuator/health", // must be always open
+            // Swagger and OpenAPI
+            "/v3/api-docs/*",
+            "/swagger-ui/**",
+            "/webjars/**"
     };
 
     private final Logger logger = LoggerFactory.getLogger(SecurityConfiguration.class);
@@ -66,7 +64,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(MODERATOR_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers(TESTER_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name(), Role.TESTER.name())
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)

@@ -24,7 +24,7 @@ class QuestTest : AbstractTest() {
                 .get("/api/v1/quest/stories/public")
                 .withBasicAuth()
                 .headers {
-                    it.acceptLanguageAsLocales = listOf(Locale.of("en"))
+                    it.acceptLanguageAsLocales = listOf(Locale.forLanguageTag("en"))
                 }.build(),
             String::class.java
         )
