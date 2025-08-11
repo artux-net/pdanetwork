@@ -40,7 +40,3 @@ postman:
     link: https://app.getpostman.com/join-team?invite_code=7314a144fdf6276193f426844376200b
   team:
     link: https://pdanet.postman.co/workspaces
-
-logging:
-  file:
-    name: logs/logfile.log
