@@ -1,0 +1,42 @@
+spring:
+  config:
+    import: startup.yml
+  datasource:
+    hikari:
+      auto-commit: false
+      connection-test-query: SELECT 1
+    url: jdbc:postgresql://localhost:5432/pdanet
+    username: pdanet
+    password: pdanet
+
+  mail:
+    host: mail.artux.net
+    username: noreply@artux.net
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+
+admin:
+  address: https://admin.artux.net/
+cdn:
+  address: https://cdn.artux.net/
+quest:
+  stories:
+    init:
+      enabled: true
+
+stories:
+  directory: /srv/pda
+  github:
+    address: https://api.github.com/repos/artux-net/pda-quests/zipball
+
+postman:
+  invite:
+    link: https://app.getpostman.com/join-team?invite_code=7314a144fdf6276193f426844376200b
+  team:
+    link: https://pdanet.postman.co/workspaces

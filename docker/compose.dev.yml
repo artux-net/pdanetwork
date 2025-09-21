@@ -1,0 +1,110 @@
+networks:
+  pda-net-dev:
+    driver: overlay
+    attachable: true
+  traefik_net:
+    external: true
+
+secrets:
+  pdanet-dev-db-pass:
+    external: true
+  pdanet-mail-password:
+    external: true
+  pdanet-s3-access-id:
+    external: true
+  pdanet-s3-access-key:
+    external: true
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    command: -p 5433 # changing for swarm
+    secrets:
+      - source: pdanet-dev-db-pass
+        target: postgres_password
+    environment:
+      POSTGRES_USER: pdanetwork
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    ports:
+      - target: 9999
+        published: 5433
+        protocol: tcp
+        mode: vip
+    networks:
+      - pda-net-dev
+
+  backend:
+    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 30s
+        max_failure_ratio: 0.3
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          memory: 768mb
+        reservations:
+          memory: 512mb
+      endpoint_mode: vip
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
+        - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
+        - "traefik.http.routers.pdanetwork_dev.tls=true"
+        - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
+        - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
+    ports:
+      - target: 8080
+        published: 8002
+        protocol: tcp
+        mode: vip
+    networks:
+      - pda-net-dev
+      - traefik_net
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configtree:/run/secrets/
+      SPRING_PROFILES_ACTIVE: default, dev
+      SERVER_HOST: dev.artux.net
+      SERVER_PROTOCOL: https
+      SERVER_WEBSOCKET_PROTOCOL: wss
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5433/pdanetwork
+      SPRING_DATASOURCE_USERNAME: pdanetwork
+      SPRING_MAIL_host: mail.artux.net
+      SPRING_MAIL_USERNAME: noreply@artux.net
+    secrets:
+      - source: pdanet-dev-db-pass
+        target: spring.datasource.password
+      - source: pdanet-mail-password
+        target: spring.mail.password
+      - source: pdanet-s3-access-id
+        target: s3.id
+      - source: pdanet-s3-access-key
+        target: s3.key
+  frontend:
+    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
+    networks:
+      - pda-net-dev
+      - traefik_net
+    environment:
+      BASE_PATH: panel
+      API_URL: https://dev.artux.net/pdanetwork
+    ports:
+      - target: 3000
+        published: 8001
+        protocol: tcp
+        mode: vip
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pdanetwork_admin_dev.rule=Host(`dev.artux.net`)"
+        - "traefik.http.routers.pdanetwork_admin_dev.entrypoints=websecure"
+        - "traefik.http.routers.pdanetwork_admin_dev.tls=true"
+        - "traefik.http.routers.pdanetwork_admin_dev.tls.certresolver=myresolver"
+        - "traefik.http.services.pdanetwork_admin_dev.loadbalancer.server.port=3000"

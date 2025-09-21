@@ -1,0 +1,192 @@
+[
+  {
+    "precision": 5,
+    "speed": 13.33,
+    "damage": 4,
+    "condition": 100,
+    "bulletBaseId": 31,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 10
+  },
+  {
+    "precision": 7,
+    "speed": "9.17",
+    "damage": 4,
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 11
+  },
+  {
+    "precision": 10,
+    "speed": "10",
+    "damage": 4,
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 12
+  },
+  {
+    "precision": 15,
+    "speed": 10,
+    "damage": 6,
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 13
+  },
+  {
+    "precision": 13,
+    "speed": 10.83,
+    "damage": 6,
+    "condition": 100,
+    "bulletBaseId": 40,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 14
+  },
+  {
+    "precision": 20,
+    "speed": 13.33,
+    "damage": 8,
+    "condition": 100,
+    "bulletBaseId": 42,
+    "bulletQuantity": 20,
+	"distance": 200.0,
+    "baseId": 15
+  },
+  {
+    "precision": 15,
+    "speed": 12.5,
+    "damage": 7,
+    "condition": 100,
+    "bulletBaseId": 42,
+    "bulletQuantity": 20,
+	"distance": 100.0,
+    "baseId": 16
+  },
+  {
+    "precision": "13.5",
+    "speed": "10",
+    "damage": 8,
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 17
+  },
+  {
+    "precision": "14.5",
+    "speed": "11.67",
+    "damage": "7.5",
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 18
+  },
+  {
+    "precision": "12.5",
+    "speed": 14.17,
+    "damage": "8",
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 100.0,
+    "baseId": 19
+  },
+  {
+    "precision": "13.5",
+    "speed": 15,
+    "damage": 10,
+    "condition": 100,
+    "bulletBaseId": 38,
+    "bulletQuantity": 30,
+	"distance": 150.0,
+    "baseId": 20
+  },
+  {
+    "precision": "4.5",
+    "speed": "0.5",
+    "damage": 44,
+    "condition": 100,
+    "bulletBaseId": 35,
+    "bulletQuantity": 2,
+	"distance": 80.0,
+    "baseId": 21
+  },
+  {
+    "precision": "7",
+    "speed": "1",
+    "damage": "25",
+    "condition": 100,
+    "bulletBaseId": 35,
+    "bulletQuantity": 2,
+	"distance": 80.0,
+    "baseId": 22
+  },
+  {
+    "precision": "5",
+    "speed": "1.67",
+    "damage": "17.5",
+    "condition": 100,
+    "bulletBaseId": 35,
+    "bulletQuantity": 6,
+	"distance": 80.0,
+    "baseId": 23
+  },
+  {
+    "precision": "1.5",
+    "speed": "2.5",
+    "damage": "16.5",
+    "condition": 100,
+    "bulletBaseId": 35,
+    "bulletQuantity": 7,
+	"distance": 80.0,
+    "baseId": 24
+  },
+  {
+    "precision": "24.5",
+    "speed": "15",
+    "damage": "9",
+    "condition": 100,
+    "bulletBaseId": 42,
+    "bulletQuantity": 10,
+	"distance": 200.0,
+    "baseId": 25
+  },
+  {
+    "precision": 40,
+    "speed": 0.5,
+    "damage": 25,
+    "condition": 100,
+    "bulletBaseId": 44,
+    "bulletQuantity": 10,
+	"distance": 300.0,
+    "baseId": 26
+  },
+  {
+    "precision": 30,
+    "speed": 0.5,
+    "damage": 20,
+    "condition": 100,
+    "bulletBaseId": 44,
+    "bulletQuantity": 10,
+	"distance": 300.0,
+    "baseId": 27
+  },
+  {
+    "precision": 40,
+    "speed": "0.17",
+    "damage": 120,
+    "condition": 100,
+    "bulletBaseId": 46,
+    "bulletQuantity": 10,
+	"distance": 400.0,
+    "baseId": 28
+  }
+]

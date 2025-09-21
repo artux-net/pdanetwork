@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ура</title>
+
+    <style media>
+        body {
+            background: #232121;
+            color: #fff;
+        }
+        P.fig {
+            text-align: center;
+        }
+        @font-face {
+            font-family: Tahoma;
+        }
+
+        P {
+            font-family: Tahoma;
+            font-size: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .rightpic {
+            float: right;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+<p class="fig">
+    <img src="https://files.artux.net/static/images/registration/logo-pass.png"/>
+</p>
+
+<p align="center" th:text="${message}"/>
+
+<p class="rightpic">
+    <img th:src="@{/images/stalker.png}"/>
+</p>
+</body>
+</html>

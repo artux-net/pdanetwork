@@ -1,0 +1,60 @@
+name: ⚙️ Deploy Docker Swarm stack
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        description: Docker image to deploy (if empty, 'master' used)
+        default: master
+        required: true
+      profile:
+        type: string
+        description: Deployment profile (dev/prod)
+        default: dev
+        required: true
+
+jobs:
+  deploy:
+    name: "Deploy stack"
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: 'docker'
+
+      - name: Login to Artux registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.artux.net
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          logout: false
+
+      - name: Setup profile and environment
+        run: |
+          if [ "${{ inputs.profile }}" == "prod" ]; then
+            echo "STACK_NAME=pdanet-prod" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=main" >> $GITHUB_ENV
+          else
+            echo "STACK_NAME=pdanet-dev" >> $GITHUB_ENV
+            echo "WEB_IMAGE_TAG=dev" >> $GITHUB_ENV
+          fi
+          # Generate .env file for stack
+          cat <<EOF > ./docker/.env
+          IMAGE_TAG=${{ inputs.tag }}
+          WEB_IMAGE_TAG=${{ env.WEB_IMAGE_TAG }}
+          EOF
+
+      - name: Deploy stack to Docker Swarm
+        run: |
+          cd docker
+          if [ "${{ inputs.profile }}" == "prod" ]; then
+            docker stack deploy $STACK_NAME -c <(docker-compose -f compose.prod.yml config)
+          else
+            docker stack deploy $STACK_NAME -c <(docker-compose -f compose.dev.yml config)
+          fi
+
+      - name: Cleanup unused resources
+        run: docker system prune -af

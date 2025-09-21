@@ -1,0 +1,8 @@
+spring:
+    jpa:
+        hibernate:
+            ddl-auto: create
+administrator:
+    email: admin@artux.net
+    nickname: system
+    password: pass

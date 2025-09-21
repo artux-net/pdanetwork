@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PDA Email</title>
+
+    <style media>
+        body {
+            background: #232121;
+            color: #fff;
+        }
+        P.fig {
+            text-align: center;
+        }
+        @font-face {
+            font-family: Tahoma;
+        }
+
+        P {
+            font-family: Tahoma;
+            font-size: 20px;
+        }
+        img {
+            height: auto;
+        }
+        .rightpic {
+            float: right;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+<p class="fig">
+    <img th:src="@{/images/poster.png}"/>
+</p>
+
+<p align="center" th:text="${message}">.</p>
+<p align="center">
+    <tr>
+        <td>
+            Если измените свое решение, просто обновите эту страницу, или зайдите на нее снова.
+        </td>
+    </tr>
+</p>
+
+<p class="rightpic">
+    <img th:src="@{/images/stalker.png}"/>
+</p>
+</body>
+</html>

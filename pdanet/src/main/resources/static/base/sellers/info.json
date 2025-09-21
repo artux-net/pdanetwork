@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Сидорович",
+    "icon": "story/prologue/screen/chapter_2_21.jpg",
+    "image": "story/prologue/screen/chapter_2_21.jpg",
+    "buyCoefficient": 1.2,
+    "sellCoefficient": 0.9,
+    "items": [
+      "0:1",
+      "2:1",
+      "4:1",
+      "10:1",
+      "12:1",
+      "21:1",
+      "38:300",
+      "29:200",
+      "35:100",
+      "69:1",
+
+      "83:10",
+      "84:3",
+      "85:2",
+      "87:1"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Бармен",
+    "icon": "story/prologue/screen/barmen.jpg",
+    "image": "story/prologue/screen/barmen.jpg",
+    "buyCoefficient": 1.3,
+    "sellCoefficient": 0.8,
+    "items": [
+      "1:1",
+      "2:1",
+      "3:1",
+      "5:1",
+      "11:1",
+      "12:1",
+      "13:1",
+      "14:1",
+      "38:300",
+      "31:200",
+      "40:200",
+      "33:50",
+      "73:1",
+      "76:1",
+      "89:2"
+    ]
+  }
+]

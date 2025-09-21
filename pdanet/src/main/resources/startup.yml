@@ -1,0 +1,17 @@
+administrator:
+  email: maksim.prygunov@gmail.com
+  login: admin
+  name: admin
+  nickname: system
+mode:
+  test: true
+quest:
+  storage:
+    s3:
+      bucket:
+        name: questStorage
+s3:
+  bucket:
+    name: pdanetwork
+  endpoint: https://s3.artux.net/pdanetwork
+  region: EEUR

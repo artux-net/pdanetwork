@@ -1,0 +1,44 @@
+[
+  {
+    "stamina": "10",
+    "health": "-5",
+    "radiation": "-10",
+    "baseId": 83
+  },
+  {
+    "stamina": "0",
+    "health": "40",
+    "radiation": "-10",
+    "baseId": 84
+  },
+  {
+    "stamina": "0",
+    "health": "5",
+    "radiation": "-50",
+    "baseId": 85
+  },
+  {
+    "stamina": "5",
+    "health": "17",
+    "radiation": "-10",
+    "baseId": 86
+  },
+  {
+    "stamina": "0",
+    "health": "15",
+    "radiation": "0",
+    "baseId": 87
+  },
+  {
+    "stamina": "10",
+    "health": "50",
+    "radiation": "-30",
+    "baseId": 89
+  },
+  {
+    "stamina": "40",
+    "health": "90",
+    "radiation": "-80",
+    "baseId": 90
+  }
+]

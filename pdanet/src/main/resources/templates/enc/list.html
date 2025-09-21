@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+   <head>
+      <meta charset="UTF-8">
+      <title>Список</title>
+      <link rel="stylesheet" th:href="@{/css/enc.css}" >
+   </head>
+   <body>
+      <main>
+         <div class="container">
+            <div class="columns col-gapless">
+               <div class="column hero-sm hero-index">
+                  <a th:href="@{'/enc'}">
+                     <div class="hero-body">
+                        <h2 class="index-h2">Назад</h2>
+                     </div>
+                  </a>
+               </div>
+            </div>
+            <!-- Блок -->
+            <th:block th:each="i : ${items}">
+            <div class="columns hero-sm div-list">
+               <a th:href="@{'/enc/item/' + ${i.id}}">
+                  <div class="hero-body">
+                     <img class="img-responsive" th:src="@{'/base/items/icons/' + ${i.icon}}">
+                     <div class="list-description">
+                        <h2 class="list-h2" th:text="${i.title}"></h2>
+                        <p th:text="${i.description}"></p>
+                     </div>
+                  </div>
+               </a>
+            </div>
+            </th:block>
+            <!-- Блок -->
+         </div>
+      </main>
+   </body>
+</html>

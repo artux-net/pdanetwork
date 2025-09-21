@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Типы</title>
+    <link rel="stylesheet" th:href="@{/css/enc.css}">
+</head>
+<body>
+<main>
+    <div class="container">
+        <!-- Блок -->
+        <th:block th:each="i : ${types}">
+            <div class="columns col-gapless">
+                <div class="column hero-sm hero-index">
+
+                    <a th:href="@{'/enc/' + ${i}}">
+                        <div class="hero-body">
+                            <h2 class="index-h2" th:text="${i.title}"></h2>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+        <!-- /Блок -->
+    </div>
+</main>
+</body>
+</html>

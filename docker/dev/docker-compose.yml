@@ -1,0 +1,14 @@
+name: pdanet
+
+services:
+  db:
+    image: postgres:16
+    container_name: pdanetwork_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=pdanet
+      - POSTGRES_PASSWORD=pdanet
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"

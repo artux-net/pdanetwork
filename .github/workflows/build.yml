@@ -1,0 +1,76 @@
+name: ⚙️Build artifact
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    name: 'Build and upload artifact'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: seepine/hash-files@v1
+        id: get-hash
+        with:
+          patterns: |
+            pdanet/**
+            pdanet-model/**
+            Dockerfile
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            registry.artux.net/pdanetwork
+          tags: |
+            type=raw,value=${{ github.sha }}
+            type=ref,event=branch
+            type=raw,value=latest
+
+      - name: Login to Artux registry to push image
+        uses: docker/login-action@v3
+        with:
+          registry: registry.artux.net
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          logout: false
+
+      - name: Check if Docker image exists
+        id: check_image
+        run: |
+          IMAGE_TAG=$(echo "${GITHUB_SHA}" | sed -e 's,.*/,,')
+          IMAGE="registry.artux.net/pdanetwork:${IMAGE_TAG}"
+          
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+
+      - name: Setup java
+        if: env.exists == 'false'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '20'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        if: env.exists == 'false'
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.4
+
+      - name: Gradle build
+        if: env.exists == 'false'
+        run: ./gradlew build --no-daemon -x test
+
+      - name: Build and push docker image
+        if: env.exists == 'false'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}

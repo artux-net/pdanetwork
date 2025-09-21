@@ -1,0 +1,47 @@
+name: 🚀Deploy to server
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      profile:
+        type: choice
+        description: Profile to deploy
+        default: dev
+        required: true
+        options:
+          - prod
+          - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+
+  backup-db:
+    name: Backup DB
+    if: ${{ github.event.inputs.profile == 'prod' }}
+    uses: ./.github/workflows/backup.yml
+
+  build:
+    name: Build and upload artifact
+    needs: test
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  deploy:
+    needs:
+      - build
+
+    name: Deploy to server ${{ github.event.inputs.profile || 'dev' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      tag: ${{ github.sha }}
+      profile: ${{ github.event.inputs.profile || 'dev' }}

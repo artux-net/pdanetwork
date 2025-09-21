@@ -1,0 +1,24 @@
+package net.artux.pdanetwork.models.quest.map;
+
+import lombok.Data;
+import net.artux.pdanetwork.models.quest.stage.Editor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+@Data
+public class Point {
+
+    private UUID id = UUID.randomUUID();
+    public int type;
+    private String name;
+    private String pos;
+    private HashMap<String, String> data;
+    public HashMap<String, List<String>> actions;
+    public HashMap<String, List<String>> condition;
+
+
+    private Editor editor;
+
+}
