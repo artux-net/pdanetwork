@@ -5,8 +5,8 @@ on:
     inputs:
       tag:
         type: string
-        description: Docker image to deploy (if empty, 'main' used)
-        default: main
+        description: Docker image to deploy (if empty, 'latest' used)
+        default: latest
         required: true
       profile:
         type: choice

@@ -26,7 +26,6 @@ jobs:
             registry.artux.net/pdanetwork
           tags: |
             type=raw,value=${{ github.sha }}
-            type=ref,event=branch
             type=raw,value=latest
 
       - name: Login to Artux registry to push image
