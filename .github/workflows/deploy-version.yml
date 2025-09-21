@@ -5,8 +5,8 @@ on:
     inputs:
       tag:
         type: string
-        description: Docker image to deploy (if empty, 'master' used)
-        default: master
+        description: Docker image to deploy (if empty, 'main' used)
+        default: main
         required: true
       profile:
         type: choice

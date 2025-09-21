@@ -3,7 +3,7 @@ name: 🚀Deploy to server
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
     inputs:
       profile:
