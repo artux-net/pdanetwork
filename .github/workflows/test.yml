@@ -18,8 +18,6 @@ jobs:
 
       - name: Test with Gradle
         run: ./gradlew detekt test
-        env:
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
       - name: Test Report
         uses: dorny/test-reporter@v1

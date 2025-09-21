@@ -1,4 +1,4 @@
-# PDA Network
+# Stalker PDA Network Backend
 ![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
@@ -15,17 +15,7 @@
     <img src="https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9" />
 </a>
 
-- данные для входа в тестовый аккаунт через BasicAuth 
-    ```yaml
-    login: `maxxx`
-    pass: `12345678`
-    ```
-- данные для входа в Grafana
-    ```yaml
-    login: `admin`
-    pass: `9uT46ZkE`
-    ```
- - панель управления пользователями по адресу https://dev.artux.net/panel
+ - [панель управления пользователями](https://dev.artux.net/panel) 
 
 ### prod среда
 
@@ -38,8 +28,6 @@
 
 - для доступа к Swagger UI необходима регистрация и роль пользователя начиная от TESTER включительно, от Grafana данные те же
 - панель управления пользователями по адресу https://app.artux.net/panel
-
-Менеджмент сервисов происходит через [Portainer](https://portainer.artux.net/#!/2/docker/stacks)
 
 ## Локальный запуск
 Для локального пуска запустить базу данных через pdanet/docker-compose.yml
