@@ -20,12 +20,6 @@ jobs:
           mkdir src
           pg_dump -U pdanet -f src/backup.sql --no-owner --no-privileges
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.date }}
-          path: backup.sql
-
       - uses: ryand56/r2-upload-action@latest
         with:
           r2-account-id: ${{ secrets.R2_ACCOUNT_ID }}
