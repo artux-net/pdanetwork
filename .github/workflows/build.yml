@@ -72,5 +72,7 @@ jobs:
         with:
           push: true
           context: .
-          no-cache: 'true'
+          platforms: linux/arm64
+          provenance: false
+          attestations: false
           tags: ${{ steps.meta.outputs.tags }}
