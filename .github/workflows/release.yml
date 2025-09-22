@@ -53,9 +53,6 @@ jobs:
     needs: 
       - validate-tag
       - backup-db
-    name: Deploy to Production
+    name: Deploy to Production (auto-detecting prod profile from tag)
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
-    with:
-      tag: ${{ needs.validate-tag.outputs.semantic_version }}
-      profile: prod

@@ -2,21 +2,10 @@ name: ⚙️ Deploy Docker Swarm stack
 
 on:
   workflow_call:
-    inputs:
-      tag:
-        type: string
-        description: Docker image to deploy (if empty, 'latest' used)
-        default: latest
-        required: true
-      profile:
-        type: string
-        description: Deployment profile (dev/prod)
-        default: dev
-        required: true
 
 jobs:
   deploy:
-    name: "Deploy stack"
+    name: "Deploy stack (${{ github.ref_name }} -> auto-detected profile)"
     runs-on: self-hosted
 
     steps:
@@ -32,9 +21,29 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
           logout: false
 
+      - name: Determine deployment context
+        id: context
+        run: |
+          # Determine if we're deploying from a tag or branch
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # This is a tag - deploy to production
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            echo "profile=prod" >> $GITHUB_OUTPUT
+            echo "tag=$TAG_NAME" >> $GITHUB_OUTPUT
+            echo "deploying_from=tag" >> $GITHUB_OUTPUT
+            echo "Detected tag deployment: $TAG_NAME -> prod"
+          else
+            # This is a branch - deploy to dev
+            BRANCH_NAME=${GITHUB_REF#refs/heads/}
+            echo "profile=dev" >> $GITHUB_OUTPUT
+            echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "deploying_from=branch" >> $GITHUB_OUTPUT
+            echo "Detected branch deployment: $BRANCH_NAME -> dev"
+          fi
+
       - name: Setup profile and environment
         run: |
-          if [ "${{ inputs.profile }}" == "prod" ]; then
+          if [ "${{ steps.context.outputs.profile }}" == "prod" ]; then
             echo "STACK_NAME=pdanet-prod" >> $GITHUB_ENV
             echo "WEB_IMAGE_TAG=main" >> $GITHUB_ENV
           else
@@ -43,14 +52,14 @@ jobs:
           fi
           # Generate .env file for stack
           cat <<EOF > ./docker/.env
-          IMAGE_TAG=${{ inputs.tag }}
+          IMAGE_TAG=${{ steps.context.outputs.tag }}
           WEB_IMAGE_TAG=${{ env.WEB_IMAGE_TAG }}
           EOF
 
       - name: Deploy stack to Docker Swarm
         run: |
           cd docker
-          if [ "${{ inputs.profile }}" == "prod" ]; then
+          if [ "${{ steps.context.outputs.profile }}" == "prod" ]; then
             docker stack deploy $STACK_NAME -c <(docker-compose -f compose.prod.yml config)
           else
             docker stack deploy $STACK_NAME -c <(docker-compose -f compose.dev.yml config)

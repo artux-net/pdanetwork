@@ -38,12 +38,9 @@ jobs:
     needs:
       - build
 
-    name: Deploy to server ${{ github.event.inputs.profile || 'dev' }}
+    name: Deploy to server (auto-detecting dev profile)
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
-    with:
-      tag: ${{ github.sha }}
-      profile: ${{ github.event.inputs.profile || 'dev' }}
 
   create-tag:
     needs:

@@ -1,20 +1,7 @@
-name: 🚀️Deploy to server specific version
+name: 🚀️Deploy to server (auto-detect profile)
 
 on:
   workflow_dispatch:
-    inputs:
-      tag:
-        type: string
-        description: Docker image to deploy (if empty, 'latest' used)
-        default: latest
-        required: true
-      profile:
-        type: choice
-        description: Profile to deploy (production deployments only through tags - see release.yml)
-        default: dev
-        required: true
-        options:
-          - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,9 +9,6 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy on server ${{ github.event.inputs.profile || 'dev' }}
+    name: Deploy on server (auto-detecting profile based on ref)
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
-    with:
-      tag: ${{ github.event.inputs.tag }}
-      profile: ${{ github.event.inputs.profile || 'dev' }}
