@@ -26,6 +26,7 @@ jobs:
             registry.artux.net/pdanetwork
           tags: |
             type=raw,value=${{ github.sha }}
+            type=ref,event=branch
             type=raw,value=latest
 
       - name: Set up Docker Buildx
