@@ -1,13 +1,39 @@
-# Stalker PDA Network Backend
+# S.T.A.L.K.E.R. PDA Network Backend
+
 ![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
 
-Монолитный бэкенд пда, отвечает за авторизацию, новости, чаты, энциклопедию, рейтинг, сюжетные истории и обрабатывает сюжетные действия
+**Turn your smartphone into a real S.T.A.L.K.E.R. PDA!**
 
-## Services
+This is the backend service for the S.T.A.L.K.E.R. PDA Network - a multifunctional Android application that transforms your smartphone into an authentic stalker's handheld computer from the post-apocalyptic Zone.
 
-### dev среда
+## 🎯 About
+
+The S.T.A.L.K.E.R. PDA Network Backend is a monolithic Spring Boot application that powers the mobile PDA experience. It handles authentication, news aggregation, real-time chat, zone encyclopedia, player rankings, story quests, and interactive quest processing.
+
+## ✨ Features
+
+### For Stalkers
+- **🗨️ Thematic Chat System**: Communicate with other stalkers in faction chats, discuss Zone situations, engage in roleplay, exchange private messages, or create custom conversations
+- **📰 Post-Apocalyptic News**: Stay updated with the latest news from S.T.A.L.K.E.R., Metro, Survarium, Fallout, and other post-apocalyptic gaming projects
+- **🗺️ Interactive Quests & Zone Map**: Complete faction missions, trader tasks, and stalker assignments while exploring the dangerous Zone filled with mutants, anomalies, and hostile humans
+- **👤 Comprehensive Profile System**: Build your inventory, track faction relationships, gain experience, and participate in stalker leaderboards
+- **📝 Dynamic Notes**: Create personal notes and receive automatic quest-related notifications during your Zone exploration
+
+### Technical Features
+- RESTful API with comprehensive Swagger documentation
+- Real-time WebSocket communication for chat and live updates
+- Quest scripting engine with story progression tracking
+- User management with role-based access control
+- Faction reputation and relationship system
+- News aggregation and content management
+- Player statistics and ranking systems
+
+## 🌐 API Documentation & Services
+
+### Development Environment
+
 <a href="https://dev.artux.net/pdanetwork/swagger-ui/index.html">
     <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white" />
 </a>
@@ -15,9 +41,9 @@
     <img src="https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9" />
 </a>
 
- - [панель управления пользователями](https://dev.artux.net/panel) 
+- [User Management Panel](https://dev.artux.net/panel)
 
-### prod среда
+### Production Environment
 
 <a href="https://app.artux.net/pdanetwork/swagger-ui/index.html">
     <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white" />
@@ -26,37 +52,181 @@
     <img src="https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9" />
 </a>
 
-- для доступа к Swagger UI необходима регистрация и роль пользователя начиная от TESTER включительно, от Grafana данные те же
-- панель управления пользователями по адресу https://app.artux.net/panel
+- **Access Requirements**: Registration required with TESTER role or higher for Swagger UI and Grafana
+- **User Management Panel**: https://app.artux.net/panel
 
-## Локальный запуск
-Для локального пуска запустить базу данных через pdanet/docker-compose.yml
+## 🎮 Quest Management
 
-Затем уже точка входа `PDANetworkApplication.main()`
+Quest management is handled through the web console at https://story.artux.net/ (use DEV environment credentials).
 
-# Работа с квестами
-Осуществляется через консоль https://story.artux.net/, использовать пароль от DEV среды
+## 🚀 Getting Started
 
-# Семантическое версионирование
+### Prerequisites
 
-Проект использует автоматическое семантическое версионирование. После каждого успешного деплоя создается новый тег в формате `v1.2.3`.
+- Java 17 or higher
+- PostgreSQL database
+- Docker (optional, for containerized deployment)
 
-## Управление версиями
+### 📱 Mobile Application
 
-### Автоматическое версионирование по коммитам:
+Download the official S.T.A.L.K.E.R. PDA application:
+- [Android - Google Play Store](https://play.google.com/store/apps/details?id=net.artux.pda&hl=ru)
 
-- **PATCH** (v1.0.1): Обычные коммиты, багфиксы
-- **MINOR** (v1.1.0): Коммиты с `feat:`, `feature:`, `[minor]`  
-- **MAJOR** (v2.0.0): Коммиты с `BREAKING CHANGE`, `!:`, `[major]`
+## 🛠️ Development Environment
 
-### Примеры:
+### Local Setup
+
+1. **Start the database**: Run PostgreSQL using Docker Compose
+   ```bash
+   cd pdanet
+   docker-compose up -d
+   ```
+
+2. **Run the application**: Start the Spring Boot application
+   ```bash
+   ./gradlew :pdanet:bootRun
+   ```
+   
+   Or run directly from your IDE using the main class: `PDANetworkApplication.main()`
+
+### Building
 
 ```bash
-git commit -m "fix: исправлена ошибка логина"          # → PATCH
-git commit -m "feat: добавлена новая функция"         # → MINOR  
-git commit -m "feat!: критические изменения в API"    # → MAJOR
+# Build all modules
+./gradlew build
+
+# Run tests
+./gradlew test
+
+# Generate test coverage report
+./gradlew jacocoTestReport
 ```
 
-Теги создаются после деплоя в production или при push в main ветку.
+## 📋 Semantic Versioning
+
+This project uses automatic semantic versioning. After each successful deployment, a new tag is created in the format `v1.2.3`.
+
+### Version Management
+
+**Automatic versioning by commits:**
+
+- **PATCH** (v1.0.1): Regular commits, bug fixes
+- **MINOR** (v1.1.0): Commits with `feat:`, `feature:`, `[minor]`
+- **MAJOR** (v2.0.0): Commits with `BREAKING CHANGE`, `!:`, `[major]`
+
+### Examples:
+
+```bash
+git commit -m "fix: fix login error"                    # → PATCH
+git commit -m "feat: add new feature"                   # → MINOR  
+git commit -m "feat!: critical API changes"             # → MAJOR
+```
+
+Tags are created after production deployment or when pushing to the main branch.
+
+## 🏗️ Architecture
+
+This project consists of two main modules:
+
+- **`pdanet`**: Main Spring Boot application with REST API, WebSocket support, and business logic
+- **`pdanet-model`**: Shared data models and enums used across the application
+
+### Technology Stack
+
+- **Backend**: Spring Boot 3.1.4, Kotlin, Java
+- **Database**: PostgreSQL with Liquibase migrations
+- **Security**: Spring Security with role-based access control
+- **API Documentation**: SpringDoc OpenAPI 3 (Swagger)
+- **Monitoring**: Micrometer with Prometheus metrics
+- **Testing**: JUnit 5, TestContainers
+- **Build**: Gradle with Kotlin DSL
+
+## 🤝 Contributing
+
+We welcome contributions from the S.T.A.L.K.E.R. community! Here's how you can help:
+
+### Ways to Contribute
+
+- 🐛 **Bug Reports**: Found a bug? Open an issue with detailed reproduction steps
+- ✨ **Feature Requests**: Have an idea for new Zone features? Let us know!
+- 🔧 **Code Contributions**: Submit pull requests for bug fixes or new features
+- 📚 **Documentation**: Help improve our documentation and guides
+- 🌍 **Localization**: Help translate the application to other languages
+
+### Development Guidelines
+
+1. **Fork the repository** and create a feature branch
+2. **Follow coding standards**: We use Detekt for Kotlin code quality
+3. **Write tests**: Ensure your code is well-tested
+4. **Update documentation**: Keep the docs in sync with your changes
+5. **Submit a pull request** with a clear description of your changes
+
+### Code Style
+
+- Use meaningful commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
+- Follow Kotlin coding conventions
+- Ensure all tests pass before submitting PR
+- Run `./gradlew detekt` to check code quality
+
+## 📞 Contact & Support
+
+### Community
+
+- **Discord**: [Join our stalker community](#) <!-- Add Discord link when available -->
+- **Telegram**: [S.T.A.L.K.E.R. PDA Chat](#) <!-- Add Telegram link when available -->
+- **Reddit**: [r/stalker](https://www.reddit.com/r/stalker/)
+
+### Development Team
+
+- **Artux Team**: Contact us through [our website](https://artux.net)
+- **Issues**: Use GitHub Issues for bug reports and feature requests
+- **Email**: <!-- Add contact email when available -->
+
+### 💖 Support the Project
+
+Help us continue developing and maintaining this Zone experience:
+
+- **Donate**: <!-- Add donation links (PayPal, Buy Me a Coffee, etc.) -->
+- **Sponsor**: <!-- Add GitHub Sponsors link when available -->
+- **Cryptocurrency**: <!-- Add crypto wallet addresses if desired -->
+
+Your support helps us:
+- 🖥️ Maintain and improve servers
+- 🎮 Add new quest content and features  
+- 🐛 Fix bugs and improve performance
+- 📱 Develop new mobile features
+
+## 📄 License
+
+This project is licensed under [License Name] - see the [LICENSE](LICENSE) file for details.
+
+<!-- Add LICENSE file with appropriate open source license -->
+
+## 🙏 Acknowledgments
+
+- **GSC Game World** - for creating the S.T.A.L.K.E.R. universe
+- **The S.T.A.L.K.E.R. Community** - for inspiration and feedback
+- **Contributors** - everyone who has contributed to this project
+- **Beta Testers** - stalkers who helped test and improve the application
+
+## 🗺️ Zone Map
+
+```
+Project Structure:
+┌─ pdanetwork/
+│  ├─ pdanet/              # Main Spring Boot application
+│  │  ├─ src/main/java/    # Application source code
+│  │  ├─ src/main/resources/ # Configuration and static files
+│  │  └─ src/test/         # Test cases
+│  ├─ pdanet-model/        # Shared data models
+│  ├─ docker/              # Docker configurations
+│  └─ .github/workflows/   # CI/CD workflows
+```
+
+---
+
+**Good hunting, stalker! 🎯**
+
+*"Get out of here, stalker!" - but first, check out our API documentation!*
 
 
