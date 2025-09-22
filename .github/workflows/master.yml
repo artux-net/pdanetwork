@@ -45,3 +45,82 @@ jobs:
     with:
       tag: ${{ github.sha }}
       profile: ${{ github.event.inputs.profile || 'dev' }}
+
+  create-tag:
+    needs:
+      - deploy
+    name: Create semantic version tag
+    runs-on: ubuntu-latest
+    # Only create tags for production deployments or automatic main branch pushes
+    if: ${{ github.event.inputs.profile == 'prod' || (github.ref == 'refs/heads/main' && github.event_name == 'push') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest tag
+        id: get-latest-tag
+        run: |
+          # Get the latest semantic version tag (format: v1.2.3)
+          LATEST_TAG=$(git tag --list --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          if [ -z "$LATEST_TAG" ]; then
+            # No tags found, start with v0.0.0 (will be incremented to v1.0.0 or appropriate version)
+            echo "latest_tag=v0.0.0" >> $GITHUB_OUTPUT
+            echo "No previous tags found, starting with v0.0.0"
+          else
+            echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+            echo "Latest tag: $LATEST_TAG"
+          fi
+
+      - name: Determine version bump
+        id: version-bump
+        run: |
+          LATEST_TAG="${{ steps.get-latest-tag.outputs.latest_tag }}"
+          
+          # Extract version numbers (remove 'v' prefix)
+          VERSION=${LATEST_TAG#v}
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          
+          # Check commit messages for version bump indicators
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          
+          if echo "$COMMIT_MSG" | grep -qE '\[major\]|BREAKING CHANGE|!:'; then
+            # Major version bump
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+            echo "Detected MAJOR version bump"
+          elif echo "$COMMIT_MSG" | grep -qE '\[minor\]|feat:|feature:'; then
+            # Minor version bump
+            MINOR=$((MINOR + 1))
+            PATCH=0
+            echo "Detected MINOR version bump"
+          else
+            # Patch version bump (default)
+            PATCH=$((PATCH + 1))
+            echo "Detected PATCH version bump"
+          fi
+          
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+
+      - name: Create and push tag
+        run: |
+          NEW_VERSION="${{ steps.version-bump.outputs.new_version }}"
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Create annotated tag
+          git tag -a "$NEW_VERSION" -m "Release $NEW_VERSION - deployed on $(date -u +%Y-%m-%d)"
+          
+          # Push tag
+          git push origin "$NEW_VERSION"
+          
+          echo "Created and pushed tag: $NEW_VERSION"
