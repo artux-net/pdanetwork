@@ -10,11 +10,10 @@ on:
         required: true
       profile:
         type: choice
-        description: Profile to deploy
+        description: Profile to deploy (production deployments only through tags - see release.yml)
         default: dev
         required: true
         options:
-          - prod
           - dev
 
 concurrency:

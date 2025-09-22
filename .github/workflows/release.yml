@@ -1,0 +1,61 @@
+name: 🚀Release to Production
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+        description: Git tag to deploy to production (must start with 'v')
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-tag:
+    name: Validate tag format
+    runs-on: ubuntu-latest
+    outputs:
+      semantic_version: ${{ steps.validate.outputs.semantic_version }}
+    steps:
+      - name: Validate tag format
+        id: validate
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            # Extract tag from ref
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+          else
+            # Use manual input
+            TAG_NAME="${{ github.event.inputs.tag }}"
+          fi
+          
+          echo "Tag to validate: $TAG_NAME"
+          
+          # Validate semantic version format (v1.2.3)
+          if [[ ! "$TAG_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Tag '$TAG_NAME' does not match semantic version format (v1.2.3)"
+            exit 1
+          fi
+          
+          echo "semantic_version=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Valid semantic version: $TAG_NAME"
+
+  backup-db:
+    name: Backup DB before production release
+    needs: validate-tag
+    uses: ./.github/workflows/backup.yml
+
+  deploy-production:
+    needs: 
+      - validate-tag
+      - backup-db
+    name: Deploy to Production
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      tag: ${{ needs.validate-tag.outputs.semantic_version }}
+      profile: prod
