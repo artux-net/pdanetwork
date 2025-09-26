@@ -1,22 +1,22 @@
-# S.T.A.L.K.E.R. PDA Network Backend
+# Stalker PDA Network Backend
 
 ![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
 
-**Turn your smartphone into a real S.T.A.L.K.E.R. PDA!**
+**Turn your smartphone into a real Stalker PDA!**
 
-This is the backend service for the S.T.A.L.K.E.R. PDA Network - a multifunctional Android application that transforms your smartphone into an authentic stalker's handheld computer from the post-apocalyptic Zone.
+This is the backend service for the Stalker PDA Network - a multifunctional Android application that transforms your smartphone into an authentic stalker's handheld computer from the post-apocalyptic Zone.
 
 ## 🎯 About
 
-The S.T.A.L.K.E.R. PDA Network Backend is a monolithic Spring Boot application that powers the mobile PDA experience. It handles authentication, news aggregation, real-time chat, zone encyclopedia, player rankings, story quests, and interactive quest processing.
+The Stalker PDA Network Backend is a monolithic Spring Boot application that powers the mobile PDA experience. It handles authentication, news aggregation, real-time chat, zone encyclopedia, player rankings, story quests, and interactive quest processing.
 
 ## ✨ Features
 
 ### For Stalkers
 - **🗨️ Thematic Chat System**: Communicate with other stalkers in faction chats, discuss Zone situations, engage in roleplay, exchange private messages, or create custom conversations
-- **📰 Post-Apocalyptic News**: Stay updated with the latest news from S.T.A.L.K.E.R., Metro, Survarium, Fallout, and other post-apocalyptic gaming projects
+- **📰 Post-Apocalyptic News**: Stay updated with the latest news from Stalker, Metro, Survarium, Fallout, and other post-apocalyptic gaming projects
 - **🗺️ Interactive Quests & Zone Map**: Complete faction missions, trader tasks, and stalker assignments while exploring the dangerous Zone filled with mutants, anomalies, and hostile humans
 - **👤 Comprehensive Profile System**: Build your inventory, track faction relationships, gain experience, and participate in stalker leaderboards
 - **📝 Dynamic Notes**: Create personal notes and receive automatic quest-related notifications during your Zone exploration
@@ -69,8 +69,19 @@ Quest management is handled through the web console at https://story.artux.net/ 
 
 ### 📱 Mobile Application
 
-Download the official S.T.A.L.K.E.R. PDA application:
+Download the official Stalker PDA application:
 - [Android - Google Play Store](https://play.google.com/store/apps/details?id=net.artux.pda&hl=ru)
+
+<!-- Screenshots and images from Google Play Store -->
+<!-- TODO: Add app screenshots here -->
+<!--
+Example format:
+<div align="center">
+<img src="path/to/screenshot1.png" width="200" alt="App Screenshot 1">
+<img src="path/to/screenshot2.png" width="200" alt="App Screenshot 2">
+<img src="path/to/screenshot3.png" width="200" alt="App Screenshot 3">
+</div>
+-->
 
 ## 🛠️ Development Environment
 
@@ -143,7 +154,7 @@ This project consists of two main modules:
 
 ## 🤝 Contributing
 
-We welcome contributions from the S.T.A.L.K.E.R. community! Here's how you can help:
+We welcome contributions from the Stalker community! Here's how you can help:
 
 ### Ways to Contribute
 
@@ -172,9 +183,10 @@ We welcome contributions from the S.T.A.L.K.E.R. community! Here's how you can h
 
 ### Community
 
-- **Discord**: [Join our stalker community](#) <!-- Add Discord link when available -->
-- **Telegram**: [S.T.A.L.K.E.R. PDA Chat](#) <!-- Add Telegram link when available -->
-- **Reddit**: [r/stalker](https://www.reddit.com/r/stalker/)
+- **📱 Telegram News**: [PDA Stalkers News](https://t.me/pda_stalkers) - Stay updated with the latest Zone news
+- **💬 Telegram Chat**: [PDA Stalker Chat](https://t.me/pda_staker_chat) - Development discussions and community chat
+- **🗨️ Discord**: [Join our stalker community](#) <!-- Add Discord link when available -->
+- **📖 Reddit**: [r/stalker](https://www.reddit.com/r/stalker/)
 
 ### Development Team
 
@@ -186,9 +198,19 @@ We welcome contributions from the S.T.A.L.K.E.R. community! Here's how you can h
 
 Help us continue developing and maintaining this Zone experience:
 
-- **Donate**: <!-- Add donation links (PayPal, Buy Me a Coffee, etc.) -->
-- **Sponsor**: <!-- Add GitHub Sponsors link when available -->
-- **Cryptocurrency**: <!-- Add crypto wallet addresses if desired -->
+<div align="center">
+
+[![Donate](https://img.shields.io/badge/💰_Donate-FF5F5F?style=for-the-badge&logo=heart&logoColor=white)](https://dalink.to/prygunovx)
+
+**Multiple Payment Options Available**
+
+</div>
+
+**💳 Cryptocurrency:**
+- **USDT (TRC20)**: `TEQGHBP6rRJHHFiMBxZZ3ZUGrBCBWcAYnz`
+
+**🔗 Other Options:**
+- **Universal Link**: [dalink.to/prygunovx](https://dalink.to/prygunovx)
 
 Your support helps us:
 - 🖥️ Maintain and improve servers
@@ -204,8 +226,8 @@ This project is licensed under [License Name] - see the [LICENSE](LICENSE) file 
 
 ## 🙏 Acknowledgments
 
-- **GSC Game World** - for creating the S.T.A.L.K.E.R. universe
-- **The S.T.A.L.K.E.R. Community** - for inspiration and feedback
+- **GSC Game World** - for creating the Stalker universe
+- **The Stalker Community** - for inspiration and feedback
 - **Contributors** - everyone who has contributed to this project
 - **Beta Testers** - stalkers who helped test and improve the application
 
