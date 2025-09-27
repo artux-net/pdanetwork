@@ -17,7 +17,7 @@ jobs:
 
       - name: Postgres Dump Backup
         run: |
-          rmdir -rf /tmp/backup || true
+          rm -rf /tmp/backup || true
           mkdir /tmp/backup
           pg_dump -U pdanet -f /tmp/backup/backup.sql --no-owner --no-privileges
 
