@@ -4,7 +4,7 @@
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-v0.0.1-blue?style=flat-square)
 [![Google Play](https://img.shields.io/badge/Google_Play-414141?style=flat-square&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=net.artux.pda&hl=ru)
 ![Downloads](https://img.shields.io/badge/downloads-50K+-success?style=flat-square)
 
