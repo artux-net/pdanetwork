@@ -3,10 +3,9 @@
 ![Deploy dev](https://github.com/artux-net/pdanetwork/actions/workflows/master.yml/badge.svg)
 ![DB Backup](https://github.com/artux-net/pdanetwork/actions/workflows/backup.yml/badge.svg)
 ![Test](https://github.com/artux-net/pdanetwork/actions/workflows/test.yml/badge.svg)
-
 ![Version](https://img.shields.io/github/v/tag/artux-net/pdanetwork?style=flat-square&label=version&color=blue)
 [![Google Play](https://img.shields.io/badge/Google_Play-414141?style=flat-square&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=net.artux.pda&hl=ru)
-![Downloads](https://img.shields.io/badge/downloads-50K+-success?style=flat-square)
+[![Downloads](https://img.shields.io/badge/downloads-50K+-success?style=flat-square)](https://play.google.com/store/apps/details?id=net.artux.pda&hl=ru)
 
 **Turn your smartphone into a real Stalker PDA!**
 
@@ -189,14 +188,13 @@ We welcome contributions from the Stalker community! Here's how you can help:
 
 - **📱 Telegram News**: [PDA Stalkers News](https://t.me/pda_stalkers) - Stay updated with the latest Zone news
 - **💬 Telegram Chat**: [PDA Stalker Chat](https://t.me/pda_staker_chat) - Development discussions and community chat
-- **🗨️ Discord**: [Join our stalker community](#) <!-- Add Discord link when available -->
 - **📖 Reddit**: [r/stalker](https://www.reddit.com/r/stalker/)
 
 ### Development Team
 
 - **Artux Team**: Contact us through [our website](https://artux.net)
 - **Issues**: Use GitHub Issues for bug reports and feature requests
-- **Email**: <!-- Add contact email when available -->
+- **Email**: [maxim@artux.net](mailto:maxim@artux.net)
 
 ### 💖 Support the Project
 
@@ -252,11 +250,3 @@ Project Structure:
 ---
 
 **Good hunting, stalker! 🎯**
-
-*"Get out of here, stalker!" - but first, check out our API documentation!*
-
----
-
-**📧 Contact**: [maxim@artux.net](mailto:maxim@artux.net)
-
-
