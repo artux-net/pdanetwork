@@ -204,21 +204,16 @@ Help us continue developing and maintaining this Zone experience:
 
 [![Donate](https://img.shields.io/badge/💰_Donate-FF5F5F?style=for-the-badge&logo=heart&logoColor=white)](https://dalink.to/prygunovx)
 
-**Multiple Payment Options Available**
-
-</div>
-
 **💳 Cryptocurrency:**
 - **USDT (TRC20)**: `TEQGHBP6rRJHHFiMBxZZ3ZUGrBCBWcAYnz`
 
-**🔗 Other Options:**
-- **Universal Link**: [dalink.to/prygunovx](https://dalink.to/prygunovx)
+</div>
 
 Your support helps us:
 - 🖥️ Maintain and improve servers
 - 🎮 Add new quest content and features  
 - 🐛 Fix bugs and improve performance
-- 📱 Develop new mobile features
+- 📱 Develop new features
 
 ## 📄 License
 
