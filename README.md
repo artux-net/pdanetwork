@@ -204,7 +204,7 @@ Help us continue developing and maintaining this Zone experience:
 
 [![Donate](https://img.shields.io/badge/💰_Donate-FF5F5F?style=for-the-badge&logo=heart&logoColor=white)](https://dalink.to/prygunovx)
 
-** Or if you prefer cryptocurrency:**
+**Or if you prefer cryptocurrency:**
 **USDT (TRC20)**: `TEQGHBP6rRJHHFiMBxZZ3ZUGrBCBWcAYnz`
 
 </div>
