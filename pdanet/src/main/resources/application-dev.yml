@@ -9,18 +9,6 @@ spring:
     username: pdanet
     password: pdanet
 
-  mail:
-    host: mail.artux.net
-    username: noreply@artux.net
-    port: 587
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-    protocol: smtp
-
 admin:
   address: https://admin.artux.net/
 cdn:

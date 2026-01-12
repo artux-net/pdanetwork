@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.service.user
 
-import jakarta.mail.MessagingException
 import mu.KLogging
 import net.artux.pdanetwork.entity.mappers.UserMapper
 import net.artux.pdanetwork.entity.security.SecurityUser
@@ -57,22 +56,13 @@ open class UserServiceImpl(
         if (!status.isSuccess) {
             return status
         }
-        return try {
-            val createdUserEntity = saveUser(registerUser, INITIAL_ROLE)
-            val token = generateConfirmationToken(createdUserEntity)
 
-            emailService.sendConfirmLetter(registerUser, token)
-            Status(
-                true,
-                """
-                    Учетная запись зарегистрирована, но лучше ее подтвердить переходом по ссылке из письма,
-                    которое было отравлено на ${registerUser.email}. Можете выполнить вход по этому email.
-                """.trimIndent()
-            )
-        } catch (e: MessagingException) {
-            logger.error("Registration", e)
-            Status(false, "Не удалось отправить письмо на " + registerUser.email)
-        }
+        val createdUserEntity = saveUser(registerUser, INITIAL_ROLE)
+        val token = generateConfirmationToken(createdUserEntity)
+
+        emailService.sendConfirmLetter(registerUser, token)
+
+        return Status(true, "Учетная запись зарегистрирована")
     }
 
     private fun generateConfirmationToken(user: UserEntity): String {
@@ -103,16 +93,7 @@ open class UserServiceImpl(
             userConfirmationRepository.deleteById(user.id)
 
             logger.info("Пользователь {} ({} {}) подтвержден.", user.login, user.name, user.nickname)
-            try {
-                emailService.sendRegisterLetter(user)
-                Status(true, "${user.pdaId} - Это ваш pdaId, мы вас зарегистрировали, спасибо!")
-            } catch (e: MessagingException) {
-                logger.error("Handle confirmation", e)
-                Status(
-                    true,
-                    "Не получилось отправить подтверждение на почту, но мы вас зарегистрировали, спасибо!"
-                )
-            }
+            Status(true, "${user.pdaId} - Это ваш pdaId, мы вас зарегистрировали, спасибо!")
         } else {
             Status(false, "Ссылка устарела или не существует")
         }

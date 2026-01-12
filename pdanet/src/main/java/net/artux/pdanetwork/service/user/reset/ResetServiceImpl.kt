@@ -1,6 +1,5 @@
 package net.artux.pdanetwork.service.user.reset
 
-import jakarta.mail.MessagingException
 import net.artux.pdanetwork.controller.web.user.PasswordController
 import net.artux.pdanetwork.entity.communication.ConversationEntity
 import net.artux.pdanetwork.entity.mappers.StoryMapper
@@ -13,7 +12,6 @@ import net.artux.pdanetwork.repository.feed.ArticleLikeRepository
 import net.artux.pdanetwork.repository.feed.CommentRepository
 import net.artux.pdanetwork.repository.feed.PostRepository
 import net.artux.pdanetwork.repository.user.UserRepository
-import net.artux.pdanetwork.service.email.EmailService
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.service.util.ValuesService
 import net.artux.pdanetwork.utils.RandomString
@@ -30,7 +28,6 @@ import java.util.TimerTask
 open class ResetServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val userService: UserService,
-    private val emailService: EmailService,
     private val userRepository: UserRepository,
     private val storyMapper: StoryMapper,
     private val valuesService: ValuesService,
@@ -62,12 +59,7 @@ open class ResetServiceImpl(
             )
             addCurrent(token, userEntity)
 
-            try {
-                emailService.askForPassword(userEntity, token)
-                Status(true, "Мы отправили письмо с паролем на Вашу почту")
-            } catch (e: MessagingException) {
-                Status(false, e.message)
-            }
+            Status(false, "Восстановление пароля временно не работает")
         } else {
             Status(false, "Такого пользователя не существует, либо письмо уже отправлено")
         }
