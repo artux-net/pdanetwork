@@ -31,9 +31,6 @@ public class ValuesService {
     @Value("${server.host}")
     private String host;
 
-    @Value("${spring.mail.username}")
-    private String email;
-
     @Value("${stories.directory}")
     private String storiesDirectory;
 

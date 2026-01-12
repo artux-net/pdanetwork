@@ -1,4 +1,6 @@
-val detektVersion = "1.23.6"
+repositories {
+    mavenCentral()
+}
 
 plugins {
     java
@@ -13,10 +15,7 @@ plugins {
 
 version = "1.0.0"
 
-repositories {
-    mavenCentral()
-}
-
+val detektVersion = "1.23.6"
 dependencies {
     implementation(project(":pdanet-model"))
     implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.4"))
@@ -29,7 +28,6 @@ dependencies {
 
     implementation("io.micrometer:micrometer-registry-prometheus")
 
-    implementation("org.springframework.boot:spring-boot-starter-mail:*")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf:*")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:*")
     implementation("org.springframework.boot:spring-boot-starter-validation:*")
@@ -78,19 +76,20 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
 }
 
-tasks.test {
-    useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-}
-
-tasks.jacocoTestReport {
-    reports {
-        csv.required = true
-    }
-    dependsOn(tasks.test) // tests are required to run before generating the report
-}
-
-detekt{
+detekt {
     autoCorrect = true
 }
 
+tasks {
+    test {
+        useJUnitPlatform()
+        finalizedBy(jacocoTestReport) // report is always generated after tests run
+    }
+
+    jacocoTestReport {
+        reports {
+            csv.required = true
+        }
+        dependsOn(test) // tests are required to run before generating the report
+    }
+}

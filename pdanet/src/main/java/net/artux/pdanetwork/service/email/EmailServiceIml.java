@@ -8,12 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -21,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class EmailServiceIml implements EmailService {
 
-    private final JavaMailSender mailSender;
     private final ValuesService valuesService;
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -44,7 +39,7 @@ public class EmailServiceIml implements EmailService {
     }
 
     public void sendSimpleMessage(String to, String subject, String text) {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        /*MimeMessage mimeMessage = mailSender.createMimeMessage();
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
@@ -56,26 +51,26 @@ public class EmailServiceIml implements EmailService {
         } catch (MessagingException e) {
             logger.error("Sent error", e);
         }
-        mailSender.send(mimeMessage);
+        mailSender.send(mimeMessage);*/
     }
 
     public void askForPassword(UserEntity user, String token) {
-        sendSimpleMessage(user.getEmail(), "Восстановление пароля", user.getLogin() + ", "
+        /*sendSimpleMessage(user.getEmail(), "Восстановление пароля", user.getLogin() + ", "
                 + "\n\n ваша ссылка для смены пароля: " + valuesService.getAddress() + "/reset/password?t=" + token
-                + "\n\n Действует в течение 30 минут.");
+                + "\n\n Действует в течение 30 минут.");*/
 
     }
 
     public void sendRegisterLetter(UserEntity user) {
-        sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
+        /*sendSimpleMessage(user.getEmail(), "Регистрация", mailTemplateReg
                 .replace("${email}", user.getEmail())
-                .replace("${pdaId}", String.valueOf(user.getPdaId())));
+                .replace("${pdaId}", String.valueOf(user.getPdaId())));*/
     }
 
     public void sendConfirmLetter(RegisterUserDto user, String token) {
-        String confirmLink = valuesService.getAddress() + "/confirmation/register?t=" + token;
+        /*String confirmLink = valuesService.getAddress() + "/confirmation/register?t=" + token;
         sendSimpleMessage(user.getEmail(), "Подтвердите регистрацию", mailTemplateCon
-                .replace("${link}", confirmLink));
+                .replace("${link}", confirmLink));*/
     }
 
 

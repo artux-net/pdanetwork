@@ -8,8 +8,6 @@ networks:
 secrets:
   pdanet-dev-db-pass:
     external: true
-  pdanet-mail-password:
-    external: true
   pdanet-s3-access-id:
     external: true
   pdanet-s3-access-key:
@@ -76,13 +74,9 @@ services:
       SERVER_WEBSOCKET_PROTOCOL: wss
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5433/pdanetwork
       SPRING_DATASOURCE_USERNAME: pdanetwork
-      SPRING_MAIL_host: mail.artux.net
-      SPRING_MAIL_USERNAME: noreply@artux.net
     secrets:
       - source: pdanet-dev-db-pass
         target: spring.datasource.password
-      - source: pdanet-mail-password
-        target: spring.mail.password
       - source: pdanet-s3-access-id
         target: s3.id
       - source: pdanet-s3-access-key
