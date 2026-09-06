@@ -47,16 +47,8 @@ services:
       - "traefik.http.routers.pdanetwork_dev.tls=true"
       - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
       - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=8080"
+      - "prometheus.io/path=/actuator/prometheus"
     volumes:
       - /var/lib/backend-tmp:/tmp
-
-  frontend:
-    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
-    restart: on-failure
-    networks:
-      - pda-net
-    environment:
-      - BASE_PATH=panel
-      - API_URL=https://app.artux.net/pdanetwork
-    ports:
-      - "9001:3000"
