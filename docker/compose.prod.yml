@@ -3,19 +3,6 @@ networks:
     driver: bridge
 
 services:
-  db:
-    image: postgres:15
-    restart: unless-stopped
-    volumes:
-      - /data/postgres:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: pdanetwork
-      POSTGRES_PASSWORD: ${DATASOURCE_PASSWORD}
-    ports:
-      - "5432:5432"
-    networks:
-      - pda-net
-
   backend:
     image: registry.artux.net/pdanetwork:${IMAGE_TAG}
     restart: on-failure
@@ -27,12 +14,14 @@ services:
           memory: 1024mb
     networks:
       - pda-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       SPRING_PROFILES_ACTIVE: default, dev, prod
       SERVER_HOST: app.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pdanetwork
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/pdanetwork
       SPRING_DATASOURCE_USERNAME: pdanetwork
       SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
