@@ -3,6 +3,10 @@ name: ⚙️ Deploy Docker Swarm stack
 on:
   workflow_call:
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   deploy:
     name: "Deploy stack (${{ github.ref_name }} -> auto-detected profile)"
@@ -13,12 +17,12 @@ jobs:
         with:
           sparse-checkout: 'docker'
 
-      - name: Login to Artux registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: registry.artux.net
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
 
       - name: Determine deployment context

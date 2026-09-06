@@ -18,7 +18,7 @@ services:
       - pda-net-dev
 
   backend:
-    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    image: ghcr.io/artux-net/pdanetwork:${IMAGE_TAG}
     restart: on-failure
     deploy:
       resources:

@@ -18,6 +18,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   test:
     name: Test
@@ -133,12 +137,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Login to Artux registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: registry.artux.net
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
 
       - name: Get semantic version from create-tag job
@@ -152,8 +156,8 @@ jobs:
       - name: Create Docker tag for semantic version
         run: |
           SEMANTIC_VERSION="${{ steps.get-version.outputs.semantic_version }}"
-          SOURCE_IMAGE="registry.artux.net/pdanetwork:${{ github.sha }}"
-          TARGET_IMAGE="registry.artux.net/pdanetwork:$SEMANTIC_VERSION"
+          SOURCE_IMAGE="ghcr.io/artux-net/pdanetwork:${{ github.sha }}"
+          TARGET_IMAGE="ghcr.io/artux-net/pdanetwork:$SEMANTIC_VERSION"
           
           # Pull the source image and tag it with semantic version
           docker pull "$SOURCE_IMAGE"
