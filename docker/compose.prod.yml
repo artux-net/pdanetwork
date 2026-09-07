@@ -40,8 +40,6 @@ services:
         -XX:+AlwaysActAsServerClassMachine
         -XX:+UseG1GC
         -Duser.timezone=Europe/Moscow
-    ports:
-      - "8080:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pdanetwork_prod.rule=Host(`api.artux.net`) && PathPrefix(`/pdanetwork`)"
