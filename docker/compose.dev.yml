@@ -38,12 +38,10 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
       S3_ID: ${S3_ACCESS_ID}
       S3_KEY: ${S3_SECRET_KEY}
-    ports:
-      - "8002:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
       - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
       - "traefik.http.routers.pdanetwork_dev.tls=true"
       - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
-      - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8002"
+      - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
