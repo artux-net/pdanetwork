@@ -1,22 +1,12 @@
 networks:
   pda-net:
-    driver: overlay
-    attachable: true
+    driver: bridge
 
 services:
   backend:
-    image: registry.artux.net/pdanetwork:${IMAGE_TAG}
+    image: ghcr.io/artux-net/pdanetwork:${IMAGE_TAG}
+    restart: on-failure
     deploy:
-      replicas: 2
-      endpoint_mode: vip
-      update_config:
-        parallelism: 1
-        delay: 10s
-        failure_action: rollback
-        monitor: 30s
-        max_failure_ratio: 0.3
-      restart_policy:
-        condition: on-failure
       resources:
         limits:
           memory: 1200mb
@@ -24,20 +14,25 @@ services:
           memory: 1024mb
     networks:
       - pda-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      SPRING_CONFIG_IMPORT: optional:configtree:/run/secrets/
       SPRING_PROFILES_ACTIVE: default, dev, prod
       SERVER_HOST: app.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
-      SPRING_DATASOURCE_URL: jdbc:postgresql://ip:port/${DATASOURCE_DB_NAME}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/pdanetwork
+      SPRING_DATASOURCE_USERNAME: pdanetwork
+      SPRING_DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD}
       SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      S3_ID: ${S3_ACCESS_ID}
+      S3_KEY: ${S3_SECRET_KEY}
       JAVA_TOOL_OPTIONS: >-
-        -Xms512m 
+        -Xms512m
         -Xmx1024m
         -XX:MaxGCPauseMillis=150
         -Xlog:gc*:file=/tmp/gc.log:time
-        -XX:+HeapDumpOnOutOfMemoryError 
+        -XX:+HeapDumpOnOutOfMemoryError
         -XX:+HeapDumpBeforeFullGC
         -XX:HeapDumpPath=/tmp/heapdumps
         -XX:+ExitOnOutOfMemoryError
@@ -45,50 +40,15 @@ services:
         -XX:+AlwaysActAsServerClassMachine
         -XX:+UseG1GC
         -Duser.timezone=Europe/Moscow
-    secrets:
-      - source: pdanet-db-host
-        target: spring.datasource.url
-      - source: pdanet-db-username
-        target: spring.datasource.username
-      - source: pdanet-db-password
-        target: spring.datasource.password
-      - source: pdanet-s3-access-id
-        target: s3.id
-      - source: pdanet-s3-access-key
-        target: s3.key
-    ports:
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        # mode: ingress  # для Swarm по умолчанию ingress; vip тут лишний
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pdanetwork_dev.rule=Host(`api.artux.net`) && PathPrefix(`/pdanetwork`)"
-      - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
-      - "traefik.http.routers.pdanetwork_dev.tls=true"
-      - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
-      - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
+      - "traefik.http.routers.pdanetwork_prod.rule=Host(`api.artux.net`) && PathPrefix(`/pdanetwork`)"
+      - "traefik.http.routers.pdanetwork_prod.entrypoints=websecure"
+      - "traefik.http.routers.pdanetwork_prod.tls=true"
+      - "traefik.http.routers.pdanetwork_prod.tls.certresolver=myresolver"
+      - "traefik.http.services.pdanetwork_prod.loadbalancer.server.port=8080"
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=8080"
+      - "prometheus.io/path=/actuator/prometheus"
     volumes:
       - /var/lib/backend-tmp:/tmp
-
-  frontend:
-    image: registry.artux.net/pda-admin-web:${WEB_IMAGE_TAG}
-    networks:
-      - pda-net
-    environment:
-      - BASE_PATH=panel
-      - API_URL=https://app.artux.net/pdanetwork
-    ports:
-      - "9001:3000"
-
-secrets:
-  pdanet-db-host:
-    external: true
-  pdanet-db-username:
-    external: true
-  pdanet-db-password:
-    external: true
-  pdanet-s3-access-id:
-    external: true
-  pdanet-s3-access-key:
-    external: true

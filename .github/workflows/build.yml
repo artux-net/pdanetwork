@@ -3,6 +3,10 @@ name: ⚙️Build artifact
 on:
   workflow_call:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: self-hosted
@@ -23,7 +27,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            registry.artux.net/pdanetwork
+            ghcr.io/artux-net/pdanetwork
           tags: |
             type=raw,value=${{ github.sha }}
             type=ref,event=branch
@@ -32,19 +36,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Artux registry to push image
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: registry.artux.net
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
 
       - name: Check if Docker image exists
         id: check_image
         run: |
           IMAGE_TAG=$(echo "${GITHUB_SHA}" | sed -e 's,.*/,,')
-          IMAGE="registry.artux.net/pdanetwork:${IMAGE_TAG}"
+          IMAGE="ghcr.io/artux-net/pdanetwork:${IMAGE_TAG}"
           
           if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_ENV

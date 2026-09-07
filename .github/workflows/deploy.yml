@@ -3,6 +3,10 @@ name: ⚙️ Deploy Docker Swarm stack
 on:
   workflow_call:
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   deploy:
     name: "Deploy stack (${{ github.ref_name }} -> auto-detected profile)"
@@ -13,12 +17,12 @@ jobs:
         with:
           sparse-checkout: 'docker'
 
-      - name: Login to Artux registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: registry.artux.net
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           logout: false
 
       - name: Determine deployment context
@@ -55,14 +59,29 @@ jobs:
           IMAGE_TAG=${{ steps.context.outputs.tag }}
           WEB_IMAGE_TAG=${{ env.WEB_IMAGE_TAG }}
           EOF
+          if [ "${{ steps.context.outputs.profile }}" == "prod" ]; then
+            cat <<EOF >> ./docker/.env
+          DATASOURCE_PASSWORD=${{ secrets.PROD_DATASOURCE_PASSWORD }}
+          S3_ACCESS_ID=${{ secrets.R2_ACCESS_KEY_ID }}
+          S3_SECRET_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}
+          EOF
+          else
+            cat <<EOF >> ./docker/.env
+          DATASOURCE_PASSWORD=${{ secrets.DEV_DATASOURCE_PASSWORD }}
+          S3_ACCESS_ID=${{ secrets.R2_ACCESS_KEY_ID }}
+          S3_SECRET_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}
+          EOF
+          fi
 
-      - name: Deploy stack to Docker Swarm
+      - name: Deploy stack
         run: |
           cd docker
           if [ "${{ steps.context.outputs.profile }}" == "prod" ]; then
-            docker stack deploy $STACK_NAME -c <(docker-compose -f compose.prod.yml config)
+            docker compose -f compose.prod.yml pull
+            docker compose -f compose.prod.yml up -d --remove-orphans
           else
-            docker stack deploy $STACK_NAME -c <(docker-compose -f compose.dev.yml config)
+            docker compose -p $STACK_NAME -f compose.dev.yml pull
+            docker compose -p $STACK_NAME -f compose.dev.yml up -d --remove-orphans
           fi
 
       - name: Cleanup unused resources
