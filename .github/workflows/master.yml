@@ -31,6 +31,7 @@ jobs:
     name: Backup DB
     if: false # Production deployments now only through tags - see release.yml
     uses: ./.github/workflows/backup.yml
+    secrets: inherit
 
   build:
     name: Build and upload artifact
