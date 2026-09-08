@@ -44,7 +44,6 @@ public class SecurityConfiguration {
             "/base/**",
             "/images/**",
             "/rules",
-            "/actuator/health", // must be always open
             // Swagger and OpenAPI
             "/v3/api-docs/*",
             "/swagger-ui/**",

@@ -33,6 +33,8 @@ spring:
     name: pdanetwork
 
 management:
+  server:
+    port: 8081
   prometheus:
     metrics:
       export:
