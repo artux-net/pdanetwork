@@ -44,6 +44,7 @@ public class SecurityConfiguration {
             "/base/**",
             "/images/**",
             "/rules",
+            "/actuator/health", // must be always open: Docker healthcheck and Traefik exclude unhealthy containers from routing
             // Swagger and OpenAPI
             "/v3/api-docs/*",
             "/swagger-ui/**",
