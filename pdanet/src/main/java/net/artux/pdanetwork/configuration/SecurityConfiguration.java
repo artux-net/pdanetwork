@@ -45,6 +45,7 @@ public class SecurityConfiguration {
             "/images/**",
             "/rules",
             "/actuator/health", // must be always open: Docker healthcheck and Traefik exclude unhealthy containers from routing
+            "/actuator/prometheus", // must be always open: scraped unauthenticated by Prometheus
             // Swagger and OpenAPI
             "/v3/api-docs",
             "/v3/api-docs/**",

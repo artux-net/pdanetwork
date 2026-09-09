@@ -46,3 +46,6 @@ services:
       - "traefik.http.routers.pdanetwork_dev.tls=true"
       - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"
       - "traefik.http.services.pdanetwork_dev.loadbalancer.server.port=8080"
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=8081"
+      - "prometheus.io/path=/actuator/prometheus"
