@@ -32,7 +32,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: default, dev
       METRICS_NAMESPACE: dev
-      SERVER_HOST: dev.artux.net
+      SERVER_HOST: api-test.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5433/pdanetwork
@@ -42,7 +42,7 @@ services:
       S3_KEY: ${S3_SECRET_KEY}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pdanetwork_dev.rule=Host(`dev.artux.net`) && PathPrefix(`/pdanetwork`)"
+      - "traefik.http.routers.pdanetwork_dev.rule=Host(`api-test.artux.net`) && PathPrefix(`/pdanetwork`)"
       - "traefik.http.routers.pdanetwork_dev.entrypoints=websecure"
       - "traefik.http.routers.pdanetwork_dev.tls=true"
       - "traefik.http.routers.pdanetwork_dev.tls.certresolver=myresolver"

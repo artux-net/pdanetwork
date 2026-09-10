@@ -41,7 +41,7 @@ services:
         -Duser.timezone=Europe/Moscow
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pdanetwork_prod.rule=Host(`app.artux.net`) && PathPrefix(`/pdanetwork`)"
+      - "traefik.http.routers.pdanetwork_prod.rule=(Host(`app.artux.net`) || Host(`dev.artux.net`)) && PathPrefix(`/pdanetwork`)"
       - "traefik.http.routers.pdanetwork_prod.entrypoints=websecure"
       - "traefik.http.routers.pdanetwork_prod.tls=true"
       - "traefik.http.routers.pdanetwork_prod.tls.certresolver=myresolver"
