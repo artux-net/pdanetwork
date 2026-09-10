@@ -8,8 +8,6 @@ services:
     restart: on-failure
     deploy:
       resources:
-        limits:
-          memory: 1200mb
         reservations:
           memory: 1024mb
     networks:
@@ -18,6 +16,7 @@ services:
       - "host.docker.internal:host-gateway"
     environment:
       SPRING_PROFILES_ACTIVE: default, dev, prod
+      METRICS_NAMESPACE: prod
       SERVER_HOST: app.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss

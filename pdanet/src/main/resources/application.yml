@@ -38,7 +38,11 @@ management:
   prometheus:
     metrics:
       export:
-        enabled=true
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      namespace: ${METRICS_NAMESPACE:default}
   endpoints:
     web:
       exposure:

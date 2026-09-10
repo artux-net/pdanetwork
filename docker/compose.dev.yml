@@ -31,6 +31,7 @@ services:
       - pda-net-dev
     environment:
       SPRING_PROFILES_ACTIVE: default, dev
+      METRICS_NAMESPACE: dev
       SERVER_HOST: dev.artux.net
       SERVER_PROTOCOL: https
       SERVER_WEBSOCKET_PROTOCOL: wss
