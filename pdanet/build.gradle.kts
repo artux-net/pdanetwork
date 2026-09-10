@@ -93,3 +93,31 @@ tasks {
         dependsOn(test) // tests are required to run before generating the report
     }
 }
+
+// Separate source set for live e2e smoke tests (hit a real deployed instance over
+// HTTP, no Spring context/Testcontainers). Kept out of `test`/`check` on purpose -
+// run explicitly via `./gradlew e2eTest`, scheduled daily against dev and prod by
+// .github/workflows/e2e.yml.
+sourceSets {
+    create("e2eTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
+configurations["e2eTestImplementation"].extendsFrom(
+    configurations["implementation"],
+    configurations["testImplementation"]
+)
+configurations["e2eTestRuntimeOnly"].extendsFrom(
+    configurations["runtimeOnly"],
+    configurations["testRuntimeOnly"]
+)
+
+tasks.register<Test>("e2eTest") {
+    description = "Runs live e2e smoke tests against a deployed instance (E2E_BASE_URL env var)."
+    group = "verification"
+    testClassesDirs = sourceSets["e2eTest"].output.classesDirs
+    classpath = sourceSets["e2eTest"].runtimeClasspath
+    useJUnitPlatform()
+}
