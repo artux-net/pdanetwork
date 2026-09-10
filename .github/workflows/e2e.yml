@@ -14,7 +14,7 @@ jobs:
       matrix:
         env:
           - name: dev
-            base_url: https://dev.artux.net/pdanetwork
+            base_url: https://api-test.artux.net/pdanetwork
           - name: prod
             base_url: https://app.artux.net/pdanetwork
     steps:
