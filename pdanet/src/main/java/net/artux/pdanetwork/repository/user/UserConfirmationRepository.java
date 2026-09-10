@@ -12,4 +12,6 @@ public interface UserConfirmationRepository extends JpaRepository<UserConfirmati
 
 
     Optional<UserConfirmationEntity> findByToken(String token);
+
+    void deleteAllByUser_Id(UUID id);
 }

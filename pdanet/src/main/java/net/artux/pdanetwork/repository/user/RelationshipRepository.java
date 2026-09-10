@@ -13,4 +13,6 @@ public interface RelationshipRepository extends JpaRepository<RelationshipEntity
 
     Optional<RelationshipEntity> getByUser1AndUser2(UserEntity user1, UserEntity user2);
 
+    void deleteAllByUser1_IdOrUser2_Id(UUID user1Id, UUID user2Id);
+
 }

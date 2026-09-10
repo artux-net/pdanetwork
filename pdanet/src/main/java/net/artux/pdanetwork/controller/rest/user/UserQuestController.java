@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+
 @Tag(name = "Прохождение")
 @RestController
 @RequestMapping("/api/v1/quest")
@@ -29,7 +31,7 @@ public class UserQuestController {
     @Operation(summary = "Информация о прохождении")
     @GetMapping("/info")
     public StoryData getCurrentStoryData() {
-        return actionService.applyCommands(null);
+        return actionService.applyCommands(Collections.emptyMap());
     }
 
 }

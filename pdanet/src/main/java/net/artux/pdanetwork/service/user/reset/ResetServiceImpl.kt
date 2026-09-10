@@ -11,6 +11,9 @@ import net.artux.pdanetwork.repository.comminication.MessageRepository
 import net.artux.pdanetwork.repository.feed.ArticleLikeRepository
 import net.artux.pdanetwork.repository.feed.CommentRepository
 import net.artux.pdanetwork.repository.feed.PostRepository
+import net.artux.pdanetwork.repository.user.BanRepository
+import net.artux.pdanetwork.repository.user.RelationshipRepository
+import net.artux.pdanetwork.repository.user.UserConfirmationRepository
 import net.artux.pdanetwork.repository.user.UserRepository
 import net.artux.pdanetwork.service.user.UserService
 import net.artux.pdanetwork.service.util.ValuesService
@@ -35,7 +38,10 @@ open class ResetServiceImpl(
     private val messageRepository: MessageRepository,
     private val articleLikeRepository: ArticleLikeRepository,
     private val postRepository: PostRepository,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val userConfirmationRepository: UserConfirmationRepository,
+    private val banRepository: BanRepository,
+    private val relationshipRepository: RelationshipRepository
 ) : ResetService {
 
     private val logger = LoggerFactory.getLogger(ResetServiceImpl::class.java)
@@ -120,6 +126,9 @@ open class ResetServiceImpl(
         commentRepository.deleteAllByAuthor(user)
         postRepository.deleteAllByAuthor(user)
         conversationRepository.deleteAllByMembersContainsAndTypeEquals(user, ConversationEntity.Type.PRIVATE)
+        userConfirmationRepository.deleteAllByUser_Id(user.id)
+        banRepository.deleteAllByUserId(user.id)
+        relationshipRepository.deleteAllByUser1_IdOrUser2_Id(user.id, user.id)
         userRepository.deleteById(user.id)
         return true
     }
