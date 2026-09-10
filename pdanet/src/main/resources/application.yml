@@ -15,9 +15,6 @@ spring:
     banner-mode: off
   profiles:
     active: default, dev
-  datasource:
-    hikari:
-      connection-init-sql: SET statement_timeout = 20000
   jpa:
     hibernate:
       ddl-auto: none
