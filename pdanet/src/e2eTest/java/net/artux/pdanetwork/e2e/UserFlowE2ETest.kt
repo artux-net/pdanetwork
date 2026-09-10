@@ -41,7 +41,8 @@ class UserFlowE2ETest {
 
     private val email = "e2e-test-${System.currentTimeMillis()}@example.com"
     private val password = "TestPass123!"
-    private val nickname = "E2eTest" + (1..6).map { ('a'..'z').random() }.joinToString("")
+    // nickname must be letters only - the registration endpoint rejects digits/underscores
+    private val nickname = "Autotest" + (1..6).map { ('a'..'z').random() }.joinToString("")
 
     private fun authHeaders(): HttpHeaders = HttpHeaders().apply { setBasicAuth(email, password) }
 
