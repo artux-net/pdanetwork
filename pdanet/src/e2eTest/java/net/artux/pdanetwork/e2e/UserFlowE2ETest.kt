@@ -61,7 +61,7 @@ class UserFlowE2ETest {
 
         assertEquals(HttpStatus.OK, response.statusCode)
         val status = response.body!!
-        assertTrue(status.success, "registration failed: ${status.description}")
+        assertTrue(status.isSuccess(), "registration failed: ${status.description}")
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserFlowE2ETest {
     fun `progress is persisted when re-reading quest info`() {
         val state = fetchQuestInfo().storyStates.first { it.storyId == 1 }
         assertEquals(1, state.stageId)
-        assertTrue(state.current)
+        assertTrue(state.isCurrent())
     }
 
     private fun fetchQuestInfo(): StoryData {
