@@ -28,16 +28,16 @@ import java.util.Set;
 @Table(name = "article")
 public class ArticleEntity extends CommentableEntity {
 
-    @NotBlank(message = "Заголовок не может быть пустым")
+    @NotBlank(message = "{validation.title.blank}")
     private String title;
     private String image;
 
-    @NotBlank(message = "Описание не может быть пустым")
+    @NotBlank(message = "{validation.description.blank}")
     @Size(max = 250, message = "Описание слишком большое")
     private String description;
     private Instant published;
 
-    @NotBlank(message = "Содержимое не может быть пустым")
+    @NotBlank(message = "{validation.content.blank}")
     @Column(columnDefinition = "text")
     private String content;
 

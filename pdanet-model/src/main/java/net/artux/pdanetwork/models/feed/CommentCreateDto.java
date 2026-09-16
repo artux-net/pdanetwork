@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentCreateDto {
 
-    @NotBlank(message = "Содержимое не может быть пустым")
+    @NotBlank(message = "{validation.content.blank}")
     private String content;
 
 }

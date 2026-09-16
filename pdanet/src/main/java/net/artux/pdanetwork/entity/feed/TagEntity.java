@@ -26,7 +26,7 @@ public class TagEntity {
 
     @Id
     @Column
-    @NotBlank(message = "Заголовок не может быть пустым")
+    @NotBlank(message = "{validation.title.blank}")
     private String title;
 
     @JsonIgnore
