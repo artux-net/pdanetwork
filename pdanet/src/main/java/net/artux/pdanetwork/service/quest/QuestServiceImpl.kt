@@ -13,10 +13,10 @@ import net.artux.pdanetwork.models.quest.admin.StoriesStatus
 import net.artux.pdanetwork.models.quest.stage.Stage
 import net.artux.pdanetwork.models.user.enums.Role
 import net.artux.pdanetwork.service.user.UserService
+import net.artux.pdanetwork.utils.localized
 import net.artux.pdanetwork.utils.security.AdminAccess
 import net.artux.pdanetwork.utils.security.CreatorAccess
 import org.springframework.context.MessageSource
-import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.EnumMap
@@ -33,9 +33,6 @@ open class QuestServiceImpl(
     private val messageSource: MessageSource
 ) : QuestService {
 
-    private fun message(code: String, vararg args: Any?): String =
-        messageSource.getMessage(code, args, LocaleContextHolder.getLocale())
-
     private val stories: MutableMap<Long, StoryDto> = HashMap()
     private val roleStories: MutableMap<Role, List<StoryDto>> = EnumMap(Role::class.java)
     private val usersStories: MutableMap<UUID, StoryDto> = HashMap()
@@ -50,7 +47,7 @@ open class QuestServiceImpl(
         usersStories[userService.getCurrentId()] = questMapper.dto(story)
         questBackupService.saveStory(story, message)
 
-        return Status(true, message("quest.story.uploaded"))
+        return Status(true, messageSource.localized("quest.story.uploaded"))
     }
 
     @CreatorAccess
@@ -58,7 +55,7 @@ open class QuestServiceImpl(
         val story = questBackupService.getBackup(backupId)
         usersStories[userService.getCurrentId()] = questMapper.dto(story)
 
-        return Status(true, message("quest.story.restored"))
+        return Status(true, messageSource.localized("quest.story.restored"))
     }
 
     @AdminAccess
@@ -122,7 +119,7 @@ open class QuestServiceImpl(
         updatedTime = Instant.now()
         val logMessage = "Установлены публичные истории, количество: $counter"
         logger.info(logMessage)
-        return Status(true, message("quest.stories.reloaded", counter))
+        return Status(true, messageSource.localized("quest.stories.reloaded", counter))
     }
 
     private fun getStories(user: UserEntity): Collection<StoryDto> {
