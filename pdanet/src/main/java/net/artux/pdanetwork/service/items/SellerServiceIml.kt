@@ -17,7 +17,9 @@ import net.artux.pdanetwork.repository.items.ItemRepository
 import net.artux.pdanetwork.repository.items.SellerRepository
 import net.artux.pdanetwork.repository.user.UserRepository
 import net.artux.pdanetwork.service.user.UserService
+import net.artux.pdanetwork.utils.localized
 import net.artux.pdanetwork.utils.security.ModeratorAccess
+import org.springframework.context.MessageSource
 import org.springframework.core.io.ClassPathResource
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
@@ -42,6 +44,7 @@ open class SellerServiceIml(
     private val sellerMapper: SellerMapper,
     private val userService: UserService,
     private val mapper: ObjectMapper,
+    private val messageSource: MessageSource,
 ) : SellerService {
 
     private lateinit var initialSellers: MutableList<SellerAdminDto>
@@ -202,7 +205,7 @@ open class SellerServiceIml(
                     itemRepository.save(userItem)
                 }
             } else {
-                Status(false, "У продавца столько нет.")
+                Status(false, messageSource.localized("seller.not.enough.stock"))
             }
 
             userEntity.statistic.setBoughtItems(userEntity.statistic.getBoughtItems() + 1)
@@ -210,7 +213,7 @@ open class SellerServiceIml(
 
             Status(true, "Ok.", storyData)
         } else {
-            Status(false, "Недостаточно средств.")
+            Status(false, messageSource.localized("seller.not.enough.money"))
         }
     }
 
@@ -240,7 +243,7 @@ open class SellerServiceIml(
             itemRepository.delete(item)
         } else {
             if (quantity > item.quantity && quantity < 0) {
-                return Status(false, "У вас столько нет")
+                return Status(false, messageSource.localized("seller.not.enough.items"))
             }
 
             sellItemToSeller(item, quantity, sellerEntity)

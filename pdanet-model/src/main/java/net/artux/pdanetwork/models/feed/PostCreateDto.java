@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostCreateDto {
 
-    @NotBlank(message = "Заголовок не может быть пустым")
+    @NotBlank(message = "{validation.title.blank}")
     private String title;
-    @NotBlank(message = "Содержимое не может быть пустым")
+    @NotBlank(message = "{validation.content.blank}")
     private String content;
 
 }

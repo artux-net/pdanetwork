@@ -25,11 +25,11 @@ import java.util.Set;
 @Table(name = "user_post")
 public class PostEntity extends CommentableEntity {
 
-    @NotBlank(message = "Заголовок не может быть пустым")
+    @NotBlank(message = "{validation.title.blank}")
     private String title;
     private Instant published;
 
-    @NotBlank(message = "Содержимое не может быть пустым")
+    @NotBlank(message = "{validation.content.blank}")
     @Column(columnDefinition = "TEXT")
     private String content;
 

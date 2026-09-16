@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.context.MessageSource
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -31,7 +32,6 @@ import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
-import java.util.Locale
 import java.util.UUID
 
 @Service
@@ -186,7 +186,7 @@ open class UserServiceImpl(
         userEntity.password = passwordEncoder.encode(user.password)
         userRepository.save(userEntity)
 
-        val message = messageSource.getMessage("user.updated", null, Locale.forLanguageTag("ru"))
+        val message = messageSource.getMessage("user.updated", null, LocaleContextHolder.getLocale())
         return Status(true, message)
     }
 

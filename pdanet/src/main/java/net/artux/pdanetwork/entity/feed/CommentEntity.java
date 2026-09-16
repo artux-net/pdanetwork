@@ -30,7 +30,7 @@ public class CommentEntity extends BaseEntity {
 
     private Instant published;
 
-    @NotBlank(message = "Содержимое не может быть пустым")
+    @NotBlank(message = "{validation.content.blank}")
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
