@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
     Optional<UserEntity> findByEmail(String email);
 
+    Optional<UserEntity> findByGooglePlayPlayerId(String googlePlayPlayerId);
+
     boolean existsByEmail(String email);
 
     Set<UserEntity> findAllByIdIn(List<UUID> list);
