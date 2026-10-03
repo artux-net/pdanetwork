@@ -44,7 +44,7 @@ open class GooglePlayGamesAuthService(
     private val userMapper: UserMapper,
 ) {
 
-    private val randomString = RandomString(32)
+    private val randomString = RandomString(GENERATED_PASSWORD_LENGTH)
     private val restTemplate = RestTemplate()
 
     @Transactional
@@ -147,5 +147,6 @@ open class GooglePlayGamesAuthService(
         private const val DEFAULT_NICKNAME = "Rookie"
         private const val MIN_NICKNAME_LENGTH = 2
         private const val MAX_NICKNAME_LENGTH = 16
+        private const val GENERATED_PASSWORD_LENGTH = 32
     }
 }
