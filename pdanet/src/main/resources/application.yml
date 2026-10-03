@@ -55,7 +55,7 @@ quest:
 
 security:
   jwt:
-    secret: ${JWT_SECRET:dev-only-insecure-jwt-secret-change-me-0123456789}
+    secret: ${JWT_SECRET}
     expiration-days: ${JWT_EXPIRATION_DAYS:180}
 
 google:

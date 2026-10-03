@@ -15,6 +15,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -45,7 +46,12 @@ open class GooglePlayGamesAuthService(
 ) {
 
     private val randomString = RandomString(GENERATED_PASSWORD_LENGTH)
-    private val restTemplate = RestTemplate()
+    private val restTemplate = RestTemplate(
+        SimpleClientHttpRequestFactory().apply {
+            setConnectTimeout(GOOGLE_API_CONNECT_TIMEOUT_MS)
+            setReadTimeout(GOOGLE_API_READ_TIMEOUT_MS)
+        }
+    )
 
     @Transactional
     open fun authenticate(serverAuthCode: String): AuthTokenDto {
@@ -148,5 +154,7 @@ open class GooglePlayGamesAuthService(
         private const val MIN_NICKNAME_LENGTH = 2
         private const val MAX_NICKNAME_LENGTH = 16
         private const val GENERATED_PASSWORD_LENGTH = 32
+        private const val GOOGLE_API_CONNECT_TIMEOUT_MS = 5000
+        private const val GOOGLE_API_READ_TIMEOUT_MS = 10000
     }
 }

@@ -23,6 +23,12 @@ class JwtService(
     @Value("\${security.jwt.expiration-days:180}") private val expirationDays: Long,
 ) {
 
+    init {
+        require(secret.toByteArray(Charsets.UTF_8).size >= MIN_SECRET_LENGTH_BYTES) {
+            "security.jwt.secret must be at least $MIN_SECRET_LENGTH_BYTES bytes (HS256 requires a 256-bit key)"
+        }
+    }
+
     private val key: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray(Charsets.UTF_8))
 
     fun generateToken(userId: UUID): String {
@@ -52,5 +58,7 @@ class JwtService(
         }
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        private const val MIN_SECRET_LENGTH_BYTES = 32
+    }
 }
