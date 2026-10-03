@@ -57,6 +57,8 @@ public class UserEntity extends BaseEntity {
     private String name;
     private String nickname;
     private String avatar;
+    @Column(unique = true)
+    private String googlePlayPlayerId;
 
     @Enumerated(EnumType.STRING)
     private Gang gang;
@@ -136,6 +138,33 @@ public class UserEntity extends BaseEntity {
     public UserEntity(RegisterUserDto registerUser, PasswordEncoder passwordEncoder, Role role) {
         this(registerUser, passwordEncoder);
         this.role = role;
+    }
+
+    /**
+     * Creates an account on the fly for a Google Play Games player who has no
+     * existing pdanetwork account yet. There is no e-mail to confirm and no
+     * password the player ever types, so a random one is generated to satisfy
+     * the non-null column; it is never handed back, the player authenticates
+     * via the Play Games JWT flow instead.
+     */
+    public UserEntity(String googlePlayPlayerId, String nickname, String avatar, PasswordEncoder passwordEncoder, String randomPassword) {
+        this.googlePlayPlayerId = googlePlayPlayerId;
+        login = "pg_" + googlePlayPlayerId;
+        email = login + "@play.games.pda";
+        password = passwordEncoder.encode(randomPassword);
+        name = "";
+        this.nickname = nickname;
+        this.avatar = avatar;
+        role = Role.USER;
+        gang = Gang.LONERS;
+        chatBan = false;
+        receiveEmails = false;
+        isConfirmed = true;
+        xp = 0;
+        money = 500;
+        lastLoginAt = registration = Instant.now();
+        gangRelation = new GangRelationEntity(this);
+        statistic = new StatisticEntity(this);
     }
 
     public long getPdaId() {

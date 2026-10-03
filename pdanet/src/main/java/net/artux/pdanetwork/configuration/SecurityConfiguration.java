@@ -2,6 +2,7 @@ package net.artux.pdanetwork.configuration;
 
 import lombok.Getter;
 import net.artux.pdanetwork.models.user.enums.Role;
+import net.artux.pdanetwork.service.security.jwt.JwtAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +33,7 @@ public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST = {
             "/api/v1/user/register",
+            "/api/v1/user/auth/google-play-games",
             "/api/v1/commands/**",
             "/api/v1/user/reset/pass",
             "/mailing/**",
@@ -59,7 +62,7 @@ public class SecurityConfiguration {
     private String roleHierarchy;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -67,6 +70,7 @@ public class SecurityConfiguration {
                         .requestMatchers(MODERATOR_LIST).hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
                         .requestMatchers(WHITE_LIST).permitAll()
                         .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .build();

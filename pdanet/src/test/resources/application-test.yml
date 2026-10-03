@@ -6,3 +6,6 @@ administrator:
     email: admin@artux.net
     nickname: system
     password: pass
+security:
+    jwt:
+        secret: test-only-jwt-secret-never-shipped-0123456789
